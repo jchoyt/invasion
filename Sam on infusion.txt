@@ -1,0 +1,11 @@
+As it stands, the middle level has 560 non-corridor squares.  That does not include non-SH squares.
+
+Now, remember I had that idea for faction levels - that they needed to "infuse" certain kinds of squares and a certain number of them in order to advance; for example, a lvl 1 faction would only need to infuse 1 square, but a lvl 2 faction would need to infuse a total of 5 squares, one of them being a resource building, and a lvl 3 faction would need to infuse 10 squares, three of them being resource buildings each of a different type.  If we're going to do that, we may want to make the first station rather large so there will be a good spread of enough tiles of enough variety to allow a large number of factions.
+
+If you want to have multiple simultaneous stations, then if this station is the first "flagship" station, then we might want to make it big.  If people can choose which station to join, however, then we can make it small and we can make various stations of different sizes.
+
+On the other hand, if we do my idea of a "progression" of stations, where the characters fight to get a slot on the ship leaving the station, then we'll want to keep the station sizes for all of them roughly the same sizes.
+
+As it stands, the middle level has 560 non-corridor tiles.  If we subtract two rows from each district, then each district would have 300 non-corridor tiles.  That would give us a total of 1160 non-corridor tiles.  If all three levels were equal in size to the middle, we'd get 1680 non-corridor tiles.
+
+So the choice is yours.  I'm not sure exactly how you want to do that aspect of the game.  It all depends on the size of the factions you want WITHIN a station.  But I can do it so we subtract 2 rows from each district.  I can do that by hand, though, if you want.

@@ -1,0 +1,18 @@
+#foreach($i in $inv)
+<tr>
+    #if ($i.type == "weapon" || $i.type == "armor")
+    <td>$i.name ($i.condition) ($i.ammoleft)</td>
+    #else
+    <td>$i.name</td>
+    #end
+    #* <td>$i.type</td> *#
+    <td>1</td>
+    #if ($i.type == "food")
+    <td><a href="#" onclick="eat(${i.itemid})">Eat</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a></td>
+    #elseif ($i.type == "booze")
+    <td><a href="#" onclick="drink(${i.itemid})">Drink</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a></td>
+    #else
+    <td><a href="#" onclick="drop(${i.itemid});">Drop</a></td>
+    #end
+</tr>
+#end

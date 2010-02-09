@@ -1,0 +1,16 @@
+<html>
+<head>
+    <script type="text/javascript" src="/tmp/vel2js.js"></script>
+    <script type="text/javascript" src="js/vel2jstools.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    var data = { "msgs": [
+        { "read":"notread", "class":"n", "reps": 2, "text":"This was repeated 2 times", "date":"Thu Jan 14 16:53:38 EST 2010"},
+        {"read":"read", "class":"effect", "reps": 1, "text":"You have healed 1 HP", "date":"Thu Jan 14 16:58:38 EST 2010"} ]
+    }
+    var html = v2js_messages( data );
+    document.write(html);
+</script>
+</body>
+</html>
