@@ -1,6 +1,0 @@
-CREATE OR REPLACE FUNCTION my_function( att INTEGER, vic INTEGER, item INTEGER ) RETURNS INTEGER as $$
-    DECLARE
-        arg INTEGER NOT NULL DEFAULT := -1;
-    BEGIN
-
-
