@@ -1,4 +1,4 @@
-<html>
+<%@ page isErrorPage="true"%><html>
 <head>
 	<style type="text/css">
 	.naughty {

@@ -9,7 +9,7 @@
         return;
     }
     //do DB inserts
-    String query = "delete from item i where itemid = ? and locid = ?";
+    String query = "delete from item where itemid = ? and locid = ?";
     InvasionConnection conn = new InvasionConnection();
     PreparedStatement ps = conn.prepareStatement(query);
     JSONObject inventory = null;

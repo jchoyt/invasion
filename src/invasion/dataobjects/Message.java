@@ -114,6 +114,7 @@ public class Message  implements java.io.Serializable {
                 lastMessage = msgs.get(msgs.size()-1).message;
             }
             query = "select * from messages where read = false and altid = ? order by messageid";
+            lastMessage="";  //reset so new messages don't get combined with old ones.
             ps = conn.prepareStatement(query);
             ps.setInt(1,altId);
             //TODO set params here

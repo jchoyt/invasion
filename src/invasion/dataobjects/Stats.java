@@ -13,7 +13,7 @@ public class Stats {
 
     public static final String KEY = Stats .class.getName();
     public static final Logger log = Logger.getLogger(KEY);
-    static { log.setLevel(Level.FINER); }
+    // static { log.setLevel(Level.FINER); }
     private static List<StatAdjustment> queue = new ArrayList<StatAdjustment>();
 
     //TODO read this directly from the DB
@@ -33,7 +33,6 @@ public class Stats {
     public static final int DEATHS = 10;
     public static final int BUFFS = 11;
 
-
     public static synchronized void addChange(int altid, int statid,
              int increment) {
         queue.add(new StatAdjustment( altid, statid, increment ));
@@ -42,6 +41,15 @@ public class Stats {
     public static String getStatName( int index )
     {
         return names[index];
+    }
+
+    public static void writeLog( java.io.Writer out ) throws IOException
+    {
+        for(StatAdjustment a : queue)
+        {
+            out.write( a.toString() );
+            out.write( "\n" );
+        }
     }
 
     public static void process()
@@ -60,9 +68,9 @@ public class Stats {
         for(StatAdjustment s : toProcess)
         {
             String[] parts = line.split("\t");
-            ps.setInt(1, s.getAltid());
-            ps.setInt(2, s.getStatid());
-            ps.setInt(3, s.getAdjustment());
+            ps.setInt(1, s.getAdjustment());
+            ps.setInt(2, s.getAltid());
+            ps.setInt(3, s.getStatid());
             ps.addBatch();
         }
         ps.executeBatch();
@@ -85,62 +93,18 @@ class StatAdjustment {
         this.adjustment = adjustment;
     }
 
-    /**
-     * Get altid property.
-     *
-     *@return Altid property.
-     */
-    public int getAltid() {
-        return this.altid;
+
+    public String toString()
+    {
+        return "update stats set count=count+"+adjustment+" where altid="+altid+" and statid="+statid;
+
     }
 
-    /**
-     * Set altid property.
-     *
-     *@param altid New altid property.
-     */
-    public void setAltid(int altid) {
-        this.altid = altid;
-    }
-
-
-    /**
-     * Get statid property.
-     *
-     *@return Statid property.
-     */
-    public int getStatid() {
-        return this.statid;
-    }
-
-    /**
-     * Set statid property.
-     *
-     *@param statid New statid property.
-     */
-    public void setStatid(int statid) {
-        this.statid = statid;
-    }
-
-
-    /**
-     * Get adjustment property.
-     *
-     *@return Adjustment property.
-     */
-    public int getAdjustment() {
-        return this.adjustment;
-    }
-
-    /**
-     * Set adjustment property.
-     *
-     *@param adjustment New adjustment property.
-     */
-    public void setAdjustment(int adjustment) {
-        this.adjustment = adjustment;
-    }
-
-
+    public int getAltid() { return this.altid; }
+    public void setAltid(int altid) { this.altid = altid; }
+    public int getStatid() { return this.statid; }
+    public void setStatid(int statid) { this.statid = statid; }
+    public int getAdjustment() { return this.adjustment; }
+    public void setAdjustment(int adjustment) { this.adjustment = adjustment; }
 
 }

@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
 import org.json.*;
+import invasion.dataobjects.*;
 
 import java.util.*;
 
@@ -36,14 +37,24 @@ public class Search
                 locid = rs.getInt("locationtype");
                 if( curLocid != locid )
                 {
-                    Collections.sort(dist);
-                    SearchDistribution.normalize(dist);
-                    lookups.put(new Integer(curLocid), dist);
+                    if( dist.size() > 0 )
+                    {
+                        Collections.sort(dist);
+                        SearchDistribution.normalize(dist);
+                        lookups.put(new Integer(curLocid), dist);
+                    }
                     dist = new ArrayList<SearchDistribution>();
                     curLocid = locid;
                 }
                 dist.add( new SearchDistribution( rs.getInt("return"), rs.getDouble("odds") ) );
             }
+            if( dist.size() > 0 )
+            {
+                Collections.sort(dist);
+                SearchDistribution.normalize(dist);
+                lookups.put(new Integer(curLocid), dist);
+            }
+            log.info("Loaded " + lookups.size() + " different item types.");
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
         }
@@ -63,15 +74,24 @@ public class Search
     public static synchronized int performSearch( int type )
     {
         //Check to see if it passes the locatoin % first
-
+        double rate = LocationType.getLocationType(type).getSearchrate();
+        if( Math.random() > rate )
+        {
+            return -1;
+        }
+        //found something.  Now figure out what it is.
         List<SearchDistribution> dist = lookups.get(type);
         SearchDistribution probe = new SearchDistribution(Math.random());
-        /*
-         * This looks completely stupid, but there is sanity here.  I've set the "equals()" method in SearchDistribution so that if the value of probe is between
-         * lowerbound and upperbound it comes back true.  Not sure how to create a decent value of hashCode for this, though, so that's not done.
-         */
-        int chosen = dist.indexOf( probe );
-        return dist.get(chosen).getItemid();
+
+        //find the corresponding item
+        for( SearchDistribution s : dist )
+        {
+            if( s.equals( probe ) )
+            {
+                return s.getItemid();
+            }
+        }
+        throw new RuntimeException("If the code reaches this point, then the SearchDistribution lists were not set up correctly, or the methodology for calculating the search was botched.");
     }
 
 
@@ -119,7 +139,8 @@ public class Search
 
         public static void normalize(List<SearchDistribution> list)
         {
-            double sum = 0;
+            double nextLowerBound = 0.0;
+            double sum = 0.0;
             for(SearchDistribution d : list)
             {
                 sum += d.rate;
@@ -129,6 +150,8 @@ public class Search
             for(SearchDistribution d : list)
             {
                 d.rate = d.rate * scalingFactor;
+                nextLowerBound = d.calculateBounds( nextLowerBound );
+                log.finer("Next lower bound is:" + nextLowerBound);
             }
         }
 

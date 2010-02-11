@@ -1,5 +1,8 @@
 package invasion.servlets;
 
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import invasion.dataobjects.*;
 import java.io.*;
 import java.util.*;
@@ -19,6 +22,9 @@ import invasion.util.Search;
  *  This allows for initial setup, inlcuding
  *  <ul>
  *    <li> Setting application-wide variables for css, js, and image files</li>
+ *    <li> Loading static lookup information</li>
+ *    <li> Setting up the Velocity template engine</li>
+ *    <li> </li>
  *  </ul>
  *
  *
@@ -29,6 +35,10 @@ import invasion.util.Search;
 
 public class InitServlet extends HttpServlet
 {
+
+    public final static String KEY = InitServlet.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    // static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the PqmServlet object
@@ -82,6 +92,21 @@ public class InitServlet extends HttpServlet
         LocationType.load();
         /* pre-load the Search information */
         Search.load();
+    }
+
+
+    public void destroy()
+    {
+        try
+        {
+            Stats.process();
+        }
+        catch (SQLException e)
+        {
+            Stats.writeLog();
+            log.throwing(KEY, "body", e);
+            return;
+        }
     }
 
     /**

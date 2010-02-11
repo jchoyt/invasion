@@ -60,11 +60,10 @@ public class InvasionConnection
      * @param  bAutoCommit                The new autoCommit value
      * @exception  SQLException  Description of the Exception
      */
-    public void setAutoCommit(boolean bAutoCommit)
-        throws SQLException
-    {
-        conn.setAutoCommit(bAutoCommit);
-    }
+    public void setAutoCommit(boolean bAutoCommit) throws SQLException { conn.setAutoCommit(bAutoCommit); }
+    public void rollback() throws SQLException { conn.rollback(); }
+    public void commit() throws SQLException { conn.commit(); }
+
 
     /**
      *  This method returns the existing connection to the database.

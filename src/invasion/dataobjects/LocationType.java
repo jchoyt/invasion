@@ -36,7 +36,6 @@ public class LocationType  implements java.io.Serializable {
        this.searchrate = searchrate;
     }
 
-
     public static void load()
     {
 
@@ -58,6 +57,7 @@ public class LocationType  implements java.io.Serializable {
                 rs.getDouble("searchrate"));
                 locationTypes.put(rs.getInt("typeid"), type);
             }
+            log.info("Loaded " + locationTypes.size() + " different location types.");
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
         }
@@ -72,6 +72,11 @@ public class LocationType  implements java.io.Serializable {
             DatabaseUtility.close(ps);
             conn.close();
         }
+    }
+
+    public static LocationType getLocationType( int typeid )
+    {
+        return locationTypes.get(typeid);
     }
 
     public int getTypeid() { return this.typeid; }

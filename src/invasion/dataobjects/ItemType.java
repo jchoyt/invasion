@@ -62,6 +62,7 @@ public class ItemType{
                 rs.getString("damageType"));
                 itemTypes.put(rs.getInt("typeid"), type);
             }
+            log.info("Loaded " + itemTypes.size() + " different item types.");
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
         }
@@ -78,6 +79,10 @@ public class ItemType{
         }
     }
 
+    public static ItemType getItemType( int typeid )
+    {
+        return itemTypes.get(typeid);
+    }
 
     /* setters and getters */
     public int getTypeid() { return this.typeid; }

@@ -8,7 +8,7 @@
     }
     catch (SQLException e)
     {
-        //TODO - write out log
+        Stats.writeLog(out);
         log.throwing(KEY, "body", e);
         out.write("FAIL");
         return;

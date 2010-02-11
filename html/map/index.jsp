@@ -137,15 +137,24 @@
             });
         }
 
+        function dosearch( reps )
+        {
+            var url = "search.jsp?count=" + reps;
+            $.getJSON(url, function(json){
+                // alert(json);
+                //$(document).trigger('POLL_COMPLETE', json)
+                updateInventory(json);
+                updateMessagePane(json);
+            });
+        }
 
         function updateMessagePane(data)
         {
-            v2js_inventory(data);
-            // var d = new Date();
-            // $.each(data.msgs, function(i,item){
-            //     $('#msg-box').append("<li>" + item.msg + " (" + d + ")</li>");
-            // });
-            $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
+            if(true)
+            {
+                $("#msg-box").html(v2js_messages(data));
+                $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
+            }
         }
 
         function updateOccupantPane(data)
@@ -269,6 +278,7 @@
                 <p>The mists in the void are producing very little light.  Marquai's symbol shines brightly in the mists.  There is a corpse here.</p>
                 <p>Someone has written <i>Dude. Not cool. </i> in chalk on a wall.</p>
                 <p>This location has been <i>infused</i> and is aligned to <a class="pln" href="http://www.nexuswar.com/factions/view.do?factionID=908">The Watchers</a>.</p>
+                <p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/></p>
             </div>
             <h6><a href="#">Skills</a></h6>
             <div>
