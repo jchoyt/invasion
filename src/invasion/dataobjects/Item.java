@@ -53,14 +53,24 @@ public class Item  implements java.io.Serializable {
         }
     }
 
-
-    public static JSONObject getItems( InvasionConnection conn, int locid )
+    /**
+     *  Returns current inventory as a JSONArray.  Sample format:
+     *      [
+     *          { "ammoleft": 2, "condition": "Non-functional", "name": "Energy pack ", "typeid": 28, "itemid": 265, "type": "ammo" },
+     *          { "ammoleft": 2, "condition": "Battered", "name": "Energy pack ", "typeid": 28, "itemid": 257, "type": "ammo" },
+     *          { "ammoleft": 5, "condition": "Destroyed", "name": "Energy pack ", "typeid": 28, "itemid": 258, "type": "ammo" },
+     *          { "ammoleft": 1, "condition": "Destroyed", "name": "Vodka", "typeid": 37, "itemid": 264, "type": "booze" },
+     *          { "ammoleft": 2, "condition": "Destroyed", "name": "Vodka", "typeid": 37, "itemid": 259, "type": "booze" },
+     *          { "ammoleft": 7, "condition": "Average", "name": "Vodka", "typeid": 37, "itemid": 268, "type": "booze" }
+     *      ]
+     */
+    public static JSONArray getItems( InvasionConnection conn, int locid )
     throws SQLException
     {
         String query = "select i.typeid, itemid, ammoleft, condition, name, type from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, ammoleft";
         PreparedStatement ps = null;
         ResultSet rs = null;
-        JSONObject root = new JSONObject();
+        JSONArray root = new JSONArray();
         try
         {
             ps = conn.prepareStatement(query);
@@ -75,7 +85,7 @@ public class Item  implements java.io.Serializable {
                 obj.put("ammoleft", rs.getInt("ammoleft"));
                 obj.put("condition", Item.conditions[rs.getInt("condition")]);
                 obj.put("type", rs.getString("type"));
-                root.append("inv", obj);
+                root.put(obj);
             }
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
@@ -94,9 +104,9 @@ public class Item  implements java.io.Serializable {
     }
 
 
-    public static JSONObject getItems( int locid )  //can also be altid
+    public static JSONArray getItems( int locid )  //can also be altid
     {
-        JSONObject ret = null;
+        JSONArray ret = null;
         InvasionConnection conn = null;
         try
         {

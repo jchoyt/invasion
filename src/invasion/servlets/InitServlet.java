@@ -103,7 +103,16 @@ public class InitServlet extends HttpServlet
         }
         catch (SQLException e)
         {
-            Stats.writeLog();
+            try
+            {
+                Stats.writeLog(new FileWriter( getServletContext().getRealPath( "/" ) + "/stats"+System.currentTimeMillis() ) );
+            }
+            catch(Exception ex)
+            {
+                StringWriter w = new StringWriter();
+                try{Stats.writeLog(w);}catch(Exception ey){}
+                log.warning( w.toString() );
+            }
             log.throwing(KEY, "body", e);
             return;
         }

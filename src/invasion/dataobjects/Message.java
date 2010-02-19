@@ -43,7 +43,9 @@ public class Message  implements java.io.Serializable {
         this.messageid = messageid;
     }
 
-
+    /**
+     *  Do not use for creating new messages - only for grabbing new ones from the database
+     */
     public Message(int id, Date messagedate, String message, int type, boolean read )
     {
         messageid = id;
@@ -53,14 +55,14 @@ public class Message  implements java.io.Serializable {
         this.read = read;
     }
 
-
-    public Message(int altid, int type, String message)
+    /**
+     *  Inserts a message into the database
+     */
+    public Message(InvasionConnection conn, int altid, int type, String message)
     {
         String query = "insert into messages (message, type, altid) values (?, ?, ?)";
-        InvasionConnection conn = null;
         PreparedStatement ps = null;
         try{
-            conn = new InvasionConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, message);
             ps.setInt(2, type);
@@ -74,21 +76,20 @@ public class Message  implements java.io.Serializable {
         finally
         {
             DatabaseUtility.close(ps);
-            conn.close();
         }
 
     }
 
-    public static JSONObject getInitialMessages(int altId)
+    public static JSONArray getInitialMessages(InvasionConnection conn, int altId)
     {
         String query = "select * from messages where read = true and altid = ? order by messageid desc limit 10";
-        InvasionConnection conn = null;
+        // InvasionConnection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Message> msgs = new ArrayList();
         try
         {
-            conn = new InvasionConnection();
+            // conn = new InvasionConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1,altId);
             rs = ps.executeQuery();
@@ -148,13 +149,13 @@ public class Message  implements java.io.Serializable {
         {
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
-            conn.close();
+            // conn.close();
         }
-        JSONObject ret = new JSONObject();
+        JSONArray ret = new JSONArray();
         for(Message m : msgs)
         {
             try{
-                ret.append("msgs", m.toJson());
+                ret.put(m.toJson());
             }
             catch(JSONException e)
             {

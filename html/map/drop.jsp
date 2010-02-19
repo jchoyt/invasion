@@ -17,7 +17,7 @@
         ps.setInt(2, wazzit.getAlt().getId());
         int count = ps.executeUpdate();
         //TODO drop a random object if count==0
-        inventory = Item.getItems(conn, wazzit.getAlt().getId());
+        // inventory = Item.getItems(conn, wazzit.getAlt().getId());
     }
     catch(Exception e)
     {
@@ -26,8 +26,9 @@
     finally
     {
         DatabaseUtility.close(ps);
+        Poll.fullPoll( conn, out, wazzit );
         conn.close();
-        out.write(String.valueOf(inventory));
+        // out.write(String.valueOf(inventory));
     }
 %>
 

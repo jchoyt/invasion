@@ -22,20 +22,15 @@
         for(int i = 0; i < reps; i++)
         {
             int itemFound = Search.performSearch(2);
-            ps = conn.prepareStatement(query);
             if( itemFound == -1 )
             {
-                //found nothing
-                ps.setInt(1, wazzit.getAlt().getId());
-                ps.setString(2, "You search and find nothing.");
+                new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You search and find nothing.");
             }
             else
             {
-                Item item = new Item(conn, itemFound, wazzit.getAlt().getId());
-                ps.setInt(1, wazzit.getAlt().getId());
-                ps.setString(2, "You search and find a " + ItemType.getItemType(itemFound).getName() + ".");
+                new Item(conn, itemFound, wazzit.getAlt().getId());
+                new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You search and find a " + ItemType.getItemType(itemFound).getName() + ".");
             }
-            ps.executeUpdate();
         }
         conn.commit();
     }
@@ -48,13 +43,14 @@
     finally
     {
         DatabaseUtility.close(ps);
+        Poll.fullPoll( conn, out, wazzit );
         conn.close();
     }
 
-    JSONObject inventory = Item.getItems(wazzit.getAlt().getId());
-    JSONObject msgs = Message.getInitialMessages(wazzit.getAlt().getId());
-    inventory.put("msgs", msgs.getJSONArray("msgs"));
-    // System.out.println( String.valueOf(inventory) );
-    out.write(String.valueOf(inventory));
+    // JSONObject inventory = Item.getItems(wazzit.getAlt().getId());
+    // JSONObject msgs = Message.getInitialMessages(wazzit.getAlt().getId());
+    // inventory.put("msgs", msgs.getJSONArray("msgs"));
+    // // System.out.println( String.valueOf(inventory) );
+    // out.write(String.valueOf(inventory));
 %>
 

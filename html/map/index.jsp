@@ -1,4 +1,4 @@
-<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, java.util.logging.*;" %><%!
+<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, java.util.logging.*,org.json.*" %><%!
     public final static String KEY = "/map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
     static{log.setLevel(Level.FINER);}%><%@
@@ -42,6 +42,7 @@
     <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
     <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <script type="text/javascript" src="${js}/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="${js}/map.js"></script>
     <script type="text/javascript" src="${js}/jquery.layout.min-1.2.0.js"></script> <%--}}}--%>
 
     <%--  {{{ css --%>
@@ -52,126 +53,6 @@
 
 	<%--{{{  javascript --%>
 	<script type="text/javascript">
-        var myLayout; // init global vars
-        $(document).ready( function() {
-
-            myLayout = $('body').layout({
-                // RESIZE Accordion widget when panes resize
-            	// west__onresize:		function () { $("#accordion1").accordion("resize"); },
-            	//east__onresize:		function () { $("#accordion").accordion("resize"); },
-            	east:  {initClosed: true, slideTrigger_open: "click", size: 350 },
-                west: { size: 320, resizable: false }
-
-            });
-
-                // ACCORDION - in the East pane - in a 'content-div'
-            $("#accordion").accordion({
-                //fillSpace: true,
-                active: 0,
-                collapsible: true,
-                autoHeight: false
-            });
-
-            $("#west-sections").addClass("ui-accordion ui-widget ui-helper-reset")
-            .find("h6")
-                .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
-                .prepend('<span class="ui-icon ui-icon-triangle-1-e"/>')
-                .click(function() {
-                    $(this).toggleClass("ui-accordion-header-active").toggleClass("ui-state-active")
-                        .toggleClass("ui-state-default").toggleClass("ui-corner-bottom")
-                    .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e").toggleClass("ui-icon-triangle-1-s")
-                    .end().next().toggleClass("ui-accordion-content-active").toggle();
-                    return false;
-                })
-                .next().addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom").hide();
-
-
-            $("#center-sections").addClass("ui-accordion ui-widget ui-helper-reset")
-            .find("h6")
-                .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
-                .prepend('<span class="ui-icon ui-icon-triangle-1-e"/>')
-                .click(function() {
-                    $(this).toggleClass("ui-accordion-header-active").toggleClass("ui-state-active")
-                        .toggleClass("ui-state-default").toggleClass("ui-corner-bottom")
-                    .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e").toggleClass("ui-icon-triangle-1-s")
-                    .end().next().toggleClass("ui-accordion-content-active").toggle();
-                    return false;
-                })
-                .next().addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom").hide();
-
-            $("#map").click();
-            $("#occupants").click();
-            $("#msgs-hdr").click();
-            $("#basic").click();
-
-            // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
-            $(document).bind('POLL_COMPLETE', function(e, data){ updateMessagePane(data); });
-            $(document).bind('POLL_COMPLETE', function(e, data){ updateOccupantPane(data); });
-            //$(document).bind('POLL_COMPLETE', function(e, data){ updateInventory(data); });
-        });
-
-        function drop( itemid )
-        {
-            var url = "drop.jsp?itemid=" + itemid;
-            $.getJSON(url, function(json){
-                //$(document).trigger('POLL_COMPLETE', json)
-                updateInventory(json);
-            });
-        }
-
-        function eat( itemid )
-        {
-            var url = "eat.jsp?itemid=" + itemid;
-            $.getJSON(url, function(json){
-                //$(document).trigger('POLL_COMPLETE', json)
-                updateInventory(json);
-            });
-        }
-
-        function drink( itemid )
-        {
-            var url = "drink.jsp?itemid=" + itemid;
-            $.getJSON(url, function(json){
-                //$(document).trigger('POLL_COMPLETE', json)
-                updateInventory(json);
-            });
-        }
-
-        function dosearch( reps )
-        {
-            var url = "search.jsp?count=" + reps;
-            $.getJSON(url, function(json){
-                // alert(json);
-                //$(document).trigger('POLL_COMPLETE', json)
-                updateInventory(json);
-                updateMessagePane(json);
-            });
-        }
-
-        function updateMessagePane(data)
-        {
-            if(true)
-            {
-                $("#msg-box").html(v2js_messages(data));
-                $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
-            }
-        }
-
-        function updateOccupantPane(data)
-        {
-            $('#occ-pane').html("");
-            $.each(data.occ, function(i, item){
-                $('#occ-pane').append( item.name );
-            });
-        }
-
-        function updateInventory(data)
-        {
-            if(true)
-            {
-                $("#inv-body").html( v2js_inventory(data) );
-            }
-        }
 
         function poll()
         {
@@ -225,18 +106,6 @@
                 log.warning("Alt " + alt.getId() + " not found.");
                 response.sendRedirect("/index.jsp");
             }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            out.write("Error retrieving stats");
-        }
-        finally
-        {
-            DatabaseUtility.close(rs);
-            conn.close();
-        }
-
         %>
 
     </div> <%--}}}--%>
@@ -251,13 +120,19 @@
         {
             out.write( "<h3 class=\"info\">" + infoMsg + "</h3>");
         }%>
+        <div id="announcements">&nbsp;</div>
         <div id="center-sections" class="ui-layout-content">
             <h6 id="msgs-hdr"><a href="#">Messages and Basic Actions</a></h6>
             <div>
                 <div id="messcontainer" class="mapbox" style="height:250px;width:100%;float:left">
                     <div id="amessages" style="height: 200px;border:1px solid black;margin-bottom:5px;" class="ui-layout-content">
                         <ul id="msg-box" class="msgs">
-                        <% VelocityUtil.applyTemplate(Message.getInitialMessages(wazzit.getAlt().getId()), "messages.vm", out);%>
+                        <%
+                            JSONArray a = Message.getInitialMessages(conn, wazzit.getAlt().getId());
+                            JSONObject obj = new JSONObject();
+                            obj.put("msgs", a);
+                            VelocityUtil.applyTemplate(obj, "messages.vm", out);
+                        %>
                         </ul>
                     </div>
                     <form method="post" action="speak.jsp" onsubmit="speak(this); return false">
@@ -297,10 +172,21 @@
             <h6><a href="#">Attack</a></h6>
             <div>
                 <p>
-                Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
-                purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
-                velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
-                suscipit faucibus urna.
+                <form method="post" action="attack.jsp" onsubmit="attack(this); return false">
+                    <select name="target">
+                        <option value="8">Test</option>
+                        <option value="9">Test2</option>
+                    </select>
+                    <input type="submit" value="Attack"/>
+                </form>
+                <form method="post" action="equip.jsp" onsubmit="equip.jsp">
+                    <select name="weaponid">
+                        <option value="127">Energy Pistol</option>
+                        <option value="127">Energy Pistol</option>
+                        <option value="127">Energy Pistol</option>
+                    </select>
+                    <input type="submit" value="Equip Weapon"/>
+                </form>
                 </p>
             </div>
         </div>
@@ -315,9 +201,6 @@
             </div>
             <h6 id="occupants"><a href="#">Occupants</a></h6>
             <div id="occ-pane">
-                <%--
-                <% VelocityUtil.applyTemplate(Message.getInitialMessages(alt.getId()), "messages.vm", out);%>
-                --%>
                 <table style="width:290px" cellpadding="0" cellspacing="0" border="0" id="occ-table">
                     <thead>
                         <tr>
@@ -328,7 +211,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% VelocityUtil.applyTemplate(Location.getOccupants(wazzit.getLocid(), alt.getId()), "occupants.vm", out); %>
+                        <%
+                            a = Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId());
+                            obj = new JSONObject();
+                            obj.put("occs", a);
+                            VelocityUtil.applyTemplate(obj, "occupants.vm", out);
+                        %>
                     </tbody>
                 </table>
                 <%-- <script type="text/javascript" charset="utf-8">
@@ -377,9 +265,6 @@
         <div id="accordion" class="ui-layout-content">
             <h3 id="inv-pane"><a href="#">Inventory</a></h3>
             <div>
-                <%--
-                <% VelocityUtil.applyTemplate(Message.getInitialMessages(alt.getId()), "messages.vm", out);%>
-                --%>
                 <form id="inv-form">
                 <table style="width:320px" cellpadding="0" cellspacing="0" border="0">
                     <thead>
@@ -391,7 +276,12 @@
                         </tr>
                     </thead>
                     <tbody id="inv-body">
-                        <% VelocityUtil.applyTemplate(Item.getItems(alt.getId()), "inventory.vm", out); %>
+                        <%
+                            a = Item.getItems(conn, alt.getId());
+                            obj = new JSONObject();
+                            obj.put("inv", a);
+                            VelocityUtil.applyTemplate(obj, "inventory.vm", out);
+                        %>
                     </tbody>
                 </table>
                 </form>
@@ -437,7 +327,19 @@
 
         <%-- <h4>Accordion inside DIV.ui-layout-content</h4> --%>
     </div> <%--}}}--%>
-
+    <%
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            out.write("Error retrieving stats");
+        }
+        finally
+        {
+            DatabaseUtility.close(rs);
+            conn.close();
+        }
+    %>
 	</body>
 </html>
 

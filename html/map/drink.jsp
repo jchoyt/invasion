@@ -18,7 +18,7 @@
         //TODO check for null
         if( !category.equals("booze") )
         {
-            throw new NaughtyException("That does not seem to be alcohohl.");
+            throw new NaughtyException("That does not seem to be alcohol.");
         }
         ps.setInt(1, id);
         ps.setInt(2, wazzit.getAlt().getId());
@@ -30,8 +30,9 @@
         else
             throw new NaughtyException("What are you trying to do?");
 
-        inventory = Item.getItems(conn, wazzit.getAlt().getId());
-        out.write(String.valueOf(inventory));
+        ;
+        // inventory = Item.getItems(conn, wazzit.getAlt().getId());
+        // out.write(String.valueOf(inventory));
     }
     catch(Exception e)
     {
@@ -40,6 +41,7 @@
     finally
     {
         DatabaseUtility.close(ps);
+        Poll.fullPoll( conn, out, wazzit );
         conn.close();
     }
 %>

@@ -18,7 +18,7 @@ public class Location  implements java.io.Serializable {
 
     public final static String KEY = Location.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
 
     private int id;
@@ -38,16 +38,16 @@ public class Location  implements java.io.Serializable {
         this.id = id; }
 
 
-    public static JSONObject getOccupants(int locid, int you)
+    public static JSONArray getOccupants(InvasionConnection conn, int locid, int you)
     {
         String query = "select * from alt where location = ? and id != ? ";
-        InvasionConnection conn = null;
+        // InvasionConnection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        JSONObject root = new JSONObject();
+        JSONArray root = new JSONArray();
         try
         {
-            conn = new InvasionConnection();
+            // conn = new InvasionConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1,locid);
             ps.setInt(2,you);
@@ -74,7 +74,7 @@ public class Location  implements java.io.Serializable {
                     obj.put("hp", 1 );
                 else
                     obj.put("hp", 0 );
-                root.append("occs", obj);
+                root.put(obj);
             }
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
@@ -88,7 +88,7 @@ public class Location  implements java.io.Serializable {
         {
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
-            conn.close();
+            // conn.close();
             return root;
         }
  }

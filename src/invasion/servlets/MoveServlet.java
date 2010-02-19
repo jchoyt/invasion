@@ -13,7 +13,7 @@ public class MoveServlet extends HttpServlet
 {
     public final static String KEY = "MoveServlet";  //change to MoveServlet eventually
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     int[] xdelta = { -1, 0, 1, -1, 0, 1, -1, 0, 1};
     int[] ydelta = { -1, -1, -1, 0, 0, 0, 1, 1, 1};

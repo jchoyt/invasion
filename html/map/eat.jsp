@@ -29,8 +29,9 @@
         else
             throw new NaughtyException("What are you trying to do?");
 
-        inventory = Item.getItems(conn, wazzit.getAlt().getId());
-        out.write(String.valueOf(inventory));
+        // inventory = Item.getItems(conn, wazzit.getAlt().getId());
+        // out.write(String.valueOf(inventory));
+        Poll.fullPoll( conn, out, wazzit );
     }
     catch(Exception e)
     {

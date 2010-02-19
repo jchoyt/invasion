@@ -31,7 +31,6 @@
     <title>
       Ooops!
     </title>
-    <%=Config.getProperty( "CSS" ) %>
   </head>
   <body>
   <center>
