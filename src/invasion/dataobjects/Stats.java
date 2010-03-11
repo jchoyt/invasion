@@ -52,7 +52,7 @@ public class Stats {
         }
     }
 
-    public static void process()
+    public static void process( InvasionConnection conn )
     throws SQLException
     {
         //Move new adjustments over to a new List in a way that is safe
@@ -62,7 +62,6 @@ public class Stats {
         //process
         String line = "";
         String query = "update stats set count=count+? where altid=? and statid=?";
-        InvasionConnection conn = new InvasionConnection();
         long start = System.currentTimeMillis();
         PreparedStatement ps = conn.prepareStatement(query);
         for(StatAdjustment s : toProcess)
@@ -75,9 +74,7 @@ public class Stats {
         }
         ps.executeBatch();
         log.info( "Total time to process "+toProcess.size()+" adjustments was " + (System.currentTimeMillis() - start) + "ms");
-        ps.close();
-        conn.close();
-
+        DatabaseUtility.close(ps);
     }
 }
 

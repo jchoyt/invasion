@@ -5,9 +5,9 @@
     version="2.5">
     <display-name>Invasion</display-name>
 
-    <!-- start Hibernate on startup and shut down nicely -->
-    <!-- <listener>
-        <listener-class>invasion.util.HibernateListener</listener-class>
+    <!-- Listener for processing stats on shutdown -->
+    <listener>
+        <listener-class>invasion.servlets.StatsListener</listener-class>
     </listener> -->
 
     <!-- Init Servlet -->
@@ -17,10 +17,20 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>TickServlet</servlet-name>
+        <servlet-class>invasion.servlets.TickServlet</servlet-class>
+        <load-on-startup>10</load-on-startup>
+    </servlet>
 
     <servlet>
         <servlet-name>MoveServlet</servlet-name>
         <servlet-class>invasion.servlets.MoveServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PollServlet</servlet-name>
+        <servlet-class>invasion.servlets.PollServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -28,6 +38,15 @@
         <url-pattern>/map/move</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>PollServlet</servlet-name>
+        <url-pattern>/poll</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TickServlet</servlet-name>
+        <url-pattern>/tick</url-pattern>
+    </servlet-mapping>
 
     <!-- Login by form -->
     <login-config>
@@ -42,7 +61,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>AdminPages</web-resource-name>
-            <description> accessible by authorised users </description>
+            <description> accessible by authorized users </description>
             <url-pattern>/admin/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
@@ -67,7 +86,6 @@
         </auth-constraint>
     </security-constraint>
 
-
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>resources</web-resource-name>
@@ -84,7 +102,6 @@
         </web-resource-collection>
             <!-- <comment this out>leaving out the auth-constraint so everyone can see it</comment this out> -->
     </security-constraint>
-
 
     <security-role>
         <description>

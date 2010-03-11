@@ -3,6 +3,11 @@
  */
 package invasion.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.sun.rowset.*;
+import javax.sql.rowset.*;
 import java.sql.*;
 import java.util.*;
 import javax.sql.*;
@@ -16,9 +21,12 @@ import javax.naming.*;
  */
 public class InvasionConnection
 {
+
+    public final static String KEY = InvasionConnection.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
     private Connection conn = null;
     private Statement stmt = null;
-
 
     public InvasionConnection()
         throws SQLException
@@ -48,7 +56,6 @@ public class InvasionConnection
     public PreparedStatement prepareStatement(String sql)
     throws SQLException
     {
-
         return conn.prepareStatement(sql);
     }
 
@@ -101,10 +108,7 @@ public class InvasionConnection
     public ResultSet executeQuery( String sSQL )
         throws SQLException
     {
-        if( stmt==null || stmt.isClosed() )
-        {
-            stmt = conn.createStatement();
-        }
+        stmt = conn.createStatement();
         return (stmt.executeQuery( sSQL ) );
     }
 
@@ -120,9 +124,71 @@ public class InvasionConnection
     public int executeUpdate(String sSQL)
         throws SQLException
     {
+        stmt = conn.createStatement();
         int iRowCount = stmt.executeUpdate(sSQL);
+        DatabaseUtility.close(stmt);
         return (iRowCount);
     }
+
+    /**
+     *  This method executes the Query SQL stmtement (usually a SELECT) that is passed as a parameter and returns a
+     *  CachedResultSet  Do NOT use this when retrieving large amounts of data, as this dumps lots of data into memory.
+     *  Also, for large data pulls, you should be setting the retreival cache size to speed retreival.
+     *
+     * @param  sSQL        Query string suitable for creating a PreparedStatment
+     * @param Object...    Comma delimited list of parameters, in order!
+     * @return             ResultSet of the query
+     * @exception  SQLException  Description of the Exception
+     */
+    public ResultSet psExecuteQuery(String query, String errorMsg, Object... params)
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try
+        {
+            CachedRowSet crs = new CachedRowSetImpl();
+            ps = conn.prepareStatement(query);
+            //set params
+            int i = 1;
+            for(Object param: params)
+            {
+                if( param instanceof String )
+                {
+                    ps.setString(i, (String)param);
+                }
+                else if( param instanceof Integer )
+                {
+                    ps.setInt(i, ((Integer)param).intValue());
+                }
+                else if( param instanceof Float )
+                {
+                    ps.setFloat(i, ((Float)param).floatValue());
+                }
+                else if( param instanceof Double )
+                {
+                    ps.setDouble(i, ((Double)param).doubleValue());
+                }
+                else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
+                i++;
+            }
+            rs = ps.executeQuery();
+            crs.populate(rs);
+            DatabaseUtility.close(rs);
+            DatabaseUtility.close(ps);
+            return crs;
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, errorMsg, e);
+            return null;
+        }
+        finally
+        {
+            DatabaseUtility.close(rs);
+            DatabaseUtility.close(ps);
+        }
+    }
+
 
     /**
      *  This method executes an updating SQL stmtement (usually an UPDATE, INSERT, or DELETE) that is passed as a

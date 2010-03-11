@@ -90,9 +90,6 @@
                         <strong>XP:</strong> <%=rs.getString("xp")%><br/>
                         <%-- <strong>Faction:</strong>  HA! Not even implemented! --%>
                     </td>
-                    <td class="stat"><span class="stat_name">HP</span><br/><span class="hp"><%=rs.getString("hp")%></span></td>
-                    <td class="stat"><span class="stat_name">IP</span><br/><span class="ip"><%=rs.getString("ip")%></span></td>
-                    <td class="stat"><span class="stat_name">AP</span><br/><span class="ap"><%=rs.getString("ap")%></span></td>
                     <td style="text-align:right;padding-right:15px;"><a href="/disconnect.jsp" class="link_button ui-state-default ui-corner-all">Disconnect</a></td>
                 </tr>
             </tbody>
@@ -148,42 +145,31 @@
             </div>
             <h6 id="basic"><a href="#">Location Description</a></h6>
             <div id="basic-description">
-                <p>You are standing inside <i>Forgotten Office Building.</i> (A <a target="_new" href="http://wiki.nexuswar.com/index.php/Forgotten_Office_Building">Forgotten Office Building</a>)</p>
-                <p>The building's floors are filled with empty, cobweb ridden cubicles. The elevators no longer work.  The door has been left <i>open</i>. Lights are <i>on</i> inside.</p>
-                <p>The mists in the void are producing very little light.  Marquai's symbol shines brightly in the mists.  There is a corpse here.</p>
-                <p>Someone has written <i>Dude. Not cool. </i> in chalk on a wall.</p>
-                <p>This location has been <i>infused</i> and is aligned to <a class="pln" href="http://www.nexuswar.com/factions/view.do?factionID=908">The Watchers</a>.</p>
+                <p>Nice descriptions were provide by Sam and Stretch, but Entomo's a lazy ass and hasn't put them in yet. </p>
                 <p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/></p>
             </div>
-            <h6><a href="#">Skills</a></h6>
-            <div>
-                <p>
-                Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
-                Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
-                ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
-                lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
-                </p>
-                <ul>
-                    <li>List item one</li>
-                    <li>List item two</li>
-                    <li>List item three</li>
-                </ul>
-            </div>
-            <h6><a href="#">Attack</a></h6>
+            <h6><a href="#">Actions</a></h6>
             <div>
                 <p>
                 <form method="post" action="attack.jsp" onsubmit="attack(this); return false">
-                    <select name="target">
-                        <option value="8">Test</option>
-                        <option value="9">Test2</option>
+                    <select name="target" id="attacklist">
+                        <%
+                            a = Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId());
+                            obj = new JSONObject();
+                            obj.put("occs", a);
+                            VelocityUtil.applyTemplate(obj, "attacklist.vm", out);
+                        %>
                     </select>
                     <input type="submit" value="Attack"/>
                 </form>
                 <form method="post" action="equip.jsp" onsubmit="equip.jsp">
-                    <select name="weaponid">
-                        <option value="127">Energy Pistol</option>
-                        <option value="127">Energy Pistol</option>
-                        <option value="127">Energy Pistol</option>
+                    <select name="weaponid" id="equiplist">
+                    <%
+                        a = Item.getItems(conn, alt.getId());
+                        obj = new JSONObject();
+                        obj.put("inv", a);
+                        VelocityUtil.applyTemplate(obj, "equiplist.vm", out);
+                    %>
                     </select>
                     <input type="submit" value="Equip Weapon"/>
                 </form>
@@ -194,11 +180,28 @@
 
     <%--{{{  west pane --%>
     <div class="ui-layout-west">
+        <div class="header">
+            <a href="/viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a><span id="stats-area">
+            <%
+                JSONObject obj2 = Alt.getStats(conn, alt.getId());
+                obj = new JSONObject();
+                obj.put("stats", obj2);
+                VelocityUtil.applyTemplate(obj, "stats.vm", out);
+            %></span>
+        </div>
         <div id="west-sections" class="ui-layout-content">
             <h6 id="map"><a href="#">Map</a></h6>
             <div style="height:340px">
                  <tags:NavPanel/>
             </div>
+            <script type="text/javascript">
+                function showtarget(id)
+                {
+                    show = "#desc-" + id;
+                    $("#att-box").html($(show).html());
+                };
+            </script>
+
             <h6 id="occupants"><a href="#">Occupants</a></h6>
             <div id="occ-pane">
                 <table style="width:290px" cellpadding="0" cellspacing="0" border="0" id="occ-table">
@@ -219,6 +222,7 @@
                         %>
                     </tbody>
                 </table>
+                <div id="att-box" style="position:relative;"></div>
                 <%-- <script type="text/javascript" charset="utf-8">
                     $("#occ-table").dataTable( {
                         "aaSorting": [[ 0, "asc" ]],
@@ -267,14 +271,7 @@
             <div>
                 <form id="inv-form">
                 <table style="width:320px" cellpadding="0" cellspacing="0" border="0">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <%-- <th>Qty</th> --%>
-                            <th>Wt</th>
-                            <th>Act</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Name</th><th>Wt</th><th>Act</th></tr></thead>
                     <tbody id="inv-body">
                         <%
                             a = Item.getItems(conn, alt.getId());

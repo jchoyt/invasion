@@ -7,8 +7,8 @@ $(document).ready( function() {
         // west__onresize:		function () { $("#accordion1").accordion("resize"); },
         //east__onresize:		function () { $("#accordion").accordion("resize"); },
         east:  {initClosed: false, slideTrigger_open: "click", size: 350 },
-        west: { size: 320, resizable: false }
-
+        west: { size: 320, resizable: false },
+        north:  {initClosed: true }
     });
 
         // ACCORDION - in the East pane - in a 'content-div'
@@ -56,6 +56,7 @@ $(document).ready( function() {
     $(document).bind('POLL_COMPLETE', function(e, data){ updateOccupantPane(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateInventory(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateAnnouncements(data); });
+    $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
 
 }); //}}}
 
@@ -85,6 +86,12 @@ function updateInventory(data)
     if(data.inv)
     {
         $("#inv-body").html( v2js_inventory(data) );
+        $("#equiplist").html( v2js_equiplist(data) );
+    }
+    else
+    {
+        $("#inv-body").html( "" );
+        $("#equiplist").html( "" );
     }
 }
 
@@ -93,6 +100,18 @@ function updateAnnouncements(data)
     if(data.announce)
     {
         $('#announcements').html(v2js_announcements(data));
+    }
+    else
+    {
+        $('#announcements').html("");
+    }
+}
+
+function updateStats(data)
+{
+    if(data.stats)
+    {
+        $('#stats-area').html(v2js_stats(data));
     }
 }//}}}
 

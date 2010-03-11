@@ -22,7 +22,7 @@ public class Poll
 
     protected static final String ERROR = buildErrorJson();
 
-    protected static String buildErrorJson()
+    private static String buildErrorJson()
     {
         JSONObject ret = new JSONObject();
         try
@@ -30,7 +30,7 @@ public class Poll
             JSONObject error = new JSONObject();
             error.put("message", "There has been an error retrieving the status");
             error.put("type", "error");
-            ret.put("err", error);
+            ret.put("announce", error);
         }
         catch (JSONException e)
         {
@@ -39,13 +39,13 @@ public class Poll
         return String.valueOf(ret);
     }
 
-    public static void fullPoll(Writer out, Whatzit wazzit)
+    public static void fullPoll(Writer out, Whatzit wazzit, JSONArray alerts)
     {
         InvasionConnection conn = null;
         try
         {
             conn =  new InvasionConnection();
-            fullPoll(conn, out, wazzit);
+            fullPoll(conn, out, wazzit, alerts);
         }
         catch(Exception e)
         {
@@ -59,16 +59,34 @@ public class Poll
         }
     }
 
-    public static void fullPoll(InvasionConnection conn, Writer out, Whatzit wazzit)
+    public static void fullPoll(InvasionConnection conn, Writer out, Whatzit wazzit, JSONArray alerts)
     {
         log.entering(KEY, "fullPoll");
         log.finer(System.currentTimeMillis()+"");
         try
         {
             JSONObject ret = new JSONObject();
-            ret.put("inv", Item.getItems(conn, wazzit.getAlt().getId() ) );
+            JSONArray items = Item.getItems(conn, wazzit.getAlt().getId() );
+            //Inventory
+            if( items.length() > 0 )
+            {
+                ret.put("inv", items);
+            }
+            //Messages (message pane)
             ret.put("msgs", Message.getInitialMessages(conn, wazzit.getAlt().getId() ) );
-            ret.put("occs", Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId() ) );
+            //Occupants
+            JSONArray occupants = Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId() );
+            if( occupants.length() > 0 )
+            {
+                ret.put("occs", occupants);
+            }
+            //Announcements (errors, info)
+            if( alerts != null )
+            {
+                ret.put("announce", alerts);
+            }
+            //stats
+            ret.put("stats", Alt.getStats(conn, wazzit.getAlt().getId() ) );
             out.write(String.valueOf(ret));
         }
         catch(Exception e)
@@ -80,6 +98,38 @@ public class Poll
         log.finer(System.currentTimeMillis()+"");
         log.exiting(KEY, "fullPoll");
     }
+
+    public static JSONObject createErrorAlert( String message )
+    {
+        try
+        {
+            JSONObject ret = new JSONObject();
+            ret.put("type", "error");
+            ret.put("message", message );
+            return ret;
+        }
+        catch (JSONException e)
+        {
+            return null;
+        }
+    }
+
+    public static JSONObject createInfoAlert( String message )
+    {
+        try
+        {
+            JSONObject ret = new JSONObject();
+            ret.put("type", "info");
+            ret.put("message", message );
+            return ret;
+        }
+        catch (JSONException e)
+        {
+            return null;
+        }
+    }
+
+
 
     /*
      *  Sample data

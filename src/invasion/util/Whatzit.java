@@ -24,100 +24,24 @@ public class Whatzit
     protected int lastTargetId = 0;
     protected int locid = -1;
     protected int locidtype = -1;
-
-    /**
-    * Get locid property.
-    *
-    *@return Locid property.
-    */
-    public int getLocid() {
-        return this.locid;
-    }
-
-    /**
-    * Set locid property.
-    *
-    *@param locid New locid property.
-    */
-    public void setLocid(int locid) {
-        this.locid = locid;
-    }
-
-    /**
-    * Get locidtype property.
-    *
-    *@return Locidtype property.
-    */
-    public int getLocidtype() {
-        return this.locidtype;
-    }
-
-    /**
-    * Set locidtype property.
-    *
-    *@param locidtype New locidtype property.
-    */
-    public void setLocidtype(int locidtype) {
-        this.locidtype = locidtype;
-    }
-
-    /**
-     * Get alt property.
-     *
-     *@return Alt property.
-     */
-    public Alt getAlt() {
-    	return this.alt;
-    }
-
-    /**
-     * Set alt property.
-     *
-     *@param alt New alt property.
-     */
-    public void setAlt(Alt alt) {
-    	this.alt = alt;
-    }
-
-    /**
-     * Get lastTargetId property.
-     *
-     *@return LastTargetId property.
-     */
-    public int getLastTargetId() {
-    	return this.lastTargetId;
-    }
-
-    /**
-     * Set lastTargetId property.
-     *
-     *@param lastTargetId New lastTargetId property.
-     */
-    public void setLastTargetId(int lastTargetId) {
-    	this.lastTargetId = lastTargetId;
-    }
-
-    /**
-     * Get gui property.
-     *
-     *@return Gui property.
-     */
-    public GuiConfig getGui() {
-    	return this.gui;
-    }
-
-    /**
-     * Set gui property.
-     *
-     *@param gui New gui property.
-     */
-    public void setGui(GuiConfig gui) {
-    	this.gui = gui;
-    }
+    protected String equippedWeaponName = null;
+    protected int equippedWeaponId = 0;
 
 
+    /* Getters and setters */
+    public Alt getAlt() { return this.alt; }
+    public GuiConfig getGui() { return this.gui; }
+    public int getLastTargetId() { return this.lastTargetId; }
+    public int getLocid() { return this.locid; }
+    public int getLocidtype() { return this.locidtype; }
+    public void setAlt(Alt alt) { this.alt = alt; }
+    public void setGui(GuiConfig gui) { this.gui = gui; }
+    public void setLastTargetId(int lastTargetId) { this.lastTargetId = lastTargetId; }
+    public void setLocid(int locid) { this.locid = locid; }
+    public void setLocidtype(int locidtype) { this.locidtype = locidtype; }
+    public int getEquippedWeaponId() { return this.equippedWeaponId; }
+    public void setEquippedWeaponId(int equippedWeaponId) { this.equippedWeaponId = equippedWeaponId; }
+    public String getEquippedWeaponName() { return this.equippedWeaponName; }
+    public void setEquippedWeaponName(String equippedWeaponName) { this.equippedWeaponName = equippedWeaponName; }
 
-
-
-
-}
+ }

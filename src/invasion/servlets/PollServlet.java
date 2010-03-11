@@ -50,7 +50,7 @@ public class PollServlet extends HttpServlet
             response.sendRedirect("/index.jsp");
             return;
         }
-        Poll.fullPoll( response.getWriter(), wazzit );
+        Poll.fullPoll( response.getWriter(), wazzit, null );
     }
 
 

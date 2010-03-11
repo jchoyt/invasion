@@ -178,27 +178,12 @@ public class Message  implements java.io.Serializable {
         return ret;
     }
 
-    public int getMessageid() {
-        return this.messageid;
-    }
-
-    public void setMessageid(int messageid) {
-        this.messageid = messageid;
-    }
-    public Date getMessagedate() {
-        return this.messagedate;
-    }
-
-    public void setMessagedate(Date messagedate) {
-        this.messagedate = messagedate;
-    }
-    public String getMessage() {
-        return this.message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public int getMessageid() { return this.messageid; }
+    public void setMessageid(int messageid) { this.messageid = messageid; }
+    public Date getMessagedate() { return this.messagedate; }
+    public void setMessagedate(Date messagedate) { this.messagedate = messagedate; }
+    public String getMessage() { return this.message; }
+    public void setMessage(String message) { this.message = message; }
 
 }
 

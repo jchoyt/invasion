@@ -15,6 +15,7 @@
     JSONObject inventory = null;
     try{
         String category = Item.getCategory(conn, id);
+        String itemName = Item.getName(conn, id);
         if( !category.equals("food") )
         {
             throw new NaughtyException("That does not seem to be food.");
@@ -31,7 +32,8 @@
 
         // inventory = Item.getItems(conn, wazzit.getAlt().getId());
         // out.write(String.valueOf(inventory));
-        Poll.fullPoll( conn, out, wazzit );
+        wazzit.getAlt().decrementAp(conn, 1);
+        new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You open the " +  itemName + " and  start eating.  It tastes horrible, but you must keep your strength up.");
     }
     catch(Exception e)
     {
@@ -40,6 +42,7 @@
     finally
     {
         DatabaseUtility.close(ps);
+        Poll.fullPoll( conn, out, wazzit, null );
         conn.close();
     }
 %>

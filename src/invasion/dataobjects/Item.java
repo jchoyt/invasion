@@ -7,9 +7,9 @@ import java.sql.*;
 import invasion.util.*;
 import org.json.*;
 
-    /**
-     *
-     */
+/**
+ *
+ */
 public class Item  implements java.io.Serializable {
 
     public final static String KEY = Item.class.getName();
@@ -22,7 +22,7 @@ public class Item  implements java.io.Serializable {
     private int ammoleft = (int)(Math.random() * 10);
     private int capacitymod = 0;
     private int condition = (int)(Math.random() * 5);
-    public static final String[] conditions = { "Destroyed", "Non-functional", "Battered", "Operational", "Average", "To spec" };
+    public static final String[] conditions = { "Destroyed", "Broken", "Battered", "Operational", "Average", "To spec" };
 
     private Item() {
     }
@@ -63,11 +63,12 @@ public class Item  implements java.io.Serializable {
      *          { "ammoleft": 2, "condition": "Destroyed", "name": "Vodka", "typeid": 37, "itemid": 259, "type": "booze" },
      *          { "ammoleft": 7, "condition": "Average", "name": "Vodka", "typeid": 37, "itemid": 268, "type": "booze" }
      *      ]
+     *  TODO - add wt, hidden, and equipped to this
      */
     public static JSONArray getItems( InvasionConnection conn, int locid )
     throws SQLException
     {
-        String query = "select i.typeid, itemid, ammoleft, condition, name, type from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, ammoleft";
+        String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, ammoleft";
         PreparedStatement ps = null;
         ResultSet rs = null;
         JSONArray root = new JSONArray();
@@ -85,6 +86,9 @@ public class Item  implements java.io.Serializable {
                 obj.put("ammoleft", rs.getInt("ammoleft"));
                 obj.put("condition", Item.conditions[rs.getInt("condition")]);
                 obj.put("type", rs.getString("type"));
+                obj.put("wt", rs.getString("weight"));
+                obj.put("hidden", rs.getBoolean("hidden"));
+                obj.put("equipped", rs.getBoolean("equipped"));
                 root.put(obj);
             }
             DatabaseUtility.close(rs);
@@ -142,57 +146,35 @@ public class Item  implements java.io.Serializable {
         return ret;
     }
 
-    public int getItemid() {
-        return this.itemid;
-    }
-
-    public void setItemid(int itemid) {
-        this.itemid = itemid;
-    }
-    public int getItemtype() {
-        return this.itemtype;
-    }
-
-    public void setItemtype(int itemtype) {
-        this.itemtype = itemtype;
-    }
-    public Integer getLocid() {
-        return this.locid;
-    }
-
-    public void setLocid(Integer locid) {
-        this.locid = locid;
-    }
-
-    public int getAmmoleft()
+    public static String getName( InvasionConnection conn, int itemid) throws SQLException
     {
-        return this.ammoleft;
+        String query = "SELECT name from item i join itemtype t on (i.typeid = t.typeid) where itemid=?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1,itemid);
+        ResultSet rs = ps.executeQuery();
+        String ret = null;
+        if(rs.next())
+        {
+            ret = rs.getString("name");
+        }
+        DatabaseUtility.close(rs);
+        DatabaseUtility.close(ps);
+        return ret;
     }
 
-    public int getCapacitymod()
-    {
-        return this.capacitymod;
-    }
-
-    public int getCondition()
-    {
-        return this.condition;
-    }
-
-    public void setAmmoleft(int x)
-    {
-        this.ammoleft = x;
-    }
-
-    public void setCapacitymod(int x)
-    {
-        this.capacitymod = x;
-    }
-
-    public void setCondition(int x)
-    {
-        this.condition = x;
-    }
+    /* setters and getters */
+    public Integer getLocid() { return this.locid; }
+    public int getAmmoleft() { return this.ammoleft; }
+    public int getCapacitymod() { return this.capacitymod; }
+    public int getCondition() { return this.condition; }
+    public int getItemid() { return this.itemid; }
+    public int getItemtype() { return this.itemtype; }
+    public void setAmmoleft(int x) { this.ammoleft = x; }
+    public void setCapacitymod(int x) { this.capacitymod = x; }
+    public void setCondition(int x) { this.condition = x; }
+    public void setItemid(int itemid) { this.itemid = itemid; }
+    public void setItemtype(int itemtype) { this.itemtype = itemtype; }
+    public void setLocid(Integer locid) { this.locid = locid; }
 }
 
 

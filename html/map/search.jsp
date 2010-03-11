@@ -14,7 +14,6 @@
         return;
     }
     //do DB inserts
-    String query = "insert into messages (altid, message) values (?,?)";
     InvasionConnection conn = new InvasionConnection();
     conn.setAutoCommit(false);
     PreparedStatement ps = null;
@@ -32,6 +31,7 @@
                 new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You search and find a " + ItemType.getItemType(itemFound).getName() + ".");
             }
         }
+        wazzit.getAlt().decrementAp(conn, reps);
         conn.commit();
     }
     catch(Exception e)
@@ -43,7 +43,7 @@
     finally
     {
         DatabaseUtility.close(ps);
-        Poll.fullPoll( conn, out, wazzit );
+        Poll.fullPoll( conn, out, wazzit, null );
         conn.close();
     }
 

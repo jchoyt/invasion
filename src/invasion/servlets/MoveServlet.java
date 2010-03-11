@@ -18,8 +18,6 @@ public class MoveServlet extends HttpServlet
     int[] xdelta = { -1, 0, 1, -1, 0, 1, -1, 0, 1};
     int[] ydelta = { -1, -1, -1, 0, 0, 0, 1, 1, 1};
 
-
-
     /**
      *  Description of the Method
      *
@@ -109,6 +107,7 @@ public class MoveServlet extends HttpServlet
                 setNewLoc(conn, locid, altid );
                 wazzit.setLocid(locid);
                 wazzit.setLocidtype(rs.getInt("typeid"));
+                wazzit.getAlt().decrementAp(conn, 1);
             }
             else
             {

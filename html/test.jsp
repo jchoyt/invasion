@@ -8,6 +8,6 @@
     }
 
     InvasionConnection conn = new InvasionConnection();
-    Poll.fullPoll(conn, out, wazzit);
+    Poll.fullPoll(conn, out, wazzit, null);
     conn.close();
 %>

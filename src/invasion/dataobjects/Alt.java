@@ -1,5 +1,6 @@
 package invasion.dataobjects;
 
+import org.json.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -175,76 +176,25 @@ public class Alt  implements java.io.Serializable {
     //}}}
 
     //{{{ Getters and Setters
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    public int getLocation() {
-        return this.location;
-    }
-
-    public void setLocation(int location) {
-        this.location = location;
-    }
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    public int getAp() {
-        return this.ap;
-    }
-
-    public void setAp(int ap) {
-        this.ap = ap;
-    }
-    public int getApmax() {
-        return this.apmax;
-    }
-
-    public void setApmax(int apmax) {
-        this.apmax = apmax;
-    }
-    public int getCp() {
-        return this.cp;
-    }
-
-    public void setCp(int cp) {
-        this.cp = cp;
-    }
-    public int getHp() {
-        return this.hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-    public int getHpmax() {
-        return this.hpmax;
-    }
-
-    public void setHpmax(int hpmax) {
-        this.hpmax = hpmax;
-    }
-
-    public void setEquippedWeapon(int item)
-    {
-        equippedWeapon = item;
-    }
-
-    public int getLocationType() {
-        return this.locationType;
-    }
-
-    public void setLocationType(int locationType) {
-        this.locationType = locationType;
-    }
-
+    public int getId() { return this.id; }
+    public void setId(int id) { this.id = id; }
+    public int getLocation() { return this.location; }
+    public void setLocation(int location) { this.location = location; }
+    public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
+    public int getAp() { return this.ap; }
+    public void setAp(int ap) { this.ap = ap; }
+    public int getApmax() { return this.apmax; }
+    public void setApmax(int apmax) { this.apmax = apmax; }
+    public int getCp() { return this.cp; }
+    public void setCp(int cp) { this.cp = cp; }
+    public int getHp() { return this.hp; }
+    public void setHp(int hp) { this.hp = hp; }
+    public int getHpmax() { return this.hpmax; }
+    public void setHpmax(int hpmax) { this.hpmax = hpmax; }
+    public void setEquippedWeapon(int item) { equippedWeapon = item; }
+    public int getLocationType() { return this.locationType; }
+    public void setLocationType(int locationType) { this.locationType = locationType; }
 
     //}}}
 
@@ -253,6 +203,32 @@ public class Alt  implements java.io.Serializable {
         equippedWeapon = -1;
     }
 
+
+    /**
+     *  decrements the AP by count
+     */
+    public void decrementAp( InvasionConnection conn, int count )
+    {
+        try
+        {
+            int updateCount = conn.executeUpdate( "update alt set ap=ap-" + count + " where id = " + id );
+            // log.finer("update alt set ap=ap-" + count + " where id = " + id);
+            if( updateCount < 1 )
+            {
+                throw new RuntimeException("No AP was decremented");
+            }
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "Error decrementing AP for character " + id, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /**
+     *  um....kills off the character
+     */
     public void die()
     {
         String query = "update alt set hp=0, ip=0, location=-1, ap=ap-level, where name=";
@@ -283,6 +259,27 @@ public class Alt  implements java.io.Serializable {
             DatabaseUtility.close(ps);
             conn.close();
         }
+    }
+
+
+    /**
+    *  stats: { "ip": 0, "hp":50, "xp": 9001, "ap": 50, "ticksalive": 190, "status": "drunk, dead, encumbered, no body, insane"},
+     */
+    public static JSONObject getStats( InvasionConnection conn, int altid )
+    throws SQLException, JSONException
+    {
+        String query = "select hp, ip, ap, xp, ticksalive from alt where id=?";
+        ResultSet rs = conn.psExecuteQuery( query, "Error retrieving character stats", altid );
+        JSONObject obj = new JSONObject();
+        if(rs.next())
+        {
+            obj.put("hp", rs.getInt("hp"));
+            obj.put("ap", rs.getInt("ap"));
+            obj.put("ip", rs.getInt("ip"));
+            obj.put("xp", rs.getInt("xp"));
+            obj.put("ticksalive", rs.getInt("ticksalive"));
+        }
+        return obj;
     }
 }
 // :wrap=none:noTabs=true:collapseFolds=1:maxLineLen=160:mode=java:tabSize=4:indentSize=4:noWordSep=_:folding=explicit:
