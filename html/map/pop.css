@@ -1,0 +1,33 @@
+.pop {
+  position: absolute;
+  display: inline; }
+
+.pop .pop_menu {
+    display: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px; }
+
+.pop .pop_toggle {
+    background-image: url(/i/sort_desc.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    cursor: pointer; }
+
+.active .pop_menu {
+  display: block;
+  background-color: white;
+  position: absolute;
+  right:0px;
+  padding: .6em;
+  width: 12em;
+  border: 1px solid black;}
+
+.active .pop_toggle {
+  z-index: 2000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url(/i/sort_asc.png); }

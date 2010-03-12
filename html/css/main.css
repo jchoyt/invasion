@@ -17,10 +17,11 @@ a img { border:0px; } /*}}}*/
 /*{{{  main game page LNF */
 .stat_name { font-size:8pt; vertical-align: top; text-align:left;}
 
-.header { padding 10px; text-align: center; }
+.header { padding: 10px; }
 .hp {padding: 0 10px; font-family: "MS Serif", "New York", serif; color:red;}
-.ip {padding: 0 10px; font-family: "MS Serif", "New York", serif; color:orange;}
+.ip {padding: 0 10px; font-family: "MS Serif", "New York", serif; color:#cc9933;}
 .ap {padding: 0 10px; font-family: "MS Serif", "New York", serif; color:blue;}
+.xp {padding: 0 10px; font-family: "MS Serif", "New York", serif; color:black;}
 
 .link_button {padding: 10px;text-decoration: none;}.stat { width:75px; background-image: url('../i/stat_bg.jpg'); }
 

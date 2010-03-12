@@ -22,6 +22,11 @@
     String errorMsg = WebUtils.getOptionalParameter(request, "error");
     String infoMsg = WebUtils.getOptionalParameter(request, "info");
     // log.entering(KEY, "html section.  Alt id is " + alt.getId());
+
+    //set up db connection
+    InvasionConnection conn = null;
+    try{
+        conn = new InvasionConnection();
     %>
 <html style="overflow: hidden; height: 100%;" >
 <head>
@@ -36,13 +41,15 @@
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="datatables.css" rel="stylesheet" />
     <link type="text/css" href="demo_table_jui.css" rel="stylesheet" />
+    <link type="text/css" href="pop.css" rel="stylesheet" />
     <script type="text/javascript" src="${js}/jquery-1.3.2.min.js"></script>
     <script type="text/javascript" src="${js}/vel2jstools.js"></script>
     <script type="text/javascript" src="${js}/vel2js.js"></script>
     <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
     <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <script type="text/javascript" src="${js}/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="${js}/map.js"></script>
+    <script type="text/javascript" src="${js}/map.js"></script>
+    <script type="text/javascript" src="jquery.pop.js"></script>
     <script type="text/javascript" src="${js}/jquery.layout.min-1.2.0.js"></script> <%--}}}--%>
 
     <%--  {{{ css --%>
@@ -53,59 +60,17 @@
 
 	<%--{{{  javascript --%>
 	<script type="text/javascript">
-
         function poll()
         {
             $.getJSON("json.js", function(json){
                 $(document).trigger('POLL_COMPLETE', json)
             });
         }
-
 	</script>
 <%--}}}--%>
 
 </head>
 	<body>
-
-	<%--{{{  north pane--%>
-    <div class="ui-layout-north">
-        <% //get char stats
-        InvasionConnection conn = null;
-        ResultSet rs = null;
-        try{
-            String query = "select * from alt where id=" + alt.getId();
-            log.finer(query);
-            conn = new InvasionConnection();
-            rs = conn.executeQuery(query);
-            if( rs.next() )
-            {
-
-        %>
-        <center>
-        <table border="0" width="100%" cellspacing="0">
-            <tbody>
-                <tr>
-                    <td style="width:250px"><img alt="Invasion banner" src="${images}/banner_sm.png"/></td>
-                    <td style="text-align:left;"><strong><a href="/viewCharacter.jsp?id=<%=rs.getString("id")%>"><%=rs.getString("name")%></a></strong><br/>
-                        <strong>XP:</strong> <%=rs.getString("xp")%><br/>
-                        <%-- <strong>Faction:</strong>  HA! Not even implemented! --%>
-                    </td>
-                    <td style="text-align:right;padding-right:15px;"><a href="/disconnect.jsp" class="link_button ui-state-default ui-corner-all">Disconnect</a></td>
-                </tr>
-            </tbody>
-        </table>
-        </center>
-
-        <%
-            }
-            else
-            {
-                log.warning("Alt " + alt.getId() + " not found.");
-                response.sendRedirect("/index.jsp");
-            }
-        %>
-
-    </div> <%--}}}--%>
 
     <%--{{{  center pane--%>
     <div class="ui-layout-center">
@@ -117,7 +82,25 @@
         {
             out.write( "<h3 class=\"info\">" + infoMsg + "</h3>");
         }%>
-        <div id="announcements">&nbsp;</div>
+        <div id="announcements"></div>
+        <div class="header">
+            <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <a href="/viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a><span id="stats-area">
+            <%
+                JSONObject obj2 = Alt.getStats(conn, alt.getId());
+                JSONObject stats = new JSONObject();
+                stats.put("stats", obj2);
+                VelocityUtil.applyTemplate(stats, "stats.vm", out);
+            %></span></span><span style="float:right;margin-right:10px">Menu<div class="pop">
+                    <p><a href="/disconnect.jsp">Disconnect</a></p>
+                    <p><hr/></p>
+                    <p><a href="#" target="_blank">Uber Map</a></p>
+                    <p><a href="http://wiki.chaoschaoschaos.com/wiki/Invasion" target="_blank">Wiki</a></p>
+                    <p><a href="#" target="_blank">Forums</a></p>
+                 </div>
+             </span><br clear="all"/>
+
+
+        </div>
         <div id="center-sections" class="ui-layout-content">
             <h6 id="msgs-hdr"><a href="#">Messages and Basic Actions</a></h6>
             <div>
@@ -180,15 +163,6 @@
 
     <%--{{{  west pane --%>
     <div class="ui-layout-west">
-        <div class="header">
-            <a href="/viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a><span id="stats-area">
-            <%
-                JSONObject obj2 = Alt.getStats(conn, alt.getId());
-                obj = new JSONObject();
-                obj.put("stats", obj2);
-                VelocityUtil.applyTemplate(obj, "stats.vm", out);
-            %></span>
-        </div>
         <div id="west-sections" class="ui-layout-content">
             <h6 id="map"><a href="#">Map</a></h6>
             <div style="height:340px">
@@ -267,6 +241,16 @@
     <%--{{{  east pane --%>
     <div class="ui-layout-east">
         <div id="accordion" class="ui-layout-content">
+            <h3><a href="#">Character Info</a></h3>
+            <div>
+                <img alt="Invasion banner" src="${images}/banner_sm.png"/>
+                <br/>You are <a href="/viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a>
+                <br/>Faction: None
+                <br/><span id="stats-area2">
+                <%
+                    VelocityUtil.applyTemplate(stats, "stats2.vm", out);
+                %></span>
+            </div>
             <h3 id="inv-pane"><a href="#">Inventory</a></h3>
             <div>
                 <form id="inv-form">
@@ -282,15 +266,6 @@
                     </tbody>
                 </table>
                 </form>
-            </div>
-            <h3><a href="#">Other stuff</a></h3>
-            <div>
-                <p>
-                Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
-                purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
-                velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
-                suscipit faucibus urna.
-                </p>
             </div>
             <h3><a href="#">I haven't</a></h3>
             <div>
@@ -333,7 +308,6 @@
         }
         finally
         {
-            DatabaseUtility.close(rs);
             conn.close();
         }
     %>

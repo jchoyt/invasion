@@ -14,7 +14,7 @@ $(document).ready( function() {
         // ACCORDION - in the East pane - in a 'content-div'
     $("#accordion").accordion({
         //fillSpace: true,
-        active: 0,
+        active: 1,
         collapsible: true,
         autoHeight: false
     });
@@ -57,6 +57,10 @@ $(document).ready( function() {
     $(document).bind('POLL_COMPLETE', function(e, data){ updateInventory(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateAnnouncements(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
+    $(document).bind('POLL_COMPLETE', function(e, data){ updateStats2(data); });
+
+    //set popup menu
+    $.pop();
 
 }); //}}}
 
@@ -113,7 +117,16 @@ function updateStats(data)
     {
         $('#stats-area').html(v2js_stats(data));
     }
-}//}}}
+}
+
+function updateStats2(data)
+{
+    if(data.stats)
+    {
+        $('#stats-area2').html(v2js_stats2(data));
+    }
+}
+//}}}
 
 //{{{ Actions
 

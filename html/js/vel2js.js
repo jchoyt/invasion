@@ -213,3 +213,18 @@ t.p( context.stats.ap);
 t.p('</span>');
 return t.toString();
 }
+function v2js_stats2(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+t.p('<span class="hp">HP: ');
+t.p( context.stats.hp);
+t.p('</span><br/><span class="ip">IP: ');
+t.p( context.stats.ip);
+t.p('</span><br/><span class="ap">AP: ');
+t.p( context.stats.ap);
+t.p('</span><br/><span class="xp">XP: ');
+t.p( context.stats.xp);
+t.p('</span>');
+return t.toString();
+}

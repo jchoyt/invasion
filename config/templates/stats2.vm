@@ -1,0 +1,4 @@
+<span class="hp">HP: $stats.hp</span>
+<br/><span class="ip">IP: $stats.ip</span>
+<br/><span class="ap">AP: $stats.ap</span>
+<br/><span class="xp">XP: $stats.xp</span>
