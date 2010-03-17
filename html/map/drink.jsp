@@ -34,6 +34,8 @@
         // out.write(String.valueOf(inventory));
         wazzit.getAlt().decrementAp(conn, 1);
         new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You open the " +  itemName + " and start drinking.  All too soon, it's gone.");
+
+        //TODO death by alcohol poisoning
     }
     catch(Exception e)
     {

@@ -83,8 +83,8 @@
             out.write( "<h3 class=\"info\">" + infoMsg + "</h3>");
         }%>
         <div id="announcements"></div>
-        <div class="header">
-            <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <a href="/viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a><span id="stats-area">
+        <div class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
+            <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <%=alt.getName()%><span id="stats-area">
             <%
                 JSONObject obj2 = Alt.getStats(conn, alt.getId());
                 JSONObject stats = new JSONObject();
@@ -196,16 +196,7 @@
                         %>
                     </tbody>
                 </table>
-                <div id="att-box" style="position:relative;"></div>
-                <%-- <script type="text/javascript" charset="utf-8">
-                    $("#occ-table").dataTable( {
-                        "aaSorting": [[ 0, "asc" ]],
-                        //"aoColumns": [ null, null, null, null ],
-                        "bJQueryUI": true,
-                        "sDom":'<"H"lr>t<"F"p>',
-                        "sPaginationType": "two_button"
-                    } );
-                </script> --%>
+                <center><div id="att-box" style="color:red"></div></center>
             </div>
             <h6><a href="#">Critters</a></h6>
             <div>

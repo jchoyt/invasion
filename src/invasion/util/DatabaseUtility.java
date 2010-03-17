@@ -5,6 +5,7 @@
  */
 package invasion.util;
 
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
@@ -81,13 +82,45 @@ public class DatabaseUtility {
                         if (dbObj instanceof Connection) {
                             close((Connection) dbObj);
                         } else {
-                            throw new IllegalArgumentException( "Close attempted on unrecognized Database Object!");
+                            throw new IllegalArgumentException( "Close attempted on unrecognized Object!");
                         }
                     }
                 }
             }
         }
+    }
 
+    public static void genericTable(ResultSet rs, Writer out)
+    throws Exception
+    {
+        out.write("<table border=\"0\" cellpadding=\"0\"><thead><tr>");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int numberOfColumns = rsmd.getColumnCount();
+        for ( int p = 0; p < numberOfColumns; p++ )
+        {
+        	out.write("<th>" + rsmd.getColumnName( p+1 ) + "</th>" );
+        }
+        out.write( "</tr></thead><tbody>" );
+        /*
+         *  Iterate through the ResultSet and extract the rows
+         */
+        boolean even=false;
+        String formattedString;
+        while ( rs.next() )
+        {
+            if( even )
+            {
+                out.write( "<tr class=\"selected\">" );
+            }
+            else out.write( "<tr>" );
+            even = !even;
+            for ( int i = 0; i < numberOfColumns; i++ )
+            {
+                out.write( "<td>" + rs.getString( i + 1 ) + "</td>" );
+            }
+            out.write( "</tr>\n" );
+        }
+        out.write("</tbody></table>\n");
     }
 }
 

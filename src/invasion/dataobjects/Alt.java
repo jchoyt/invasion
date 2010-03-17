@@ -193,6 +193,7 @@ public class Alt  implements java.io.Serializable {
     public int getHpmax() { return this.hpmax; }
     public void setHpmax(int hpmax) { this.hpmax = hpmax; }
     public void setEquippedWeapon(int item) { equippedWeapon = item; }
+    public int getEquippedWeapon(){ return equippedWeapon; }
     public int getLocationType() { return this.locationType; }
     public void setLocationType(int locationType) { this.locationType = locationType; }
 
@@ -229,37 +230,81 @@ public class Alt  implements java.io.Serializable {
     /**
      *  um....kills off the character
      */
-    public void die()
+    public static void kill(InvasionConnection conn, int alt)
+        throws SQLException
     {
-        String query = "update alt set hp=0, ip=0, location=-1, ap=ap-level, where name=";
-        InvasionConnection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
+        String query = "select name, lasthurtby, race, level, location from alt where id = ?";  //add race to this
+        ResultSet rs = conn.psExecuteQuery( query, "Error retrieving responsible party", alt );
+        int whodunnit = 0;
+        String name = null;
+        int deadRace = 0;
+        int level = -1;
+        int deathLoc = -1;
+        if(rs.next())
         {
-            conn = new InvasionConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1,id);
-            rs = ps.executeQuery();
-            if(!rs.next())
+            name = rs.getString( 1 );
+            whodunnit = rs.getInt( 2 );
+            deadRace = rs.getInt( 3 );
+            level = rs.getInt( 4 );
+            deathLoc = rs.getInt( 5 );
+        }
+        else
+        {
+            //error
+            return;
+        }
+        DatabaseUtility.close(rs);
+        query = "update alt set hp=0, ip=0, ticksalive=0-level, location=?, ap=ap-level where id=?";
+        conn.psExecuteUpdate( query, "Error setting death", -57005, alt );
+
+        // update victim's stat
+        Stats.addChange( alt, Stats.DEATHS, 1);
+        String killerName = null;
+        if( whodunnit != 0 )
+        {
+            query = "update alt set xp=xp+? where id=?;select race, killerName from alt where id=?";
+            rs = conn.psExecuteQuery( query, "Error awarding killing XP and retrieving killer's race.", level, whodunnit, whodunnit );
+            int killerRace = 0;
+            if( rs.next() )
             {
-                throw new RuntimeException("Lucky stiff, you didn't die.  The server insists you live.  But it's a bug...please report it.");
+                killerRace = rs.getInt( 1 );
+                killerName = rs.getString( 2 );
             }
             DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
+
+            //give kill message to attacker (and ding IP if appropriate)
+            int ipHit = 0;
+            if( deadRace == killerRace && deadRace > 1)
+            {
+                ipHit = 10;
+            }
+            else if( deadRace == 1 )
+            {
+                ipHit = 2;
+            }
+            String message = "You have landed the killing blow on " + name + ".  You have been awarded and additional " + level + " XP.";
+            if( ipHit > 0 )
+            {
+                message = message + "  Your actions weigh on your consciousness, however (+" + ipHit + " IP).";
+                query = "update alt set ip=ip+? where id=?";
+                conn.psExecuteUpdate( query, "Error dinging IP", ipHit, alt );
+            }
+            Stats.addChange( whodunnit, Stats.KILLS, 1);
+            new Message(conn, whodunnit, Message.NORMAL, message );
+
+            //give victim death message
+            new Message( conn, alt, Message.NORMAL, killerName + " has dealt you a death blow.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
         }
-        catch(SQLException e)
+        else
         {
-            log.throwing( KEY, "Exception killing character " + name, e);
-            throw new RuntimeException(e);
+            //death message with no killer
+            new Message( conn, alt, Message.SELF, "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
         }
-        finally
-        {
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
-            conn.close();
-        }
-    }
+
+        ///TODO death message to others in the location
+        ///use deathLoc
+        // X has killed Y.  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.  (+1/2IP unless opposite)
+   }
 
 
     /**

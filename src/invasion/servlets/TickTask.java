@@ -76,13 +76,22 @@ public class TickTask extends TimerTask
         query = "update alt set ip = ip -1 where ip > 0 AND id!=4 ";
         conn.executeUpdate(query);
         //if you have 10 HP or less, you are destined for death.
-        query = "insert into messages (message, type, altid) select 'Your wounds are so grevious even breathing causes more damage', 4, id from alt where hp < 11 and hp > 0; update alt set hp = hp - 1 where hp < 11 and hp > 0 ";
+        query = "insert into messages (message, type, altid) select 'Your wounds are so grevious even breathing causes more damage', 4, id from alt where hp < 11 and hp > 0; " +
+            "update stats set count = count + 1 where statid = 4 and altid in (select id from alt where hp < 11 and hp > 0); " +  //update damage taken
+            "update alt set hp = hp - 1 where hp < 11 and hp > 0 ";
         conn.executeUpdate(query);
         //if just died, put body at a random cloning facility
-        query = "update alt set location = (select id from location l where typeid=31 and alt.station=l.station order by random() limit 1), ticksalive=-1*level where ticksalive=" + Integer.MIN_VALUE;
+        query = "insert into messages (message, type, altid) select 'Your new body has been started.  It will be ready in approximately ' || level || ' tick(s).', 1, id from alt where location=-57005";
+        conn.executeUpdate(query);
+        query = "update alt set location = (select id from location l where typeid=31 and alt.station=l.station order by random() limit 1), ticksalive=-1*level where location=-57005";
+        //increament ticksalive
         conn.executeUpdate(query);
         query = "update alt set ticksalive = ticksalive + 1 where ticksalive != 0 ";
         conn.executeUpdate(query);
+        //clear "lasthurtby" where hp=hpmax
+        query = "update alt set lasthurtby=null where hp=hpmax and lasthurtby is not null ";
+        conn.executeUpdate(query);
+
 }
 
     private void checkSanity()

@@ -16,26 +16,29 @@ attribute name="locid" required="true" %><%!
         ResultSet rs = null;
         try {
             conn = new InvasionConnection();
-            String query = "select x, y from location where id = ?";
+            String query = "select x, y, station from location where id = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, Integer.parseInt(locid));
             rs = ps.executeQuery();
             int x = 0;
             int y = 0;
+            int station = -1;
             if(rs.next())
             {
                 x = rs.getInt(1);
                 y = rs.getInt(2);
+                station = rs.getInt(3);
             }
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
             int spread = (MAP_SIDE)/2;
-            query = "select  id, station, level, x, y, l.name as locname, lt.name as typename, description, cssname from Location l join locationtype lt on (l.typeid = lt.typeid) where x between ? and ? and y between ? and ? order by y,x";
+            query = "select  id, station, level, x, y, l.name as locname, lt.name as typename, description, cssname from Location l join locationtype lt on (l.typeid = lt.typeid) where x between ? and ? and y between ? and ? and station = ? order by y,x";
             ps = conn.prepareStatement(query);
             ps.setInt(1, x - spread );
             ps.setInt(2, x + spread);
             ps.setInt(3, y - spread);
             ps.setInt(4, y + spread);
+            ps.setInt(5, station);
             return ps.executeQuery();
         } catch (SQLException e) {
             DatabaseUtility.close(rs);

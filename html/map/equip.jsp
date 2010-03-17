@@ -13,6 +13,7 @@
     InvasionConnection conn = new InvasionConnection();
     PreparedStatement ps = conn.prepareStatement(query);
     ResultSet rs = null;
+    boolean newWeaponNeedsAmmo = false;
     JSONObject inventory = null;
     try{
         ps.setInt(1, id);
@@ -22,6 +23,7 @@
         if( rs.next() )
         {
             weaponName = rs.getString("name");
+            newWeaponNeedsAmmo = rs.getBoolean("usesammo");
         }
         else
             response.sendRedirect( "/map/index.jsp?error=That item is not a weapon or you do not own it.");
@@ -39,6 +41,7 @@
         DatabaseUtility.close(ps);
         //now decrement AP
         wazzit.getAlt().decrementAp(conn, 1);
+        wazzit.setAmmoModNeeded( newWeaponNeedsAmmo );
         new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You switch your equipped weapon. You will now use your " + weaponName + ".");
         response.sendRedirect( "/map/index.jsp" );
     }

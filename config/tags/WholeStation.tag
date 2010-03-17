@@ -1,13 +1,14 @@
 <%@ tag import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*" %>
 <div id="mapbox" style="position:relative;float:left;margin:2em;" onmouseout="shloc('${locid}')">
 <%
+    String stationid = WebUtils.getRequiredParameter( request, "id" );
     InvasionConnection conn = new InvasionConnection();
     int BOX_SIZE = 15;
-    String query = "select  id, station, level, x, y, l.name as locname, lt.name as typename, description, cssname from Location l join locationtype lt on (l.typeid = lt.typeid) where x between 0 and 50 and y between 0 and 50 order by y,x";
+    String query = "select  id, station, level, x, y, l.name as locname, lt.name as typename, description, cssname from Location l join locationtype lt on (l.typeid = lt.typeid) where station = ? and  x between 0 and 50 and y between 0 and 50 order by y,x";
     int x = 0;
     int y = 0;
     String cloc;
-    ResultSet rs = conn.executeQuery(query);
+    ResultSet rs = conn.psExecuteQuery(query, "", Integer.decode(stationid));
     if( rs ==null )
     {
         out.write("Error retrieving map data;");

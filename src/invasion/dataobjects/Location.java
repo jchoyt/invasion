@@ -40,7 +40,7 @@ public class Location  implements java.io.Serializable {
 
     public static JSONArray getOccupants(InvasionConnection conn, int locid, int you)
     {
-        String query = "select * from alt where location = ? and id != ? ";
+        String query = "select * from alt where location = ? and id != ? and ticksalive > 0";
         // InvasionConnection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;

@@ -66,6 +66,6 @@ String message = WebUtils.getOptionalParameter(request, "message", null);
     <br/>
     Welcome to INVASION <br/>
 </div>
-
+<a href="http://english-186714478924.spampoison.com" style="display:none"><img src="http://pics5.inxhost.com/images/sticker.gif" border="0" width="80" height="15"/></a>
 </body>
 </html>

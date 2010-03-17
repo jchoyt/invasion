@@ -26,6 +26,7 @@ public class Whatzit
     protected int locidtype = -1;
     protected String equippedWeaponName = null;
     protected int equippedWeaponId = 0;
+    protected boolean ammoModNeeded = false;
 
 
     /* Getters and setters */
@@ -43,5 +44,6 @@ public class Whatzit
     public void setEquippedWeaponId(int equippedWeaponId) { this.equippedWeaponId = equippedWeaponId; }
     public String getEquippedWeaponName() { return this.equippedWeaponName; }
     public void setEquippedWeaponName(String equippedWeaponName) { this.equippedWeaponName = equippedWeaponName; }
-
+    public void setAmmoModNeeded(boolean needed) { this.ammoModNeeded = needed; }
+    public boolean getAmmoModNeeded() { return ammoModNeeded; }
  }

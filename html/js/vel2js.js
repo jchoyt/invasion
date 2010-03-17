@@ -217,7 +217,10 @@ function v2js_stats2(context) {
 var t = new StringCat();
 var velocityCount = 0;
 if (context.velocityCount) velocityCount=context.velocityCount;
-t.p('<span class="hp">HP: ');
+var da = ( context.stats.ticksalive / 96 );
+t.p('Days alive: ');
+t.p( da);
+t.p('<br/><span class="hp">HP: ');
 t.p( context.stats.hp);
 t.p('</span><br/><span class="ip">IP: ');
 t.p( context.stats.ip);
