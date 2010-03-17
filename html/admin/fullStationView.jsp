@@ -1,6 +1,5 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %><%@
     page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
-    String locid = WebUtils.getOptionalParameter(request, "locid", "1021631");
 %><html>
     <head>
 		<link type="text/css" href="../css/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
@@ -17,15 +16,12 @@
 			};
 
 			</script>
-		<style type="text/css">
-			/*demo page css*/
-			body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px; background: #201913}
-			.white-background { background:#fff; color:#000; }
-		</style>
     </head>
     <body>
-        <div style="border:1px solid white;margin:2em;color:white;" id="descbox">
+        <jsp:include page="navigation.jsp"/>
+        <div style="float:left;width:400px;border:1px solid black" id="descbox">
         </div>
+        <br clear="all" />
         <tags:WholeStation />
     </body>
 <html>

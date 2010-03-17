@@ -28,4 +28,4 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
         conn.close();
     }
 
-%><jsp:forward page="index.jsp" />
+%><jsp:forward page="stationEdit.jsp" />

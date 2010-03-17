@@ -2,7 +2,7 @@
 <%@ page import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*,javax.sql.*" %>
 
 <%
-    String locid = WebUtils.getOptionalParameter(request, "locid", "1021631");
+    String locid = WebUtils.getRequiredParameter(request, "locid");
     InvasionConnection conn = new InvasionConnection();
     String query = "select name, description from Location where id = ?";
     PreparedStatement ps = conn.prepareStatement(query);
@@ -20,7 +20,7 @@
     request.setAttribute("conn", conn);
 %>
 
-<a href="index.jsp?locid=<%=locid%>">Recenter map here</a><br/>
+<a href="stationEdit.jsp?locid=<%=locid%>">Recenter map here</a><br/>
 -OR-<br/>
 Edit this tile:
 <form action="editLocationProcess.jsp" method="post">
