@@ -2,20 +2,19 @@
     public final static String KEY = "/map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
     static{log.setLevel(Level.FINER);}%><%@
-
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
-
+    log.finer("entering /map/index.jsp");
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     if( wazzit == null )
     {  //nobody is logged in
-        log.finer("Player is not logged in");
+        log.warning("Player is not logged in");
         response.sendRedirect("/index.jsp");
         return;
     }
     Alt alt = wazzit.getAlt();
     if( alt == null )
     {  //nobody is logged in
-        log.finer("didn't find the alt in wazzit");
+        log.warning("didn't find the alt in wazzit");
         response.sendRedirect("/index.jsp");
         return;
     }
@@ -60,12 +59,6 @@
 
 	<%--{{{  javascript --%>
 	<script type="text/javascript">
-        function poll()
-        {
-            $.getJSON("json.js", function(json){
-                $(document).trigger('POLL_COMPLETE', json)
-            });
-        }
 	</script>
 <%--}}}--%>
 
@@ -134,7 +127,7 @@
             <h6><a href="#">Actions</a></h6>
             <div>
                 <p>
-                <form method="post" action="attack.jsp" onsubmit="attack(this); return false">
+                <form method="post" action="#" onsubmit="attack(this); return false">
                     <select name="target" id="attacklist">
                         <%
                             a = Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId());
@@ -177,7 +170,6 @@
             </script>
 
             <h6 id="occupants"><a href="#">Occupants</a></h6>
-            <div id="occ-pane">
                 <table style="width:290px" cellpadding="0" cellspacing="0" border="0" id="occ-table">
                     <thead>
                         <tr>
@@ -187,7 +179,7 @@
                             <th>Act</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="occ-pane">
                         <%
                             a = Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId());
                             obj = new JSONObject();
@@ -197,7 +189,6 @@
                     </tbody>
                 </table>
                 <center><div id="att-box" style="color:red"></div></center>
-            </div>
             <h6><a href="#">Critters</a></h6>
             <div>
                 <p>

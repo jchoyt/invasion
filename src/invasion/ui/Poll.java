@@ -62,7 +62,8 @@ public class Poll
     public static void fullPoll(InvasionConnection conn, Writer out, Whatzit wazzit, JSONArray alerts)
     {
         log.entering(KEY, "fullPoll");
-        log.finer(System.currentTimeMillis()+"");
+        long start = System.currentTimeMillis();
+        log.finer(start+"");
         try
         {
             JSONObject ret = new JSONObject();
@@ -72,6 +73,7 @@ public class Poll
             {
                 ret.put("inv", items);
             }
+            log.finer( "Items complete: " + (System.currentTimeMillis()-start) );
             //Messages (message pane)
             ret.put("msgs", Message.getInitialMessages(conn, wazzit.getAlt().getId() ) );
             //Occupants
@@ -80,6 +82,7 @@ public class Poll
             {
                 ret.put("occs", occupants);
             }
+            log.finer( "Occupants complete: " + (System.currentTimeMillis()-start) );
             //Announcements (errors, info)
             if( alerts != null )
             {
@@ -87,6 +90,7 @@ public class Poll
             }
             //stats
             ret.put("stats", Alt.getStats(conn, wazzit.getAlt().getId() ) );
+            log.finer( "Stats complete: " + (System.currentTimeMillis()-start) );
             out.write(String.valueOf(ret));
         }
         catch(Exception e)
@@ -95,8 +99,7 @@ public class Poll
             try {out.write(ERROR);} catch (Exception ee){};
             return;
         }
-        log.finer(System.currentTimeMillis()+"");
-        log.exiting(KEY, "fullPoll");
+        log.finer("Exiting: " + (System.currentTimeMillis()-start));
     }
 
     public static JSONObject createErrorAlert( String message )

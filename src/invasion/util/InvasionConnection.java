@@ -142,6 +142,8 @@ public class InvasionConnection
      */
     public ResultSet psExecuteQuery(String query, String errorMsg, Object... params)
     {
+        log.entering(KEY, "psExecuteQuery", query);
+        log.entering(KEY, "psExecuteQuery", params);
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
@@ -206,6 +208,9 @@ public class InvasionConnection
      */
     public int psExecuteUpdate(String query, String errorMsg, Object... params)
     {
+        log.entering(KEY, "psExecuteUpdate", query);
+        log.entering(KEY, "psExecuteUpdate", params);
+
         PreparedStatement ps = null;
         try
         {

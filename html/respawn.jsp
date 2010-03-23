@@ -7,7 +7,6 @@
 %><%
     String charId = WebUtils.getRequiredParameter(request, "id");
     int altid = Integer.parseInt(charId);
-    Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = null;
 
     String query = "update alt set hp=hpmax, ip=0, lasthurtby=null, ticksalive=1 where id=? and ticksalive=0;";
@@ -21,15 +20,10 @@
             response.sendRedirect("/naughty.jsp");
             return;
         }
-        alt = new Alt(request.getRemoteUser(), altid);
+        alt = new Alt(request.getRemoteUser(), altid, true);
+        Whatzit wazzit = new Whatzit();
         wazzit.setAlt( alt );
-        wazzit.setLocid( alt.getLocation() );
-        wazzit.setLocidtype( alt.getLocationType() );
-        //set whether the equipped weapon uses ammunition or not
-        query = "select item i join itemtype t on (i.typeid = t.typeid) where i=?";
-        ResultSet rs = conn.psExecuteUpdate( query, "Error connecting to " + charId, alt.getEquippedWeapon() );
-        rs.next();
-        wazzit.setAmmoModNeeded( rs.getBoolean( "usesammo" ) );
+        session.setAttribute( Whatzit.KEY,  wazzit );
 
         new Message( conn, altid, Message.SELF, "You step out of the cloning chamber and look around with your new old eyes.  You see rows of identical chambers around the room.  Moving around experimentally, you determine everything appears to be as it should be.");
         response.sendRedirect( "/map/index.jsp" );
@@ -45,3 +39,5 @@
     }
 
 %>
+
+

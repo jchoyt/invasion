@@ -59,12 +59,22 @@ $(document).ready( function() {
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats2(data); });
 
+    // setInterval( "poll()", 10000);
+
     //set popup menu
     $.pop();
 
 }); //}}}
 
 //{{{ GUI updates
+function poll()
+{
+    $.getJSON("/poll", function(json){
+        $(document).trigger('POLL_COMPLETE', json)
+    });
+}
+
+
 function updateMessagePane(data)
 {
     if(data.msgs)
@@ -76,12 +86,20 @@ function updateMessagePane(data)
 
 function updateOccupantPane(data)
 {
-    if(data.occ)
+    /* if(data.occs)
     {
         $('#occ-pane').html("");
-        $.each(data.occ, function(i, item){
+        $.each(data.occs, function(i, item){
             $('#occ-pane').append( item.name );
         });
+    } */
+    if(data.occs)
+    {
+        $('#occ-pane').html( v2js_occupants(data) );
+    }
+    else
+    {
+        $('#occ-pane').html("");
     }
 }
 
@@ -166,5 +184,14 @@ function dosearch( reps )
         $(document).trigger('POLL_COMPLETE', json)
     });
 }
+
+function attack( targetid )
+{
+    var url = "attack.jsp?target=" + targetid;
+    $.getJSON(url, function(json){
+        $(document).trigger('POLL_COMPLETE', json)
+    });
+}
+
 //}}}
 

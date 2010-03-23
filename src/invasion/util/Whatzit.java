@@ -1,5 +1,6 @@
 package invasion.util;
 
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import invasion.dataobjects.*;
@@ -20,30 +21,61 @@ public class Whatzit
     static{log.setLevel(Level.FINER);}
 
     protected Alt alt = null;
+    protected Alt lastTarget = null;
     protected GuiConfig gui = null;
     protected int lastTargetId = 0;
     protected int locid = -1;
     protected int locidtype = -1;
-    protected String equippedWeaponName = null;
     protected int equippedWeaponId = 0;
+    protected int equippedWeaponTypeId = 0;
     protected boolean ammoModNeeded = false;
+    protected int ammo = 0;
+
+
+    public void reload()
+        throws SQLException
+    {
+        this.alt = new Alt( null,alt.getId(), false);
+        setAlt( alt );
+    }
 
 
     /* Getters and setters */
+    public void setAlt(Alt alt)
+        throws SQLException
+    {
+        this.alt = alt;
+        locid = alt.getLocation();
+        locidtype = alt.getLocationType();
+        //set whether the equipped weapon uses ammunition or not
+        InvasionConnection conn = new InvasionConnection();
+        String query = "select * from item i join itemtype t on (i.typeid = t.typeid) where itemid=?";
+        ResultSet rs = conn.psExecuteQuery( query, "Error connecting to " + alt.getId(), alt.getEquippedWeapon() );
+        if(rs.next())
+        {
+            ammoModNeeded = rs.getBoolean( "usesammo" );
+            ammo = rs.getInt("ammoleft");
+            equippedWeaponTypeId = rs.getInt("typeid");
+        }
+        DatabaseUtility.close(rs);
+        conn.close();
+    }
+
     public Alt getAlt() { return this.alt; }
     public GuiConfig getGui() { return this.gui; }
     public int getLastTargetId() { return this.lastTargetId; }
     public int getLocid() { return this.locid; }
     public int getLocidtype() { return this.locidtype; }
-    public void setAlt(Alt alt) { this.alt = alt; }
     public void setGui(GuiConfig gui) { this.gui = gui; }
     public void setLastTargetId(int lastTargetId) { this.lastTargetId = lastTargetId; }
     public void setLocid(int locid) { this.locid = locid; }
     public void setLocidtype(int locidtype) { this.locidtype = locidtype; }
     public int getEquippedWeaponId() { return this.equippedWeaponId; }
-    public void setEquippedWeaponId(int equippedWeaponId) { this.equippedWeaponId = equippedWeaponId; }
-    public String getEquippedWeaponName() { return this.equippedWeaponName; }
-    public void setEquippedWeaponName(String equippedWeaponName) { this.equippedWeaponName = equippedWeaponName; }
+    public int getEquippedWeaponTypeId() { return this.equippedWeaponTypeId; }
+    public void setEquippedWeaponTypeId(int id) { this.equippedWeaponTypeId = id; }
     public void setAmmoModNeeded(boolean needed) { this.ammoModNeeded = needed; }
     public boolean getAmmoModNeeded() { return ammoModNeeded; }
+    public int getAmmo() { return this.ammo; }
+    public void setAmmo(int ammo) { this.ammo = ammo; }
+    public void decrementAmmo() { ammo--; }
  }

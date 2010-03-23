@@ -38,6 +38,9 @@
         ps.setInt(4, id);
         ps.execute();
         wazzit.getAlt().setEquippedWeapon( id );
+        //TODO update wazzit - weapon name, ammo, etc
+        wazzit.reload();
+
         DatabaseUtility.close(ps);
         //now decrement AP
         wazzit.getAlt().decrementAp(conn, 1);

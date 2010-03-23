@@ -41,6 +41,7 @@ public class PollServlet extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
+        response.setHeader( "Content-Type", "application/json; charset=\"ISO-8859-1\"" );
         // String direction = WebUtils.getRequiredParameter(request, "dir");
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
         if( wazzit==null)

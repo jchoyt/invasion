@@ -129,31 +129,30 @@ public class Alt  implements java.io.Serializable {
     /**
      *  Retrieve an existing character from the database but only load the information necessary for Whatzit.
      */
-    public Alt(String username, int id) {
+    public Alt(String username, int id, boolean doUserCheck) {
         log.entering(KEY, "Retrieve from db", username + "|" + id);
-        String query = "select * from alt a join location l on (a.location = l.id) where a.id=? and a.username=?";
         InvasionConnection conn = null;
-        PreparedStatement ps = null;
         ResultSet rs = null;
         try
         {
             conn = new InvasionConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1,id);
-            ps.setString(2, username);
-            rs = ps.executeQuery();
-            while(rs.next())
+            String query = "select * from alt a join location l on (a.location = l.id) where a.id=?";
+            if( doUserCheck )
             {
-                this.name = rs.getString("name");
-                this.id = rs.getInt("id");
-                this.equippedWeapon=rs.getInt("equippedweapon");
-                this.autoReload = rs.getBoolean("autoreload");
-                this.location = rs.getInt("location");
-                this.locationType = rs.getInt("typeid");
+                query = query + " and a.username=?";
+                rs = conn.psExecuteQuery( query, "Error retrieving alt " + id, id, username );
             }
+            else
+                rs = conn.psExecuteQuery( query, "Error retrieving alt " + id, id );
+            rs.next();
+            this.name = rs.getString("name");
+            this.id = rs.getInt("id");
+            this.equippedWeapon=rs.getInt("equippedweapon");
+            this.autoReload = rs.getBoolean("autoreload");
+            this.location = rs.getInt("location");
+            this.locationType = rs.getInt("typeid");
             log.finer("in Alt, id is " + id);
             DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
             if( id == -1 )
             {
                 log.severe("Did not find an alt number " + id + " for user " + username);
@@ -168,10 +167,8 @@ public class Alt  implements java.io.Serializable {
         finally
         {
             DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
             conn.close();
         }
-
     }
     //}}}
 
@@ -260,10 +257,13 @@ public class Alt  implements java.io.Serializable {
         // update victim's stat
         Stats.addChange( alt, Stats.DEATHS, 1);
         String killerName = null;
+        log.finer( "Killer ID is " + whodunnit);
         if( whodunnit != 0 )
         {
-            query = "update alt set xp=xp+? where id=?;select race, killerName from alt where id=?";
-            rs = conn.psExecuteQuery( query, "Error awarding killing XP and retrieving killer's race.", level, whodunnit, whodunnit );
+            query = "update alt set xp=xp+? where id=?";
+            conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", level, whodunnit );
+            query = "select race, name from alt where id=?";
+            rs = conn.psExecuteQuery( query, "Error awarding killing XP and retrieving killer's race.", whodunnit );
             int killerRace = 0;
             if( rs.next() )
             {
@@ -287,7 +287,7 @@ public class Alt  implements java.io.Serializable {
             {
                 message = message + "  Your actions weigh on your consciousness, however (+" + ipHit + " IP).";
                 query = "update alt set ip=ip+? where id=?";
-                conn.psExecuteUpdate( query, "Error dinging IP", ipHit, alt );
+                conn.psExecuteUpdate( query, "Error dinging IP", ipHit, whodunnit );
             }
             Stats.addChange( whodunnit, Stats.KILLS, 1);
             new Message(conn, whodunnit, Message.NORMAL, message );

@@ -191,9 +191,10 @@ t.p('#" onmouseover="showtarget(');
 t.p( occ.id);
 t.p(')">>></a></td>    <div style="display:none" id="desc-');
 t.p( occ.id);
-t.p('"><a href="attack.jsp?target=');
+t.p('"><a href="');
+t.p('#" onclick="attack(');
 t.p( occ.id);
-t.p('">Attack ');
+t.p(')">Attack ');
 t.p( occ.name);
 t.p('</a></div></tr>');
 }

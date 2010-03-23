@@ -40,6 +40,7 @@
         wazzit.getAlt().setEquippedWeapon( id );
         DatabaseUtility.close(ps);
         //now decrement AP
+        wazzit.reload();
         wazzit.getAlt().decrementAp(conn, 1);
         new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You have unequipped your " + weaponName + ".");
         response.sendRedirect( "/map/index.jsp" );

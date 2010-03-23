@@ -1,12 +1,5 @@
 <%@ page import="invasion.util.*" %><%@
-taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
-
-    Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
-    if( wazzit == null )
-    {
-        session.setAttribute(Whatzit.KEY, new Whatzit());
-    }
-%><html>
+taglib prefix="tags" tagdir="/WEB-INF/tags" %><html>
 <head>
     <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />

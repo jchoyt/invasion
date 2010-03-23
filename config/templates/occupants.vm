@@ -4,6 +4,6 @@
     <td>${occ.level}</td>
     <td><img alt="" src="/i/hp-${occ.hp}.png"/></td>
     <td><a href="#" onmouseover="showtarget(${occ.id})">>></a></td>
-    <div style="display:none" id="desc-${occ.id}"><a href="attack.jsp?target=${occ.id}">Attack ${occ.name}</a></div>
+    <div style="display:none" id="desc-${occ.id}"><a href="#" onclick="attack(${occ.id})">Attack ${occ.name}</a></div>
 </tr>
 #end
