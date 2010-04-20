@@ -83,8 +83,11 @@
                 JSONObject stats = new JSONObject();
                 stats.put("stats", obj2);
                 VelocityUtil.applyTemplate(stats, "stats.vm", out);
-            %></span></span><span style="float:right;margin-right:10px">Menu<div class="pop">
+            %></span></span><span id="poll-indicator" style="display:none;"><img alt="" src="/i/rss16.png"/></span>
+            <span style="float:right;margin-right:10px">Menu<div class="pop">
                     <p><a href="/disconnect.jsp">Disconnect</a></p>
+                    <p><hr/></p>
+                    <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage regular poll</a></p>
                     <p><hr/></p>
                     <p><a href="#" target="_blank">Uber Map</a></p>
                     <p><a href="http://wiki.chaoschaoschaos.com/wiki/Invasion" target="_blank">Wiki</a></p>
@@ -127,7 +130,7 @@
             <h6><a href="#">Actions</a></h6>
             <div>
                 <p>
-                <form method="post" action="#" onsubmit="attack(this); return false">
+                <form method="post" action="#" onsubmit="attack(this.target.value); return false">
                     <select name="target" id="attacklist">
                         <%
                             a = Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId());

@@ -14,7 +14,7 @@
         return;
     }
     int apIncrement = 1;
-    wazzit.setLastTargetId( targetid );
+    wazzit.setLastTarget( targetid );
     JSONArray alerts = null;
     InvasionConnection conn = null;
     try
@@ -83,7 +83,7 @@
         {
             //hit
             //TODO soaks
-            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You attack your victim with your "  + weaponName + " and deal "+rawDamageAmt+" points of damage.  You earned "+rawDamageAmt+" XP.");
+            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You attack " + wazzit.getLastTarget().getName() + " with your "  + weaponName + " and deal "+rawDamageAmt+" points of damage.  You earned "+rawDamageAmt+" XP.");
             new Message( conn, targetid, Message.NORMAL, wazzit.getAlt().getName() + " attacked you with a "  + weaponName + " and dealt "+rawDamageAmt+" points of damage.");
 
             //X was absorbed by armor
@@ -106,7 +106,7 @@
         else
         {
             //miss
-            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You attack XXXXX with your "  + weaponName + " and miss.");
+            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You attack " + wazzit.getLastTarget().getName() + " with your "  + weaponName + " and miss.");
             new Message( conn, targetid, Message.NORMAL, wazzit.getAlt().getName() + " attacked you with a "  + weaponName + " and missed.");
         }
 

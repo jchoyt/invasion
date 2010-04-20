@@ -69,9 +69,11 @@ $(document).ready( function() {
 //{{{ GUI updates
 function poll()
 {
+    $("#poll-indicator").show();
     $.getJSON("/poll", function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
+    $("#poll-indicator").hide();
 }
 
 
@@ -96,10 +98,12 @@ function updateOccupantPane(data)
     if(data.occs)
     {
         $('#occ-pane').html( v2js_occupants(data) );
+        $('#attacklist').html( v2js_attacklist(data) );
     }
     else
     {
         $('#occ-pane').html("");
+        $('#attacklist').html("");
     }
 }
 

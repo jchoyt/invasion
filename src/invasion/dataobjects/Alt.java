@@ -301,7 +301,7 @@ public class Alt  implements java.io.Serializable {
             new Message( conn, alt, Message.SELF, "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
         }
 
-        ///TODO death message to others in the location
+        /// TODO death message to others in the location
         ///use deathLoc
         // X has killed Y.  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.  (+1/2IP unless opposite)
    }

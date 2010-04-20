@@ -189,14 +189,14 @@ t.p( occ.hp);
 t.p('.png"/></td>    <td><a href="');
 t.p('#" onmouseover="showtarget(');
 t.p( occ.id);
-t.p(')">>></a></td>    <div style="display:none" id="desc-');
+t.p(')">>></a><span style="display:none" id="desc-');
 t.p( occ.id);
 t.p('"><a href="');
 t.p('#" onclick="attack(');
 t.p( occ.id);
 t.p(')">Attack ');
 t.p( occ.name);
-t.p('</a></div></tr>');
+t.p('</a></span></td></tr>');
 }
 velocityCount = 0;
 return t.toString();

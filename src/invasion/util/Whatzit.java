@@ -23,7 +23,6 @@ public class Whatzit
     protected Alt alt = null;
     protected Alt lastTarget = null;
     protected GuiConfig gui = null;
-    protected int lastTargetId = 0;
     protected int locid = -1;
     protected int locidtype = -1;
     protected int equippedWeaponId = 0;
@@ -56,18 +55,24 @@ public class Whatzit
             ammoModNeeded = rs.getBoolean( "usesammo" );
             ammo = rs.getInt("ammoleft");
             equippedWeaponTypeId = rs.getInt("typeid");
+            equippedWeaponId = rs.getInt("itemid");
         }
         DatabaseUtility.close(rs);
         conn.close();
     }
 
+    public void setLastTarget(int targetId)
+    {
+        this.lastTarget = new Alt(null, targetId, false);
+    }
+
+
     public Alt getAlt() { return this.alt; }
     public GuiConfig getGui() { return this.gui; }
-    public int getLastTargetId() { return this.lastTargetId; }
+    public Alt getLastTarget() { return this.lastTarget; }
     public int getLocid() { return this.locid; }
     public int getLocidtype() { return this.locidtype; }
     public void setGui(GuiConfig gui) { this.gui = gui; }
-    public void setLastTargetId(int lastTargetId) { this.lastTargetId = lastTargetId; }
     public void setLocid(int locid) { this.locid = locid; }
     public void setLocidtype(int locidtype) { this.locidtype = locidtype; }
     public int getEquippedWeaponId() { return this.equippedWeaponId; }

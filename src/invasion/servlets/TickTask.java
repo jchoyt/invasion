@@ -56,7 +56,7 @@ public class TickTask extends TimerTask
         catch(Exception e)
         {
             log.throwing(KEY, "Exception running the tick", e);
-            //TODO bot notify
+            // TODO bot notify
         }
         finally{
             conn.close();
@@ -80,6 +80,13 @@ public class TickTask extends TimerTask
             "update stats set count = count + 1 where statid = 4 and altid in (select id from alt where hp < 11 and hp > 0); " +  //update damage taken
             "update alt set hp = hp - 1 where hp < 11 and hp > 0 ";
         conn.executeUpdate(query);
+        //DOO  Check for death
+        query = "select id from alt where hp=0 and ticksalive > 0";
+        ResultSet rs = conn.psExecuteQuery( query, "Error checking for those who have died a slow death" );
+        while(rs.next())
+        {
+            Alt.kill(conn, rs.getInt(1));
+        }
         //if just died, put body at a random cloning facility
         query = "insert into messages (message, type, altid) select 'Your new body has been started.  It will be ready in approximately ' || level || ' tick(s).', 1, id from alt where location=-57005";
         conn.executeUpdate(query);
