@@ -91,17 +91,8 @@ public class Alt  implements java.io.Serializable {
 
 
             // save him to the database
-            query = "insert into alt ( id, username, name, location, speciality ) values ( DEFAULT, ?,?,?,? ) returning id";
-            ps = conn.prepareStatement(query);
-            ps.setString(1,username);
-            ps.setString(2,name);
-            ps.setInt(3,loc);
-            ps.setInt(4,speciality);
-            rs = ps.executeQuery();
-            rs.next();
-            id = rs.getInt(1);
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
+            query = "insert into alt ( id, username, name, location, speciality ) values ( DEFAULT, ?,?,?,? ); select max(id) from alt;";// returning id";
+            id = conn.psExecuteInsert( query, "Error createing the new character", username, name, loc, speciality );
 
             //now new guy has a location, give them stuff
             new Item( conn, ENERGYPISTOL, id);
