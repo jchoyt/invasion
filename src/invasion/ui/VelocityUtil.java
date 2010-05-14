@@ -1,3 +1,7 @@
+/*
+ *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
+ */
+
 package invasion.ui;
 
 import org.apache.velocity.app .*;

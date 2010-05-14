@@ -1,4 +1,8 @@
 /*
+ *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
+ */
+
+/*
  *  Copyright 2009 Jeffrey Hoyt. All Rights Reserved.
  */
 package invasion.util;

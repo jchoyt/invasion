@@ -1,3 +1,6 @@
+/*
+ *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
+ */
 package invasion.dataobjects;
 
 import org.json.*;
@@ -59,6 +62,7 @@ public class Alt  implements java.io.Serializable {
         try
         {
             conn = new InvasionConnection();
+            conn.setAutoCommit(false);
             ps = conn.prepareStatement(query);
             ps.setString(1,name);
             rs = ps.executeQuery();
@@ -91,8 +95,16 @@ public class Alt  implements java.io.Serializable {
 
 
             // save him to the database
-            query = "insert into alt ( id, username, name, location, speciality ) values ( DEFAULT, ?,?,?,? ); select max(id) from alt;";// returning id";
-            id = conn.psExecuteInsert( query, "Error createing the new character", username, name, loc, speciality );
+            query = "insert into alt ( id, username, name, location, speciality ) values ( DEFAULT, ?,?,?,? )";
+            conn.psExecuteUpdate( query, "Error creating the new character", username, name, loc, speciality );
+            //get new ID
+            query="select max(id) as id from alt";
+            rs = conn.executeQuery( query );
+            rs.next();
+            id = rs.getInt( "id" );
+
+            query="insert into stats (select ?, statid from statstype)";
+            conn.psExecuteUpdate( query, "Error entering stats for new alt", id );
 
             //now new guy has a location, give them stuff
             new Item( conn, ENERGYPISTOL, id);
@@ -106,11 +118,13 @@ public class Alt  implements java.io.Serializable {
         }
         catch(SQLException e)
         {
+            try{ conn.rollback(); } catch (Exception e2) {e2.printStackTrace(System.out);}
             log.throwing( KEY, "Exception creating character " + name, e);
             throw new RuntimeException(e);
         }
         finally
         {
+            try{ conn.commit(); } catch (Exception e2) {e2.printStackTrace(System.out);}
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
             conn.close();

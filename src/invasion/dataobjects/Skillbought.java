@@ -1,3 +1,6 @@
+/*
+ *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
+ */
 package invasion.dataobjects;
 // Generated Oct 18, 2009 2:11:39 AM by Hibernate Tools 3.2.4.GA
 

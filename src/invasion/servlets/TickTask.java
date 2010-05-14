@@ -1,5 +1,5 @@
-/**
- *
+/*
+ *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
  */
 
 package invasion.servlets;
