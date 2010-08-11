@@ -8,7 +8,12 @@
     Alt alt = null;
     try
     {
-        alt = new Alt(request.getRemoteUser(), Integer.parseInt(charId), true);
+        alt = Alt.load( Integer.parseInt(charId));
+        if( !alt.getUsername().equals(request.getRemoteUser()) )
+        {
+            response.sendRedirect("/naughty.jsp");
+            return;
+        }
         Whatzit wazzit = new Whatzit();
         wazzit.setAlt( alt );
         session.setAttribute( Whatzit.KEY,  wazzit );

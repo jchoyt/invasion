@@ -8,11 +8,6 @@
     String count = WebUtils.getRequiredParameter(request, "count");
     int reps = Integer.parseInt(count);
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
-    if( wazzit == null )
-    {  //nobody is logged in
-        response.sendRedirect("/index.jsp");
-        return;
-    }
     //do DB inserts
     InvasionConnection conn = new InvasionConnection();
     conn.setAutoCommit(false);

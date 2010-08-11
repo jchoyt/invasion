@@ -20,7 +20,12 @@
             response.sendRedirect("/naughty.jsp");
             return;
         }
-        alt = new Alt(request.getRemoteUser(), altid, true);
+        alt = Alt.load(altid);
+        if( !alt.getUsername().equals(request.getRemoteUser()) )
+        {
+            response.sendRedirect("/naughty.jsp");
+            return;
+        }
         Whatzit wazzit = new Whatzit();
         wazzit.setAlt( alt );
         session.setAttribute( Whatzit.KEY,  wazzit );

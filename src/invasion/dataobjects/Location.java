@@ -19,10 +19,11 @@ import java.sql.SQLException;
  */
 public class Location  implements java.io.Serializable {
 
+    //{{{ Logging
     public final static String KEY = Location.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
-
+    //}}}
 
     private int id;
     private int locationtype;
@@ -34,12 +35,12 @@ public class Location  implements java.io.Serializable {
     private String description;
     private Set<Alt> alts = new HashSet<Alt>(0);
 
+    //{{{ Constructors
     public Location() { }
-
 
     public Location(int id) {
         this.id = id; }
-
+    //}}}
 
     public static JSONArray getOccupants(InvasionConnection conn, int locid, int you)
     {
@@ -96,6 +97,7 @@ public class Location  implements java.io.Serializable {
         }
  }
 
+    //{{{ Getters and Setters
     public int getId() { return this.id; }
     public void setId(int id) { this.id = id; }
     public int getLocationtype() { return this.locationtype; }
@@ -114,10 +116,9 @@ public class Location  implements java.io.Serializable {
     public void setDescription(String description) { this.description = description; }
     public Set<Alt> getAlts() { return this.alts; }
     public void setAlts(Set<Alt> alts) { this.alts = alts; }
-
-
+    //}}}
 
 
 }
-
+// :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:
 

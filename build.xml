@@ -109,7 +109,7 @@
     <!--target name="compile" if="junit.present" depends="setProps, junit-present"-->
     <target name="compile" depends="setProps">
         <mkdir dir="${build}" />
-        <javac srcdir="${src}" destdir="${build}" deprecation="on" debug="on" source="1.5" target="1.5" >
+        <javac srcdir="${src}" destdir="${build}" deprecation="on" debug="on">
             <!-- <bootclasspath>
                 <fileset dir="/usr/local/share/jdk1.5.0_10/jre/lib">
                     <include name="*rt.jar" />

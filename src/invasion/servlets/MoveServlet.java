@@ -87,7 +87,7 @@ public class MoveServlet extends HttpServlet
 
 
         int altid = wazzit.getAlt().getId();
-        int locid = wazzit.getLocid();
+        int locid = wazzit.getAlt().getLocation();
 
         log.finer("old location: " + locid);
         boolean valid = true;
@@ -109,8 +109,8 @@ public class MoveServlet extends HttpServlet
                 //DO CHECKS FOR VALID destinations here
                 log.finer("new location: " + locid);
                 setNewLoc(conn, locid, altid );
-                wazzit.setLocid(locid);
-                wazzit.setLocidtype(rs.getInt("typeid"));
+                wazzit.getAlt().setLocation(locid);
+                wazzit.getAlt().setLocationType(rs.getInt("typeid"));
                 wazzit.getAlt().decrementAp(conn, 1);
             }
             else

@@ -41,7 +41,7 @@
             return ps.executeQuery();
         } catch (SQLException e) {
             DatabaseUtility.close(rs);
-            Logger log = Logger.getLogger( "AdminMap.tag" );
+            Logger log = Logger.getLogger( "NavPanel.tag" );
             log.log(Level.WARNING, "Error retrieving map data", e);
             return null;
         }
@@ -55,20 +55,6 @@
 			    $("#descbox").html(contents);
 			};
 </script>
-<%
-    Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
-    if( wazzit == null )
-    {  //nobody is logged in
-        response.sendRedirect("/index.jsp");
-        return;
-    }
-    locid = wazzit.getLocid();
-    if( locid == -1337 )
-    {
-        out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
-        return;
-    }
-%>
 <div class="descbox" id="descbox">&nbsp;</div>
 <div id="mapbox" style="position:relative;" onmouseout="shloc('<%=locid%>')">
 <%

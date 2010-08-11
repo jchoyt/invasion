@@ -81,7 +81,7 @@ public class Poll
             //Messages (message pane)
             ret.put("msgs", Message.getInitialMessages(conn, wazzit.getAlt().getId() ) );
             //Occupants
-            JSONArray occupants = Location.getOccupants(conn, wazzit.getLocid(), wazzit.getAlt().getId() );
+            JSONArray occupants = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId() );
             if( occupants.length() > 0 )
             {
                 ret.put("occs", occupants);

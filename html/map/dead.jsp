@@ -3,18 +3,9 @@
     public final static Logger log = Logger.getLogger( KEY );
     static{log.setLevel(Level.FINER);}%><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
-    log.finer("entering /map/index.jsp");
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = wazzit.getAlt();
-    if( alt == null )
-    {  //nobody is logged in
-        log.warning("didn't find the alt in wazzit");
-        response.sendRedirect("/index.jsp");
-        return;
-    }
-    String errorMsg = WebUtils.getOptionalParameter(request, "error");
-    String infoMsg = WebUtils.getOptionalParameter(request, "info");
-    // log.entering(KEY, "html section.  Alt id is " + alt.getId());
+    String errorMsg = wazzit.getAlt().getName() + " is dead. <a href=\"/disconnect.jsp\">Go back</a> and select another character.";
 
     //set up db connection
     InvasionConnection conn = null;
@@ -37,6 +28,7 @@
     <script type="text/javascript" src="${js}/vel2jstools.js"></script>
     <script type="text/javascript" src="${js}/vel2js.js"></script>
     <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <script type="text/javascript" src="jquery.pop.js"></script>
     <script type="text/javascript" src="${js}/map.js"></script>
     <script type="text/javascript" src="${js}/jquery.layout.min-1.2.0.js"></script>
@@ -49,25 +41,13 @@
 	</style>
 	<%--}}} --%>
 
-	<%--{{{  javascript --%>
-	<script type="text/javascript">
-	</script>
-    <%--}}}--%>
 
 </head>
 	<body>
 
     <%--{{{  center pane--%>
     <div class="ui-layout-center">
-        <%  if( !errorMsg.equals(WebUtils.EMPTY_STR) )
-        {
-            out.write( "<h3 class=\"error\">" + errorMsg + "</h3>");
-        }
-        if( !infoMsg.equals(WebUtils.EMPTY_STR) )
-        {
-            out.write( "<h3 class=\"info\">" + infoMsg + "</h3>");
-        }%>
-        <div id="announcements"></div>
+        <h3 class="error"><%=errorMsg%></h3>
         <div class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
             <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <%=alt.getName()%><span id="stats-area">
             <%
@@ -88,9 +68,9 @@
              </span><br clear="all"/>
         </div>
         <div id="center-sections" class="ui-layout-content">
-            <h6 id="msgs-hdr"><a href="#">Messages and Basic Actions</a></h6>
+            <h6 id="msgs-hdr"><a href="#">Messages</a></h6>
             <div>
-                <div id="messcontainer" class="mapbox" style="height:250px;width:100%;float:left">
+                <div id="messcontainer" class="mapbox" style="width:100%;float:left">
                     <div id="amessages" style="height: 200px;border:1px solid black;margin-bottom:5px;" class="ui-layout-content">
                         <ul id="msg-box" class="msgs">
                         <%
@@ -101,11 +81,6 @@
                         %>
                         </ul>
                     </div>
-                    <form method="post" action="speak.jsp" onsubmit="speak(this); return false">
-                        <button type="submit">Speak (<span id="spts">0</span> AP)</button>
-                        <input name="words" type="input" size="50">
-                    </form>
-                    <%-- <a href="#" onclick="poll();">Test updateMessagePane()</a> --%>
                    <script type="text/javascript">
                         $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
                    </script>
@@ -114,103 +89,7 @@
             </div>
             <h6 id="basic"><a href="#">Location Description</a></h6>
             <div id="basic-description">
-                <p>Nice descriptions were provide by Sam and Stretch, but Entomo's a lazy ass and hasn't put them in yet. </p>
-                <p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/></p>
-            </div>
-            <h6><a href="#">Actions</a></h6>
-            <div>
-                <p>
-                <form method="post" action="#" onsubmit="attack(this.target.value); return false">
-                    <select name="target" id="attacklist">
-                        <%
-                            a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
-                            obj = new JSONObject();
-                            obj.put("occs", a);
-                            VelocityUtil.applyTemplate(obj, "attacklist.vm", out);
-                        %>
-                    </select>
-                    <input type="submit" value="Attack"/>
-                </form>
-                <form method="post" action="equip.jsp" onsubmit="equip.jsp">
-                    <select name="weaponid" id="equiplist">
-                    <%
-                        a = Item.getItems(conn, alt.getId());
-                        obj = new JSONObject();
-                        obj.put("inv", a);
-                        VelocityUtil.applyTemplate(obj, "equiplist.vm", out);
-                    %>
-                    </select>
-                    <input type="submit" value="Equip Weapon"/>
-                </form>
-                </p>
-            </div>
-        </div>
-    </div> <%--}}}--%>
-
-    <%--{{{  west pane --%>
-    <div class="ui-layout-west">
-        <div id="west-sections" class="ui-layout-content">
-            <h6 id="map"><a href="#">Map</a></h6>
-            <div style="height:340px">
-                 <tags:NavPanel/>
-            </div>
-            <script type="text/javascript">
-                function showtarget(id)
-                {
-                    show = "#desc-" + id;
-                    $("#att-box").html($(show).html());
-                };
-            </script>
-
-            <h6 id="occupants"><a href="#">Occupants</a></h6>
-            <div>
-                <table style="width:290px" cellpadding="0" cellspacing="0" border="0" id="occ-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Lvl</th>
-                            <th>HP</th>
-                            <th>Act</th>
-                        </tr>
-                    </thead>
-                    <tbody id="occ-pane">
-                        <%
-                            a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
-                            obj = new JSONObject();
-                            obj.put("occs", a);
-                            VelocityUtil.applyTemplate(obj, "occupants.vm", out);
-                        %>
-                    </tbody>
-                </table>
-                <center><div id="att-box" style="color:red"></div></center>
-            </div>
-            <h6><a href="#">Critters</a></h6>
-            <div>
-                <p>
-                Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
-                Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
-                ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
-                lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
-                </p>
-                <ul>
-                    <li>List item one</li>
-                    <li>List item two</li>
-                    <li>List item three</li>
-                </ul>
-            </div>
-            <h6><a href="#">Items</a></h6>
-            <div>
-                <p>
-                Cras dictum. Pellentesque habitant morbi tristique senectus et netus
-                et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
-                faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
-                mauris vel est.
-                </p>
-                <p>
-                Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
-                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-                inceptos himenaeos.
-                </p>
+                <p>You are dead.  There is no sensation or concept of time.  For some reason you can still manage your inventory.  Go figure. </p>
             </div>
         </div>
     </div>

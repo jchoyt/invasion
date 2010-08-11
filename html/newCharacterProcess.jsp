@@ -1,6 +1,6 @@
 <%@ page import="invasion.dataobjects.*,invasion.util.*,java.util.logging.*" %><%
 
-String username = WebUtils.getRequiredParameter( request, "name");
+String charname = WebUtils.getRequiredParameter( request, "name");
 String speciality = WebUtils.getRequiredParameter( request, "speciality");
 String skill = WebUtils.getRequiredParameter( request, "skill");
 skill="-1";
@@ -9,7 +9,7 @@ InvasionConnection conn = null;
 try
 {
     int specialityid = Integer.parseInt( speciality );
-    Alt alt = new Alt( request.getUserPrincipal().getName(), username, specialityid, Integer.parseInt(skill), station );
+    Alt alt = Alt.createNew( request.getUserPrincipal().getName(), charname, specialityid, Integer.parseInt(skill), station );
 
     if( alt != null )
     {

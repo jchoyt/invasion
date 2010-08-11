@@ -3,11 +3,6 @@
     String itemid = WebUtils.getRequiredParameter(request, "weaponid");
     int id = Integer.parseInt(itemid);
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
-    if( wazzit == null )
-    {  //nobody is logged in
-        response.sendRedirect("/index.jsp");
-        return;
-    }
     //do DB inserts
     String query = "select * from item i join itemtype t on i.typeid=t.typeid where itemid = ? and locid = ? and type='weapon'";
     InvasionConnection conn = new InvasionConnection();
@@ -40,11 +35,9 @@
         wazzit.getAlt().setEquippedWeapon( id );
         //TODO update wazzit - weapon name, ammo, etc
         wazzit.reload();
-
         DatabaseUtility.close(ps);
         //now decrement AP
         wazzit.getAlt().decrementAp(conn, 1);
-        wazzit.setAmmoModNeeded( newWeaponNeedsAmmo );
         new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You switch your equipped weapon. You will now use your " + weaponName + ".");
         response.sendRedirect( "/map/index.jsp" );
     }

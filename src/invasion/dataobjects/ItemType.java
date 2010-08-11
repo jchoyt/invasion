@@ -23,12 +23,14 @@ public class ItemType{
     protected String name = null;
     protected String type = null;
     protected String damageType = null;
+    protected boolean usesammo = false;
+
 
     protected static Map<Integer, ItemType> itemTypes = new HashMap<Integer, ItemType>();
 
 
     public ItemType(int typeid, int weight, int capacity, int damage,
-             boolean consumable, String name, String type, String damageType){
+             boolean consumable, String name, String type, String damageType, boolean usesammo){
         this.typeid = typeid;
         this.weight = weight;
         this.capacity = capacity;
@@ -37,6 +39,7 @@ public class ItemType{
         this.name = name;
         this.type = type;
         this.damageType = damageType;
+        this.usesammo = usesammo;
     }
 
     public ItemType() { }
@@ -62,7 +65,8 @@ public class ItemType{
                 rs.getBoolean("consumable"),
                 rs.getString("name"),
                 rs.getString("type"),
-                rs.getString("damageType"));
+                rs.getString("damageType"),
+                rs.getBoolean("usesammo"));
                 itemTypes.put(rs.getInt("typeid"), type);
             }
             log.info("Loaded " + itemTypes.size() + " different item types.");
@@ -88,6 +92,9 @@ public class ItemType{
     }
 
     /* setters and getters */
+
+	public boolean getUsesammo() { return this.usesammo; }
+	public void setUsesammo(boolean usesammo) { this.usesammo = usesammo; }
     public int getTypeid() { return this.typeid; }
     public void setTypeid(int typeid) { this.typeid = typeid; }
     public int getWeight() { return this.weight; }

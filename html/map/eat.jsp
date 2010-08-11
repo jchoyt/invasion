@@ -3,11 +3,6 @@
     String itemid = WebUtils.getRequiredParameter(request, "itemid");
     int id = Integer.parseInt(itemid);
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
-    if( wazzit == null )
-    {  //nobody is logged in
-        response.sendRedirect("/index.jsp");
-        return;
-    }
     //do DB inserts
     String query = "delete from item where itemid = ? and locid = ?";
     InvasionConnection conn = new InvasionConnection();
