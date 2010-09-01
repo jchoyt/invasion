@@ -1,8 +1,8 @@
 <%@ tag import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*,java.util.logging.*" %><%!
 
+
     InvasionConnection conn = null;
     int locid = -1337;
-
     int BOX_SIZE = 55;
     int MAP_SIDE = 5;
     int TOTAL_SIZE = BOX_SIZE * MAP_SIDE;
@@ -58,6 +58,18 @@
 <div class="descbox" id="descbox">&nbsp;</div>
 <div id="mapbox" style="position:relative;" onmouseout="shloc('<%=locid%>')">
 <%
+    Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
+    if( wazzit == null )
+    {  //nobody is logged in
+        response.sendRedirect("/index.jsp");
+        return;
+    }
+    locid = wazzit.getAlt().getLocation();
+    if( locid == -1337 )
+    {
+        out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
+        return;
+    }
     conn = new InvasionConnection();
     int x = 0;
     int y = 0;

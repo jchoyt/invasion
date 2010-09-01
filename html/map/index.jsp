@@ -1,8 +1,8 @@
-<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, java.util.logging.*,org.json.*" %><%!
+<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, java.util.logging.*,org.json.*" %><%@
+    taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
     public final static String KEY = "/map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}%><%@
-    taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
+    static{log.setLevel(Level.FINER);}%><%
     log.finer("entering /map/index.jsp");
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = wazzit.getAlt();

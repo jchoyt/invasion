@@ -3,8 +3,9 @@
  */
 package invasion.servlets;
 
-import java.util.logging.Level;
+import java.sql.*;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
@@ -20,7 +21,7 @@ public class DeathFilter implements Filter
 
     public final static String KEY = DeathFilter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     private FilterConfig filterConfig = null;
@@ -49,7 +50,7 @@ public class DeathFilter implements Filter
             HttpSession session = ((HttpServletRequest)request).getSession(false);
             if (session != null) {
                 wazzit = (Whatzit) session.getAttribute(Whatzit.KEY);
-                if( wazzit == null )
+                if( wazzit == null || wazzit.getAlt() == null )
                 {  //nobody is logged in
                     filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
                 }
@@ -59,6 +60,13 @@ public class DeathFilter implements Filter
         }
         if( endpoint.endsWith("jsp") )
         {
+            try{
+                wazzit.reload();
+            }
+            catch (SQLException e)
+            {
+                filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            }
             int locid = wazzit.getAlt().getLocation();
             log.finer( "Location id is: " + locid + " and HP total is " + wazzit.getAlt().getHp() );
             if( locid == -1337 )
@@ -67,16 +75,17 @@ public class DeathFilter implements Filter
                 // out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
             }
-            else if( locid == -0xDEAD || wazzit.getAlt().getHp() < 1 )
+            else if( locid == -57005 || wazzit.getAlt().getHp() < 1 )
             {
                 filterConfig.getServletContext().getRequestDispatcher("/map/dead.jsp").forward(request, response);
             }
             /* Add AP filter here and have it work off of Config */
-
         }
-
+        else
+        {
+            log.finer( "Endpoint does not end in 'jsp', see? " + endpoint );
+        }
         chain.doFilter(request, response);
-
     }
 
 

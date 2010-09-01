@@ -87,7 +87,7 @@ public class TickTask extends TimerTask
         {
             Alt.kill(conn, rs.getInt(1));
         }
-        //if just died, put body at a random cloning facility
+        //if just died, put body at a random cloning facility  TODO - check to see if everyone respawns in the same cloning center.
         query = "insert into messages (message, type, altid) select 'Your new body has been started.  It will be ready in approximately ' || level || ' tick(s).', 1, id from alt where location=-57005";
         conn.executeUpdate(query);
         query = "update alt set location = (select id from location l where typeid=31 and alt.station=l.station order by random() limit 1), ticksalive=-1*level where location=-57005";

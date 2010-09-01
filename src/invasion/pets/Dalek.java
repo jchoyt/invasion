@@ -6,8 +6,37 @@ package invasion.pets;
 
 public class Dalek extends Critter
 {
-    //{{{ Constructor
-    public Dalek()
+    //{{{ Constructors
+    /**
+     * Constructor to add a Dalek to an existing Brood
+     * @param
+     * @return
+     *
+     */
+    public Dalek( Brood brood )
+    {
+        if( brood == null )
+        {
+            throw new RuntimeException("Can't created a new Dalek in a non-existant brood");
+        }
+        init();
+        this.brood = brood;
+    }
+
+    /**
+     * Constructor for a Brood-less Dalek - a new Brood will be created with this guy as the sole member
+     * @param
+     * @return
+     *
+     */
+    public Dalek( int station )
+    {
+        Brood b = new Brood(-1);
+        b.addMember(this);
+        setBroodGoals( b );
+    }
+
+    public void init()
     {
         ap = 75;
         apmax = 75;

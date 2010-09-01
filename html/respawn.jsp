@@ -4,7 +4,6 @@
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
 %><%
-%><%
     String charId = WebUtils.getRequiredParameter(request, "id");
     int altid = Integer.parseInt(charId);
     Alt alt = null;

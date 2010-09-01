@@ -89,7 +89,24 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     public boolean soakingPhysical() { return false; }
 
-    public void hit( Attacker attacker, int rawAmount, InvasionConnection conn ){}
+    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn ) throws SQLException
+    {
+        String query = "update alt set hp = hp-?, lasthurtby=? where id=?";
+        int damageDone = rawAmount;
+        //TODO apply soaks
+
+        conn.psExecuteUpdate( query, "Error occurred while updating your victim's HP", damageDone, attacker.getId(), id );
+        Stats.addChange(id, Stats.DAMTAKEN, damageDone);
+        query = "select id from alt where hp < 1 and id=?";
+        ResultSet rs = conn.psExecuteQuery( query, "Error occurred while updating damage on the defender", id );
+        if( rs.next() )
+        {
+            System.out.println( "He's dead!");
+            Alt.kill( conn, id );
+        }
+        hp = hp - damageDone;
+        return damageDone;
+    }
 
     /**
      *  um....kills off the character
@@ -230,34 +247,11 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 //TODO soaks
                 new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and deal "+equippedWeaponType.getDamage()+" points of damage.  You earned "+equippedWeaponType.getDamage()+" XP.");
                 defender.insertMessage(name + " attacked you with a "  + equippedWeaponType.getName() + " and dealt " + equippedWeaponType.getDamage() + " points of damage.", Message.NORMAL, conn);
+                int damageDone = defender.hit( this, equippedWeaponType.getDamage(), conn );
 
-
-
-
-
-
-                //TODO - adapt query if target is a critter - or better yet, let the defender take care of this
-                //X was absorbed by armor
-                //Y was absorbed by shields
-                String query = "update alt set hp = hp-?, lasthurtby=? where id=?;update alt set xp=xp+? where id=?";
-                conn.psExecuteUpdate( query, "Error occurred while updating your victim's HP", equippedWeaponType.getDamage(), id, defender.getId(), equippedWeaponType.getDamage(), id );
-                query = "select id from alt where hp < 1 and id=?";
-                ResultSet rs = conn.psExecuteQuery( query, "Error occurred while updating your victim's HP", defender.getId() );
-                if( rs.next() )
-                {
-                    System.out.println( " He's dead!");
-                    Alt.kill( conn, defender.getId() );
-                }
-
-                //method should do all soaks and return final damage done
-
-
-                Stats.addChange(id, Stats.DAMDONE, equippedWeaponType.getDamage());
-                if( defender instanceof Alt )
-                {
-                    Stats.addChange(defender.getId(), Stats.DAMTAKEN, equippedWeaponType.getDamage());
-                }
-                DatabaseUtility.close(rs);
+                String query="update alt set xp=xp+? where id=?";
+                conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", damageDone, id );
+                Stats.addChange(id, Stats.DAMDONE, damageDone);
             }
             else
             {
@@ -282,14 +276,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     /*
      *  Load from the database
      */
-    public static Alt load( int id )
+    public static Alt load( InvasionConnection conn, int id )
     {
         Alt ret = new Alt();
-        InvasionConnection conn = null;
         ResultSet rs = null;
         try
         {
-            conn = new InvasionConnection();
             String query = "select * from alt a join location l on (a.location = l.id) where a.id=?";
             rs = conn.psExecuteQuery( query, "Error loading char " + id, id);
             rs.next();
@@ -333,6 +325,25 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         finally
         {
             DatabaseUtility.close(rs);
+        }
+    }
+
+
+    public static Alt load( int id )
+    {
+        InvasionConnection conn = null;
+        try
+        {
+            conn = new InvasionConnection();
+            return load( conn, id );
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "looks like the player is messing with the inputs", e);
+            throw new NaughtyException(e);
+        }
+        finally
+        {
             conn.close();
         }
     }

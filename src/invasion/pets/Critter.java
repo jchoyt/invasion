@@ -4,12 +4,18 @@
 
 package invasion.pets;
 
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.*;
 import invasion.util.*;
 import invasion.dataobjects.*;
 
 public class Critter implements Attacker, Defender
 {
+    public final static String KEY = Critter.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
     //{{{ Constructors
     /**
      *  Basic constructor for Critter
@@ -36,26 +42,95 @@ public class Critter implements Attacker, Defender
     protected int lasthurtby = 0;
     protected int shield = 0;
     protected int shieldMax = 0;
+	protected Brood brood = null;
     //}}}
 
     //{{{ Methods
     /**
      *  If this Critter gets control of a brood, what are his priorities?
      */
-    public void setBroodGoals( Brood brood ){}
+    public void setBroodGoals(){}
+
+    public int getLocation()
+    {
+        return brood.getLocation();
+    }
     //}}}
 
     //{{{ For Defender interface
     public void insertMessage(String message, int type, InvasionConnection conn){}
 
-    public int getLocation() {return -1;}
+    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn ){
+        int damageDone = rawAmount;
+        //TODO apply soaks
 
-    public void hit( Attacker attacker, int rawAmount, InvasionConnection conn ){}
+        if( attacker instanceof Alt )
+            lasthurtby = ((Alt)attacker).getId();
+        else
+            lasthurtby = 0;
+        hp = hp - damageDone;
 
+        if( hp < 1 )
+        {
+            die();
+            //todo add critters killed stat
+            //todo adjust IP (maybe)
+        }
+        return damageDone;
+    }
+
+    public void die()
+    {
+        brood.removeMember(this);
+        ap = -1;
+        brood = null;
+    }
     //}}}
 
     //{{{ For Attacker interface
-    public JSONArray attack(Defender defender, InvasionConnection conn ){ return null;}
+    public JSONArray attack(Defender defender, InvasionConnection conn ){
+        /* check to see if the target ran off */
+        try
+        {
+            // check if you hit
+            if( Math.random() < attackAccuracy )
+            {
+                //TODO soaks
+                defender.insertMessage(name + " attacked you and dealt " + attackDamage + " points of damage.", Message.NORMAL, conn);
+                //X was absorbed by armor
+                //Y was absorbed by shields
+                String query = "update alt set hp = hp-?, lasthurtby=? where id=?";
+                conn.psExecuteUpdate( query, "Error occurred while updating your victim's HP", attackDamage, id, defender.getId(), attackDamage, id );
+                query = "select id from alt where hp < 1 and id=?";
+                ResultSet rs = conn.psExecuteQuery( query, "Error occurred while updating your victim's HP", defender.getId() );
+                if( rs.next() )
+                {
+                    System.out.println( " He's dead!");
+                    Alt.kill( conn, defender.getId() );
+                }
+                //method should do all soaks and return final damage done
+                Stats.addChange(id, Stats.DAMDONE, attackDamage);
+                if( defender instanceof Alt )
+                {
+                    Stats.addChange(defender.getId(), Stats.DAMTAKEN, attackDamage);
+                }
+                DatabaseUtility.close(rs);
+            }
+            else
+            {
+                //miss
+               defender.insertMessage(name + " attacked you and missed.", Message.NORMAL, conn);
+            }
+        }
+        catch (Exception e)
+        {
+            log.throwing(KEY, "body", e);
+        }
+        finally
+        {
+            return null;
+        }
+    }
     //}}}
 
 
@@ -90,6 +165,9 @@ public class Critter implements Attacker, Defender
     public void setLasthurtby(int lasthurtby) { this.lasthurtby = lasthurtby; }
     public void setName(String name) { this.name = name; }
     public void setShield(int shield) { this.shield = shield; }
+    public Brood getBrood() { return this.brood; }
+	public void setBrood(Brood brood) { this.brood = brood; }
+
 //}}}
 
 }

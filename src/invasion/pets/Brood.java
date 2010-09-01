@@ -57,7 +57,7 @@ public class Brood
      */
     public void combat()
     {
-        List<Target> targets = new ArrayList<Target>();
+        List<Defender> targets = new ArrayList<Defender>();
         //find targets
         String query = "select * from alt where location = ? and ticksalive > 0";
         //TODO - faction check
@@ -72,10 +72,24 @@ public class Brood
             rs = ps.executeQuery();
             while(rs.next())
             {
-                targets.add(new Target(rs));
+                targets.add(Alt.load(conn, rs.getInt("id")));
             }
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
+
+            // rank targets.  Higher attractiveness for lower armor and them dishing out higher damage per "round"
+
+            // max 3 brood members per target
+
+            // figure out best way to defend brood owner
+
+            // do attacks
+            for( Critter c : members )
+            {
+                //TODO - make these focused attacks
+                int randomTarget = (int) (Math.random() * targets.size() );
+                c.attack( targets.get(randomTarget), conn );
+            }
         }
         catch(SQLException e)
         {
@@ -88,11 +102,6 @@ public class Brood
             DatabaseUtility.close(ps);
             conn.close();
         }
-        //rank targets.  Higher attractiveness for lower armor and them dishing out higher damage per "round"
-
-        // max 3 brood members per target
-
-        // figure out best way to defend brood owner
     }
 
 
@@ -101,7 +110,7 @@ public class Brood
 	    float x = Constants.ARMOR_SOAK_PERCENT;
 	}
 
-	public void addMemeber(Critter newCritter)
+	public void addMember(Critter newCritter)
 	{
 	    members.add(newCritter);
 	}
