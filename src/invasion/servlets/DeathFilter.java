@@ -21,7 +21,7 @@ public class DeathFilter implements Filter
 
     public final static String KEY = DeathFilter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     private FilterConfig filterConfig = null;
@@ -42,22 +42,17 @@ public class DeathFilter implements Filter
         throws IOException, ServletException
     {
         log.finer("filter running");
-        String endpoint = null;
         Whatzit wazzit = null;
-        if (request instanceof HttpServletRequest) {
-            endpoint = ((HttpServletRequest)request).getRequestURI();
-            log.finer("processing " + endpoint );
-            HttpSession session = ((HttpServletRequest)request).getSession(false);
-            if (session != null) {
-                wazzit = (Whatzit) session.getAttribute(Whatzit.KEY);
-                if( wazzit == null || wazzit.getAlt() == null )
-                {  //nobody is logged in
-                    filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
-                }
-            }
-            else
+        String endpoint = ((HttpServletRequest)request).getRequestURI();
+        log.finer("processing " + endpoint );
+        HttpSession session = ((HttpServletRequest)request).getSession(false);
+        if (session != null) {
+            wazzit = (Whatzit) session.getAttribute(Whatzit.KEY);
+            if( wazzit == null || wazzit.getAlt() == null )  //nobody is logged in
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
         }
+        else
+            filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
         if( endpoint.endsWith("jsp") )
         {
             try{

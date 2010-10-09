@@ -29,7 +29,7 @@ public class OffensiveComparatorTest
      */
     @Before
     public void setUp() throws Exception {
-        c2 = new Dalek();
+        c2 = new Dalek(-1);
 
         c1 = new Critter(){
             public void setBroodGoals( Brood brood ) {}

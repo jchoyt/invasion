@@ -1,0 +1,7 @@
+#foreach($pet in $pets)
+<tr>
+    <td><a href="/viewOwner.jsp?id=${pet.id}">${pet.name}</a></td>
+    <td><img alt="" src="/i/hp-${pet.hp}.png"/></td>
+    <td><a href="#" onmouseover="show_pet_target(${pet.id})">>></a><span style="display:none" id="pet-desc-${pet.id}"><a href="#" onclick="attack_pet(${pet.id})">Attack ${pet.name}</a></span></td>
+</tr>
+#end

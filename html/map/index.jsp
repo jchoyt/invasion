@@ -1,4 +1,4 @@
-<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, java.util.logging.*,org.json.*" %><%@
+<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*" %><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
     public final static String KEY = "/map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
@@ -28,7 +28,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="language" content="en">
 
-	<title>Invasion - power has it's price</title>
+	<title>Invasion - power has its price</title>
     <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
@@ -81,9 +81,9 @@
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage regular poll</a></p>
                     <p><hr/></p>
-                    <p><a href="#" target="_blank">Uber Map</a></p>
-                    <p><a href="http://wiki.chaoschaoschaos.com/wiki/Invasion" target="_blank">Wiki</a></p>
-                    <p><a href="#" target="_blank">Forums</a></p>
+                    <p><a href="#" onclick="No uber map yet">Uber Map</a></p>
+                    <p><a href="http://wiki.soulcubes.com" target="_blank">Wiki</a></p>
+                    <p><a href="http://forums.soulcubes.com" target="_blank">Forums</a></p>
                  </div>
              </span><br clear="all"/>
         </div>
@@ -154,13 +154,6 @@
             <div style="height:340px">
                  <tags:NavPanel/>
             </div>
-            <script type="text/javascript">
-                function showtarget(id)
-                {
-                    show = "#desc-" + id;
-                    $("#att-box").html($(show).html());
-                };
-            </script>
 
             <h6 id="occupants"><a href="#">Occupants</a></h6>
             <div>
@@ -184,19 +177,26 @@
                 </table>
                 <center><div id="att-box" style="color:red"></div></center>
             </div>
-            <h6><a href="#">Critters</a></h6>
+            <h6 id="critters"><a href="#">Critters</a></h6>
             <div>
-                <p>
-                Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
-                Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
-                ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
-                lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
-                </p>
-                <ul>
-                    <li>List item one</li>
-                    <li>List item two</li>
-                    <li>List item three</li>
-                </ul>
+                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" id="occ-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>HP</th>
+                            <th>Act</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pet-pane">
+                        <%
+                            a = Critter.petsAtLocation( wazzit.getAlt().getLocation() );
+                            obj = new JSONObject();
+                            obj.put("pets", a);
+                            VelocityUtil.applyTemplate(obj, "critterpane.vm", out);
+                        %>
+                    </tbody>
+                </table>
+                <center><div id="att-pet-box" style="color:red"></div></center>
             </div>
             <h6><a href="#">Items</a></h6>
             <div>

@@ -166,7 +166,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             {
                 ipHit = 2;
             }
-            String message = "You have landed the killing blow on " + name + ".  You have been awarded and additional " + level + " XP.";
+            String message = "You have landed the killing blow on " + name + ".  You have been awarded an additional " + level + " XP.";
             if( ipHit > 0 )
             {
                 message = message + "  Your actions weigh on your consciousness, however (+" + ipHit + " IP).";
@@ -199,6 +199,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         {
             if( location != defender.getLocation() )
             {
+                log.finer("Defender no longer at the attacker's location");
                 alerts = new JSONArray();
                 alerts.put( Poll.createErrorAlert("Your target is no longer in the area.") );
                 return alerts;
@@ -269,7 +270,29 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             alerts.put( Poll.createErrorAlert(e.getMessage()) );
             return alerts;
         }
-   }
+
+    }
+
+    /**
+     * Calculates the HP circle that will show
+     * @param
+     * @return
+     *
+     */
+    public static int calcHpCategory( int hp, int hpmax )
+    {
+        int hpPercent = 100*hp/hpmax;
+        if( hpPercent < 10 )
+            return 4;
+        else if( hpPercent < 25 )
+            return 3;
+        else if( hpPercent < 50 )
+            return 2;
+        else if( hpPercent < 99 )
+            return 1;
+        else
+            return 0;
+    }
     //}}}
 
     //{{{ Loading Alts and Alt data
@@ -412,7 +435,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             new Message( conn, ret.id, Message.NORMAL, "The space between the stars is black and cold. You've been there, in a sleep on the edge of death, for longer than you will ever be awake. Your old life is buried light years away and decades in the past. Whatever you came from, there's no going back.");
             new Message( conn, ret.id, Message.NORMAL, "Humanity never found an answer to easy space travel. As science progressed, the hyperdrives and breakthrough wormhole physics never materialized. In the end, mankind put it's faith in cold reality. Where superluminal flight had escaped them, cryogenics did not. A man could survive for as long as his equipment did, and by this stage, the equipment could survive for a very long time.");
             new Message( conn, ret.id, Message.NORMAL, "Some travelers arrive at their end destination to find that the passage of decades or centuries has created a far different place than they expected. In the last few hours, as your body was pumped with the drugs that would fully revive it from the suspended animation it had been held in for so long, you struggled to remember the dreams you had directly before waking. You stare out the small portal in the airlock door, into the blackness that was your home for so long. The scientists say that you don't dream in cold sleep. Your experience speaks differently.");
-            new Message( conn, ret.id, Message.NORMAL, "The visions were jumbled confusion - one moment personal the next distant. A world with a sun a few shades redder than you remember. Unfamiliar plants surrounding a cave with dark shapes lurking in the shadows, out of sight. A black moon that seemed to turn a dark reddish color when you stared at it - when seen out of the corner of your eye, it almost seemed to slowly shift, as though it's surface were some foul liquid instead of the rock you expect. It filled you with a quiet terror for reasons you can't understand. You remember hunting, being hunted, neither, both, all in a confusing swirl of memories that weren't yours.");
+            new Message( conn, ret.id, Message.NORMAL, "As you peer out the window, you recall the jumbled confusion of visions - one moment personal the next distant. A world with a sun a few shades redder than you remember. Unfamiliar plants surrounding a cave with dark shapes lurking in the shadows, out of sight. A black moon that seemed to turn a dark reddish color when you stared at it - when seen out of the corner of your eye, it almost seemed to slowly shift, as though its surface were some foul liquid instead of the rock you expect. It filled you with a quiet terror for reasons you can't understand. You remember hunting, being hunted, neither, both, all in a confusing swirl of memories that weren't yours.");
             new Message( conn, ret.id, Message.NORMAL, "Outside the window, the shuttle is already being dismantled for spare parts. With a final hiss of equalizing pressure, the airlock opens. Your new life has just begun. You turn around, and don't look back.");
 
             //now new guy has a location, give them stuff

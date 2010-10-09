@@ -31,6 +31,34 @@ velocityCount = 0;
 t.p('.');
 return t.toString();
 }
+function v2js_critterpane(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+for (var i1=0;  i1<context.pets.length; i1++) {
+var pet = context.pets[i1];
+velocityCount = i1;
+t.p('<tr>    <td><a href="/viewOwner.jsp?id=');
+t.p( pet.id);
+t.p('">');
+t.p( pet.name);
+t.p('</a></td>    <td><img alt="" src="/i/hp-');
+t.p( pet.hp);
+t.p('.png"/></td>    <td><a href="');
+t.p('#" onmouseover="show_pet_target(');
+t.p( pet.id);
+t.p(')">>></a><span style="display:none" id="pet-desc-');
+t.p( pet.id);
+t.p('"><a href="');
+t.p('#" onclick="attack_pet(');
+t.p( pet.id);
+t.p(')">Attack ');
+t.p( pet.name);
+t.p('</a></span></td></tr>');
+}
+velocityCount = 0;
+return t.toString();
+}
 function v2js_equiplist(context) { 
 var t = new StringCat();
 var velocityCount = 0;

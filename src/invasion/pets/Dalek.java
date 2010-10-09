@@ -4,11 +4,31 @@
 
 package invasion.pets;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import invasion.dataobjects.*;
+
 public class Dalek extends Critter
 {
+
+    public final static String KEY = Dalek.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
     //{{{ Constructors
+
+   /**
+     * Bare constructor - used by CritterFactory to load from the database
+     * @param
+     * @return
+     *
+     */
+    public Dalek()
+    {
+        init();
+    }
+
     /**
-     * Constructor to add a Dalek to an existing Brood
+     * Constructor to add a new Dalek to an existing Brood
      * @param
      * @return
      *
@@ -17,10 +37,11 @@ public class Dalek extends Critter
     {
         if( brood == null )
         {
-            throw new RuntimeException("Can't created a new Dalek in a non-existant brood");
+            throw new RuntimeException("Can't create a new Dalek in a non-existant brood");
         }
+        setBrood(brood);
         init();
-        this.brood = brood;
+        insert();
     }
 
     /**
@@ -31,9 +52,22 @@ public class Dalek extends Critter
      */
     public Dalek( int station )
     {
+        //no brood yet, so create one
         Brood b = new Brood(-1);
         b.addMember(this);
+        b.setLocation( Station.getRandomLocation( station ) );
         setBroodGoals( b );
+        b.setType( Brood.INVADING );
+        if( !b.insert() )
+        {
+            log.warning("Brood not inserted.");
+        }
+
+        //now create the pet
+        setBrood( b );
+        init();
+        insert();
+        log.finer("Finished creating Dalek " + id + " at location " + b.getLocation() );
     }
 
     public void init()
@@ -48,6 +82,13 @@ public class Dalek extends Critter
         armorMax = 40;
         shield = 40;
         shieldMax = 40;
+        name = "Dalek " + id;
+        typeid = 1;
+        if(Math.random() < 0.01) name = "I peed on the doctor";
+        deathKnells = new String[] { "You have landed the killing blow.",
+            "With a final blow, the lights on the Dalek slowly dim.",
+            "Sparks fly from your target's caraprice and it finally lies motionless."
+            };
     }
     //}}}
 

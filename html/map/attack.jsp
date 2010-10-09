@@ -3,12 +3,9 @@
     public final static Logger log = Logger.getLogger( KEY );
     static{log.setLevel(Level.FINER);}%><%
 
-    // response.setHeader( "Content-Type", "application/json; charset=\"ISO-8859-1\"" );
     String target = WebUtils.getRequiredParameter(request, "target");
     int targetid = Integer.parseInt(target);
-    String targetName = null;
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
-    int apIncrement = 1;
     wazzit.setLastTarget( targetid );
     JSONArray alerts = null;
     InvasionConnection conn = null;

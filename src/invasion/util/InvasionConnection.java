@@ -28,11 +28,23 @@ public class InvasionConnection
 
     public final static String KEY = InvasionConnection.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    //static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
     private Connection conn = null;
     private Statement stmt = null;
 
     public InvasionConnection()
+        throws SQLException
+    {
+        init( "postgres" );
+    }
+
+    public InvasionConnection( String dbname )
+        throws SQLException
+    {
+        init( dbname );
+    }
+
+    private void init( String dbname )
         throws SQLException
     {
         try {
@@ -41,12 +53,12 @@ public class InvasionConnection
                throw new SQLException("Uh oh -- no context!");
             }
 
-            DataSource ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/postgres" );
+            DataSource ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/" + dbname );
 
             if ( ds == null ) {
                throw new SQLException("Data source not found!");
             }
-            conn = ds.getConnection();
+            this.conn = ds.getConnection();
         }
         catch (NamingException e)
         {
@@ -146,8 +158,6 @@ public class InvasionConnection
      */
     public ResultSet psExecuteQuery(String query, String errorMsg, Object... params)
     {
-        log.entering(KEY, "psExecuteQuery", query);
-        log.entering(KEY, "psExecuteQuery", params);
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
@@ -174,6 +184,10 @@ public class InvasionConnection
                 {
                     ps.setDouble(i, ((Double)param).doubleValue());
                 }
+                else if( param instanceof Boolean )
+                {
+                    ps.setBoolean(i, ((Boolean)param).booleanValue());
+                }
                 else if( param == null )
                 {
                     throw new NullPointerException("Parameters passed to psExecuteQuery() cannot be null");
@@ -181,6 +195,7 @@ public class InvasionConnection
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
                 i++;
             }
+            log.finer(ps.toString());
             rs = ps.executeQuery();
             crs.populate(rs);
             DatabaseUtility.close(rs);
@@ -209,8 +224,6 @@ public class InvasionConnection
      */
     public int psExecuteUpdate(String query, String errorMsg, Object... params)
     {
-        log.entering(KEY, "psExecuteUpdate", query);
-        log.entering(KEY, "psExecuteUpdate", params);
 
         PreparedStatement ps = null;
         try
@@ -236,6 +249,10 @@ public class InvasionConnection
                 {
                     ps.setDouble(i, ((Double)param).doubleValue());
                 }
+                else if( param instanceof Boolean )
+                {
+                    ps.setBoolean(i, ((Boolean)param).booleanValue());
+                }
                 else if( param == null )
                 {
                     throw new NullPointerException("Parameters passed to psExecuteQuery() cannot be null");
@@ -243,6 +260,7 @@ public class InvasionConnection
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
                 i++;
             }
+            log.finer(ps.toString());
             return ps.executeUpdate();
         }
         catch(SQLException e)
@@ -269,6 +287,7 @@ public class InvasionConnection
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
+        int returnVal = -1;
         try
         {
             ps = conn.prepareStatement(query);
@@ -277,21 +296,13 @@ public class InvasionConnection
             for(Object param: params)
             {
                 if( param instanceof String )
-                {
                     ps.setString(i, String.valueOf(param));
-                }
                 else if( param instanceof Integer )
-                {
                     ps.setInt(i, ((Integer)param).intValue());
-                }
                 else if( param instanceof Float )
-                {
                     ps.setFloat(i, ((Float)param).floatValue());
-                }
                 else if( param instanceof Double )
-                {
                     ps.setDouble(i, ((Double)param).doubleValue());
-                }
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
                 i++;
             }
@@ -299,19 +310,20 @@ public class InvasionConnection
 
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
-
-            rs.next();
-            return rs.getInt( 1 );
+            if(rs.next())
+                returnVal = rs.getInt( 1 );
+            else
+                throw new SQLException("Error retrieving generated keys.");
         }
         catch(SQLException e)
         {
             log.throwing( KEY, errorMsg, e);
-            return 0;
         }
         finally
         {
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
+            return returnVal;
         }
     }
 

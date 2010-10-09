@@ -48,12 +48,14 @@ $(document).ready( function() {
 
     $("#map").click();
     $("#occupants").click();
+    $("#critters").click();
     $("#msgs-hdr").click();
     $("#basic").click();
 
     // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
     $(document).bind('POLL_COMPLETE', function(e, data){ updateMessagePane(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateOccupantPane(data); });
+    $(document).bind('POLL_COMPLETE', function(e, data){ updatePetPane(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateInventory(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateAnnouncements(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
@@ -104,6 +106,20 @@ function updateOccupantPane(data)
     {
         $('#occ-pane').html("");
         $('#attacklist').html("");
+        $('#att-box').html("");
+    }
+}
+
+function updatePetPane(data)
+{
+    if(data.pets)
+    {
+        $('#pet-pane').html( v2js_critterpane(data) );
+    }
+    else
+    {
+        $('#pet-pane').html("");
+        $('#att-pet-box').html("");
     }
 }
 
@@ -148,6 +164,7 @@ function updateStats2(data)
         $('#stats-area2').html(v2js_stats2(data));
     }
 }
+
 //}}}
 
 //{{{ Actions
@@ -197,5 +214,25 @@ function attack( targetid )
     });
 }
 
-//}}}
+function attack_pet( targetid )
+{
+    var url = "attackPet.jsp?target=" + targetid;
+    $.getJSON(url, function(json){
+        $(document).trigger('POLL_COMPLETE', json)
+    });
+}
 
+function showtarget(id)
+{
+    show = "#desc-" + id;
+    $("#att-box").html($(show).html());
+};
+
+function show_pet_target(id)
+{
+    show = "#pet-desc-" + id;
+    $("#att-pet-box").html($(show).html());
+};
+
+//}}}
+// :collapseFolds=0:folding=explicit:

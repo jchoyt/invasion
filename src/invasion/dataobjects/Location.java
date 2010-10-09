@@ -56,28 +56,13 @@ public class Location  implements java.io.Serializable {
             ps.setInt(1,locid);
             ps.setInt(2,you);
             rs = ps.executeQuery();
-            int hp;
-            int hpmax;
-            int hpPercent;
             while(rs.next())
             {
                 JSONObject obj = new JSONObject();
                 obj.put("name", rs.getString("name"));
                 obj.put("id", rs.getInt("id"));
                 obj.put("level", rs.getInt("level"));
-                hp = rs.getInt("hp");
-                hpmax = rs.getInt("hpmax");
-                hpPercent = 100*hp/hpmax;
-                if( hpPercent < 10 )
-                    obj.put("hp", 4);
-                else if( hpPercent < 25 )
-                     obj.put("hp", 3 );
-                else if( hpPercent < 50 )
-                     obj.put("hp", 2 );
-                else if( hpPercent < 99 )
-                    obj.put("hp", 1 );
-                else
-                    obj.put("hp", 0 );
+                obj.put( "hp", Alt.calcHpCategory( rs.getInt("hp"), rs.getInt("hpmax") ) );
                 root.put(obj);
             }
             DatabaseUtility.close(rs);

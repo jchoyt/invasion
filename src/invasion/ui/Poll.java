@@ -4,6 +4,7 @@
 
 package invasion.util;
 
+import invasion.pets.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.*;
@@ -95,6 +96,14 @@ public class Poll
             //stats
             ret.put("stats", Alt.getStats(conn, wazzit.getAlt().getId() ) );
             log.finer( "Stats complete: " + (System.currentTimeMillis()-start) );
+            //critters
+            JSONArray pets = Critter.petsAtLocation( wazzit.getAlt().getLocation() );
+            if( pets.length() > 0 )
+            {
+                ret.put("pets", pets );
+            }
+            log.finer( "Pets complete: " + (System.currentTimeMillis()-start) );
+            log.finer( "Poll results: " + String.valueOf(ret));
             out.write(String.valueOf(ret));
         }
         catch(Exception e)

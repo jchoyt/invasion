@@ -31,7 +31,7 @@
     PreparedStatement ps = conn.prepareStatement(query);
     try{
         ps.setString(1, message);
-        ps.setInt(2, wazzit.getLocid());
+        ps.setInt(2, wazzit.getAlt().getLocation());
         ps.executeUpdate();
     }
     catch(Exception e)
