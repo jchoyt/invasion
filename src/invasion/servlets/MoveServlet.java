@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import java.beans.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -17,8 +18,10 @@ public class MoveServlet extends HttpServlet
 {
     public final static String KEY = "MoveServlet";  //change to MoveServlet eventually
     public final static Logger log = Logger.getLogger( KEY );
+    public static PropertyChangeSupport pcs = new PropertyChangeSupport(new MoveServlet());
     // static{log.setLevel(Level.FINER);}
 
+    //movement direction 1 through 9 like a telephone keypad
     int[] xdelta = { -1, 0, 1, -1, 0, 1, -1, 0, 1};
     int[] ydelta = { -1, -1, -1, 0, 0, 0, 1, 1, 1};
 
@@ -72,22 +75,12 @@ public class MoveServlet extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
-        // put current location in sesion memory  String start = WebUtils.getRequiredParameter(request, "start");
-        // don't wnat destination...want movement direction  String dest = WebUtils.getRequiredParameter(request, "dest");
         String direction = WebUtils.getRequiredParameter(request, "dir");
         int dir = Integer.parseInt(direction);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
-        if( wazzit==null)
-        {
-            //not logged in
-            log.warning("User not logged in.");
-            response.sendRedirect("/index.jsp");
-            return;
-        }
-
-
         int altid = wazzit.getAlt().getId();
         int locid = wazzit.getAlt().getLocation();
+        int oldloc = locid;
 
         log.finer("old location: " + locid);
         boolean valid = true;
@@ -109,8 +102,11 @@ public class MoveServlet extends HttpServlet
                 //DO CHECKS FOR VALID destinations here
                 log.finer("new location: " + locid);
                 setNewLoc(conn, locid, altid );
-                wazzit.getAlt().setLocation(locid);
-                wazzit.getAlt().setLocationType(rs.getInt("typeid"));
+                // notify the listeners
+                pcs.firePropertyChange(KEY, oldloc, locid);
+                // alt is reloaded by DeathFilter anyway
+                // wazzit.getAlt().setLocation(locid);
+                // wazzit.getAlt().setLocationType(rs.getInt("typeid"));
                 wazzit.getAlt().decrementAp(conn, 1);
             }
             else
@@ -146,6 +142,16 @@ public class MoveServlet extends HttpServlet
         throws ServletException, IOException
     {
         response.sendRedirect("/naughty.jsp");
+    }
+
+    public static void subscribe( PropertyChangeListener pcl )
+    {
+        pcs.addPropertyChangeListener(pcl);
+    }
+
+    public static void unsubscribe( PropertyChangeListener pcl )
+    {
+        pcs.removePropertyChangeListener(pcl);
     }
 
 }

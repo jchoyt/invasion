@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import invasion.pets.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,6 +97,8 @@ public class InitServlet extends HttpServlet
         LocationType.load();
         /* pre-load the Search information */
         Search.load();
+        /* Load up the location occupant counts */
+        LocationCache.load();
     }
 
     /**
