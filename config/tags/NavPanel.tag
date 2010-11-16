@@ -6,8 +6,7 @@
     int BOX_SIZE = 55;
     int MAP_SIDE = 5;
     int TOTAL_SIZE = BOX_SIZE * MAP_SIDE;
-    Location center = null;
-    StringBuilder centerLocData = new StringBuilder();
+    String DEEP_SPACE = "Deep Space";
     /**
      *  Does the data retrieval
      */
@@ -55,8 +54,6 @@
 			    $("#descbox").html(contents);
 			};
 </script>
-<div class="descbox" id="descbox">&nbsp;</div>
-<div id="mapbox" style="position:relative;" onmouseout="shloc('<%=locid%>')">
 <%
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     if( wazzit == null )
@@ -70,6 +67,10 @@
         out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
         return;
     }
+%>
+<div class="descbox" id="descbox">&nbsp;</div>
+<div id="mapbox" style="position:relative;" onmouseout="shloc('<%=locid%>')">
+<%
     conn = new InvasionConnection();
     int x = 0;
     int y = 0;
@@ -90,7 +91,10 @@
             out.write(Integer.toString(y*BOX_SIZE) + "px;\" onmouseover=\"shloc('" + cloc);
             out.write("')\">");
             /* movement */
-            out.write( WebUtils.getMovementClass(boxNum) );
+            if( !DEEP_SPACE.equals( rs.getString("typename") ) )
+            {
+                out.write( WebUtils.getMovementClass(boxNum) );
+            }
             /* metadata - hidden until mouseover */
             out.write("<div style=\"display:none\" id=\"desc-" + cloc + "\">");
             out.write("<strong>Name:</strong> " + rs.getString("locname"));

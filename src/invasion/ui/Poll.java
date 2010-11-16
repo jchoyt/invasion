@@ -72,8 +72,12 @@ public class Poll
         try
         {
             JSONObject ret = new JSONObject();
-            JSONArray items = Item.getItems(conn, wazzit.getAlt().getId() );
+            //stats
+            ret.put("stats", Alt.getStats(conn, wazzit.getAlt().getId() ) );
+            log.finer( "Stats complete: " + (System.currentTimeMillis()-start) );
+            //TODO: if char is dead, stop here so messages don't show up as read.
             //Inventory
+            JSONArray items = Item.getItems(conn, wazzit.getAlt().getId() );
             if( items.length() > 0 )
             {
                 ret.put("inv", items);
@@ -93,9 +97,6 @@ public class Poll
             {
                 ret.put("announce", alerts);
             }
-            //stats
-            ret.put("stats", Alt.getStats(conn, wazzit.getAlt().getId() ) );
-            log.finer( "Stats complete: " + (System.currentTimeMillis()-start) );
             //critters
             JSONArray pets = Critter.petsAtLocation( wazzit.getAlt().getLocation() );
             if( pets.length() > 0 )
@@ -114,6 +115,23 @@ public class Poll
         }
         log.finer("Exiting: " + (System.currentTimeMillis()-start));
     }
+
+    public static void sendReloadCommand(Writer out)
+    {
+        try
+        {
+            JSONObject ret = new JSONObject();
+            ret.put("reload", true );
+            out.write(String.valueOf(ret));
+        }
+        catch(Exception e)
+        {
+            log.throwing( KEY, "Error occurred during polling", e);
+            try {out.write(ERROR);} catch (Exception ee){};
+            return;
+        }
+    }
+
 
     public static JSONObject createErrorAlert( String message )
     {
@@ -149,28 +167,139 @@ public class Poll
 
     /*
      *  Sample data
-     *       {
-     *        "msgs": [
-     *            {  "who": "You", "msg": "test",  "date": "2010-01-08 21:00:00" },
-     *            { "who": "EK",  "msg": "test2",  "date": "2010-01-08 21:00:01" } ] ,
-     *        "occs":[
-     *            {"id":9,"hp":0,"level":1,"name":"Test2"},
-     *            {"id":10,"hp":0,"level":1,"name":"Test3"},
-     *            {"id":1,"hp":0,"level":1,"name":"Uncle Purvy"},
-     *            {"id":12,"hp":0,"level":1,"name":"asdf"} ],
-     *        "inv": [
-     *            { "ammoleft": 2, "condition": "Non-functional", "name": "Energy pack ", "typeid": 28, "itemid": 265, "type": "ammo" },
-     *            { "ammoleft": 2, "condition": "Battered", "name": "Energy pack ", "typeid": 28, "itemid": 257, "type": "ammo" },
-     *            { "ammoleft": 5, "condition": "Destroyed", "name": "Energy pack ", "typeid": 28, "itemid": 258, "type": "ammo" },
-     *            { "ammoleft": 1, "condition": "Destroyed", "name": "Vodka", "typeid": 37, "itemid": 264, "type": "booze" },
-     *            { "ammoleft": 2, "condition": "Destroyed", "name": "Vodka", "typeid": 37, "itemid": 259, "type": "booze" },
-     *            { "ammoleft": 7, "condition": "Average", "name": "Vodka", "typeid": 37, "itemid": 268, "type": "booze" },
-     *        stats: { "ip": 0, "hp":50, "XP": 9001, "AP": 50, "status": "drunk, dead, encumbered, no body, insane"},
-     *        pets: [],
-     *        announce: [
-     *            { "type": "error", "message":"This is an error" },
-     *            { "type": "info", "message":"This is for information" } ]
-     *       }
+     *  {
+     *      "msgs": [
+     *          {
+     *              "text": "You attack Dalek323 with your Energy pistol and miss.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:29:02 -0500",
+     *              "type": 0
+     *          },
+     *          {
+     *              "text": "Dalek323 attacked you and missed.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:29:02 -0500",
+     *              "type": 0
+     *          },
+     *          {
+     *              "text": "You attack Dalek323 with your Energy pistol and miss.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
+     *              "type": 0
+     *          },
+     *          {
+     *              "text": "Dalek323 attacked you and missed.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
+     *              "type": 0
+     *          },
+     *          {
+     *              "text": "You attack Dalek323 with your Energy pistol and deal 5 points of damage.  You earned 5 XP.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
+     *              "type": 0
+     *          },
+     *          {
+     *              "text": "Dalek323 attacked you and dealt 9 points of damage.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
+     *              "type": 0
+     *          },
+     *          {
+     *              "text": "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
+     *              "type": 1
+     *          },
+     *          {
+     *              "text": "After some contemplation on your experiences, you have a major insight.  You have levelled up!",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:30:00 -0500",
+     *              "type": 4
+     *          },
+     *          {
+     *              "text": "Your new body has been started.  It will be ready in approximately 3 tick(s).",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 18:30:00 -0500",
+     *              "type": 1
+     *          },
+     *          {
+     *              "text": "You step out of the cloning chamber and look around with your new old eyes.  You see rows of identical chambers around the room.  Moving around experimentally, you determine everything appears to be as it should be.",
+     *              "reps": 1,
+     *              "read": true,
+     *              "date": "2010-11-15 (Mon) 22:35:02 -0500",
+     *              "type": 1
+     *          },
+     *          {
+     *              "text": "You attack Dalek447 with your Energy pistol and miss.",
+     *              "reps": 1,
+     *              "read": false,
+     *              "date": "2010-11-15 (Mon) 22:35:13 -0500",
+     *              "type": 0
+     *          },
+     *          {
+     *              "text": "Dalek447 attacked you and missed.",
+     *              "reps": 1,
+     *              "read": false,
+     *              "date": "2010-11-15 (Mon) 22:35:13 -0500",
+     *              "type": 0
+     *          }
+     *      ],
+     *      "stats": {
+     *          "hp": 50,
+     *          "level": 3,
+     *          "cp": 20,
+     *          "ap": 21,
+     *          "xp": 232,
+     *          "ticksalive": 1,
+     *          "ip": 0
+     *      },
+     *      "pets": [
+     *          {
+     *              "id": "447",
+     *              "hp": 0,
+     *              "name": "Dalek447"
+     *          },
+     *          {
+     *              "id": "536",
+     *              "hp": 0,
+     *              "name": "Dalek536"
+     *          }
+     *      ],
+     *      "inv": [
+     *          {
+     *              "ammoleft": 8,
+     *              "condition": "Average",
+     *              "hidden": false,
+     *              "name": "Energy pack",
+     *              "typeid": 28,
+     *              "equipped": false,
+     *              "itemid": 937,
+     *              "type": "ammo",
+     *              "wt": "2"
+     *          },
+     *          {
+     *              "ammoleft": 2,
+     *              "condition": "Broken",
+     *              "hidden": false,
+     *              "name": "Energy pistol",
+     *              "typeid": 26,
+     *              "equipped": true,
+     *              "itemid": 938,
+     *              "type": "weapon",
+     *              "wt": "3"
+     *          }
+     *      ]
+     *  }
      *
      */
 }

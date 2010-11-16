@@ -36,8 +36,7 @@ public class Login {
 
 
     public static String registerPlayer(HttpServletRequest request)
-    throws NoSuchAlgorithmException,  java.io.IOException,
-             java.io.UnsupportedEncodingException {
+        throws NoSuchAlgorithmException,  java.io.IOException, java.io.UnsupportedEncodingException {
         //
         // Retrieve the necessary values from the MsgObject.
         // (These are important no matter the operation)

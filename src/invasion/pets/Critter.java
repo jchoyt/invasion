@@ -15,7 +15,7 @@ public class Critter implements Attacker, Defender
 {
     public final static String KEY = Critter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Constructors
     //}}}
@@ -30,7 +30,7 @@ public class Critter implements Attacker, Defender
     protected static int  apmax = 50;
     protected int armor = 50;
     protected static int armorMax = 50;
-    protected int attackDamage = 5;
+    protected static DiceRoller attackDamage = new DiceRoller("2d5");
     protected int cost = 10;
     protected int hp = 30;
     protected static int hpmax = 0;
@@ -168,7 +168,7 @@ public class Critter implements Attacker, Defender
 
     /**
      *
-     * @param  conn - don't use - need to use the petdb
+     * @param  conn - don't use - need to use the petdb.  This is the connection for the attacker
      * @return
      *
      */
@@ -186,15 +186,40 @@ public class Critter implements Attacker, Defender
         if( hp < 1 )
         {
             die( conn, lasthurtby );
+            attacker.setReload();
         }
         else
+        {
             update();
+        }
         return damageDone;
     }
 
+    /**
+     * Notify the defender that they've been attacked.  Allows for reprisals.
+     *
+     * @param
+     * @return
+     *
+     */
+    public void notifyAttacked( Attacker attacker, InvasionConnection conn )
+    {
+        Defender defender = (Defender) attacker;
+        attack( defender, conn );
+        //WARNING - this will cause an lethal loop of attacking and counter attacking if one pet attacks another
+    }
+
+    /**
+     * Kills off a pet
+     *
+     * @param  conn Connection to use for attacker only (assuming it's a character)
+     * @param  whodunnit The id of the last entity to attack
+     * @return
+     *
+     */
     public void die(InvasionConnection conn, int whodunnit)
     {
-        if( whodunnit != 0 )
+        if( whodunnit > 0 )
         {
             String query = "update alt set xp=xp+10 where id=?";
             conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", whodunnit );
@@ -207,7 +232,7 @@ public class Critter implements Attacker, Defender
                 killerRace = rs.getInt( 1 );
             }
             DatabaseUtility.close(rs);
-         */
+            */
             //give kill message to attacker (and ding IP if appropriate)
             int ipHit = 2;
             // if( deadRace == killerRace && deadRace > 1)
@@ -264,12 +289,13 @@ public class Critter implements Attacker, Defender
             // check if you hit
             if( Math.random() < attackAccuracy )
             {
+                int dmg = attackDamage.roll();
                 //TODO soaks
-                defender.insertMessage(name + " attacked you and dealt " + attackDamage + " points of damage.", Message.NORMAL, conn);
+                defender.insertMessage(name + " attacked you and dealt " + dmg + " points of damage.", Message.NORMAL, conn);
                 //X was absorbed by armor
                 //Y was absorbed by shields
                 String query = "update alt set hp = hp-?, lasthurtby=? where id=?";
-                conn.psExecuteUpdate( query, "Error occurred while updating your victim's HP", attackDamage, id, defender.getId(), attackDamage, id );
+                conn.psExecuteUpdate( query, "Error occurred while updating your victim's HP", dmg, getId(), defender.getId());  //TODO - getId should be  this the brood master's ID
                 query = "select id from alt where hp < 1 and id=?";
                 ResultSet rs = conn.psExecuteQuery( query, "Error occurred while updating your victim's HP", defender.getId() );
                 if( rs.next() )
@@ -278,10 +304,10 @@ public class Critter implements Attacker, Defender
                     Alt.kill( conn, defender.getId() );
                 }
                 //method should do all soaks and return final damage done
-                Stats.addChange(id, Stats.DAMDONE, attackDamage);
+                Stats.addChange(id, Stats.DAMDONE, dmg);
                 if( defender instanceof Alt )
                 {
-                    Stats.addChange(defender.getId(), Stats.DAMTAKEN, attackDamage);
+                    Stats.addChange(defender.getId(), Stats.DAMTAKEN, dmg);
                 }
                 DatabaseUtility.close(rs);
             }
@@ -300,6 +326,9 @@ public class Critter implements Attacker, Defender
             return null;
         }
     }
+
+	public boolean getReload() { return false; }
+	public void setReload() { }
     //}}}
 
     //{{{  Getters and setters
@@ -311,7 +340,6 @@ public class Critter implements Attacker, Defender
     public int getAp() { return this.ap; }
     public int getApmax() { return this.apmax; }
     public int getArmor() { return this.armor; }
-    public int getAttackDamage() { return this.attackDamage; }
     public int getCost() { return this.cost; }
     public int getHp() { return this.hp; }
     public int getHpmax() { return this.hpmax; }
@@ -322,7 +350,6 @@ public class Critter implements Attacker, Defender
     public void setApmax(int apmax) { this.apmax = apmax; }
     public void setArmor(int armor) { this.armor = armor; }
     public void setAttackAccuracy(float attackAccuracy) { this.attackAccuracy = attackAccuracy; }
-    public void setAttackDamage(int attackDamage) { this.attackDamage = attackDamage; }
     public void setCost(int cost) { this.cost = cost; }
     public void setDamageType(char damageType) { this.damageType = damageType; }
     public void setDefendAccuracy(float defendAccuracy) { this.defendAccuracy = defendAccuracy; }

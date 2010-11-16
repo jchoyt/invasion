@@ -28,4 +28,6 @@ public interface Defender
      */
     public int hit( Attacker attacker, int rawAmount, InvasionConnection conn ) throws SQLException;
 
+    public void notifyAttacked( Attacker attacker, InvasionConnection conn );
+
 }

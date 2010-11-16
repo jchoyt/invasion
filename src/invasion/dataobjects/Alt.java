@@ -46,7 +46,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected int race = 0;
     protected ItemType equippedWeaponType = null;
 	protected int ammo = 0;
-
+	protected boolean reload = false;
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
@@ -103,10 +103,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         {
             System.out.println( "He's dead!");
             Alt.kill( conn, id );
+            attacker.setReload();
         }
         hp = hp - damageDone;
         return damageDone;
     }
+
+    public void notifyAttacked( Attacker attacker, InvasionConnection conn ){}
 
     /**
      *  um....kills off the character
@@ -142,7 +145,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         Stats.addChange( alt, Stats.DEATHS, 1);
         String killerName = null;
         log.finer( "Killer ID is " + whodunnit);
-        if( whodunnit != 0 )
+        if( whodunnit > 0 )
         {
             query = "update alt set xp=xp+? where id=?";
             conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", level, whodunnit );
@@ -224,12 +227,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 }
                 ammo--;  //TODO - adjust this in the database
                 //check if reload necessary
-                if( ammo == 0 )
+                if( ammo < 1 )
                 {
                     //TODO:  check for ammo
                     log.finer("reloading");
                     int capacity = equippedWeaponType.getCapacity();
-                    String query = "update item i set ammoleft=? where itemid=?";
+                    String query = "update item set ammoleft=? where itemid=?";
                     ammo = capacity;
                     int count = conn.psExecuteUpdate( query, "Error occured updating ammunition.", capacity, equippedWeapon );
                     new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
@@ -260,6 +263,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and miss.");
                defender.insertMessage(name + " attacked you with a "  + equippedWeaponType.getName() + " and missed.", Message.NORMAL, conn);
             }
+            defender.notifyAttacked( this, conn );
             decrementAp(conn, apIncrement);
             return null;
         }
@@ -399,7 +403,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             DatabaseUtility.close(ps);
 
             // assign spawn location
-            query = "select * from location where typeid=31 and station=? order by random() limit 1";
+            query = "select * from location where typeid=10 and station=? order by random() limit 1";
             ps = conn.prepareStatement(query);
             ps.setInt(1,station);
             rs = ps.executeQuery();
@@ -470,7 +474,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public static JSONObject getStats( InvasionConnection conn, int altid )
     throws SQLException, JSONException
     {
-        String query = "select hp, ip, ap, xp, ticksalive from alt where id=?";
+        String query = "select hp, ip, ap, cp, level, xp, ticksalive from alt where id=?";
         ResultSet rs = conn.psExecuteQuery( query, "Error retrieving character stats", altid );
         JSONObject obj = new JSONObject();
         if(rs.next())
@@ -479,7 +483,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             obj.put("ap", rs.getInt("ap"));
             obj.put("ip", rs.getInt("ip"));
             obj.put("xp", rs.getInt("xp"));
+            obj.put("cp", rs.getInt("cp"));
+            obj.put("level", rs.getInt("level"));
             obj.put("ticksalive", rs.getInt("ticksalive"));
+            if( rs.getInt( "hp" ) < 1 )
+            {
+                obj.put("reload", true);
+            }
         }
         return obj;
     } //}}}
@@ -525,6 +535,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setRace(int race) { this.race = race; }
 	public int getAmmo() { return this.ammo; }
 	public void setAmmo(int ammo) { this.ammo = ammo; }
+	public boolean getReload() { return this.reload; }
+	public void setReload() { this.reload = true; }
     //}}}
 
 }

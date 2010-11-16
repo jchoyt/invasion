@@ -53,6 +53,7 @@ $(document).ready( function() {
     $("#basic").click();
 
     // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
+    $(document).bind('POLL_COMPLETE', function(e, data){ checkForReload(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateMessagePane(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateOccupantPane(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updatePetPane(data); });
@@ -69,6 +70,19 @@ $(document).ready( function() {
 }); //}}}
 
 //{{{ GUI updates
+function checkForReload( data )
+{
+    if( data.reload )
+    {
+        window.location="/map/index.jsp";
+    }
+    if( data.stats.reload )
+    {
+        window.location="/map/index.jsp";
+    }
+}
+
+
 function poll()
 {
     $("#poll-indicator").show();
@@ -173,7 +187,6 @@ function drop( itemid )
 {
     var url = "drop.jsp?itemid=" + itemid;
     $.getJSON(url, function(json){
-        //$(document).trigger('POLL_COMPLETE', json)
         $(document).trigger('POLL_COMPLETE', json)
     });
 }
@@ -182,7 +195,6 @@ function eat( itemid )
 {
     var url = "eat.jsp?itemid=" + itemid;
     $.getJSON(url, function(json){
-        //$(document).trigger('POLL_COMPLETE', json)
         $(document).trigger('POLL_COMPLETE', json)
     });
 }
@@ -191,7 +203,6 @@ function drink( itemid )
 {
     var url = "drink.jsp?itemid=" + itemid;
     $.getJSON(url, function(json){
-        //$(document).trigger('POLL_COMPLETE', json)
         $(document).trigger('POLL_COMPLETE', json)
     });
 }
@@ -200,8 +211,6 @@ function dosearch( reps )
 {
     var url = "search.jsp?count=" + reps;
     $.getJSON(url, function(json){
-        // alert(json);
-        //$(document).trigger('POLL_COMPLETE', json)
         $(document).trigger('POLL_COMPLETE', json)
     });
 }

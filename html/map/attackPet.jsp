@@ -23,6 +23,12 @@
         }
         log.finer("Character " + wazzit.getAlt().getId() + " about to attack pet " + target );
         alerts = wazzit.getAlt().attack( defender, conn );
+        if( wazzit.getAlt().getReload() )
+        {
+            Poll.sendReloadCommand(out);
+            return;
+        }
+        Poll.fullPoll( conn, out, wazzit, alerts );
     }
     catch (Exception e)
     {
@@ -32,7 +38,6 @@
     }
     finally
     {
-        Poll.fullPoll( conn, out, wazzit, alerts );
         conn.close();
     }
 %>

@@ -13,12 +13,11 @@ try
 
     if( alt != null )
     {
-        session.setAttribute("character", alt.getId());
-        response.sendRedirect( "/map" );
+        conn = new InvasionConnection();
+        Message msg = new Message( conn, alt.getId(), Message.SELF, "Welcome to Invasion's pre-alpha stage.  In reality, you can't do much yet.  Over time, more will be added and I'm relying on you to pass on lessons learned to others (via the wiki, for example) who will follow you.  Also, I need bug reports, suggestions, etc. - put them on the forums.  There are some loop holes in security right now.  Report them and have fun with them, but don't abuse them.  Mostly, enjoy.");
+        response.sendRedirect( "/" );
         return;
     }
-    conn = new InvasionConnection();
-    Message msg = new Message( conn, alt.getId(), Message.SELF, "Welcome to Invasion's pre-alpha stage.  In reality, you can't do much yet.  Over time, more will be added and I'm relying on you to pass on lessons learned to others (via the wiki, for example) who will follow you.  Also, I need bug reports, suggestions, etc. - put them on the forums.  There are some loop holes in security right now.  Report them and have fun with them, but don't abuse them.  Mostly, enjoy.");
 }
 catch (Exception e)
 {

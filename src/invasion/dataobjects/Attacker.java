@@ -24,4 +24,8 @@ public interface Attacker
 
     public int getId();
 
+    public void setReload();
+
+    public boolean getReload();
+
 }

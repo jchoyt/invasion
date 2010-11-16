@@ -17,7 +17,7 @@ catch ( NullPointerException e) {
 }
 if( loginResult.equals( Login.LOGIN_OK ))
 {
-    response.sendRedirect( "map/index.jsp" );
+    response.sendRedirect( "/index.jsp" );
     return;
 }
 %>

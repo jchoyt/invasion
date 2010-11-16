@@ -7,6 +7,7 @@ package invasion.pets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import invasion.dataobjects.*;
+import invasion.util.*;
 
 public class Dalek extends Critter
 {
@@ -76,7 +77,7 @@ public class Dalek extends Critter
         apmax = 75;
         hp = 50;
         hpmax = 50;
-        attackDamage = 7;
+        attackDamage = new DiceRoller("2d7");
         cost = -1;
         armor = 40;
         armorMax = 40;
@@ -105,6 +106,10 @@ public class Dalek extends Critter
         brood.setGoal( Brood.GOAL_KILL_HUMAN , 5 );
         brood.setGoal( Brood.GOAL_KILL_MUT , 5 );
     }
+    //}}}
+
+    //{{{  Getters and setters
+    public int getId() { return -1; }
     //}}}
 
 }

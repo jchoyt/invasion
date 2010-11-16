@@ -26,8 +26,8 @@ public class OffensiveComparator implements Comparator
 
     public int compare(Critter o1, Critter o2)
     {
-        float o1DamagePerAp = o1.getAttackAccuracy() * o1.getAttackDamage();
-        float o2DamagePerAp = o2.getAttackAccuracy() * o2.getAttackDamage();
+        float o1DamagePerAp = o1.getAttackAccuracy(); //* o1.getAttackDamage();
+        float o2DamagePerAp = o2.getAttackAccuracy(); //* o2.getAttackDamage();
         return ( (int)( ( o2DamagePerAp - o1DamagePerAp ) * 10 )  );
     }
 

@@ -49,10 +49,16 @@ public class DeathFilter implements Filter
         if (session != null) {
             wazzit = (Whatzit) session.getAttribute(Whatzit.KEY);
             if( wazzit == null || wazzit.getAlt() == null )  //nobody is logged in
+            {
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+                return;
+            }
         }
         else
+        {
             filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            return;
+        }
         if( endpoint.endsWith("jsp") )
         {
             try{
@@ -61,6 +67,7 @@ public class DeathFilter implements Filter
             catch (SQLException e)
             {
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+                return;
             }
             int locid = wazzit.getAlt().getLocation();
             log.finer( "Location id is: " + locid + " and HP total is " + wazzit.getAlt().getHp() );
@@ -69,10 +76,13 @@ public class DeathFilter implements Filter
                 //make LOST IN SPACE page
                 // out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+                return;
             }
             else if( locid == -57005 || wazzit.getAlt().getHp() < 1 )
             {
+                log.finer("Character is dead.");
                 filterConfig.getServletContext().getRequestDispatcher("/map/dead.jsp").forward(request, response);
+                return;
             }
             /* Add AP filter here and have it work off of Config */
         }

@@ -1,5 +1,5 @@
 #foreach($msg in $msgs)
-    <li><span class="read-$msg.read"><span class="$msg.type">
+    <li><span class="read-$msg.read"><span class="msgtype$msg.type">
     #if( $msg.reps > 1 )
         ( $msg.reps times )
     #end
