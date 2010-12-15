@@ -36,6 +36,23 @@
                     ID: <input type="text" name="id"/><br/>
                     <input type="submit"/>
                 </form>
+                <form action="showOccupants.jsp">
+                <h3>Occupants</h3>
+                    ID: <input type="text" name="station"/><br/>
+                    <input type="submit"/>
+                </form>
+                <form action="sendStationMessage.jsp">
+                <h3>Send message to entire station</h3>
+                    ID: <input type="text" name="station"/><br/>
+                    Type: <select name="type"><option value="0">Normal (black)</option>
+                            <option value="1">Self (green)</option>
+                            <option value="2">Broadcast (cyan)</option>
+                            <option value="3" selected="true">Etherial (purple)</option>
+                            <option value="4">Effect (red)</option>
+                        </select><br/>
+                    Message: <input type="text" name="msg" size="40"/></br>
+                    <input type="submit"/>
+                </form>
             </div>
         </center>
     </body>

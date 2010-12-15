@@ -3,12 +3,17 @@
  */
 package invasion.pets;
 
+import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import invasion.util.*;
+import java.util.List;
 import invasion.servlets.*;
-import java.beans.*;
-import java.sql.*;
+import invasion.servlets.*;
+import invasion.util.*;
 public class LocationCache implements PropertyChangeListener
 {
 
@@ -36,8 +41,8 @@ public class LocationCache implements PropertyChangeListener
     public static void load()
     {
         // subscribe to events
-        MoveServlet.subscribe(new LocationCache());
-        // Brood.subscribe(this);
+        MoveServlet.pcs.addPropertyChangeListener(new LocationCache());
+        // Brood.pcs.addPropertyChangeListener(this);
         String query = "select min(id), max(id) - min(id) from location where id >= 1000000";
         InvasionConnection conn = null;
         ResultSet rs = null;
@@ -90,6 +95,73 @@ public class LocationCache implements PropertyChangeListener
 
     }
 
+    /**
+     * Check to make sure the Cache matches the database
+     * @param
+     * @return
+     *
+     */
+    public static List<String> verify()
+    {
+        String query = "select min(id), max(id) - min(id) from location where id >= 1000000";
+        InvasionConnection conn = null;
+        ResultSet rs = null;
+        List<String> ret = null;
+        try
+        {
+            ret = new ArrayList<String>();
+            conn = new InvasionConnection();
+            //character count per location
+            query = "select location, count(*) from alt where location >= 1000000 group by location order by location";
+            rs = conn.executeQuery(query);
+            while(rs.next())
+            {
+                if( getCharactersAtLoc( rs.getInt(1) ) != rs.getInt(2) )
+                {
+                    ret.add( "Character count for location " + rs.getInt(1) + " does not match.  Cache says " + getCharactersAtLoc( rs.getInt(1) ) + " while the database has " + rs.getInt(2) + ".  Correcting." );
+                    setCharactersAtLoc(rs.getInt(1), rs.getInt(2));
+                }
+                // else ret.add("Location " + rs.getInt(1) + " verified correct.");
+            }
+            DatabaseUtility.close(rs);
+
+            //brood count per location
+            query = "select location, count(id) from brood group by location order by location";
+            rs = conn.executeQuery(query);
+            while(rs.next())
+            {
+                int loc = rs.getInt(1);
+                int count = rs.getInt(2);
+                if( getBroodsAtLoc( loc ) != count )
+                {
+                    ret.add( "Critter count for location " + loc + " does not match.  Cache says " + getCharactersAtLoc( loc ) + " while the database has " + count + ".  Correcting." );
+                    setCrittersAtLoc(rs.getInt(1), rs.getInt(2));
+                }
+            }
+            DatabaseUtility.close(rs);
+
+        //     //items count per location
+        //     query = "select locid, count(itemid) from item where locid >= 1000000 group by locid order by locid";
+        //     rs = conn.executeQuery(query);
+        //     while(rs.next())
+        //         setItemsAtLoc(rs.getInt(1), rs.getInt(2));
+        //     DatabaseUtility.close(rs);
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            DatabaseUtility.close(rs);
+            conn.close();
+        }
+        return ret;
+
+    }
+
+
     protected static void init( int shift, int span )
     {
         offset = shift;
@@ -108,7 +180,12 @@ public class LocationCache implements PropertyChangeListener
             incrementChars( (Integer)evt.getNewValue() );
             decrementChars( (Integer)evt.getOldValue() );
         }
-        //else if
+        else if( evt.getPropertyName().equals( Brood.KEY ) )
+        {
+            log.finer("Adjusting location counts.");
+            incrementCritters( (Integer)evt.getNewValue() );
+            decrementCritters( (Integer)evt.getOldValue() );
+        }
     }
 
     public static void logCounts()
@@ -124,7 +201,7 @@ public class LocationCache implements PropertyChangeListener
     }
 
 	public static int getCharactersAtLoc( int locid ) { return charactersAtLoc[locid - offset]; }
-	public static int getCrittersAtLoc( int locid ) { return crittersAtLoc[locid - offset]; }
+	public static int getBroodsAtLoc( int locid ) { return crittersAtLoc[locid - offset]; }
 	public static int getItemsAtLoc( int locid ) { return itemsAtLoc[locid - offset]; }
 	public static void setCharactersAtLoc(int locid, int count) { charactersAtLoc[locid - offset] = count; }
 	public static void setCrittersAtLoc(int locid, int count) { crittersAtLoc[locid - offset] = count; }
@@ -135,6 +212,7 @@ public class LocationCache implements PropertyChangeListener
     public static void incrementChars( int locid ) { charactersAtLoc[locid - offset]++; }
     public static void incrementCritters( int locid ) { crittersAtLoc[locid - offset]++; }
     public static void incrementItems( int locid ) { itemsAtLoc[locid - offset]++; }
+    public static int getSize() { return charactersAtLoc.length; }
     //}}}
 
     //{{{ Getters and Setters

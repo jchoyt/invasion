@@ -18,28 +18,20 @@ public class MoveServlet extends HttpServlet
 {
     public final static String KEY = "MoveServlet";  //change to MoveServlet eventually
     public final static Logger log = Logger.getLogger( KEY );
-    public static PropertyChangeSupport pcs = new PropertyChangeSupport(new MoveServlet());
     // static{log.setLevel(Level.FINER);}
 
+    public final static PropertyChangeSupport pcs = new PropertyChangeSupport(KEY);
+
     //movement direction 1 through 9 like a telephone keypad
-    int[] xdelta = { -1, 0, 1, -1, 0, 1, -1, 0, 1};
-    int[] ydelta = { -1, -1, -1, 0, 0, 0, 1, 1, 1};
+    public static final int[] xdelta = { -1, 0, 1, -1, 0, 1, -1, 0, 1};
+    public static final int[] ydelta = { -1, -1, -1, 0, 0, 0, 1, 1, 1};
 
     /**
-     *  Description of the Method
+     * Update the database to show the new location
+     * @param
+     * @return
      *
-     *@param  config                Description of the Parameter
-     *@exception  ServletException  Description of the Exception
      */
-    public void init( ServletConfig config )
-        throws ServletException
-    {
-        /*
-         *  required for all Servlets
-         */
-        super.init( config );
-    }
-
     protected void setNewLoc(InvasionConnection conn, int locid, int altid)
     {
         Integer[] params = {locid, altid};
@@ -143,15 +135,4 @@ public class MoveServlet extends HttpServlet
     {
         response.sendRedirect("/naughty.jsp");
     }
-
-    public static void subscribe( PropertyChangeListener pcl )
-    {
-        pcs.addPropertyChangeListener(pcl);
-    }
-
-    public static void unsubscribe( PropertyChangeListener pcl )
-    {
-        pcs.removePropertyChangeListener(pcl);
-    }
-
 }

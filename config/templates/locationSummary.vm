@@ -1,0 +1,20 @@
+Located at ($x, $y) on level $level of $station station
+<br/>Named $name, it is a $type
+<br/>
+<br/><u>Characters here</u>
+<ul>
+#foreach($o in $chars)
+    <li>$o.name (L$o.level)</li>
+#end
+</ul>
+<u>Critters here</u>
+<ul>
+#foreach($o in $critters)
+    <li>$o.type named $o.name in brood $o.brood (owned by $o.owner)
+#end
+</ul>
+
+<form action="sendMessageLocation.jsp">
+    <input type="hidden" name="locid" value="$locid">
+    Send message to this location: <input type="text" name="msg" width="40" value="This doesn't work yet"/><input type="submit"/>
+</form>

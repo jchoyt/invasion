@@ -12,6 +12,12 @@
         <br/><br/>
         <tags:CharacterList/>
         <br/><br/><a href="newCharacter.html">Create a new character</a> | <a href="logout.jsp">Log out</a>
+        <%
+            if( request.isUserInRole("Admin") )
+            {
+                out.write(" | <a href=\"admin\">Admin area</a>");
+            }
+        %>
     </center>
 </body>
 </html>

@@ -8,9 +8,11 @@ import java.util.logging.Logger;
 import org.json.*;
 import java.io.*;
 import java.util.*;
+import invasion.util.*;
+import java.sql.*;
 
 /**
- * @deprecated  Failed experiment, but I may have to come back to it
+ * Objects for having "active" broods working.  An active Brood is one that is in combat, or was recently in combat.
  *
  * @see #Critter(static methods)
  */
@@ -25,10 +27,6 @@ public class BroodManager
 	protected static Map<Integer, Brood> playerBroods = new HashMap<Integer, Brood>();
 	protected static List<Brood> feralBroods = new ArrayList<Brood>();
 	protected static File serializedFileLocation = null;
-	protected static Map<Integer, Brood> playerAddBuffer = new HashMap<Integer, Brood>();
-	protected static List<Brood> feralAddBuffer = new ArrayList<Brood>();
-	protected static List<Integer> playerRemoveBuffer = new ArrayList<Integer>();
-	protected static List<Brood> feralRemoveBuffer = new ArrayList<Brood>();
     //}}}
 
     //{{{ Constuctors
@@ -47,34 +45,39 @@ public class BroodManager
     //}}}
 
     //{{{ Methods
-    public static void workBroods()
-
+    /**
+     * Everyone acts on the tick
+     * @param
+     * @return
+     *
+     */
+    public static void workBroodsForTick()
     {
-       //remove all marked for removal
-       List<Integer> temp1 = playerRemoveBuffer;
-       playerRemoveBuffer = new ArrayList<Integer>();
-       for( Integer i : temp1 )
-           playerBroods.remove( i );
-       List<Brood> temp2 = feralRemoveBuffer;
-       feralRemoveBuffer = new ArrayList<Brood>();
-       for( Brood b : temp2 )
-           feralBroods.remove( b );
-
-       //add all new
-       Map<Integer, Brood> temp3 = playerBroods;
-       playerBroods = new HashMap<Integer, Brood>();
-       playerBroods.putAll( temp3 );
-
-       List<Brood> temp4 = feralAddBuffer;
-       feralAddBuffer = new ArrayList<Brood>();
-       feralBroods.addAll( temp4 );
-
+        log.entering(KEY, "workBroodsForTick");
        //cycle through and initiate each one
        for( Integer key : playerBroods.keySet() )
            playerBroods.get(key).act();
 
        for( Brood b : feralBroods )
            b.act();
+        log.exiting(KEY, "workBroodsForTick");
+    }
+
+    /**
+     * use for every X second activity
+     * @param
+     * @return
+     *
+     */
+    public static void workBroods()
+    {
+       //cycle through and initiate each one
+       for( Integer key : playerBroods.keySet() )
+           if( playerBroods.get(key).getActive() )
+               playerBroods.get(key).act();
+       for( Brood b : feralBroods )
+           if( b.getActive() )
+               b.act();
     }
 
     public static Critter getCritter( int id, JSONArray alerts )
@@ -111,19 +114,57 @@ public class BroodManager
     }
 
     /**
-     * Loads a serialized set of broods from a file on disk
+     * Loads the broods
      */
     public static void load( )
     {
-        //TODO simple serialzation
-    }
-
-    /**
-     *  Serializes the broods to a file on disk
-     */
-    public static void save( )
-    {
-        //TODO simple serialization
+        InvasionConnection conn = null;
+        //Load
+        Brood ret;
+        String query = "select * from brood";
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        //load up basic data
+        try
+        {
+            conn = new InvasionConnection( Brood.PETDB );
+            rs = conn.executeQuery(query);
+            while(rs.next())
+            {
+                ret = new Brood();
+                ret.setLocation( rs.getInt("location") );
+                ret.setType( rs.getInt("type") );
+                ret.setGoal( Brood.GOAL_SURVIVE, rs.getInt("goal_survive") );
+                ret.setGoal( Brood.GOAL_PROTECT, rs.getInt("goal_protect") );
+                ret.setGoal( Brood.GOAL_KILL_PSI, rs.getInt("goal_killpsi") );
+                ret.setGoal( Brood.GOAL_KILL_MUT, rs.getInt("goal_killmut") );
+                ret.setGoal( Brood.GOAL_KILL_HUMAN, rs.getInt("goal_killhuman") );
+                ret.setOwnerId( rs.getInt("owner") );
+                ret.setId( rs.getInt("id") );
+                //process
+                query = "select id from critters where brood = ?";
+                rs2 = conn.psExecuteQuery(query, "Error message", ret.getId());
+                while(rs2.next())
+                    ret.addMember( CritterFactory.loadCritter( conn, rs2.getInt("id" ) ) );
+                DatabaseUtility.close(rs2);
+                if( ret.getOwnerId() == -1 )
+                    feralBroods.add(ret);
+                else
+                    playerBroods.put( ret.getOwnerId(), ret );
+            }
+            DatabaseUtility.close(rs);
+            //load up members
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            log.finer("Loaded " + feralBroods.size() + " feral broods and " + playerBroods.size() + " player broods.");
+            DatabaseUtility.close(rs);
+        }
     }
 
     /**
@@ -136,9 +177,9 @@ public class BroodManager
     {
         log.finer("new brood is owned by " + b.getOwnerId() );
         if( b.getOwnerId() == -1 )
-            feralAddBuffer.add(b);
+            feralBroods.add(b);
         else
-            playerAddBuffer.put( b.getOwnerId(), b );
+            playerBroods.put( b.getOwnerId(), b );
     }
 
     /**
@@ -149,9 +190,17 @@ public class BroodManager
     public static void removeBrood( Brood b )
     {
         if( b.getOwnerId() == -1 )
-            feralRemoveBuffer.add( b );
+            feralBroods.remove( b );
         else
-            playerRemoveBuffer.add( b.getOwnerId() );
+            playerBroods.remove( b.getOwnerId() );
+    }
+
+    public static Brood getFeralBrood( int id )
+    {
+        for(Brood b : feralBroods)
+            if( b.getId() == id )
+                return b;
+        return null;
     }
     //}}}
 

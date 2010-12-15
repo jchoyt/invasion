@@ -2,9 +2,6 @@
  *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
  */
 
-/*
- *  Copyright 2009 Jeffrey Hoyt. All Rights Reserved.
- */
 package invasion.util;
 
 import java.util.logging.Level;
@@ -28,7 +25,7 @@ public class InvasionConnection
 
     public final static String KEY = InvasionConnection.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
     private Connection conn = null;
     private Statement stmt = null;
 

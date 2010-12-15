@@ -96,9 +96,13 @@ public class DatabaseUtility {
         out.write("<table border=\"0\" cellpadding=\"0\"><thead><tr>");
         ResultSetMetaData rsmd = rs.getMetaData();
         int numberOfColumns = rsmd.getColumnCount();
+        int locationCol = -1;
         for ( int p = 0; p < numberOfColumns; p++ )
         {
-        	out.write("<th>" + rsmd.getColumnName( p+1 ) + "</th>" );
+            String colname = rsmd.getColumnName( p+1 );
+            if( colname.equalsIgnoreCase("location") )
+                locationCol = p;
+        	out.write("<th>" + colname + "</th>" );
         }
         out.write( "</tr></thead><tbody>" );
         /*
@@ -116,7 +120,10 @@ public class DatabaseUtility {
             even = !even;
             for ( int i = 0; i < numberOfColumns; i++ )
             {
-                out.write( "<td>" + rs.getString( i + 1 ) + "</td>" );
+                if( i == locationCol )
+                    out.write( "<td><a href=\"\" rel=\"locationPopup.jsp?locid="+ rs.getString( i + 1 ) +"\" title=\"Tile "+ rs.getString( i + 1 ) +"\" class=\"locpopup\">" + rs.getString( i + 1 ) + "</a></td>" );
+                else
+                    out.write( "<td>" + rs.getString( i + 1 ) + "</td>" );
             }
             out.write( "</tr>\n" );
         }

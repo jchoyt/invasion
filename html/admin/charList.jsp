@@ -6,13 +6,15 @@
     <head>
         <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
         <link type="text/css" href="${css}/main.css" rel="stylesheet" />
+        <link type="text/css" href="${css}/jquery.cluetip.css" rel="stylesheet" />
         <script type="text/javascript" src="${js}/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
+        <script type="text/javascript" src="${js}/jquery.cluetip.js"></script>
     </head>
     <body>
         <jsp:include page="navigation.jsp"/>
         <center>
-            <% String query = "select * from alt a where name ~* ? limit 20";
+            <% String query = "select id, name, xp, level, station, factionid, ap, hp, cp, ip, location, speciality, level, ticksalive, lasthurtby from alt a where name ~* ? limit 20";
                 InvasionConnection conn = new InvasionConnection();
                 ResultSet rs = conn.psExecuteQuery( query, "", searchString );
                 DatabaseUtility.genericTable(rs, out);
@@ -40,4 +42,8 @@
             </div>
         </center>
     </body>
+    <script type="text/javascript">
+        $(".locpopup").cluetip({activation: 'click', width: 500, closePosition: 'title', arrows: true});
+    </script>
+
 <html>

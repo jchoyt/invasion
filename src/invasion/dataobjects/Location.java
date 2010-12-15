@@ -22,7 +22,7 @@ public class Location  implements java.io.Serializable {
     //{{{ Logging
     public final static String KEY = Location.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
     //}}}
 
     private int id;
@@ -42,6 +42,14 @@ public class Location  implements java.io.Serializable {
         this.id = id; }
     //}}}
 
+    //{{{ Methods
+    /**
+     * Returns all the occupants.  See Poll.fullPoll() for data format returned.
+     * @see Poll.fullPoll()
+     * @param
+     * @return  JSONArray full of occupants
+     *
+     */
     public static JSONArray getOccupants(InvasionConnection conn, int locid, int you)
     {
         String query = "select * from alt where location = ? and id != ? and ticksalive > 0";
@@ -80,7 +88,87 @@ public class Location  implements java.io.Serializable {
             // conn.close();
             return root;
         }
- }
+    }
+
+    /**
+     * Returns all the information about a location
+     * @param
+     * @return JSONObject with all known information about a location
+     *
+     */
+    public static JSONObject getSummary(InvasionConnection conn, int locid)
+    {
+        String query = "select t.name as basetype, s.name as station, l.name as tilename, x, y, level, description, l.id as locid from location l join locationtype t on l.typeid=t.typeid join station s on l.station=s.id where l.id=?";
+        ResultSet rs = null;
+        JSONObject mainobj = new JSONObject();
+        try
+        {
+            conn = new InvasionConnection();
+            rs = conn.psExecuteQuery(query, "Error retrieving basic location information.", locid);
+            if(rs.next())
+            {
+                mainobj.put("type", rs.getString("basetype"));
+                mainobj.put("station", rs.getString("station"));
+                mainobj.put("level", rs.getString("level"));
+                mainobj.put("locid", rs.getString("locid"));
+                mainobj.put("x", rs.getInt("x"));
+                mainobj.put("y", rs.getInt("y"));
+                mainobj.put("name", rs.getString("tilename"));
+                mainobj.put("description", rs.getString("description"));
+            }
+            else
+                return null;
+            DatabaseUtility.close(rs);
+            //pull character info
+            query = "select * from alt where location=?";
+            log.finer(" about to send " + query );
+            rs = conn.psExecuteQuery(query, "Error retrieving basic character location information.", locid);
+            JSONArray occs = new JSONArray();
+            while(rs.next())
+            {
+                JSONObject obj = new JSONObject();
+                obj.put("id", rs.getInt("id"));
+                obj.put("name", rs.getString("name"));
+                obj.put("owner", rs.getString("username"));
+                obj.put("level", rs.getInt("level"));
+                obj.put("race", rs.getInt("race"));
+                occs.put(obj);
+            }
+            mainobj.put("chars", occs);
+            DatabaseUtility.close(rs);
+            //pull critter info
+            query = "select * from brood b join critters c on b.id=c.brood where location=?";
+            log.finer(" about to send " + query );
+            //TODO get pet dababase connection
+            rs = conn.psExecuteQuery(query, "Error retrieving basic brood location information.", locid);
+            JSONArray pets = new JSONArray();
+            while(rs.next())
+            {
+                JSONObject obj = new JSONObject();
+                obj.put("owner", rs.getInt("owner"));
+                obj.put("name", rs.getString("name"));
+                obj.put("type", rs.getString("type"));
+                obj.put("brood", rs.getInt("brood"));
+                pets.put(obj);
+            }
+            mainobj.put("critters", pets);
+            DatabaseUtility.close(rs);
+            //TODO get items
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            DatabaseUtility.close(rs);
+            conn.close();
+            mainobj.toString();
+            return mainobj;
+        }
+    }
+    //}}}
 
     //{{{ Getters and Setters
     public int getId() { return this.id; }

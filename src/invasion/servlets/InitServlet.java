@@ -4,24 +4,18 @@
 
 package invasion.servlets;
 
-import invasion.pets.*;
-import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import invasion.dataobjects.*;
-import java.io.*;
-import java.util.*;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Date;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import invasion.dataobjects.*;
+import invasion.pets.*;
 import invasion.ui.VelocityUtil;
-import invasion.util.Search;
+import invasion.util.*;
 
 /**
  *  This allows for initial setup, inlcuding
@@ -69,6 +63,10 @@ public class InitServlet extends HttpServlet
          *  required for all Servlets
          */
         super.init( config );
+        /* Set up logging */
+        System.setProperty( "java.util.logging.config.class", "invasion.util.LogConfig" );
+        LogConfig.reloadLogManagerProperties();
+        System.out.println( LogConfig.getConfiguration() );
         /*
          *  Grab the name for the currently deployed webapp.  It's possible this could be in error if the webapp is deployed
          *  as a subdirectory (i.e., The docbase is http://localhost:8080/first/sub).  If this ever gets deployed that way it will
@@ -99,6 +97,8 @@ public class InitServlet extends HttpServlet
         Search.load();
         /* Load up the location occupant counts */
         LocationCache.load();
+        /* load up the broods */
+        BroodManager.load();
     }
 
     /**

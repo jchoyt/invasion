@@ -8,12 +8,14 @@
 
 package invasion.pets;
 
+import invasion.servlets.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.*;
 import invasion.util.*;
 import invasion.dataobjects.*;
 import java.sql.*;
+import java.beans.*;
 
 
 public class Brood
@@ -29,21 +31,27 @@ public class Brood
     public final static String PETDB = "postgres";  //"critterdb";
 
     //{{{ Common class properties
+    public final static PropertyChangeSupport pcs = new PropertyChangeSupport(KEY);
+
     public final static int GOAL_SURVIVE = 0;
     public final static int GOAL_PROTECT = 1;
     public final static int GOAL_KILL_PSI = 2;
     public final static int GOAL_KILL_MUT = 3;
     public final static int GOAL_KILL_HUMAN = 4;
-    protected List<Critter> members = new ArrayList<Critter>();
-	protected int ownerId = -1;
-	protected int[] goals= new int[5];
-	protected int location = 0;
+
 	public final static int PLAYER_CONTROLLED = 128;
 	public final static int FERAL_PSION = 129;
 	public final static int FERAL_MUTATE = 130;
 	public final static int INVADING = 131;
+
+    protected List<Critter> members = new ArrayList<Critter>();
+	protected int ownerId = -1;
+	protected int[] goals= new int[5];
+	protected int location = 0;
 	protected int type = 0;
 	protected int id = 0;
+	protected List<Defender> targetList = new ArrayList<Defender>();
+	protected boolean active = false;
 	//}}}
 
 	//{{{ Constructors
@@ -52,6 +60,8 @@ public class Brood
 	    this.ownerId = ownerId;
 	    insert();
 	}
+
+	public Brood(){}
 	//}}}
 
 	//{{{ methods
@@ -63,62 +73,6 @@ public class Brood
         }
 	    goals[type] = value;
 	}
-
-	/**
-     *  Deploy the troops
-     */
-    public void combat()
-    {
-        List<Defender> targets = new ArrayList<Defender>();
-        //find targets
-        String query = "select * from alt where location = ? and ticksalive > 0";
-        //TODO - faction check
-        InvasionConnection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            conn = new InvasionConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, location );
-            rs = ps.executeQuery();
-            while(rs.next())
-            {
-                targets.add(Alt.load(conn, rs.getInt("id")));
-            }
-            if( targets.size() == 0 )
-            {
-                return;
-            }
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
-
-            // rank targets.  Higher attractiveness for lower armor and them dishing out higher damage per "round"
-
-            // max 3 brood members per target
-
-            // figure out best way to defend brood owner
-
-            // do attacks
-            for( Critter c : members )
-            {
-                //TODO - make these focused attacks
-                int randomTarget = (int) (Math.random() * targets.size() );
-                c.attack( targets.get(randomTarget), conn );
-            }
-        }
-        catch(SQLException e)
-        {
-            log.throwing( KEY, "a useful message", e);
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
-            conn.close();
-        }
-    }
 
     /**
      * Puts a new brood into the database and sets the Brood ID that's returned from the database.  Note this uses the critter database rather than the main one.
@@ -164,52 +118,250 @@ public class Brood
      * @return
      *
      */
-    public boolean update()
+    public boolean update( InvasionConnection conn )
     {
         String query = "update brood set location=?, type=?, goal_survive=?, goal_protect=?, goal_killpsi=?, goal_killmut=?, goal_killhuman=? where id=?";
+        int count = conn.psExecuteUpdate(query, "Error updating brood in the database", location, type, goals[GOAL_SURVIVE], goals[GOAL_PROTECT], goals[GOAL_KILL_PSI], goals[GOAL_KILL_MUT], goals[GOAL_KILL_HUMAN], id );
+        if( count != 1 )
+        {
+            log.severe( "Brood " +  id + " not updated.  Count was " + count);
+            return false;
+        }
+        else
+            return true;
+    }
+
+
+    /**
+     * General movement, attacking, etc.
+     *
+     * @param
+     * @return
+     *
+     */
+    public void act()
+    {
+        log.entering(KEY, "act");
+        //move
         InvasionConnection conn = null;
+        ResultSet rs = null;
+        String query = null;
+        if( targetList.size() == 0 )
+        {
+            int dir = (int)(Math.random() * 8);
+            query = "select id from location l where (station, level, x, y) in (select station, level, x + " + MoveServlet.xdelta[dir] + ", y + " + MoveServlet.ydelta[dir] + " from location s where id=?)";
+            int oldloc = location;
+            try
+            {
+                conn = new InvasionConnection( PETDB );
+                rs = conn.psExecuteQuery(query, "Brood movmement not updated", location);
+                if(rs.next())
+                {
+                    location = rs.getInt(1);
+                }
+                DatabaseUtility.close(rs);
+                if(!update( conn ))
+                {
+                    log.severe("Failed to update the brood after movement.  Things will be ... inconsistent.");
+                    return;
+                }
+                else
+                    pcs.firePropertyChange(KEY, oldloc, location);
+            }
+            catch(SQLException e)
+            {
+                log.throwing( KEY, "a useful message", e);
+                throw new RuntimeException(e);
+            }
+            finally
+            {
+                DatabaseUtility.close(rs);
+                // conn.close();
+            }
+        }
+
+        //combine if possible
+        if( ownerId == -1 ) // if feral
+        {
+            //check for other ferals
+            if( LocationCache.getBroodsAtLoc(location) > 1 )
+            {
+                try
+                {
+                    if(conn == null)
+                        conn = new InvasionConnection( PETDB );
+                    query = "select b.id from brood b where owner = -1 and location = ? and id != ?";
+                    rs = conn.psExecuteQuery(query, "Error grabbing list of feral broods to merge with", location, id);
+                    while(rs.next())
+                    {
+                        int broodId = rs.getInt(1);
+                        Brood b = BroodManager.getFeralBrood( broodId );
+                        if( b == null )
+                        {
+                            b = BroodManager.getFeralBrood( broodId );
+                            BroodManager.addBrood( b );
+                        }
+                        if( b.getPowerRating() > this.getPowerRating() )
+                        {
+                            this.mergeInto(conn, b);
+                            this.delete(conn);
+                            break;
+                        }
+                        else  //merge the new brood into this one
+                        {
+                            b.mergeInto(conn, this);
+                            b.delete(conn);
+                        }
+                    }
+                    DatabaseUtility.close(rs);
+                }
+                catch(SQLException e)
+                {
+                    log.throwing( KEY, "a useful message", e);
+                    throw new RuntimeException(e);
+                }
+                finally
+                {
+                    DatabaseUtility.close(rs);
+                    conn.close();
+                }
+            }
+        }
+        //rebuild target list to see if there's someone to attack in the *new* location
+        buildTargetList();
+        //check for stuff to attack
+        if( targetList.size() > 0 )
+        {
+            for( Critter c : members )
+            {
+                //TODO - make these focused attacks
+                int randomTarget = (int) (Math.random() * targetList.size() );
+                c.attack( targetList.get(randomTarget), conn );
+            }
+        }
+        else
+            active = false;
+        //attack
+        log.exiting(KEY, "act");
+    }
+
+
+    /**
+     * bulids a list of potential targets
+     *
+     * @param
+     * @return
+     *
+     */
+    public void buildTargetList()
+    {
+        targetList.clear();
+        //find targets
+        String query = "select * from alt where location = ? and ticksalive > 0";
+        //TODO - faction check
+        InvasionConnection conn = null;
+        ResultSet rs = null;
         try
         {
-            conn = new InvasionConnection( PETDB );
-            int count = conn.psExecuteUpdate(query, "Error updating brood in the database", location, type, goals[GOAL_SURVIVE], goals[GOAL_PROTECT], goals[GOAL_KILL_PSI], goals[GOAL_KILL_MUT], goals[GOAL_KILL_HUMAN], id );
-            if( count != 1 )
+            conn = new InvasionConnection();
+
+            if( LocationCache.getCharactersAtLoc(location) > 1 || (LocationCache.getCharactersAtLoc(location) > 0 && ownerId == -1 ) )  // more than one character or feral and any characters
             {
-                log.warning( "Brood " +  id + " not updated.  Count was " + count);
-                return false;
+                rs = conn.psExecuteQuery( query, "Error", location );
+                while(rs.next())
+                {
+                    //TODO - determine if enemy
+                    targetList.add(Alt.load(conn, rs.getInt("id")));
+                }
+                DatabaseUtility.close(rs);
             }
-            else
-                return true;
+
+            if( LocationCache.getBroodsAtLoc(location) > 1 )
+            {
+                query = "select * from brood b join critters c on b.id=c.brood where b.id != ? and location = ?";
+                rs = conn.psExecuteQuery( query, "Error", id, location );
+                while(rs.next())
+                {
+                    //TODO - determine if enemy
+                    targetList.add(Alt.load(conn, rs.getInt("id")));
+                }
+                DatabaseUtility.close(rs);
+            }
+            // rank targets.  Higher attractiveness for lower armor and them dishing out higher damage per "round"
+
+            // max 3 brood members per target
+
+            // figure out best way to defend brood owner
+
         }
         catch(SQLException e)
         {
             log.throwing( KEY, "a useful message", e);
-            return false;
+            throw new RuntimeException(e);
         }
         finally
         {
+            DatabaseUtility.close(rs);
+            if( targetList.size() == 0 )
+                active=false;
+            else
+                active=true;
             conn.close();
         }
-
     }
 
-    public void act()
+    /**
+     * Moves critters from this brood into another both in the database and in the BroodManager
+     * @param
+     * @return
+     *
+     */
+    public void mergeInto( InvasionConnection conn, Brood b )
     {
-        //move
-
-        //combine if possible
-
-        //attack
-        combat();
+        b.getMembers().addAll( this.members );
+        String query = "update critters set brood = ?  where brood = ?";
+        conn.psExecuteUpdate(query, "Failure merging broods", b.getId(), id);
+        this.members = null;
     }
 
+    /**
+     * Deletes the brood from the database
+     * @param
+     * @return
+     *
+     */
+    public void delete(InvasionConnection conn)
+    {
+        BroodManager.removeBrood(this);
+        String query = "delete from brood where id=?";
+        conn.psExecuteUpdate(query, "Deleting merged brood", id);
+    }
+
+
+    /**
+     * Adds a new critter to the List in this Brood object - does not make any database changes.
+     * @param
+     * @return
+     *
+     */
 	public void addMember(Critter newCritter)
 	{
 	    members.add(newCritter);
 	}
 
+    /**
+     * Removes a specific critter from the List in this Brood object - does not make any database changes.
+     * @param
+     * @return
+     *
+     */
 	public void removeMember( Critter oldCritter)
 	{
 	    members.remove(oldCritter);
+	    if( members.size() == 0 )
+        {
+
+        }
 	}
 
 	public int getPowerRating()
@@ -217,6 +369,21 @@ public class Brood
 	    //TODO - do something smart here
 	    return members.size();
 	}
+
+	public boolean equals(Object o)
+	{
+	    if( o instanceof Brood )
+        {
+            return id == ((Brood)o).getId();
+        }
+        return false;
+	}
+
+	public int hashcode(Object o)
+	{
+	    return id;
+	}
+
 	//}}}
 
     //{{{  Getters and Setters
@@ -232,69 +399,11 @@ public class Brood
 	public void setType(int type) { this.type = type; }
     public int getId() { return this.id; }
 	public void setId(int id) { this.id = id; }
+	public List<Defender> getTargetList() { return this.targetList; }
+	public void setTargetList(List<Defender> targetList) { this.targetList = targetList; }
+	public boolean getActive() { return this.active; }
+	public void setActive(boolean active) { this.active = active; }
     //}}}
 
 }
-
-class Target
-{
-    //{{{ Members
-	protected int id = 0;
-	protected float attackAvg = 5.0f;
-	protected boolean soakingPhysical = true;
-	protected boolean soakingEnergy = true;
-	protected int hpLeft = 0;
-	protected int level = 0;
-	protected int maxHp = 0;
-    //}}}
-
-    //{{{ Constructors
-    public Target( ResultSet rs )
-        throws SQLException
-    {
-        id = rs.getInt("id");
-        level = rs.getInt("level");
-        attackAvg = level;  //assume "level" damage per attack
-        int hp = rs.getInt("hp");
-        maxHp = rs.getInt("hpmax");
-        int hpPercent = 100*hp/maxHp;
-        if( hpPercent < 10 )
-            hpLeft =  4;
-        else if( hpPercent < 25 )
-             hpLeft = 3;
-        else if( hpPercent < 50 )
-             hpLeft = 2;
-        else if( hpPercent < 99 )
-            hpLeft = 1;
-        else
-            hpLeft = 0;
-    }
-    //}}}
-
-    //{{{ Methods
-    public int getTargetAttractivness()
-    {
-        return 1;
-    }
-    //}}}
-
-	//{{{ Setters and Getters
-	public int getId() { return this.id; }
-	public void setId(int id) { this.id = id; }
-	public float getAttackAvg() { return this.attackAvg; }
-	public void setAttackAvg(float attackAvg) { this.attackAvg = attackAvg; }
-	public boolean isSoakingPhysical() { return this.soakingPhysical; }
-	public void setSoakingPhysical(boolean soakingPhysical) { this.soakingPhysical = soakingPhysical; }
-	public boolean isSoakingEnergy() { return this.soakingEnergy; }
-	public void setSoakingEnergy(boolean soakingEnergy) { this.soakingEnergy = soakingEnergy; }
-	public int getHpLeft() { return this.hpLeft; }
-	public void setHpLeft(int hpLeft) { this.hpLeft = hpLeft; }
-	public int getLevel() { return this.level; }
-	public void setLevel(int level) { this.level = level; }
-	public int getMaxHp() { return this.maxHp; }
-	public void setMaxHp(int maxHp) { this.maxHp = maxHp; }
-	//}}}
-
-
-}
-// :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:
+ // :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:`

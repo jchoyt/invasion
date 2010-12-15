@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import java.util.*;
 import invasion.dataobjects.*;
 import invasion.util.*;
+import invasion.pets.*;
 
 
 /**
@@ -26,7 +27,7 @@ public class TickTask extends TimerTask
 
     public final static String KEY = TickTask.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     InvasionConnection conn = null;
 
@@ -51,6 +52,7 @@ public class TickTask extends TimerTask
             checkLevels();
             checkSanity();
             adjustStats();
+            BroodManager.workBroodsForTick();
             log.exiting( KEY, "run" );
         }
         catch(Exception e)
@@ -98,7 +100,7 @@ public class TickTask extends TimerTask
         s.addBatch( "update alt set lasthurtby=null where hp=hpmax and lasthurtby is not null " );
         s.executeBatch();
         DatabaseUtility.close(s);
-}
+    }
 
     private void checkSanity()
     {

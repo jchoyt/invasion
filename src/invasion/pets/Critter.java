@@ -257,7 +257,11 @@ public class Critter implements Attacker, Defender
         //remove it from the PET database
         String query = "delete from critters where id=" + id;
         InvasionConnection petConn = null;
-        ResultSet rs = null;
+        if( brood != null )
+        {
+            brood.removeMember( this );
+            LocationCache.decrementCritters( brood.getLocation() );
+        }
         try
         {
             petConn = new InvasionConnection();

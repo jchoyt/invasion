@@ -101,7 +101,7 @@ h3, h4 { /* Headers & Footer in Center & East panes */
 .corridor{ background:#ffffff; color:#000000; }
 .cryolab{ background:#ffff00; color:#000000; }
 .damage {background:#d8bfd8; color:#000000; }
-.delete{ background:#000000; color:#ffffff; }
+.delete{ background:#ffff99; color:#ffffff; }
 .edu {background:#bc8f8f; color:#000000; }
 .elev{ background:#996666; color:#000000; }
 .food {background:#dda0dd; color:#000000; }

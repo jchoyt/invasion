@@ -13,7 +13,7 @@
     try
     {
         conn = new InvasionConnection();
-        Defender defender = CritterFactory.loadCritter( targetid );
+        Defender defender = CritterFactory.loadCritter( conn, targetid );
         if( defender == null )
         {
             log.finer("No defender found");

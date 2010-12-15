@@ -23,16 +23,13 @@ public class CritterFactory
     //}}}
 
     //{{{ Methods
-
-	public static Critter loadCritter( int id )
+	public static Critter loadCritter( InvasionConnection conn, int id )
 	{
-	    String query = "select * from critters c join crittertype t on c.typeid=t.id join brood b on c.brood=b.id where c.id=?";
-        InvasionConnection conn = null;
+	    String query = "select class, b.id as id, ap, hp, armor, shield, typeid, c.name, location  from critters c join crittertype t on c.typeid=t.id join brood b on c.brood=b.id where c.id=?";
         ResultSet rs = null;
         Critter ret = null;
         try
         {
-            conn = new InvasionConnection();
             rs = conn.psExecuteQuery(query, "Error message", id);
             if(rs.next())
             {
@@ -41,16 +38,17 @@ public class CritterFactory
                 ret.setId( id );
                 ret.setAp( rs.getInt("ap"));
                 ret.setHp( rs.getInt("hp"));
-                ret.setHp( rs.getInt("hp"));
+                // ret.setHp( rs.getInt("hp"));
                 ret.setArmor( rs.getInt("armor"));
                 ret.setShield( rs.getInt("shield"));
                 ret.setName( rs.getString("name"));
                 ret.setTypeid( rs.getInt("typeid"));
                 ret.setLocation( rs.getInt("location"));
+                //TODO get this working for player broods as well
+                ret.setBrood( BroodManager.getFeralBrood(rs.getInt("id")));
             }
             else
             {
-
                 //throwsome error
             }
             DatabaseUtility.close(rs);
@@ -63,7 +61,6 @@ public class CritterFactory
         finally
         {
             DatabaseUtility.close(rs);
-            conn.close();
         }
 
         return ret;

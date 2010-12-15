@@ -11,6 +11,7 @@ import java.io.*;
 import java.util.*;
 import java.sql.*;
 import invasion.util.*;
+import invasion.pets.*;
 import invasion.ui.NaughtyException;
 
 /**
@@ -140,6 +141,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         DatabaseUtility.close(rs);
         query = "update alt set hp=0, ip=0, ticksalive=0-level, location=-57005, ap=ap-level where id=?";
         conn.psExecuteUpdate( query, "Error setting death", alt );
+        LocationCache.decrementChars( deathLoc );
 
         // update victim's stat
         Stats.addChange( alt, Stats.DEATHS, 1);
