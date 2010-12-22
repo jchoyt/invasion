@@ -62,7 +62,7 @@ String message = WebUtils.getOptionalParameter(request, "message", null);
     <br/>
     As characters grow in experience, they discover new powers of immense caliber and discover the price of such powers. There are those who feel their minds expand in consciousness and ability and develop psionic skills. There are those whose bodies warp and mutate with traits of tumorous horror that grant unnatural strength and primal weaponry. But both types of the Invaded - the Psions and the Mutates - soon realize that the greater their powers become the more of their humanity is lost.<br/>
     <br/>
-    Welcome to a game of science horror where power always has it's price.<br/>
+    Welcome to a game of science horror where power always has its price.<br/>
     <br/>
     Welcome to INVASION <br/>
 </div>
