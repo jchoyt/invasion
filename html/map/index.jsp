@@ -114,13 +114,15 @@
             </div>
             <h6 id="basic"><a href="#">Location Description</a></h6>
             <div id="basic-description">
-                <p>Nice descriptions were provide by Sam and Stretch, but Entomo's a lazy ass and hasn't put them in yet. </p>
-                <p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/></p>
+                <%
+                    obj.put("location", Location.getSummary( conn, wazzit.getAlt().getLocation() ) );
+                    VelocityUtil.applyTemplate( obj, "locationDescription.vm", out );
+                %>
             </div>
             <h6><a href="#">Actions</a></h6>
             <div>
                 <p>
-                <form method="post" action="#" onsubmit="attack(this.target.value); return false">
+                <%--  <form method="post" action="#" onsubmit="attack(this.target.value); return false">
                     <select name="target" id="attacklist">
                         <%
                             a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
@@ -141,7 +143,7 @@
                     %>
                     </select>
                     <input type="submit" value="Equip Weapon"/>
-                </form>
+                </form> --%>
                 </p>
             </div>
         </div>

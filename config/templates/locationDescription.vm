@@ -1,0 +1,7 @@
+#if($location.name)
+    <strong>You are located in ${location.name}, a ${location.type} at (${location.x}, ${location.y}) on level ${location.level} of ${location.station} station</strong>
+#else
+    <strong>You are located in a ${location.type} at (${location.x}, ${location.y}) on level ${location.level} of ${location.station} station</strong>
+#end
+<p>${location.description}</p>
+<p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/></p>

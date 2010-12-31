@@ -18,6 +18,7 @@
                 out.write(" | <a href=\"admin\">Admin area</a>");
             }
         %>
+        <br/><a href="http://forums.soulcubes.com" target="_blank">Forums</a> | <a href="http://wiki.soulcubes.com" target="_blank">Wiki</a>
     </center>
 </body>
 </html>

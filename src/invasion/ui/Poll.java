@@ -19,7 +19,7 @@ public class Poll
 
     public final static String KEY = Poll.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     public Poll()
     {
@@ -104,6 +104,8 @@ public class Poll
                 ret.put("pets", pets );
             }
             log.finer( "Pets complete: " + (System.currentTimeMillis()-start) );
+            //loction details
+            ret.put("location", Location.getSummary(conn, wazzit.getAlt().getLocation()) );
             log.finer( "Poll results: " + String.valueOf(ret));
             out.write(String.valueOf(ret));
         }

@@ -61,6 +61,7 @@ $(document).ready( function() {
     $(document).bind('POLL_COMPLETE', function(e, data){ updateAnnouncements(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats2(data); });
+    $(document).bind('POLL_COMPLETE', function(e, data){ updateLocation(data); });
 
     // setInterval( "poll()", 10000);
 
@@ -176,6 +177,14 @@ function updateStats2(data)
     if(data.stats)
     {
         $('#stats-area2').html(v2js_stats2(data));
+    }
+}
+
+function updateLocation(data)
+{
+    if(data.location)
+    {
+        $('#basic-description').html(v2js_locationDescription(data));
     }
 }
 

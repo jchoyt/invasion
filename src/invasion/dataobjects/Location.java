@@ -119,40 +119,6 @@ public class Location  implements java.io.Serializable {
             else
                 return null;
             DatabaseUtility.close(rs);
-            //pull character info
-            query = "select * from alt where location=?";
-            log.finer(" about to send " + query );
-            rs = conn.psExecuteQuery(query, "Error retrieving basic character location information.", locid);
-            JSONArray occs = new JSONArray();
-            while(rs.next())
-            {
-                JSONObject obj = new JSONObject();
-                obj.put("id", rs.getInt("id"));
-                obj.put("name", rs.getString("name"));
-                obj.put("owner", rs.getString("username"));
-                obj.put("level", rs.getInt("level"));
-                obj.put("race", rs.getInt("race"));
-                occs.put(obj);
-            }
-            mainobj.put("chars", occs);
-            DatabaseUtility.close(rs);
-            //pull critter info
-            query = "select * from brood b join critters c on b.id=c.brood where location=?";
-            log.finer(" about to send " + query );
-            //TODO get pet dababase connection
-            rs = conn.psExecuteQuery(query, "Error retrieving basic brood location information.", locid);
-            JSONArray pets = new JSONArray();
-            while(rs.next())
-            {
-                JSONObject obj = new JSONObject();
-                obj.put("owner", rs.getInt("owner"));
-                obj.put("name", rs.getString("name"));
-                obj.put("type", rs.getString("type"));
-                obj.put("brood", rs.getInt("brood"));
-                pets.put(obj);
-            }
-            mainobj.put("critters", pets);
-            DatabaseUtility.close(rs);
             //TODO get items
         }
         catch(SQLException e)
