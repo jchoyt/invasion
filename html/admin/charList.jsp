@@ -15,7 +15,9 @@
         <jsp:include page="navigation.jsp"/>
         <center>
             <% String query = "select id, name, xp, level, station, factionid, ap, hp, cp, ip, location, speciality, level, ticksalive, lasthurtby from alt a where name ~* ? limit 20";
-                InvasionConnection conn = new InvasionConnection();
+            InvasionConnection conn = null;
+            try {
+                conn = new InvasionConnection();
                 ResultSet rs = conn.psExecuteQuery( query, "", searchString );
                 DatabaseUtility.genericTable(rs, out);
                 rs.close();
@@ -47,3 +49,9 @@
     </script>
 
 <html>
+            <%
+            } catch (Exception e)
+            { e.printStackTrace(); }
+            finally
+            { conn.close(); }
+            %>

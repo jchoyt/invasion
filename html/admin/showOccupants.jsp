@@ -17,10 +17,12 @@
         <div style="float:left;margin:2em;">
             <h3>Character Location Summary</h3>
             <% String query = "select location, count(id) as count from alt a where station=? group by location";
-                InvasionConnection conn = new InvasionConnection();
-                ResultSet rs = conn.psExecuteQuery( query, "", sid );
-                DatabaseUtility.genericTable(rs, out);
-                DatabaseUtility.close(rs);
+                InvasionConnection conn = null;
+                try {
+                    conn = new InvasionConnection();
+                    ResultSet rs = conn.psExecuteQuery( query, "", sid );
+                    DatabaseUtility.genericTable(rs, out);
+                    DatabaseUtility.close(rs);
             %>
         </div>
         <div style="float:left;margin:2em;">
@@ -35,4 +37,10 @@
         </script>
         </div>
     </body>
-<html>
+<html><%
+    }
+    catch(Exception e)
+    { e.printStackTrace();}
+    finally
+    { conn.close(); }
+%>

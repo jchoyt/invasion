@@ -9,9 +9,10 @@
     Alt alt = null;
 
     String query = "update alt set hp=hpmax, ip=0, lasthurtby=null, ticksalive=1 where id=? and ticksalive=0;";
-    InvasionConnection conn = new InvasionConnection();
+    InvasionConnection conn = null;
     try
     {
+        conn = new InvasionConnection();
         int count = conn.psExecuteUpdate( query, "Error respawning alt " + altid, altid );
         if( count == 0 )
         {

@@ -9,10 +9,10 @@
     int reps = Integer.parseInt(count);
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     //do DB inserts
-    InvasionConnection conn = new InvasionConnection();
-    conn.setAutoCommit(false);
-    PreparedStatement ps = null;
+    InvasionConnection conn = null;
     try{
+        conn = new InvasionConnection();
+        conn.setAutoCommit(false);
         for(int i = 0; i < reps; i++)
         {
             int itemFound = Search.performSearch(2);
@@ -37,7 +37,6 @@
     }
     finally
     {
-        DatabaseUtility.close(ps);
         Poll.fullPoll( conn, out, wazzit, null );
         conn.close();
     }

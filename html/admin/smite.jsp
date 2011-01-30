@@ -3,9 +3,10 @@
     String altid = WebUtils.getRequiredParameter(request, "id");
     String message = WebUtils.getRequiredParameter(request, "message");
     String query = "update alt set hp=0, lasthurtby=null where id=?";
-    InvasionConnection conn = new InvasionConnection();
-    PreparedStatement ps = conn.prepareStatement(query);
+    InvasionConnection conn = null;
     try{
+        conn = new InvasionConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
         ps.setInt(1, Integer.parseInt(altid));
         int count = ps.executeUpdate();
         new Message( conn, Integer.parseInt(altid), Message.EFFECT, message );

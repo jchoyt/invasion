@@ -18,10 +18,12 @@
         <jsp:include page="navigation.jsp"/>
         <center>
             <%  String query = "select typeid, name from locationtype where name ~* ? order by typeid";
-                InvasionConnection conn = new InvasionConnection();
-                ResultSet rs = conn.psExecuteQuery( query, "", searchString );
-                DatabaseUtility.genericTable(rs, out);
-                rs.close();
+                InvasionConnection conn = null;
+                try {
+                    conn = new InvasionConnection();
+                    ResultSet rs = conn.psExecuteQuery( query, "", searchString );
+                    DatabaseUtility.genericTable(rs, out);
+                    rs.close();
             %>
             <hr/>
             <div class="descbox" style="width:400px;">
@@ -46,4 +48,10 @@
         $(".locpopup").cluetip({activation: 'click', width: 500, closePosition: 'title', arrows: true});
     </script>
 
-<html>
+<html><%
+    }
+    catch(Exception e)
+    { e.printStackTrace();}
+    finally
+    { conn.close(); }
+%>

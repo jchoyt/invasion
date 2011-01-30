@@ -5,14 +5,23 @@
     {
         String stationid = WebUtils.getRequiredParameter(request, "id" );
         String query = "select id from location where station = ? and x=25 and y=25";
-        InvasionConnection conn = new InvasionConnection();
-        ResultSet rs = conn.psExecuteQuery( query, "", Integer.decode(stationid) );
-        if(rs.next())
+        InvasionConnection conn = null;
+        try
         {
-            locid = rs.getString( 1 );
+            conn = new InvasionConnection();
+            ResultSet rs = conn.psExecuteQuery( query, "", Integer.decode(stationid) );
+            if(rs.next())
+            {
+                locid = rs.getString( 1 );
+            }
+            else throw new RuntimeException("Borked attempt to grab the center of the station.");
+            rs.close();
+            <%
         }
-        else throw new RuntimeException("Borked attempt to grab the center of the station.");
-        rs.close();
+        catch(Exception e)
+        { e.printStackTrace();}
+        finally
+        { conn.close(); }
     }
 %>
 <html>

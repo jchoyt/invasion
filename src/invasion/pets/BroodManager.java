@@ -164,6 +164,7 @@ public class BroodManager
         {
             log.finer("Loaded " + feralBroods.size() + " feral broods and " + playerBroods.size() + " player broods.");
             DatabaseUtility.close(rs);
+            conn.close();
         }
     }
 

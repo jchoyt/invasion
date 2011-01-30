@@ -177,7 +177,7 @@ public class Brood
             finally
             {
                 DatabaseUtility.close(rs);
-                // conn.close();
+                conn.close();
             }
         }
 
@@ -189,8 +189,8 @@ public class Brood
             {
                 try
                 {
-                    if(conn == null)
-                        conn = new InvasionConnection( PETDB );
+                    //if(conn == null)
+                    conn = new InvasionConnection( PETDB );
                     query = "select b.id from brood b where owner = -1 and location = ? and id != ?";
                     rs = conn.psExecuteQuery(query, "Error grabbing list of feral broods to merge with", location, id);
                     while(rs.next())

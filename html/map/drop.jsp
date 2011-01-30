@@ -4,11 +4,13 @@
     int id = Integer.parseInt(itemid);
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     String query = "delete from item where itemid = ? and locid = ? and equipped='f'";
-    InvasionConnection conn = new InvasionConnection();
-    PreparedStatement ps = conn.prepareStatement(query);
+    InvasionConnection conn = null;
+    PreparedStatement ps = null;
     JSONObject inventory = null;
     JSONArray alerts = null;
     try{
+        conn = new InvasionConnection();
+        ps = conn.prepareStatement(query);
         String itemName = Item.getName(conn, id);
         if( itemName == null )
         {

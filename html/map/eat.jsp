@@ -5,10 +5,12 @@
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     //do DB inserts
     String query = "delete from item where itemid = ? and locid = ?";
-    InvasionConnection conn = new InvasionConnection();
-    PreparedStatement ps = conn.prepareStatement(query);
+    InvasionConnection conn = null;
+    PreparedStatement ps = null;
     JSONObject inventory = null;
     try{
+        conn = new InvasionConnection();
+        ps = conn.prepareStatement(query);
         String category = Item.getCategory(conn, id);
         String itemName = Item.getName(conn, id);
         if( !category.equals("food") )

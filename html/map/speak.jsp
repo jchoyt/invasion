@@ -27,9 +27,11 @@
 
     //do DB inserts
     String query = "insert into messages (message, altid) select ?, id from alt where location = ?";
-    InvasionConnection conn = new InvasionConnection();
-    PreparedStatement ps = conn.prepareStatement(query);
+    InvasionConnection conn = null;
+    PreparedStatement ps = null;
     try{
+        conn = new InvasionConnection();
+        ps = conn.prepareStatement(query);
         ps.setString(1, message);
         ps.setInt(2, wazzit.getAlt().getLocation());
         ps.executeUpdate();

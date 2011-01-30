@@ -13,10 +13,12 @@
         <jsp:include page="navigation.jsp"/>
         <center>
             <% String query = "select * from player a where username ~* ? limit 20";
-                InvasionConnection conn = new InvasionConnection();
-                ResultSet rs = conn.psExecuteQuery( query, "", searchString );
-                DatabaseUtility.genericTable(rs, out);
-                rs.close();
+                InvasionConnection conn = null;
+                try {
+                    conn = new InvasionConnection();
+                    ResultSet rs = conn.psExecuteQuery( query, "", searchString );
+                    DatabaseUtility.genericTable(rs, out);
+                    rs.close();
             %>
             <hr/>
             <div class="descbox" style="width:400px;">
@@ -34,4 +36,10 @@
             </div>
         </center>
     </body>
-<html>
+<html><%
+    }
+    catch(Exception e)
+    { e.printStackTrace();}
+    finally
+    { conn.close(); }
+%>

@@ -2,9 +2,12 @@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
     String id_string = WebUtils.getRequiredParameter(request, "id");
     int id = Integer.parseInt(id_string);
-    InvasionConnection conn = new InvasionConnection();
-    request.setAttribute("conn", conn);
-    LocationType loctype = LocationType.getLocationType(id);
+    InvasionConnection conn = null;
+    try
+    {
+        conn = new InvasionConnection();
+        request.setAttribute("conn", conn);
+        LocationType loctype = LocationType.getLocationType(id);
 %><html>
 <head>
     <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
@@ -161,4 +164,10 @@
         </ul>
     </div>
 </html>
-<% conn.close(); %>
+<%
+    }
+    catch(Exception e)
+    { e.printStackTrace();}
+    finally
+    { conn.close(); }
+%>

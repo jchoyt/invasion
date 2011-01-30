@@ -16,10 +16,13 @@
         <jsp:include page="navigation.jsp"/>
         <center>
             <% String query = "select name , type , weight, size, accuracy , damage , capacity , consumable, damagetype, usesammo, typeid || ',' || name || ',' ||  type || ',' || weight  || ',' || size || ',' || accuracy || ',' || damage || ',' || capacity || ',' || consumable|| ',' || damagetype|| ',' || usesammo  as EditString from itemtype";
-                InvasionConnection conn = new InvasionConnection();
-                ResultSet rs = conn.executeQuery( query );
-                DatabaseUtility.genericTable(rs, out);
-                rs.close();
+                InvasionConnection conn = null;
+                try
+                {
+                    conn = new InvasionConnection();
+                    ResultSet rs = conn.executeQuery( query );
+                    DatabaseUtility.genericTable(rs, out);
+                    rs.close();
             %>
             <hr/>
             <div class="descbox" style="width:400px;">
@@ -55,4 +58,10 @@
             </ul>
         </div>
     </body>
-<html>
+<html><%
+    }
+    catch(Exception e)
+    { e.printStackTrace();}
+    finally
+    { conn.close(); }
+%>

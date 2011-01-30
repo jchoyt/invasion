@@ -3,23 +3,26 @@
 
 <%
     String locid = WebUtils.getRequiredParameter(request, "locid");
-    InvasionConnection conn = new InvasionConnection();
-    String query = "select name, description, station from Location where id = ?";
-    PreparedStatement ps = conn.prepareStatement(query);
-    ps.setInt(1, Integer.parseInt(locid));
-    ResultSet rs = ps.executeQuery();
-    String name = "not found";
-    String description = "not found";
-    int station = 0;
-    if(rs.next())
+    InvasionConnection conn = null;
+    try
     {
-        name = rs.getString(1);
-        description = rs.getString(2);
-        station = rs.getInt("station");
-    }
-    DatabaseUtility.close(rs);
-    DatabaseUtility.close(ps);
-    request.setAttribute("conn", conn);
+        conn = new InvasionConnection();
+        String query = "select name, description, station from Location where id = ?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1, Integer.parseInt(locid));
+        ResultSet rs = ps.executeQuery();
+        String name = "not found";
+        String description = "not found";
+        int station = 0;
+        if(rs.next())
+        {
+            name = rs.getString(1);
+            description = rs.getString(2);
+            station = rs.getInt("station");
+        }
+        DatabaseUtility.close(rs);
+        DatabaseUtility.close(ps);
+        request.setAttribute("conn", conn);
 %>
 
 Edit this tile:
@@ -33,5 +36,9 @@ Edit this tile:
 </form>
 
 <%
-    conn.close();
+    }
+    catch(Exception e)
+    { e.printStackTrace();}
+    finally
+    { conn.close(); }
 %>

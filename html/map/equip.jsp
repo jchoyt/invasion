@@ -5,12 +5,14 @@
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     //do DB inserts
     String query = "select * from item i join itemtype t on i.typeid=t.typeid where itemid = ? and locid = ? and type='weapon'";
-    InvasionConnection conn = new InvasionConnection();
-    PreparedStatement ps = conn.prepareStatement(query);
+    InvasionConnection conn = null;
+    PreparedStatement ps = null;
     ResultSet rs = null;
     boolean newWeaponNeedsAmmo = false;
     JSONObject inventory = null;
     try{
+        conn = new InvasionConnection();
+        ps = conn.prepareStatement(query);
         ps.setInt(1, id);
         ps.setInt(2, wazzit.getAlt().getId());
         rs = ps.executeQuery();
