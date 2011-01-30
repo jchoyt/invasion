@@ -18,7 +18,7 @@
         while(rs.next())
         {
             cloc = rs.getString("id");
-            out.write("   <div class=\"me " + rs.getString("cssname") + "\" style=\"left: " + Integer.toString(x*BOX_SIZE) + "px; top:");
+            out.write("   <div class=\"ubertile " + rs.getString("cssname") + "\" style=\"left: " + Integer.toString(x*BOX_SIZE) + "px; top:");
             out.write(Integer.toString(y*BOX_SIZE) + "px;\" onmouseover=\"shloc('" + cloc);
             out.write("')\" onclick=\"edit(" + cloc + ");\">");
             out.write("\n\t<div style=\"display:none\" id=\"desc-" + cloc + "\">");

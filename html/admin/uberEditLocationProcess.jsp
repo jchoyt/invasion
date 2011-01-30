@@ -4,15 +4,7 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
     String name = WebUtils.getRequiredParameter(request, "name");
     String type = WebUtils.getRequiredParameter(request, "type");
     String desc = WebUtils.getRequiredParameter(request, "desc");
-
-    if( name.equals("") )
-    {
-        name == null;
-    }
-    if( desc.equals("") )
-    {
-        desc == null;
-    }
+    String station = WebUtils.getRequiredParameter(request, "station");
 
     InvasionConnection conn = null;
     PreparedStatement ps = null;
@@ -36,5 +28,5 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
         DatabaseUtility.close(ps);
         conn.close();
     }
-
-%><jsp:forward page="stationEdit.jsp" />
+    response.sendRedirect( "fullStationView.jsp?id=" + station );
+%>

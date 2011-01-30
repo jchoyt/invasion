@@ -207,7 +207,27 @@ t.p(' station</strong>');
 }
 t.p('<p>');
 t.p( context.location.description);
-t.p('</p><p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/></p>');
+t.p('</p>');
+if (context.location.chalk) {
+t.p('    <p>Someone has written <i>');
+t.p( context.location.chalk);
+t.p('</i> on the wall</p>');
+}
+else {
+if (context.location.draw) {
+t.p('    <p>Someone has drawn a picture of ');
+t.p( context.location.draw);
+t.p(' on the wall.</p>');
+}
+else {
+if (context.location.scrawl) {
+t.p('    <p>Someone has crudely scrawled a message here.  You can barely make out <i>');
+t.p( context.location.scrawl);
+t.p('</i>.</p>');
+}
+}
+}
+t.p('<p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/> <input type="button" onclick="chalkWall();" value="Write on wall (1 AP)"/></p>');
 return t.toString();
 }
 function v2js_locationSummary(context) { 
@@ -331,19 +351,19 @@ var t = new StringCat();
 var velocityCount = 0;
 if (context.velocityCount) velocityCount=context.velocityCount;
 var da = ( context.stats.ticksalive / 96 );
-t.p('Days alive: ');
+t.p('<b>Days alive</b>: ');
 t.p( da);
-t.p('<br/>Level: ');
+t.p('<br/><b>Level</b>: ');
 t.p( context.stats.level);
-t.p('<br>Unspent CP: ');
+t.p('<br/><b>Unspent CP</b>: ');
 t.p( context.stats.cp);
-t.p('<br/><span class="hp">HP: ');
+t.p(' <a href="/purchaseSkills.jsp">Purchase Skills</a><br/><span class="hp"><b>HP</b>: ');
 t.p( context.stats.hp);
-t.p('</span><br/><span class="ip">IP: ');
+t.p('</span><br/><span class="ip"><b>IP</b>: ');
 t.p( context.stats.ip);
-t.p('</span><br/><span class="ap">AP: ');
+t.p('</span><br/><span class="ap"><b>AP</b>: ');
 t.p( context.stats.ap);
-t.p('</span><br/><span class="xp">XP: ');
+t.p('</span><br/><span class="xp"><b>XP</b>: ');
 t.p( context.stats.xp);
 t.p('</span>');
 return t.toString();

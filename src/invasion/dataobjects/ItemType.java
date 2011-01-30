@@ -18,7 +18,7 @@ public class ItemType{
     protected int typeid = 0;
     protected int weight = 0;
     protected int capacity = 0;
-    protected int damage = 0;
+    protected DiceRoller damage = null;
     protected boolean consumable = false;
     protected String name = null;
     protected String type = null;
@@ -26,18 +26,19 @@ public class ItemType{
     protected boolean usesammo = false;
 
 
+
     protected static Map<Integer, ItemType> itemTypes = new HashMap<Integer, ItemType>();
 
 
-    public ItemType(int typeid, int weight, int capacity, int damage,
+    public ItemType(int typeid, int weight, int capacity, String damage,
              boolean consumable, String name, String type, String damageType, boolean usesammo){
         this.typeid = typeid;
         this.weight = weight;
         this.capacity = capacity;
-        this.damage = damage;
+        this.damage = new DiceRoller(damage);
         this.consumable = consumable;
         this.name = name;
-        this.type = type;
+        this.type =type;
         this.damageType = damageType;
         this.usesammo = usesammo;
     }
@@ -61,7 +62,7 @@ public class ItemType{
                 type = new ItemType(rs.getInt("typeid"),
                 rs.getInt("weight"),
                 rs.getInt("capacity"),
-                rs.getInt("damage"),
+                rs.getString("damage"),
                 rs.getBoolean("consumable"),
                 rs.getString("name"),
                 rs.getString("type"),
@@ -91,6 +92,11 @@ public class ItemType{
         return itemTypes.get(typeid);
     }
 
+    public int getDamage()
+    {
+        return this.damage.roll();
+    }
+
     /* setters and getters */
 
 	public boolean getUsesammo() { return this.usesammo; }
@@ -101,8 +107,6 @@ public class ItemType{
     public void setWeight(int weight) { this.weight = weight; }
     public int getCapacity() { return this.capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
-    public int getDamage() { return this.damage; }
-    public void setDamage(int damage) { this.damage = damage; }
     public boolean isConsumable() { return this.consumable; }
     public void setConsumable(boolean consumable) { this.consumable = consumable; }
     public String getName() { return this.name; }

@@ -24,9 +24,6 @@
 		<script type="text/javascript">
 			$(function(){
 
-				// Tabs
-				$('#tabs').tabs();
-
 				// Dialog
 				$('#dialog').dialog({
 					autoOpen: false,

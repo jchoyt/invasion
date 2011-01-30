@@ -7,6 +7,18 @@
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
 		<script type="text/javascript">
+			$(function(){
+				// Dialog
+				$('#dialog').dialog({
+					autoOpen: false,
+					width: 600,
+					buttons: {
+						"Cancel": function() {
+							$(this).dialog("close");
+						}
+					}
+				});
+			});
 
 			function shloc(id)
 			{
@@ -15,6 +27,13 @@
 			    $("#descbox").html(contents);
 			};
 
+			function edit(id)
+			{
+			    resource = "uberEditLocation.jsp?locid=" + id;
+                $('#dialog').load(resource);
+                $('#dialog').dialog('open');
+                return false;
+			}
 			</script>
     </head>
     <body>
@@ -23,5 +42,9 @@
         </div>
         <br clear="all" />
         <tags:WholeStation />
+        <!-- ui-dialog -->
+		<div id="dialog" title="Dialog Title">
+			<p>Place holder text.</p>
+		</div>
     </body>
 <html>

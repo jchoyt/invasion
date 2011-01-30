@@ -14,7 +14,7 @@ public class Dalek extends Critter
 
     public final static String KEY = Dalek.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
     //{{{ Constructors
 
    /**

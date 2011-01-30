@@ -23,7 +23,7 @@ public class Brood
 
     public final static String KEY = Brood.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     /**
      * The pet database name - for now, leave it as postgres
@@ -146,6 +146,7 @@ public class Brood
         InvasionConnection conn = null;
         ResultSet rs = null;
         String query = null;
+        buildTargetList();
         if( targetList.size() == 0 )
         {
             int dir = (int)(Math.random() * 8);

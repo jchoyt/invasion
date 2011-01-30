@@ -3,15 +3,11 @@
  */
 package invasion.dataobjects;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.logging.*;
+import java.util.*;
 import org.json.*;
 import invasion.util.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 /**
@@ -34,6 +30,15 @@ public class Location  implements java.io.Serializable {
     private String name;
     private String description;
     private Set<Alt> alts = new HashSet<Alt>(0);
+    public static final List<String> UNWALKABLE = new ArrayList<String>();
+    static
+    {
+        UNWALKABLE.add("Deep Space");
+        UNWALKABLE.add("Water");
+        UNWALKABLE.add("Bulkhead");
+        UNWALKABLE.add("Window");
+    }
+
 
     //{{{ Constructors
     public Location() { }
@@ -92,19 +97,22 @@ public class Location  implements java.io.Serializable {
 
     /**
      * Returns all the information about a location
-     * @param
+     * @param conn Currently open databse connection
+     * @param locid Location to dump the informatoin about
      * @return JSONObject with all known information about a location
      *
      */
     public static JSONObject getSummary(InvasionConnection conn, int locid)
     {
-        String query = "select t.name as basetype, s.name as station, l.name as tilename, x, y, level, description, l.id as locid from location l join locationtype t on l.typeid=t.typeid join station s on l.station=s.id where l.id=?";
+        String query = "select t.name as basetype, s.name as station, l.name as tilename, x, y, level, description, l.id as locid, message, messagetype from location l join locationtype t on l.typeid=t.typeid join station s on l.station=s.id where l.id=?";
         ResultSet rs = null;
         JSONObject mainobj = new JSONObject();
         try
         {
             conn = new InvasionConnection();
             rs = conn.psExecuteQuery(query, "Error retrieving basic location information.", locid);
+            String message = null;
+            String messagetype = null;
             if(rs.next())
             {
                 mainobj.put("type", rs.getString("basetype"));
@@ -115,6 +123,15 @@ public class Location  implements java.io.Serializable {
                 mainobj.put("y", rs.getInt("y"));
                 mainobj.put("name", rs.getString("tilename"));
                 mainobj.put("description", rs.getString("description"));
+                message = rs.getString("message");
+                messagetype = rs.getString("messagetype");
+                if( message != null && messagetype != null )
+                {
+                    mainobj.put( messagetype, message );
+                }
+                else
+                    log.info("Chalk message not put in " + message + messagetype );
+
             }
             else
                 return null;

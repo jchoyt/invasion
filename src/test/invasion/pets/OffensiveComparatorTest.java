@@ -47,7 +47,7 @@ public class OffensiveComparatorTest
         critters.add(c2);
         assertFalse( critters.get(0) instanceof Dalek );
         Collections.sort( critters, new OffensiveComparator());
-        assertTrue( critters.get(0) instanceof Dalek );
+        assertTrue( critters.get(1) instanceof Dalek );
     } //}}}
 
 

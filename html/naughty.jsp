@@ -17,7 +17,7 @@
 <center>
     <div class="naughty">
     <br/><br/><br/><br/><br/><br/>
-        You have done something you werent't meant to do and I found out about it.  If you persist, your account will get locked.
+        You have done something you weren't meant to do and I found out about it.  If you persist, your account will get locked.
     </div>
 </center>
 </body>

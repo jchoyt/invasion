@@ -7,6 +7,7 @@
     int MAP_SIDE = 5;
     int TOTAL_SIZE = BOX_SIZE * MAP_SIDE;
     String DEEP_SPACE = "Deep Space";
+
     /**
      *  Does the data retrieval
      */
@@ -91,7 +92,7 @@
             out.write(Integer.toString(y*BOX_SIZE) + "px;\" onmouseover=\"shloc('" + cloc);
             out.write("')\">");
             /* movement */
-            if( !DEEP_SPACE.equals( rs.getString("typename") ) )
+            if( !Location.UNWALKABLE.contains( rs.getString("typename") ) )
             {
                 out.write( WebUtils.getMovementClass(boxNum) );
             }

@@ -25,7 +25,7 @@ public class InvasionConnection
 
     public final static String KEY = InvasionConnection.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
     private Connection conn = null;
     private Statement stmt = null;
 
@@ -166,29 +166,19 @@ public class InvasionConnection
             for(Object param: params)
             {
                 if( param instanceof String )
-                {
                     ps.setString(i, (String)param);
-                }
                 else if( param instanceof Integer )
-                {
                     ps.setInt(i, ((Integer)param).intValue());
-                }
+                else if( param instanceof Long )
+                    ps.setLong(i, ((Long)param).longValue());
                 else if( param instanceof Float )
-                {
                     ps.setFloat(i, ((Float)param).floatValue());
-                }
                 else if( param instanceof Double )
-                {
                     ps.setDouble(i, ((Double)param).doubleValue());
-                }
                 else if( param instanceof Boolean )
-                {
                     ps.setBoolean(i, ((Boolean)param).booleanValue());
-                }
                 else if( param == null )
-                {
                     throw new NullPointerException("Parameters passed to psExecuteQuery() cannot be null");
-                }
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
                 i++;
             }
@@ -231,29 +221,19 @@ public class InvasionConnection
             for(Object param: params)
             {
                 if( param instanceof String )
-                {
                     ps.setString(i, (String)param);
-                }
                 else if( param instanceof Integer )
-                {
                     ps.setInt(i, ((Integer)param).intValue());
-                }
+                else if( param instanceof Long )
+                    ps.setLong(i, ((Long)param).longValue());
                 else if( param instanceof Float )
-                {
                     ps.setFloat(i, ((Float)param).floatValue());
-                }
                 else if( param instanceof Double )
-                {
                     ps.setDouble(i, ((Double)param).doubleValue());
-                }
                 else if( param instanceof Boolean )
-                {
                     ps.setBoolean(i, ((Boolean)param).booleanValue());
-                }
                 else if( param == null )
-                {
                     throw new NullPointerException("Parameters passed to psExecuteQuery() cannot be null");
-                }
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
                 i++;
             }
@@ -296,6 +276,8 @@ public class InvasionConnection
                     ps.setString(i, String.valueOf(param));
                 else if( param instanceof Integer )
                     ps.setInt(i, ((Integer)param).intValue());
+                else if( param instanceof Long )
+                    ps.setLong(i, ((Long)param).longValue());
                 else if( param instanceof Float )
                     ps.setFloat(i, ((Float)param).floatValue());
                 else if( param instanceof Double )

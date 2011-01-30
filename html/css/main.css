@@ -4,9 +4,9 @@ body{
     font-size:10pt;
 }
 
-td { border:1px solid black; text-align:center; font-size:10pt; padding:5px}
-th { border:1px solid black; text-align:center; background-color: #c5dbec; font-size:10pt; }
-table {border: 1px solid black; }
+td { border:1px solid black; text-align:center; font-size:10pt; padding:5px;}
+th { border:1px solid black; text-align:center; background-color: #c5dbec; font-size:10pt; padding:5px;}
+table {border: 1px solid black; border-collapse:collapse; }
 .selected { background-color: #dedede; }
 
 div { font-size: 10pt;  }
@@ -59,9 +59,14 @@ h3, h4 { /* Headers & Footer in Center & East panes */
 .dataTables_wrapper {
     margin:0;
     padding:0;
-} /*}}}*/
+}
 
-/*{{{ navigation map*/
+#poll-indicator {
+    display:none;
+}
+/*}}}*/
+
+/*{{{  navigation map*/
 
 .me {
   position: absolute;
@@ -140,6 +145,9 @@ h3, h4 { /* Headers & Footer in Center & East panes */
 .warehs{ background:#3300cc; color:#cccccc; }
 .waste {background:#778899; color:#000000; }
 .raw {background:#ffdab9; color:#000000; }
+.water {background:#0000ff; color:#000000; }
+.bulkhead {background:#808080; color:#000000; }
+.window {background:#800000; color:#000000; }
 /*}}}*/
 
 /*{{{  for message box */
@@ -183,5 +191,25 @@ h3, h4 { /* Headers & Footer in Center & East panes */
 .read-false .msgtype4 { font-weight:500;  color:#ff3333; }   /* effect */
 
 /*}}}*/
+
+/*{{{  for different admin functions */
+.ubertile {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-top: 1px solid #000000;
+  border-left: 1px solid #000000;
+}
+.edittile {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-top: 1px solid #000000;
+  border-left: 1px solid #000000;
+}
+
+.notes { border: solid 1px black; margin:auto; width:60%;}
+/*}}}*/
+
 
 /* :wrap=none:noTabs=true:collapseFolds=1:mode=css:tabSize=4:indentSize=4:folding=explicit: */

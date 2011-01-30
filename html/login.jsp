@@ -53,18 +53,16 @@ String message = WebUtils.getOptionalParameter(request, "message", null);
     <img alt="corridor-like image by aephius on deviant art" src="${images}/Spaceship_Corridor_by_aerphis.jpg"/>
 </div>
 
-<div style="margin-left:420px;padding:1.5em;border:1px solid black;">
-    Invasion is a browser-based massively-multiplayer online roleplaying game wherein characters and their cadres struggle for control over resources and territories within an isolated space station.<br/>
-    <br/>
-    Humanity has spread to the stars and has seeded itself amongst the void. Generations have been born, lived, and died on the many space stations built throughout the cosmos.<br/>
-    <br/>
-    But now something strange is happening on these deep space stations. Some residents are finding that they can read thoughts and move objects with their minds. Others are finding their bodies developing new organs and body parts. But all of them feel their grip on sanity loosen in the celestial emptiness.<br/>
-    <br/>
-    As characters grow in experience, they discover new powers of immense caliber and discover the price of such powers. There are those who feel their minds expand in consciousness and ability and develop psionic skills. There are those whose bodies warp and mutate with traits of tumorous horror that grant unnatural strength and primal weaponry. But both types of the Invaded - the Psions and the Mutates - soon realize that the greater their powers become the more of their humanity is lost.<br/>
-    <br/>
-    Welcome to a game of science horror where power always has its price.<br/>
-    <br/>
-    Welcome to INVASION <br/>
+<div style="margin-left:420px;padding:1.5em;border:1px solid black;font-size:1.5em;">
+Invasion is a browser-based massively-multiplayer online roleplaying game wherein characters and their cadres struggle for control over resources and territories and maybe humanity itself within isolated space stations across space. Humanity has spread to the stars and has seeded itself amongst the void. Generations have been born, lived, and died on the many space stations built throughout the cosmos. But now something strange is happening on these deep space stations. It all started with the voices. Strange, ethereal messages received by people of all walks of life. What some hear is encouraging yet slightly disturbing while others hear fearful, cautionary thoughts. Some hear nothing and fear for the sanity of those around them.
+<br/><br/>
+Some time later, small cubes of fused crystal and metal appear in the quarters of those that heard the voices most strongly. They became a point of comfort and a focus for mediation...and then they were gone. In their place, people started displaying new abilities. Some residents found that they can read thoughts and move objects with their minds. Others are finding new control over their bodies - even the ability to change their shape in small ways. But all of them feel their grip on sanity loosen in the celestial emptiness. Some blamed the "soul cubes" as they became known. While those that build them see them as the salvation for what was invading their minds.
+<br/><br/>
+As characters grow in experience, they discover new powers of immense caliber and discover the price of such powers. There are those who feel their minds expand in consciousness and ability and develop psionic skills. There are those whose bodies warp and mutate with traits that grant unnatural strength and primal weaponry. But both types of the Invaded - the Psis and the Mutates - soon realize that the greater their powers become the more of their humanity is lost.
+<br/><br/>
+Humanity is being torn and brought into a racial civil war millennia old. Will it choose sides or resist the split that destroyed a race so long ago? Welcome to a game of science horror where power always has its price.
+<br/><br/>
+Welcome to INVASION
 </div>
 <a href="http://english-186714478924.spampoison.com" style="display:none"><img src="http://pics5.inxhost.com/images/sticker.gif" border="0" width="80" height="15"/></a>
 </body>

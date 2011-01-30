@@ -1,0 +1,20 @@
+<script type="text/javascript">
+    $(function(){
+        // Dialog
+        $('#dialog').dialog({
+            autoOpen: false,
+            width: 600,
+            buttons: {
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+</script>
+
+<!-- ui-dialog -->
+<div id="dialog" title="Dialog Title">
+    <p>Place holder text.</p>
+</div>
+

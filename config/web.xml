@@ -110,7 +110,9 @@
             <url-pattern>/i/*</url-pattern>
             <url-pattern>/registrationProcess.jsp</url-pattern>
             <url-pattern>/registration.jsp</url-pattern>
+            <url-pattern>/404.jsp</url-pattern>
             <url-pattern>/favicon.ico</url-pattern>
+            <url-pattern>/mobile.html</url-pattern>
             <url-pattern>/j_security_check</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
@@ -140,7 +142,7 @@
     </security-role>
 
     <session-config>
-      <session-timeout>20</session-timeout>    <!-- 20 minutes -->
+      <session-timeout>240</session-timeout>    <!-- 20 minutes -->
     </session-config>
 
     <mime-mapping>
@@ -158,6 +160,10 @@
         <location>/denied.html</location>
     </error-page>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+    </error-page>
     <error-page>
         <exception-type>invasion.ui.NaughtyException</exception-type>
         <location>/naughty.jsp</location>

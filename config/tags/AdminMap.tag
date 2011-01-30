@@ -2,7 +2,7 @@
 attribute name="locid" required="true" %><%!
 
     InvasionConnection conn = null;
-    int BOX_SIZE = 55;
+    int BOX_SIZE = 25;
     int MAP_SIDE = 15;
     int TOTAL_SIZE = BOX_SIZE * MAP_SIDE;
     Location center = null;
@@ -65,7 +65,7 @@ attribute name="locid" required="true" %><%!
         while(rs.next())
         {
             cloc = rs.getString("id");
-            out.write("   <div class=\"me " + rs.getString("cssname") + "\" style=\"left: " + Integer.toString(x*BOX_SIZE) + "px; top:");
+            out.write("   <div class=\"edittile " + rs.getString("cssname") + "\" style=\"left: " + Integer.toString(x*BOX_SIZE) + "px; top:");
             out.write(Integer.toString(y*BOX_SIZE) + "px;\" onmouseover=\"shloc('" + cloc);
             out.write("')\" onclick=\"edit(" + cloc + ");\">");
             out.write("\n\t<div style=\"display:none\" id=\"desc-" + cloc + "\">");

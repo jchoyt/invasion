@@ -18,7 +18,7 @@ import java.util.Set;
 import org.json.*;
 
 /**
- *  Hold messages and retrieve them from the db
+ *  Create messages and retrieve them from the db
  */
 public class Message  implements java.io.Serializable {
 
@@ -27,6 +27,7 @@ public class Message  implements java.io.Serializable {
     static{log.setLevel(Level.FINER);}
 
 
+    //{{{ Members
     private int messageid;
     private Date messagedate;
     private String message;
@@ -37,8 +38,9 @@ public class Message  implements java.io.Serializable {
     public static final int SELF = 1;
     public static final int BROADCAST = 2;
     public static final int ETHERIAL = 3;
-    public static final int EFFECT = 4;
+    public static final int EFFECT = 4; //}}}
 
+    //{{{ Constructors
     public Message() {
     }
 
@@ -81,8 +83,9 @@ public class Message  implements java.io.Serializable {
             DatabaseUtility.close(ps);
         }
 
-    }
+    } //}}}
 
+    //{{{ methods
     public static JSONArray getInitialMessages(InvasionConnection conn, int altId)
     {
         String query = "select * from messages where read = true and altid = ? order by messageid desc limit 10";
@@ -168,6 +171,82 @@ public class Message  implements java.io.Serializable {
         return ret;
     }
 
+    /**
+     *  Inserts a message into the database for every character at the given location
+     */
+    public static void locationBroadcast(InvasionConnection conn, int locid, int type, String message)
+    {
+        String query = "insert into messages (message, type, altid) select ?, ?, id from alt where location=?";
+        PreparedStatement ps = null;
+        try{
+            ps = conn.prepareStatement(query);
+            ps.setString(1, message);
+            ps.setInt(2, type);
+            ps.setInt(3, locid);
+            ps.executeUpdate();
+        }
+        catch(Exception e)
+        {
+            log.throwing(KEY, "constructor", e);
+        }
+        finally
+        {
+            DatabaseUtility.close(ps);
+        }
+
+    }
+
+    /**
+     *  Inserts a message into the database for every character at the given location except the one given
+     */
+    public static void locationBroadcast(InvasionConnection conn, int locid, int type, String message, int exceptAlt)
+    {
+        String query = "insert into messages (message, type, altid) select ?, ?, id from alt where location=? and id != ?";
+        PreparedStatement ps = null;
+        try{
+            ps = conn.prepareStatement(query);
+            ps.setString(1, message);
+            ps.setInt(2, type);
+            ps.setInt(3, locid);
+            ps.setInt(4, exceptAlt);
+            ps.executeUpdate();
+        }
+        catch(Exception e)
+        {
+            log.throwing(KEY, "constructor", e);
+        }
+        finally
+        {
+            DatabaseUtility.close(ps);
+        }
+
+    }
+
+    /**
+     *  Inserts a message into the database for every character who should be in the given station
+     */
+    public static void stationBroadcast(InvasionConnection conn, int station, int type, String message)
+    {
+        String query = "insert into messages (message, type, altid) select ?, ?, id from alt where station=?";
+        PreparedStatement ps = null;
+        try{
+            ps = conn.prepareStatement(query);
+            ps.setString(1, message);
+            ps.setInt(2, type);
+            ps.setInt(3, station);
+            ps.executeUpdate();
+        }
+        catch(Exception e)
+        {
+            log.throwing(KEY, "constructor", e);
+        }
+        finally
+        {
+            DatabaseUtility.close(ps);
+        }
+
+    }
+
     public JSONObject toJson()
         throws JSONException
     {
@@ -179,15 +258,19 @@ public class Message  implements java.io.Serializable {
         ret.put("text", message);
         ret.put("date", f.format(messagedate));
         return ret;
-    }
+    } //}}}
 
+    //{{{ Getters and Setters
     public int getMessageid() { return this.messageid; }
     public void setMessageid(int messageid) { this.messageid = messageid; }
     public Date getMessagedate() { return this.messagedate; }
     public void setMessagedate(Date messagedate) { this.messagedate = messagedate; }
     public String getMessage() { return this.message; }
     public void setMessage(String message) { this.message = message; }
+    //}}}
+
 
 }
 
+// :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:
 

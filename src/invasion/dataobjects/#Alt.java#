@@ -55,6 +55,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
+    protected static Map<Alt, Date> altCache = new HashMap<Alt, Date>();
+    
     //}}}
 
     //{{{ Methods

@@ -252,6 +252,7 @@ public class Critter implements Attacker, Defender
             }
             Stats.addChange( whodunnit, Stats.KILLS, 1);
             new Message(conn, whodunnit, Message.NORMAL, message );
+            //TODO - broadcast the kill message
 
         }
         //remove it from the PET database

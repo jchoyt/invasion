@@ -64,9 +64,9 @@ public class InitServlet extends HttpServlet
          */
         super.init( config );
         /* Set up logging */
-        System.setProperty( "java.util.logging.config.class", "invasion.util.LogConfig" );
-        LogConfig.reloadLogManagerProperties();
-        System.out.println( LogConfig.getConfiguration() );
+        //System.setProperty( "java.util.logging.config.class", "invasion.util.LogConfig" );
+        //LogConfig.reloadLogManagerProperties();
+        //System.out.println( LogConfig.getConfiguration() );
         /*
          *  Grab the name for the currently deployed webapp.  It's possible this could be in error if the webapp is deployed
          *  as a subdirectory (i.e., The docbase is http://localhost:8080/first/sub).  If this ever gets deployed that way it will
@@ -95,6 +95,8 @@ public class InitServlet extends HttpServlet
         LocationType.load();
         /* pre-load the Search information */
         Search.load();
+        /* pre-load the Skill values */
+        Skills.load();
         /* Load up the location occupant counts */
         LocationCache.load();
         /* load up the broods */

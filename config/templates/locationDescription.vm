@@ -4,4 +4,11 @@
     <strong>You are located in a ${location.type} at (${location.x}, ${location.y}) on level ${location.level} of ${location.station} station</strong>
 #end
 <p>${location.description}</p>
-<p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/></p>
+#if($location.chalk)
+    <p>Someone has written <i>$location.chalk</i> on the wall</p>
+#elseif($location.draw)
+    <p>Someone has drawn a picture of $location.draw on the wall.</p>
+#elseif($location.scrawl)
+    <p>Someone has crudely scrawled a message here.  You can barely make out <i>${location.scrawl}</i>.</p>
+#end
+<p><input type="button" onclick="dosearch(1);" value="Search (1 AP)"/>  <input type="button" value="Search 5 times (5 AP)" onclick="dosearch(5);"/> <input type="button" onclick="chalkWall();" value="Write on wall (1 AP)"/></p>

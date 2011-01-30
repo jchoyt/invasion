@@ -22,7 +22,7 @@ public class Stats {
     //TODO read this directly from the DB
     private static final String[] names = { "Locations Hacked", "Alcohol Consumed", "Food Consumed", "Damage Inflicted", "Damage Suffered",
         "Survival Streak", "Books Read", "Items Repaired", "Items Crafted", "Murder-Death-Kills",
-        "Trips to the Mainframe", "Items Buffed" };
+        "Trips to the Mainframe" };
     public static final int HACK = 0;
     public static final int BOOZE = 1;
     public static final int FOOD = 2;
@@ -34,7 +34,6 @@ public class Stats {
     public static final int CRAFTED = 8;
     public static final int KILLS = 9;
     public static final int DEATHS = 10;
-    public static final int BUFFS = 11;
 
     public static synchronized void addChange(int altid, int statid,
              int increment) {

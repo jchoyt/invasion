@@ -21,7 +21,7 @@ public class DeathFilter implements Filter
 
     public final static String KEY = DeathFilter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     private FilterConfig filterConfig = null;
@@ -50,12 +50,14 @@ public class DeathFilter implements Filter
             wazzit = (Whatzit) session.getAttribute(Whatzit.KEY);
             if( wazzit == null || wazzit.getAlt() == null )  //nobody is logged in
             {
+                log.finer("no character is logged in");
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
                 return;
             }
         }
         else
         {
+            log.finer("session is null");
             filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
             return;
         }
@@ -66,6 +68,7 @@ public class DeathFilter implements Filter
             }
             catch (SQLException e)
             {
+                log.throwing(KEY, "doFilter, failed while reloading wazzit", e);
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
                 return;
             }
@@ -75,6 +78,7 @@ public class DeathFilter implements Filter
             {
                 //make LOST IN SPACE page
                 // out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
+                log.finer("Locid = -1337 - character is basically screwed.");
                 filterConfig.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
                 return;
             }

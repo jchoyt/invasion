@@ -1,4 +1,4 @@
-<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*" %><%@
+<%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*, java.io.*" %><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
     public final static String KEY = "/map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
@@ -20,6 +20,10 @@
     InvasionConnection conn = null;
     try{
         conn = new InvasionConnection();
+        StringWriter pollJson = new StringWriter();
+        JSONArray alerts = new JSONArray();
+        Poll.fullPoll( conn, pollJson, wazzit, alerts );
+        JSONObject obj = new JSONObject( pollJson.toString() );
     %>
 <html style="overflow: hidden; height: 100%;" >
 <head>
@@ -51,6 +55,27 @@
 
 	<%--{{{  javascript --%>
 	<script type="text/javascript">
+        $(function(){
+            // Dialog
+            $('#dialog').dialog({
+                autoOpen: false,
+                width: 600,
+                buttons: {
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+
+        function chalkWall()
+        {
+            resource = "chalk.jsp";
+            $('#dialog').load(resource);
+            $('#dialog').dialog('open');
+            return false;
+        }
+
 	</script>
     <%--}}}--%>
 
@@ -71,19 +96,19 @@
         <div class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
             <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <%=alt.getName()%><span id="stats-area">
             <%
-                JSONObject obj2 = Alt.getStats(conn, alt.getId());
-                JSONObject stats = new JSONObject();
-                stats.put("stats", obj2);
-                VelocityUtil.applyTemplate(stats, "stats.vm", out);
-            %></span></span><span id="poll-indicator" style="display:none;"><img alt="" src="/i/rss16.png"/></span>
-            <span style="float:right;margin-right:10px">Menu<div class="pop">
+                // JSONObject obj2 = Alt.getStats(conn, alt.getId());
+                // JSONObject stats = new JSONObject();
+                // stats.put("stats", obj2);
+                VelocityUtil.applyTemplate(obj, "stats.vm", out);
+            %></span></span>
+            <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.png"/></span> Menu<div class="pop">
                     <p><a href="/disconnect.jsp">Disconnect</a></p>
                     <p><hr/></p>
-                    <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage regular poll</a></p>
+                    <p><a href="#" onclick="setInterval( 'poll()', 10000);$('.pop').removeClass('active');">Engage periodic poll</a></p>
                     <p><hr/></p>
-                    <p><a href="#" onclick="No uber map yet">Uber Map</a></p>
-                    <p><a href="http://wiki.soulcubes.com" target="_blank">Wiki</a></p>
-                    <p><a href="http://forums.soulcubes.com" target="_blank">Forums</a></p>
+                    <p><a href="#" onclick="alert('No uber map yet');$('.pop').removeClass('active');">Uber Map</a></p>
+                    <p><a href="http://wiki.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Wiki</a></p>
+                    <p><a href="http://forums.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Forums</a></p>
                  </div>
              </span><br clear="all"/>
         </div>
@@ -94,9 +119,9 @@
                     <div id="amessages" style="height: 200px;border:1px solid black;margin-bottom:5px;" class="ui-layout-content">
                         <ul id="msg-box" class="msgs">
                         <%
-                            JSONArray a = Message.getInitialMessages(conn, wazzit.getAlt().getId());
-                            JSONObject obj = new JSONObject();
-                            obj.put("msgs", a);
+                            // JSONArray a = Message.getInitialMessages(conn, wazzit.getAlt().getId());
+                            // JSONObject obj = new JSONObject();
+                            // obj.put("msgs", a);
                             VelocityUtil.applyTemplate(obj, "messages.vm", out);
                         %>
                         </ul>
@@ -105,7 +130,6 @@
                         <button type="submit">Speak (<span id="spts">0</span> AP)</button>
                         <input name="words" type="input" size="50">
                     </form>
-                    <%-- <a href="#" onclick="poll();">Test updateMessagePane()</a> --%>
                    <script type="text/javascript">
                         $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
                    </script>
@@ -125,9 +149,9 @@
                 <%--  <form method="post" action="#" onsubmit="attack(this.target.value); return false">
                     <select name="target" id="attacklist">
                         <%
-                            a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
-                            obj = new JSONObject();
-                            obj.put("occs", a);
+                            //a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
+                            //obj = new JSONObject();
+                            //obj.put("occs", a);
                             VelocityUtil.applyTemplate(obj, "attacklist.vm", out);
                         %>
                     </select>
@@ -136,9 +160,9 @@
                 <form method="post" action="equip.jsp" onsubmit="equip.jsp">
                     <select name="weaponid" id="equiplist">
                     <%
-                        a = Item.getItems(conn, alt.getId());
-                        obj = new JSONObject();
-                        obj.put("inv", a);
+                        //a = Item.getItems(conn, alt.getId());
+                        //obj = new JSONObject();
+                        //obj.put("inv", a);
                         VelocityUtil.applyTemplate(obj, "equiplist.vm", out);
                     %>
                     </select>
@@ -147,6 +171,10 @@
                 </p>
             </div>
         </div>
+        <!-- ui-dialog -->
+		<div id="dialog" title="Dialog Title">
+			<p>There has been an exception.  Check <a href="editLocation.jsp?locid=1001625">here</a> to see what the problem may have been</p>
+		</div>
     </div> <%--}}}--%>
 
     <%--{{{  west pane --%>
@@ -170,9 +198,9 @@
                     </thead>
                     <tbody id="occ-pane">
                         <%
-                            a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
-                            obj = new JSONObject();
-                            obj.put("occs", a);
+                            // a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
+                            // obj = new JSONObject();
+                            // obj.put("occs", a);
                             VelocityUtil.applyTemplate(obj, "occupants.vm", out);
                         %>
                     </tbody>
@@ -191,9 +219,9 @@
                     </thead>
                     <tbody id="pet-pane">
                         <%
-                            a = Critter.petsAtLocation( wazzit.getAlt().getLocation() );
-                            obj = new JSONObject();
-                            obj.put("pets", a);
+                            // a = Critter.petsAtLocation( wazzit.getAlt().getLocation() );
+                            // obj = new JSONObject();
+                            // obj.put("pets", a);
                             VelocityUtil.applyTemplate(obj, "critterpane.vm", out);
                         %>
                     </tbody>
@@ -228,7 +256,7 @@
                 <br/>Faction: None
                 <br/><span id="stats-area2">
                 <%
-                    VelocityUtil.applyTemplate(stats, "stats2.vm", out);
+                    VelocityUtil.applyTemplate(obj, "stats2.vm", out);
                 %></span>
             </div>
             <h3 id="inv-pane"><a href="#">Inventory</a></h3>
@@ -238,41 +266,19 @@
                     <thead><tr><th>Name</th><th>Wt</th><th>Act</th></tr></thead>
                     <tbody id="inv-body">
                         <%
-                            a = Item.getItems(conn, alt.getId());
-                            obj = new JSONObject();
-                            obj.put("inv", a);
+                            // a = Item.getItems(conn, alt.getId());
+                            // obj = new JSONObject();
+                            // obj.put("inv", a);
                             VelocityUtil.applyTemplate(obj, "inventory.vm", out);
                         %>
                     </tbody>
                 </table>
                 </form>
             </div>
-            <h3><a href="#">I haven't</a></h3>
+            <h3><a href="#">Skills</a></h3>
             <div>
                 <p>
-                Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
-                Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
-                ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
-                lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
-                </p>
-                <ul>
-                    <li>List item one</li>
-                    <li>List item two</li>
-                    <li>List item three</li>
-                </ul>
-            </div>
-            <h3><a href="#">decided on yet</a></h3>
-            <div>
-                <p>
-                Cras dictum. Pellentesque habitant morbi tristique senectus et netus
-                et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
-                faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
-                mauris vel est.
-                </p>
-                <p>
-                Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
-                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-                inceptos himenaeos.
+                There are skills.  Yours don't do anything.
                 </p>
             </div>
         </div>

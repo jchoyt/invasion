@@ -1,3 +1,4 @@
+#* used for admin pages *#
 Located at ($x, $y) on level $level of $station station
 <br/>Named $name, it is a $type
 <br/>

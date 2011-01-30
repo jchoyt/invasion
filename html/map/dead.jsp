@@ -55,7 +55,7 @@
                 JSONObject stats = new JSONObject();
                 stats.put("stats", obj2);
                 VelocityUtil.applyTemplate(stats, "stats.vm", out);
-            %></span></span><span id="poll-indicator" style="display:none;"><img alt="" src="/i/rss16.png"/></span>
+            %></span></span>
             <span style="float:right;margin-right:10px">Menu<div class="pop">
                     <p><a href="/disconnect.jsp">Disconnect</a></p>
                     <p><hr/></p>
