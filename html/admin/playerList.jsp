@@ -41,5 +41,5 @@
     catch(Exception e)
     { e.printStackTrace();}
     finally
-    { conn.close(); }
+    { DatabaseUtility.close(conn); }
 %>

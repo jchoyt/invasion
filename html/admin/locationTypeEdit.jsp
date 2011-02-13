@@ -144,7 +144,7 @@
                 --%>
             </div>
         </div>
-        <br clear="all"/><a href="/map/index.jsp">Back</a>
+        <br clear="all"/><a href="/admin">Back</a>
     </center>
     <!-- ui-dialog -->
     <div id="dialog" title="Add a new item" style="text-align:center;">
@@ -169,5 +169,5 @@
     catch(Exception e)
     { e.printStackTrace();}
     finally
-    { conn.close(); }
+    { DatabaseUtility.close(conn); }
 %>

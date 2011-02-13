@@ -194,7 +194,7 @@ function updateLocation(data)
 
 function drop( itemid )
 {
-    var url = "drop.jsp?itemid=" + itemid;
+    var url = "drop?itemid=" + itemid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
@@ -202,7 +202,7 @@ function drop( itemid )
 
 function eat( itemid )
 {
-    var url = "eat.jsp?itemid=" + itemid;
+    var url = "eat?itemid=" + itemid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
@@ -210,7 +210,7 @@ function eat( itemid )
 
 function drink( itemid )
 {
-    var url = "drink.jsp?itemid=" + itemid;
+    var url = "drink?itemid=" + itemid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
@@ -218,7 +218,7 @@ function drink( itemid )
 
 function dosearch( reps )
 {
-    var url = "search.jsp?count=" + reps;
+    var url = "search?count=" + reps;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
@@ -226,7 +226,7 @@ function dosearch( reps )
 
 function attack( targetid )
 {
-    var url = "attack.jsp?target=" + targetid;
+    var url = "attack?target=" + targetid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
@@ -234,7 +234,7 @@ function attack( targetid )
 
 function attack_pet( targetid )
 {
-    var url = "attackPet.jsp?target=" + targetid;
+    var url = "attackPet?target=" + targetid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });

@@ -16,12 +16,11 @@
             }
             else throw new RuntimeException("Borked attempt to grab the center of the station.");
             rs.close();
-            <%
         }
         catch(Exception e)
         { e.printStackTrace();}
         finally
-        { conn.close(); }
+        { DatabaseUtility.close(conn); }
     }
 %>
 <html>
@@ -63,7 +62,7 @@
     </head>
     <body>
         <jsp:include page="navigation.jsp"/>
-        <div style="border:1px solid black;margin-left:2em;width:400px;float:left;" id="descbox"></div>
+        <div style="border:1px solid black;margin-left:2em;width:400px;height:150px;position:fixed;left:200px;top:10px;background-color:white;z-index:10;" id="descbox"></div>
         <br clear="all"/>
         <tags:AdminMap locid="<%=locid%>"/>
         		<!-- ui-dialog -->

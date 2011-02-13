@@ -70,7 +70,7 @@
 
         function chalkWall()
         {
-            resource = "chalk.jsp";
+            resource = "/map/chalk";
             $('#dialog').load(resource);
             $('#dialog').dialog('open');
             return false;
@@ -126,7 +126,7 @@
                         %>
                         </ul>
                     </div>
-                    <form method="post" action="speak.jsp" onsubmit="speak(this); return false">
+                    <form method="post" action="speak" onsubmit="speak(this); return false">
                         <button type="submit">Speak (<span id="spts">0</span> AP)</button>
                         <input name="words" type="input" size="50">
                     </form>
@@ -157,7 +157,7 @@
                     </select>
                     <input type="submit" value="Attack"/>
                 </form>
-                <form method="post" action="equip.jsp" onsubmit="equip.jsp">
+                <form method="post" action="equip" onsubmit="equip.jsp">
                     <select name="weaponid" id="equiplist">
                     <%
                         //a = Item.getItems(conn, alt.getId());
@@ -295,7 +295,7 @@
         }
         finally
         {
-            conn.close();
+            DatabaseUtility.close(conn);
         }
     %>
 	</body>

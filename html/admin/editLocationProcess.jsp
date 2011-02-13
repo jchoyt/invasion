@@ -7,11 +7,11 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
 
     if( name.equals("") )
     {
-        name == null;
+        name = null;
     }
     if( desc.equals("") )
     {
-        desc == null;
+        desc = null;
     }
 
     InvasionConnection conn = null;
@@ -20,9 +20,9 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
         conn = new InvasionConnection();
         String query = "update location set name=?, typeid=?, description=? where id=?";
         ps = conn.prepareStatement(query);
-        ps.setString(1, name);
+        ps.setString(1, EscapeChars.forHTML(name));
         ps.setInt(2, Integer.parseInt( type ));
-        ps.setString(3, desc);
+        ps.setString(3, EscapeChars.forHTML(desc));
         ps.setInt(4, Integer.parseInt(locid));
         ps.execute();
     }
@@ -34,7 +34,7 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
     finally
     {
         DatabaseUtility.close(ps);
-        conn.close();
+        DatabaseUtility.close(conn);
     }
 
 %><jsp:forward page="stationEdit.jsp" />

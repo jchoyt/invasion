@@ -49,7 +49,7 @@
         else
         {
             %>
-                <form action="purchaseSkillProcess.jsp" method="post">
+                <form action="/purchaseSkill" method="post">
                     <input type="hidden" name="altid" value="<%=altid%>" />
                     <input type="hidden" name="skillid" value="<%=skillid%>" />
                     Purchasing <%=name%> will cost <%=s.getCost()%> CP.  Are you sure?
@@ -65,7 +65,7 @@
     finally
     {
         DatabaseUtility.close( rs );
-        conn.close();
+        DatabaseUtility.close(conn);
     }
 
 %>

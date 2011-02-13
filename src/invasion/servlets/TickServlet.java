@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 
 
 /**
@@ -21,6 +22,7 @@ import javax.servlet.ServletException;
  * @author     jchoyt
  * @created    Wed Mar 10 12:23:54 EST 2010 @766 /Internet Time/
  */
+@WebServlet(urlPatterns = { "/tick" }, loadOnStartup=10 )
 public class TickServlet extends HttpServlet
 {
 
@@ -92,6 +94,7 @@ public class TickServlet extends HttpServlet
      * @exception  IOException       Description of the Exception
      * @exception  ServletException  Description of the Exception
      */
+    @Override
     public void doGet( HttpServletRequest req, HttpServletResponse resp )
         throws IOException, ServletException {
             resp.sendRedirect("http://disney.com");
@@ -106,6 +109,7 @@ public class TickServlet extends HttpServlet
      * @exception  IOException       Description of the Exception
      * @exception  ServletException  Description of the Exception
      */
+    @Override
     public void doPost( HttpServletRequest req, HttpServletResponse resp )
         throws IOException, ServletException {
             resp.sendRedirect("http://disney.com");

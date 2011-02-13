@@ -35,7 +35,7 @@
             </div>
             <br/>
             <div class="descbox" style="width:400px;">
-                <form action="itemAdd.jsp">
+                <form action="itemAdd">
                 <h3>Add Item</h3>
                     New item values<sup>2</sup>: <input type="text" name="newvalues"/><br/>
                     (e.g., Spiced Rum,booze,1,s,15,1d3,1,true,p,false)<br/>
@@ -63,5 +63,5 @@
     catch(Exception e)
     { e.printStackTrace();}
     finally
-    { conn.close(); }
+    { DatabaseUtility.close(conn); }
 %>

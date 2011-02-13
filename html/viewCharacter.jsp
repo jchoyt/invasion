@@ -59,7 +59,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
     InvasionConnection conn = null;
     try
     {
-        new InvasionConnection();
+        conn = new InvasionConnection();
         //load the alt
             Alt thisguy = Alt.load(conn, id);
             Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
@@ -199,5 +199,5 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
     catch(Exception e)
     { e.printStackTrace();}
     finally
-    { conn.close(); }
+    {  DatabaseUtility.close(conn); }
 %>

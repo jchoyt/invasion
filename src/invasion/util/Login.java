@@ -4,16 +4,18 @@
 
 package invasion.util;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.*;
-import javax.servlet.http.*;
 import javax.servlet.*;
-import java.security.*;
-import java.util.*;
+import javax.servlet.http.*;
 import invasion.dataobjects.*;
-import java.security.MessageDigest;
-import java.sql.*;
 
 /**
  *  Description of the Class

@@ -13,7 +13,10 @@ import invasion.util.*;
 import java.sql.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 
+
+@WebServlet(urlPatterns = { "/map/move" })
 public class MoveServlet extends HttpServlet
 {
     public final static String KEY = "MoveServlet";  //change to MoveServlet eventually
@@ -44,6 +47,7 @@ public class MoveServlet extends HttpServlet
             ps.setInt(2, altid);
             int count = ps.executeUpdate();
             log.finer("did query - updated number of rows = " + count);
+            Alt.load(conn, altid).setLocation(locid);
         }
         catch(Exception e)
         {
@@ -64,6 +68,7 @@ public class MoveServlet extends HttpServlet
      *@exception  ServletException  Description of the Exception
      *@exception  IOException       Description of the Exception
      */
+    @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
@@ -130,6 +135,7 @@ public class MoveServlet extends HttpServlet
      *@exception  ServletException  Description of the Exception
      *@exception  IOException       Description of the Exception
      */
+    @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {

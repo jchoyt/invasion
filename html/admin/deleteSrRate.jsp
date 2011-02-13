@@ -17,7 +17,7 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
     }
     finally
     {
-        conn.close();
+        DatabaseUtility.close(conn);
     }
 %>
 <%-- Note:  It is up to the calling javascript page to do the page reload --%>

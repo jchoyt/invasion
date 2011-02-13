@@ -26,7 +26,7 @@
 %>
 
 Edit this tile:
-<form action="uberEditLocationProcess.jsp" method="post">
+<form action="uberEditLocation" method="post">
     <input type="hidden" name="locid" value="<%=locid%>" />
     <input type="hidden" name="station" value="<%=station%>" />
     Type: <select name="type"><tags:Locationtypes/></select><br/>
@@ -40,5 +40,5 @@ Edit this tile:
     catch(Exception e)
     { e.printStackTrace();}
     finally
-    { conn.close(); }
+    { DatabaseUtility.close(conn); }
 %>

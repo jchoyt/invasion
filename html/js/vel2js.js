@@ -146,12 +146,12 @@ else {
 if (i.type == "weapon") {
 t.p('        ');
 if (i.equipped) {
-t.p('            <td><a href="unequip.jsp?weaponid=');
+t.p('            <td><a href="unequip?weaponid=');
 t.p( i.itemid);
 t.p('" >Unequip</a></td>        ');
 }
 else {
-t.p('            <td><a href="equip.jsp?weaponid=');
+t.p('            <td><a href="equip?weaponid=');
 t.p( i.itemid);
 t.p('" >Equip</a> | <a href="');
 t.p('#" onclick="drop(');
@@ -357,7 +357,7 @@ t.p('<br/><b>Level</b>: ');
 t.p( context.stats.level);
 t.p('<br/><b>Unspent CP</b>: ');
 t.p( context.stats.cp);
-t.p(' <a href="/purchaseSkills.jsp">Purchase Skills</a><br/><span class="hp"><b>HP</b>: ');
+t.p('<br/><span class="hp"><b>HP</b>: ');
 t.p( context.stats.hp);
 t.p('</span><br/><span class="ip"><b>IP</b>: ');
 t.p( context.stats.ip);

@@ -5,13 +5,12 @@
 package invasion.util;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.sql.*;
-import org.json.*;
+import java.util.logging.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import invasion.dataobjects.*;
-
-import java.util.*;
+import org.json.*;
 
 public class Search
 {

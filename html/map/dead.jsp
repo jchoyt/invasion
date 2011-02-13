@@ -166,7 +166,7 @@
         }
         finally
         {
-            conn.close();
+            DatabaseUtility.close(conn);
         }
     %>
 	</body>

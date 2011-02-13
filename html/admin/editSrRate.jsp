@@ -20,7 +20,7 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
     }
     finally
     {
-        conn.close();
+        DatabaseUtility.close(conn);
     }
 
     response.sendRedirect("locationTypeEdit.jsp?id=" + locid);

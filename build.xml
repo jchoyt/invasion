@@ -68,8 +68,8 @@
             <lib dir="${jars}">
                 <!-- provided by Tomcat -->
                 <exclude name="servlet-api.jar" />
-                <exclude name="javax.servlet.jar" />
                 <exclude name="jsp-api.jar" />
+		<exclude name="el-api.jar" />
                 <exclude name="commons-logging*" />
                 <!-- flatten out the lib directory -->
                 <exclude name="**/restlet/**"/>

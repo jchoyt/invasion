@@ -33,7 +33,7 @@ page import="invasion.util.*, java.sql.*,java.util.logging.*" %><%
     finally
     {
         DatabaseUtility.close(ps);
-        conn.close();
+        DatabaseUtility.close(conn);
     }
 
 %><jsp:forward page="itemList.jsp" />

@@ -9,5 +9,5 @@
 
     InvasionConnection conn = new InvasionConnection();
     Poll.fullPoll(conn, out, wazzit, null);
-    conn.close();
+    DatabaseUtility.close(conn);
 %>

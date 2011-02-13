@@ -75,7 +75,7 @@ public class WebUtils
         {
             if ( i > 0 )
             {
-                ret.append( "," );
+                ret.append( ',' );
             }
             ret.append( values[i] );
         }
@@ -134,7 +134,7 @@ public class WebUtils
         {
             if ( i > 0 )
             {
-                ret.append( "," );
+                ret.append( ',' );
             }
             ret.append( values[i] );
         }
@@ -226,7 +226,7 @@ public class WebUtils
         return tokens.length == 2 &&
                     tokens[0].trim().length() > 0 &&
                     tokens[1].trim().length() > 0 &&
-                    tokens[1].indexOf( "." ) != -1;
+                    tokens[1].indexOf( '.' ) != -1;
     }
 
 

@@ -6,16 +6,17 @@
     log.entering("connect.jsp", "body");
     String charId = WebUtils.getRequiredParameter(request, "id");
     Alt alt = null;
+    int altid = Integer.parseInt(charId);
     try
     {
-        alt = Alt.load( Integer.parseInt(charId));
+        alt = Alt.load( altid );
         if( !alt.getUsername().equals(request.getRemoteUser()) )
         {
             response.sendRedirect("/naughty.jsp");
             return;
         }
-        Whatzit wazzit = new Whatzit();
-        wazzit.setAlt( alt );
+        Whatzit wazzit = new Whatzit(altid);
+        wazzit.reload();
         session.setAttribute( Whatzit.KEY,  wazzit );
         response.sendRedirect( "/map/index.jsp" );
     }

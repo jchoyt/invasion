@@ -41,7 +41,7 @@
                   <legend>Register a new account (many characters can be used on one account)<sup>1</sup></legend>
                   <p>
                     <label for="cname">User Name<sup>2</sup></label>
-                    <input id="cname" name="name" size="15" remote="checkUsernameAvail.jsp" class="required" minlength="2" />
+                    <input id="cname" name="name" size="15" remote="checkUsernameAvailable" class="required" minlength="2" />
                   </p>             <p>
                     <label for="cemail">E-Mail<sup>3</sup></label>
                     <input id="cemail" name="email" size="15"  class="required email" />

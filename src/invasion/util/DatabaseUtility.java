@@ -62,6 +62,15 @@ public class DatabaseUtility {
         }
     }
 
+
+    public static void close(InvasionConnection conn) {
+        log.entering(KEY, "close InvasionConnection");
+        if (conn == null) {
+            return;
+        }
+        conn.close();
+    }
+
     public static void close(Object dbObj) {
         if (dbObj == null) {
             return;
@@ -109,7 +118,6 @@ public class DatabaseUtility {
          *  Iterate through the ResultSet and extract the rows
          */
         boolean even=false;
-        String formattedString;
         while ( rs.next() )
         {
             if( even )

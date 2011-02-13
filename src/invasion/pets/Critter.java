@@ -94,7 +94,7 @@ public class Critter implements Attacker, Defender
         {
             try{ conn.commit(); } catch (Exception e2) {e2.printStackTrace(System.out);}
             DatabaseUtility.close(rs);
-            conn.close();
+            DatabaseUtility.close(conn);
         }
 
     }
@@ -122,7 +122,7 @@ public class Critter implements Attacker, Defender
         }
         finally
         {
-            conn.close();
+            DatabaseUtility.close(conn);
         }
 
     }
@@ -156,7 +156,7 @@ public class Critter implements Attacker, Defender
         finally
         {
             DatabaseUtility.close(rs);
-            conn.close();
+            DatabaseUtility.close(conn);
         }
 
         return ret;
@@ -172,7 +172,8 @@ public class Critter implements Attacker, Defender
      * @return
      *
      */
-    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn ){
+    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn ) throws SQLException
+    {
         log.finer( "Critter " + id + " getting hit for " + rawAmount + " damage." );
         int damageDone = rawAmount;
         //TODO apply soaks
@@ -185,8 +186,7 @@ public class Critter implements Attacker, Defender
 
         if( hp < 1 )
         {
-            die( conn, lasthurtby );
-            attacker.setReload();
+            kill( conn );
         }
         else
         {
@@ -209,6 +209,25 @@ public class Critter implements Attacker, Defender
         //WARNING - this will cause an lethal loop of attacking and counter attacking if one pet attacks another
     }
 
+
+    public void kill()
+    {
+        InvasionConnection conn = null;
+        try
+        {
+            conn = new InvasionConnection();
+            kill( conn );
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+        }
+        finally
+        {
+            DatabaseUtility.close(conn);
+        }
+    }
+
     /**
      * Kills off a pet
      *
@@ -217,15 +236,15 @@ public class Critter implements Attacker, Defender
      * @return
      *
      */
-    public void die(InvasionConnection conn, int whodunnit)
+    public void kill(InvasionConnection conn) throws SQLException
     {
-        if( whodunnit > 0 )
+        if( lasthurtby > 0 )
         {
             String query = "update alt set xp=xp+10 where id=?";
-            conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", whodunnit );
+            conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", lasthurtby );
             /*         This is for when we care about what kind of pet it was
             query = "select race, name from alt where id=?";
-            rs = conn.psExecuteQuery( query, "Error awarding killing XP and retrieving killer's race.", whodunnit );
+            rs = conn.psExecuteQuery( query, "Error awarding killing XP and retrieving killer's race.", lasthurtby );
             int killerRace = 0;
             if( rs.next() )
             {
@@ -248,10 +267,10 @@ public class Critter implements Attacker, Defender
             {
                 message = message + "  As you view the remanants of your slaughter, your stomach churns (+" + ipHit + " IP).";
                 query = "update alt set ip=ip+? where id=?";
-                conn.psExecuteUpdate( query, "Error dinging IP", ipHit, whodunnit );
+                conn.psExecuteUpdate( query, "Error dinging IP", ipHit, lasthurtby );
             }
-            Stats.addChange( whodunnit, Stats.KILLS, 1);
-            new Message(conn, whodunnit, Message.NORMAL, message );
+            Stats.addChange( lasthurtby, Stats.KILLS, 1);
+            new Message(conn, lasthurtby, Message.NORMAL, message );
             //TODO - broadcast the kill message
 
         }
@@ -306,7 +325,7 @@ public class Critter implements Attacker, Defender
                 if( rs.next() )
                 {
                     System.out.println( " He's dead!");
-                    Alt.kill( conn, defender.getId() );
+                    defender.kill( conn );
                 }
                 //method should do all soaks and return final damage done
                 Stats.addChange(id, Stats.DAMDONE, dmg);
@@ -333,7 +352,7 @@ public class Critter implements Attacker, Defender
     }
 
 	public boolean getReload() { return false; }
-	public void setReload() { }
+	public void setReload( boolean reload ) { }
     //}}}
 
     //{{{  Getters and setters

@@ -43,7 +43,7 @@
         {
             out.write( "</td><td>");
             out.write( rs.getString("loc"));
-            out.write( "</td><td><a class=\"link_button\" href=\"respawn.jsp?id="+ id +"\">Respawn</a>");
+            out.write( "</td><td><a class=\"link_button\" href=\"respawn?id="+ id +"\">Respawn</a>");
         }
         else
         {

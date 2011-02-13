@@ -21,7 +21,7 @@
     finally
     {
         DatabaseUtility.close(ps);
-        conn.close();
+        DatabaseUtility.close(conn);
     }
 %><META HTTP-EQUIV="Refresh" CONTENT="1;URL=charList.jsp">
 (Sh/H)e's been smote

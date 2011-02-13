@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import javax.servlet.annotation.WebServlet;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -13,6 +14,7 @@ import java.sql.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
+@WebServlet(urlPatterns = { "/poll" })
 public class PollServlet extends HttpServlet
 {
     public final static String KEY = "PollServlet";
@@ -42,6 +44,7 @@ public class PollServlet extends HttpServlet
      *@exception  ServletException  Description of the Exception
      *@exception  IOException       Description of the Exception
      */
+    @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
@@ -67,6 +70,7 @@ public class PollServlet extends HttpServlet
      *@exception  ServletException  Description of the Exception
      *@exception  IOException       Description of the Exception
      */
+    @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {

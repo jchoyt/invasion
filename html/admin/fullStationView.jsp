@@ -38,7 +38,7 @@
     </head>
     <body>
         <jsp:include page="navigation.jsp"/>
-        <div style="float:left;width:400px;border:1px solid black" id="descbox">
+        <div style="border:1px solid black;margin-left:2em;width:400px;height:150px;position:fixed;left:200px;top:10px;background-color:white;z-index:10;" id="descbox">
         </div>
         <br clear="all" />
         <tags:WholeStation />

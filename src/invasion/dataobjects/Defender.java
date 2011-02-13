@@ -17,6 +17,10 @@ public interface Defender
 
     public int getId();
 
+    public void kill() throws SQLException;
+
+    public void kill( InvasionConnection conn ) throws SQLException;
+
     /**
      * Notifies the defender they've been hit.  Soak should be applied (or pet defensive manuevers).
      *
