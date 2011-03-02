@@ -8,5 +8,5 @@
 %>
 <html><body>
 50 daleks added<br/>
-<a href="index.jsp"> back to map</a>
+<a href="/map/index.jsp"> back to map</a>
 

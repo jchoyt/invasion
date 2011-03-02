@@ -66,30 +66,32 @@ public class SearchServlet extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
+        log.entering(KEY, "doGet");
         PrintWriter out = response.getWriter();
         String count = WebUtils.getRequiredParameter(request, "count");
         int reps = Integer.parseInt(count);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
-        //do DB inserts
+        Alt alt = wazzit.getAlt();
         InvasionConnection conn = null;
         try{
             conn = new InvasionConnection();
             conn.setAutoCommit(false);
             for(int i = 0; i < reps; i++)
             {
-                int itemFound = Search.performSearch(2);
+                int itemFound = Search.performSearch(alt.getLocation());
                 if( itemFound == -1 )
                 {
-                    new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You search and find nothing.");
+                    new Message( conn, alt.getId(), Message.NORMAL, "You search and find nothing.");
                 }
                 else
                 {
-                    new Item(conn, itemFound, wazzit.getAlt().getId());
-                    new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You search and find a " + ItemType.getItemType(itemFound).getName() + ".");
+                    new Item(conn, itemFound, alt.getId());
+                    new Message( conn, alt.getId(), Message.NORMAL, "You search and find a " + ItemType.getItemType(itemFound).getName() + ".");
                 }
             }
-            wazzit.getAlt().decrementAp(conn, reps);
             conn.commit();
+            conn.setAutoCommit(true);
+            alt.decrementAp(conn, reps);
         }
         catch(Exception e)
         {
@@ -97,21 +99,19 @@ public class SearchServlet extends HttpServlet
             {
                 conn.rollback();
             }
-            catch (SQLException se) {}
-            log.throwing( KEY, "body", e);
-            //TODO - return error in JSON format
+            catch (SQLException se)
+            {
+                log.throwing( KEY, "doGet", se );
+                log.throwing( KEY, "doGet - rollback failed, original error:", e);
+            }
+            log.throwing( KEY, "doGet", e);
         }
         finally
         {
             Poll.fullPoll( conn, out, wazzit, null );
             DatabaseUtility.close(conn);
+            log.exiting(KEY, "doGet");
         }
-
-        // JSONObject inventory = Item.getItems(wazzit.getAlt().getId());
-        // JSONObject msgs = Message.getInitialMessages(wazzit.getAlt().getId());
-        // inventory.put("msgs", msgs.getJSONArray("msgs"));
-        // // System.out.println( String.valueOf(inventory) );
-        // out.write(String.valueOf(inventory));
     }
 
 

@@ -48,10 +48,11 @@ public class TickTask extends TimerTask
             log.entering( KEY, "run" );
             processStats();
             ticksAlive();
-            //checkBadges();
             checkLevels();
             checkSanity();
             adjustStats();
+            //checkBadges();
+            Alt.checkCache();
             BroodManager.workBroodsForTick();
             log.exiting( KEY, "run" );
         }
@@ -117,6 +118,12 @@ public class TickTask extends TimerTask
         //count/98 for days alive
     }
 
+    /**
+     * rotaties the stats tracker and logs them to file prior to processing
+     * @param
+     * @return
+     *
+     */
     private void processStats()
     {
         try

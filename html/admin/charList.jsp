@@ -35,7 +35,7 @@
                     ID: <input type="text" name="id"/><br/>
                     <input type="submit"/>
                 </form>
-                <form action="smite.jsp">
+                <form action="smite">
                 <h3>Smite</h3>
                     ID: <input type="text" name="id"/><br/>
                     Message: <input type="text" name="message" value="The system's automated defenses suddenly activate and reduce your body to ash."/><br/>

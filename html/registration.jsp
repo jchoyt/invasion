@@ -56,7 +56,7 @@
                   </p>
                   <center><input type="submit" value="Register"/></center>
                 </fieldset>
-                <sup>1</sup>By creating an account, you agree to be bound by the <a href="tos.html">terms of service and certify that you are at least 13 years of age.</a>.<br/>
+                <sup>1</sup>By creating an account, you agree to be bound by the <a href="/tos.html">terms of service and certify that you are at least 13 years of age.</a>.<br/>
                 <sup>2</sup>You are only allowed one user account.  You may have multiple characters per account.<br/>
                 <sup>3</sup>Read the disclaimer and privacy policy.  Short version is "this is for emergency use only."<br/>
             </form>

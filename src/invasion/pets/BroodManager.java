@@ -21,7 +21,7 @@ public class BroodManager
 
     public final static String KEY = BroodManager.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
 	protected static Map<Integer, Brood> playerBroods = new HashMap<Integer, Brood>();

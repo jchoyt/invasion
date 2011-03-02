@@ -252,14 +252,14 @@ public class WebUtils
     {
         String[] temp = new String[25];
         Arrays.fill( temp, EMPTY_STR );
-        temp[6] =  "<a href=\"move?dir=0\")><img src=\"/i/nw.png\"/></a>";
-        temp[7] =  "<a href=\"move?dir=1\")><img src=\"/i/n.png\"/></a>";
-        temp[8] =  "<a href=\"move?dir=2\")><img src=\"/i/ne.png\"/></a>";
-        temp[11] = "<a href=\"move?dir=3\")><img src=\"/i/w.png\"/></a>";
-        temp[13] = "<a href=\"move?dir=5\")><img src=\"/i/e.png\"/></a>";
-        temp[16] = "<a href=\"move?dir=6\")><img src=\"/i/sw.png\"/></a>";
-        temp[17] = "<a href=\"move?dir=7\")><img src=\"/i/s.png\"/></a>";
-        temp[18] = "<a href=\"move?dir=8\")><img src=\"/i/se.png\"/></a>";
+        temp[6] =  "<a href=\"/map/move?dir=0\")><img src=\"/i/nw.png\"/></a>";
+        temp[7] =  "<a href=\"/map/move?dir=1\")><img src=\"/i/n.png\"/></a>";
+        temp[8] =  "<a href=\"/map/move?dir=2\")><img src=\"/i/ne.png\"/></a>";
+        temp[11] = "<a href=\"/map/move?dir=3\")><img src=\"/i/w.png\"/></a>";
+        temp[13] = "<a href=\"/map/move?dir=5\")><img src=\"/i/e.png\"/></a>";
+        temp[16] = "<a href=\"/map/move?dir=6\")><img src=\"/i/sw.png\"/></a>";
+        temp[17] = "<a href=\"/map/move?dir=7\")><img src=\"/i/s.png\"/></a>";
+        temp[18] = "<a href=\"/map/move?dir=8\")><img src=\"/i/se.png\"/></a>";
         return temp;
     }
 

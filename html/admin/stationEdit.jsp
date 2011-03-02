@@ -67,7 +67,7 @@
         <tags:AdminMap locid="<%=locid%>"/>
         		<!-- ui-dialog -->
 		<div id="dialog" title="Dialog Title">
-			<p>There has been an exception.  Check <a href="editLocation.jsp?locid=1001625">here</a> to see what the problem may have been</p>
+			<p>There has been an exception.  Check <a href="/admin/editLocation.jsp?locid=1001625">here</a> to see what the problem may have been</p>
 		</div>
     </body>
 </html>

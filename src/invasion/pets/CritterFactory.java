@@ -14,7 +14,7 @@ public class CritterFactory
 
     public final static String KEY = CritterFactory.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     //}}}

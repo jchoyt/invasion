@@ -17,7 +17,7 @@ public class Item  implements java.io.Serializable {
 
     public final static String KEY = Item.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     private int itemid;
     private int itemtype;

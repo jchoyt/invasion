@@ -24,7 +24,7 @@ public class Message  implements java.io.Serializable {
 
     public final static String KEY = Message.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
 
     //{{{ Members

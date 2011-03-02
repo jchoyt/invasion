@@ -22,10 +22,9 @@ public class Whatzit
 
     public final static String KEY = Whatzit.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
-    protected Alt alt = null;
 	protected int currentAltId = 0;
     protected GuiConfig gui = null;
     //}}}
@@ -38,14 +37,9 @@ public class Whatzit
     //}}}
 
     //{{{ Methods
-    public void reload()
-        throws SQLException
-    {
-        this.alt = Alt.load(currentAltId);
-    }
     //}}}
 
-    public Alt getAlt() { return this.alt; }
+    public Alt getAlt() { return Alt.load(currentAltId); }
 
     //{{{ Getters and Setters
     public int getCurrentAltId() { return this.currentAltId; }

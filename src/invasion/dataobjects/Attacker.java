@@ -28,4 +28,6 @@ public interface Attacker
 
     public boolean getReload();
 
+    public String getName();
+
 }

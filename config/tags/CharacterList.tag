@@ -1,12 +1,12 @@
 <%@ tag import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*" %><table border="0" cellpadding="2" cellspacing="0" width="700px">
         <thead>
-            <tr><th>Name</th><th>Station</th><th>Level</th><th>AP</th><th>IP</th><th>HP</th><th>Location</th><th>Action</th></tr>
+            <tr><th>Name</th><th>Station</th><th>Level</th><th>AP</th><th>IP</th><th>HP</th><th>CP</th><th>Location</th><th>Action</th></tr>
         </thead>
         <tbody>
 <%
     String player = request.getRemoteUser();
 
-    String query = "select a.id, a.name as alt, a.level, ap || '/' || apmax as apset, ip, hp || '/' || hpmax as hpset, s.name as sname, 'L' || l.level || ' (' || x || ',' || y || ')' as loc, ticksalive from alt a join location l on (a.location=l.id) join station s on (s.id=l.station) where username=? order by a.name";
+    String query = "select a.id, cp, a.name as alt, a.level, ap || '/' || apmax as apset, ip, hp || '/' || hpmax as hpset, s.name as sname, 'L' || l.level || ' (' || x || ',' || y || ')' as loc, ticksalive from alt a join location l on (a.location=l.id) join station s on (s.id=l.station) where username=? order by a.name";
     InvasionConnection conn = new InvasionConnection();
     PreparedStatement ps = conn.prepareStatement(query);
     ps.setString(1,player);
@@ -27,7 +27,9 @@
         out.write( "</td><td>");
         out.write( rs.getString( "ip" ) );
         out.write( "</td><td>");
-        out.write( rs.getString( "hpset" ));
+        out.write( rs.getString( "hpset" ) );
+        out.write( "</td><td>");
+        out.write( rs.getString( "cp" ) );
         int ticksalive = rs.getInt("ticksalive");
         if( sname.equals("Dead") )
         {
@@ -43,13 +45,13 @@
         {
             out.write( "</td><td>");
             out.write( rs.getString("loc"));
-            out.write( "</td><td><a class=\"link_button\" href=\"respawn?id="+ id +"\">Respawn</a>");
+            out.write( "</td><td><a class=\"link_button\" href=\"/respawn?id="+ id +"\">Respawn</a>");
         }
         else
         {
             out.write( "</td><td>");
             out.write( rs.getString("loc"));
-            out.write( "</td><td><a class=\"link_button\" href=\"connect.jsp?id="+ id +"\">Connect</a>");
+            out.write( "</td><td><a class=\"link_button\" href=\"/connect?id="+ id +"\">Connect</a>");
         }
         out.write( "</td></tr>\n" );
         slotsUsed++;

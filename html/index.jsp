@@ -11,11 +11,11 @@
     <center><img alt="logo" src="${images}/banner.png"/>
         <br/><br/>
         <tags:CharacterList/>
-        <br/><br/><a href="newCharacter.html">Create a new character</a> | <a href="logout.jsp">Log out</a>
+        <br/><br/><a href="/newCharacter.html">Create a new character</a> | <a href="/logout">Log out</a>
         <%
             if( request.isUserInRole("Admin") )
             {
-                out.write(" | <a href=\"admin\">Admin area</a>");
+                out.write(" | <a href=\"/admin\">Admin area</a>");
             }
         %>
         <br/><a href="http://forums.soulcubes.com" target="_blank">Forums</a> | <a href="http://wiki.soulcubes.com" target="_blank">Wiki</a>

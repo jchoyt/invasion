@@ -172,26 +172,20 @@ public class Critter implements Attacker, Defender
      * @return
      *
      */
-    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn ) throws SQLException
+    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn, boolean updateNow ) throws SQLException
     {
         log.finer( "Critter " + id + " getting hit for " + rawAmount + " damage." );
         int damageDone = rawAmount;
         //TODO apply soaks
 
-        if( attacker instanceof Alt )
-            lasthurtby = ((Alt)attacker).getId();
-        else
-            lasthurtby = 0;
+        lasthurtby = attacker.getId();
         hp = hp - damageDone;
 
         if( hp < 1 )
-        {
             kill( conn );
-        }
         else
-        {
-            update();
-        }
+            if( updateNow )
+                update();
         return damageDone;
     }
 
@@ -205,7 +199,8 @@ public class Critter implements Attacker, Defender
     public void notifyAttacked( Attacker attacker, InvasionConnection conn )
     {
         Defender defender = (Defender) attacker;
-        attack( defender, conn );
+        if( hp > 0 )
+            attack( defender, conn );
         //WARNING - this will cause an lethal loop of attacking and counter attacking if one pet attacks another
     }
 
@@ -240,8 +235,8 @@ public class Critter implements Attacker, Defender
     {
         if( lasthurtby > 0 )
         {
-            String query = "update alt set xp=xp+10 where id=?";
-            conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", lasthurtby );
+            Alt alt = Alt.load( lasthurtby );
+            alt.setXp( alt.getXp() + 10 );
             /*         This is for when we care about what kind of pet it was
             query = "select race, name from alt where id=?";
             rs = conn.psExecuteQuery( query, "Error awarding killing XP and retrieving killer's race.", lasthurtby );
@@ -266,13 +261,12 @@ public class Critter implements Attacker, Defender
             if( ipHit > 0 )
             {
                 message = message + "  As you view the remanants of your slaughter, your stomach churns (+" + ipHit + " IP).";
-                query = "update alt set ip=ip+? where id=?";
-                conn.psExecuteUpdate( query, "Error dinging IP", ipHit, lasthurtby );
+                alt.setIp( alt.getIp() + ipHit );
             }
+            alt.update();
             Stats.addChange( lasthurtby, Stats.KILLS, 1);
             new Message(conn, lasthurtby, Message.NORMAL, message );
             //TODO - broadcast the kill message
-
         }
         //remove it from the PET database
         String query = "delete from critters where id=" + id;
@@ -303,37 +297,24 @@ public class Critter implements Attacker, Defender
         int i = (int)(Math.random() * deathKnells.length);
         return deathKnells[i];
     }
+
+
+    public int getDodgeLevel()
+    {
+        return 0;
+    }
+
     //}}}
 
     //{{{ For Attacker interface
-    public JSONArray attack(Defender defender, InvasionConnection conn ){
+    public JSONArray attack( Defender defender, InvasionConnection conn ){
         /* check to see if the target ran off */
         try
         {
             // check if you hit
             if( Math.random() < attackAccuracy )
             {
-                int dmg = attackDamage.roll();
-                //TODO soaks
-                defender.insertMessage(name + " attacked you and dealt " + dmg + " points of damage.", Message.NORMAL, conn);
-                //X was absorbed by armor
-                //Y was absorbed by shields
-                String query = "update alt set hp = hp-?, lasthurtby=? where id=?";
-                conn.psExecuteUpdate( query, "Error occurred while updating your victim's HP", dmg, getId(), defender.getId());  //TODO - getId should be  this the brood master's ID
-                query = "select id from alt where hp < 1 and id=?";
-                ResultSet rs = conn.psExecuteQuery( query, "Error occurred while updating your victim's HP", defender.getId() );
-                if( rs.next() )
-                {
-                    System.out.println( " He's dead!");
-                    defender.kill( conn );
-                }
-                //method should do all soaks and return final damage done
-                Stats.addChange(id, Stats.DAMDONE, dmg);
-                if( defender instanceof Alt )
-                {
-                    Stats.addChange(defender.getId(), Stats.DAMTAKEN, dmg);
-                }
-                DatabaseUtility.close(rs);
+                defender.hit( this, attackDamage.roll(), conn, true );
             }
             else
             {

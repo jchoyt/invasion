@@ -1,11 +1,11 @@
 <%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, java.util.logging.*,org.json.*" %><%!
     public final static String KEY = "/map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}%><%@
+    // static{log.setLevel(Level.FINER);}%><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = wazzit.getAlt();
-    String errorMsg = wazzit.getAlt().getName() + " is dead. <a href=\"/disconnect.jsp\">Go back</a> and select another character.";
+    String errorMsg = wazzit.getAlt().getName() + " is dead. <a href=\"/disconnect\">Go back</a> and select another character.";
 
     //set up db connection
     InvasionConnection conn = null;
@@ -57,7 +57,7 @@
                 VelocityUtil.applyTemplate(stats, "stats.vm", out);
             %></span></span>
             <span style="float:right;margin-right:10px">Menu<div class="pop">
-                    <p><a href="/disconnect.jsp">Disconnect</a></p>
+                    <p><a href="/disconnect">Disconnect</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage regular poll</a></p>
                     <p><hr/></p>

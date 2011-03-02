@@ -101,10 +101,9 @@ public class Unequip extends HttpServlet
             ps.setInt(2, wazzit.getAlt().getId());
             ps.setInt(3, id);
             ps.execute();
-            wazzit.getAlt().setEquippedWeapon( id );
             DatabaseUtility.close(ps);
+            wazzit.getAlt().setEquippedWeapon( id );
             //now decrement AP
-            wazzit.reload();
             wazzit.getAlt().decrementAp(conn, 1);
             new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You have unequipped your " + weaponName + ".");
             response.sendRedirect( "/map/index.jsp" );

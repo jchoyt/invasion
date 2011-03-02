@@ -21,7 +21,7 @@ import org.json.*;
  * @author     jchoyt
  * @created
  */
-@WebServlet(urlPatterns = { "//purchaseSkill" } )
+@WebServlet(urlPatterns = { "/purchaseSkill" } )
 public class PurchaseSkill extends HttpServlet
 {
 
@@ -66,13 +66,14 @@ public class PurchaseSkill extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        String altid = WebUtils.getRequiredParameter( request, "altid" );
+        String altidString = WebUtils.getRequiredParameter( request, "altid" );
         String skillid_string = WebUtils.getRequiredParameter( request, "skillid" );
         int skillid = Integer.parseInt( skillid_string );
         Skill s = Skills.getById( skillid );
         InvasionConnection conn = null;
         try
         {
+            int altid = Integer.parseInt( altidString );
             conn = new InvasionConnection();
             String column = "humanskill";
             if( s.getRace().equals( Skill.PSI ) )
@@ -86,7 +87,7 @@ public class PurchaseSkill extends HttpServlet
 
             boolean hascp = false, prereq = false;
             boolean okToContinue = false;
-            ResultSet rs = conn.psExecuteQuery( query, "error", Integer.parseInt( altid ), skillid );
+            ResultSet rs = conn.psExecuteQuery( query, "error", altid, skillid );
             if( rs.next() )
             {
                 hascp = rs.getBoolean("hascp");
@@ -102,10 +103,11 @@ public class PurchaseSkill extends HttpServlet
             else
             {
                 query = "update alt set " + column + " = " + column + " | ? where id=?";
-                conn.psExecuteUpdate( query, "error", s.getValue(), Integer.parseInt( altid ) );
+                conn.psExecuteUpdate( query, "error", s.getValue(), altid );
                 query = "update alt set cp = cp - ? where id = ?";
-                conn.psExecuteUpdate( query, "error", s.getCost(), Integer.parseInt( altid ) );
+                conn.psExecuteUpdate( query, "error", s.getCost(), altid );
                 DatabaseUtility.close(conn);
+                Alt.uncache( altid );
                 response.sendRedirect("/map/index.jsp");
             }
         }

@@ -23,10 +23,11 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //{{{ Logging
     public final static String KEY = Alt.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
     //}}}
 
     //{{{ Members
+    public static final long CACHELIFE = 3 * 1000 * 60;  //3 minutes
     private int location=-1;
     private int locationType = -1;
     private String name;
@@ -51,7 +52,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected long humanSkills = 0;
 	protected long psiSkills = 0;
 	protected long mutateSkills = 0;
-	protected double firearmsAttackLevel = 0.0;
+	protected int firearmsAttackLevel = 0;
 	protected long lastTouched = 0;
 	protected boolean reload = false;
 
@@ -73,51 +74,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
      */
     public void decrementAp( InvasionConnection conn, int count )
     {
-        try
-        {
-            int updateCount = conn.executeUpdate( "update alt set ap=ap-" + count + " where id = " + id );
-            // log.finer("update alt set ap=ap-" + count + " where id = " + id);
-            if( updateCount < 1 )
-            {
-                throw new RuntimeException("No AP was decremented");
-            }
-        }
-        catch(SQLException e)
-        {
-            log.throwing( KEY, "Error decrementing AP for character " + id, e);
-            throw new RuntimeException(e);
-        }
+        log.entering(KEY, "decrementAp");
+        ap=ap-count;
+        if( !update() )
+            log.severe("Update failed");
+        log.exiting(KEY, "decrementAp" );
     }
-
-    public void insertMessage(String message, int type, InvasionConnection conn)
-    {
-        new Message(conn, id, type, message );
-    }
-
-    public boolean soakingEnergy() { return false; }
-
-    public boolean soakingPhysical() { return false; }
-
-    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn ) throws SQLException
-    {
-        int damageDone = rawAmount;
-        //TODO apply soaks
-        hp = hp - damageDone;
-        lastHurtBy = attacker.getId();
-        Stats.addChange(id, Stats.DAMTAKEN, damageDone);
-        if( hp < 1 )
-        {
-            System.out.println( "He's dead!");
-            kill( conn );
-            attacker.setReload(true);
-        }
-        else
-            update( conn );
-        return damageDone;
-    }
-
-    public void notifyAttacked( Attacker attacker, InvasionConnection conn ){}
-
 
     /**
      * Convenience method for when you don't already have an InvasionConnection and you still want to kill the alt.  No real work should be done here.
@@ -144,78 +106,14 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
     }
 
-    /**
-     *  um....kills off the character.  Sets time till respawn, updates the database, and removes the character from the cache.
-     */
-    public void kill(InvasionConnection conn) throws SQLException
+
+    public boolean update( InvasionConnection conn )
     {
-        int deathLoc = location;
-        hp = 0;
-        ip = 0;
-        location = -57005;
-        ap = ap - level;
-        update( conn );
-        String query = "update alt set ticksalive=0-level where id=?";
-        conn.psExecuteUpdate( query, "err", id );
-        LocationCache.decrementChars( deathLoc );
-
-        // update victim's stat
-        Stats.addChange( id, Stats.DEATHS, 1);
-        String killerName = null;
-        log.finer( "Killer ID is " + lastHurtBy);
-        if( lastHurtBy > 0 )
-        {
-            query = "update alt set xp=xp+? where id=?";
-            conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", level, lastHurtBy );
-            query = "select race, name from alt where id=?";
-            ResultSet rs = conn.psExecuteQuery( query, "Error awarding killing XP and retrieving killer's race.", lastHurtBy );
-            int killerRace = 0;
-            if( rs.next() )
-            {
-                killerRace = rs.getInt( 1 );
-                killerName = rs.getString( 2 );
-            }
-            DatabaseUtility.close(rs);
-
-            //give kill message to attacker (and ding IP if appropriate)
-            int ipHit = 0;
-            if( race == killerRace && race > 1)
-            {
-                ipHit = 10;
-            }
-            else if( race == 1 )
-            {
-                ipHit = 2;
-            }
-            String message = "You have landed the killing blow on " + name + ".  You have been awarded an additional " + level + " XP.";
-            if( ipHit > 0 )
-            {
-                message = message + "  Your actions weigh on your consciousness, however (+" + ipHit + " IP).";
-                query = "update alt set ip=ip+? where id=?";
-                conn.psExecuteUpdate( query, "Error dinging IP", ipHit, lastHurtBy );
-            }
-            Stats.addChange( lastHurtBy, Stats.KILLS, 1);
-            new Message(conn, lastHurtBy, Message.NORMAL, message );
-
-            //give victim death message
-            new Message( conn, id, Message.NORMAL, killerName + " has dealt you a death blow.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
-            //broadcast killer message
-            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killerName + " killed " + name + "!  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.", lastHurtBy);
-            //TODO IP adjust if others are of the same race (or faction?)
-        }
-        else
-        {
-            //death message with no killer
-            new Message( conn, id, Message.SELF, "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
-            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, name + " died.  Who the hell knows how this happens anymore?");
-        }
-        altCache.remove( id );
-   }
-
-    public boolean update( InvasionConnection conn ) throws SQLException
-    {
+        log.entering(KEY, "update");
         String query = "update alt set ap=?, ip=?, hp=?, xp=?, lasthurtby=? ,location=? where id=?";
         int count = conn.psExecuteUpdate(query, "Error updating brood in the database", ap, ip, hp, xp, lastHurtBy, location, id );
+        log.finer("query done");
+        setLastTouched( System.currentTimeMillis() );
         if( count != 1 )
         {
             log.warning( "Character " +  id + " not updated");
@@ -244,7 +142,37 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
     }
 
-   public JSONArray attack( Defender defender, InvasionConnection conn )
+
+    /**
+     * Calculates the HP circle that will show
+     * @param
+     * @return
+     *
+     */
+    public static int calcHpCategory( int hp, int hpmax )
+    {
+        int hpPercent = 100*hp/hpmax;
+        if( hpPercent < 10 )
+            return 4;
+        else if( hpPercent < 25 )
+            return 3;
+        else if( hpPercent < 50 )
+            return 2;
+        else if( hpPercent < 99 )
+            return 1;
+        else
+            return 0;
+    }
+    //}}}
+
+    //{{{ For Attacker interface
+    public void insertMessage(String message, int type, InvasionConnection conn)
+    {
+        new Message(conn, id, type, message );
+    }
+
+
+    public JSONArray attack( Defender defender, InvasionConnection conn )
    {
        int apIncrement = 1;
        JSONArray alerts = null;
@@ -296,17 +224,17 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             }
 
             // check if you hit
-            if( Math.random() < 0.5 )
+            double attackChance = Skills.calculateAttackChance( equippedWeaponType.getAccuracy(), firearmsAttackLevel, defender.getDodgeLevel() );
+            log.finer("Attack chance: " + attackChance);
+            if( Math.random() < attackChance )
             {
                 //hit
                 int damage = equippedWeaponType.getDamage();
-                //TODO soaks
-                int damageDone = defender.hit( this, damage, conn );
+                int damageDone = defender.hit( this, damage, conn, true );
                 new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and deal "+ damageDone +" points of damage.  You earned "+ damageDone +" XP.");
-                defender.insertMessage(name + " attacked you with a "  + equippedWeaponType.getName() + " and dealt " + damageDone + " points of damage.", Message.NORMAL, conn);
 
-                String query="update alt set xp=xp+? where id=?";
-                conn.psExecuteUpdate( query, "Error awarding killing XP and retrieving killer's race.", damageDone, id );
+                xp = xp + damageDone;
+                update(conn);
                 Stats.addChange(id, Stats.DAMDONE, damageDone);
             }
             else
@@ -329,25 +257,104 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     }
 
-    /**
-     * Calculates the HP circle that will show
-     * @param
-     * @return
-     *
-     */
-    public static int calcHpCategory( int hp, int hpmax )
+    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn, boolean updateNow ) throws SQLException
     {
-        int hpPercent = 100*hp/hpmax;
-        if( hpPercent < 10 )
-            return 4;
-        else if( hpPercent < 25 )
-            return 3;
-        else if( hpPercent < 50 )
-            return 2;
-        else if( hpPercent < 99 )
-            return 1;
+        int damageDone = rawAmount;
+        //TODO apply soaks
+        log.finer( name + " hit for " + damageDone + " dp by " + attacker.getName() );
+        hp = hp - damageDone;
+        lastHurtBy = attacker.getId();
+        Stats.addChange(id, Stats.DAMTAKEN, damageDone);
+        insertMessage(attacker.getName() + " attacked you and dealt " + damageDone + " points of damage.", Message.NORMAL, conn);
+        //TODO modify for soaks
+        if( hp < 1 )
+        {
+            System.out.println( "He's dead!");
+            kill( conn );
+            attacker.setReload(true);
+        }
+        else if( updateNow )
+            update( conn );
+
+        return damageDone;
+    }
+
+    public void notifyAttacked( Attacker attacker, InvasionConnection conn ){}
+
+    //}}}
+
+    //{{{ For Defender interface
+    /**
+     *  um....kills off the character.  Sets time till respawn, updates the database, and removes the character from the cache.
+     */
+    public void kill(InvasionConnection conn)
+    {
+        int deathLoc = location;
+        hp = 0;
+        ip = 0;
+        location = -57005;
+        ap = ap - level;
+        update( conn );
+        String query = "update alt set ticksalive=0-level where id=?";
+        conn.psExecuteUpdate( query, "err", id );
+        LocationCache.decrementChars( deathLoc );
+
+        // update victim's stat
+        Stats.addChange( id, Stats.DEATHS, 1);
+        if( lastHurtBy > 0 )
+        {
+            Alt killer = Alt.load( lastHurtBy );
+            killer.setXp( killer.getXp() + level );
+
+            //give kill message to attacker (and ding IP if appropriate)
+            int ipHit = 0;
+            if( race == killer.getRace() && race > 1)
+            {
+                ipHit = 10;
+            }
+            else if( race == 1 )
+            {
+                ipHit = 2;
+            }
+            String message = "You have landed the killing blow on " + name + ".  You have been awarded an additional " + level + " XP.";
+            if( ipHit > 0 )
+            {
+                message = message + "  Your actions weigh on your consciousness, however (+" + ipHit + " IP).";
+                killer.setIp( killer.getIp() + ipHit);
+            }
+            killer.update();
+            Stats.addChange( lastHurtBy, Stats.KILLS, 1);
+            new Message(conn, lastHurtBy, Message.NORMAL, message );
+
+            //give victim death message
+            new Message( conn, id, Message.NORMAL, killer.getName() + " has dealt you a death blow.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
+            //broadcast killer message
+            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killer.getName() + " killed " + name + "!  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.", lastHurtBy);
+            //TODO IP adjust if others are of the same race (or faction?)
+        }
         else
-            return 0;
+        {
+            //death message with no killer
+            new Message( conn, id, Message.SELF, "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
+            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, name + " died.  Who the hell knows how this happens anymore?");
+        }
+        altCache.remove( id );
+   }
+
+
+   public int getDodgeLevel()
+    {
+        return 0;
+    }
+
+    public void decrementHp( int damage, Attacker attacker, InvasionConnection conn, boolean updateNow )
+    {
+        hp = hp - damage;
+        if( hp < 1 )
+            kill( conn );
+        else
+            if( updateNow )
+                update();
     }
     //}}}
 
@@ -384,6 +391,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.psiSkills = rs.getLong("psiskill");
             ret.mutateSkills = rs.getLong("mutateskill");
             ret.lastTouched = System.currentTimeMillis();
+            ret.xp = rs.getInt("xp");
+            ret.cp = rs.getInt("cp");
             log.finer("in Alt.load(), id is " + id);
             DatabaseUtility.close(rs);
             /* load equipped weapon */
@@ -402,11 +411,11 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             /* Calculate human skill bonuses */
             if( ret.getHumanSkills() > 0 )
             {
-                if( (ret.getHumanSkills() ^ Skills.getValue(Skill.FIREARMS5)) > 0 ) ret.firearmsAttackLevel = 5;
-                else if( (ret.getHumanSkills() ^ Skills.getValue(Skill.FIREARMS4)) > 0 ) ret.firearmsAttackLevel = 4;
-                else if( (ret.getHumanSkills() ^ Skills.getValue(Skill.FIREARMS3)) > 0 ) ret.firearmsAttackLevel = 3;
-                else if( (ret.getHumanSkills() ^ Skills.getValue(Skill.FIREARMS2)) > 0 ) ret.firearmsAttackLevel = 2;
-                else if( (ret.getHumanSkills() ^ Skills.getValue(Skill.FIREARMS1)) > 0 ) ret.firearmsAttackLevel = 1;
+                if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS5)) > 0 ) ret.firearmsAttackLevel = 5;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS4)) > 0 ) ret.firearmsAttackLevel = 4;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS3)) > 0 ) ret.firearmsAttackLevel = 3;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS2)) > 0 ) ret.firearmsAttackLevel = 2;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS1)) > 0 ) ret.firearmsAttackLevel = 1;
             }
 
             /* TODO Load items */
@@ -449,7 +458,14 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     public static void checkCache()
     {
-
+        long cutoff = System.currentTimeMillis() - CACHELIFE;
+        for( Integer altid : altCache.keySet() )
+        {
+            Alt a = altCache.get( altid );
+            if( a.getLastTouched() < cutoff )
+                altCache.remove( altid );
+        }
+        log.info("Alt cache cleaned out.  " + altCache.size() + " remaining in cache." );
     }
 
 
@@ -570,7 +586,23 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             }
         }
         return obj;
-    } //}}}
+    }
+
+    /**
+     * Saves alt current state and takes him out of the cache, forcing a reload
+     * @param
+     * @return
+     *
+     */
+    public static void uncache( int altid )
+    {
+        if( altCache.keySet().contains( altid ) )
+        {
+            Alt a = altCache.get(altid);
+            a.update();
+            altCache.remove( altid );
+        }
+    }//}}}
 
     //{{{ Constructors
     private Alt() {}
@@ -591,6 +623,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public void setCp(int cp) { this.cp = cp; }
     public int getHp() { return this.hp; }
     public void setHp(int hp) { this.hp = hp; }
+    public int getIp() { return this.ip; }
+    public void setIp(int hp) { this.ip = ip; }
     public int getHpmax() { return this.hpmax; }
     public void setHpmax(int hpmax) { this.hpmax = hpmax; }
     public void setEquippedWeapon(int item) { equippedWeapon = item; }
@@ -619,8 +653,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setPsiSkills(long psiSkills) { this.psiSkills = psiSkills; }
 	public long getMutateSkills() { return this.mutateSkills; }
 	public void setMutateSkills(long mutateSkills) { this.mutateSkills = mutateSkills; }
-    public double getFirearmsAttackLevel() { return this.firearmsAttackLevel; }
-	public void setFirearmsAttackLevel(double firearmsAttackLevel) { this.firearmsAttackLevel = firearmsAttackLevel; }
+    public int getFirearmsAttackLevel() { return this.firearmsAttackLevel; }
+	public void setFirearmsAttackLevel(int firearmsAttackLevel) { this.firearmsAttackLevel = firearmsAttackLevel; }
     public long getLastTouched() { return this.lastTouched; }
 	public void setLastTouched(long lastTouched) { this.lastTouched = lastTouched; }
     public boolean getReload() { return this.reload; }

@@ -2,7 +2,7 @@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
     public final static String KEY = "/map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}%><%
+    // static{log.setLevel(Level.FINER);}%><%
     log.finer("entering /map/index.jsp");
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = wazzit.getAlt();
@@ -70,7 +70,7 @@
 
         function chalkWall()
         {
-            resource = "/map/chalk";
+            resource = "/map/chalk.jsp";
             $('#dialog').load(resource);
             $('#dialog').dialog('open');
             return false;
@@ -102,7 +102,7 @@
                 VelocityUtil.applyTemplate(obj, "stats.vm", out);
             %></span></span>
             <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.png"/></span> Menu<div class="pop">
-                    <p><a href="/disconnect.jsp">Disconnect</a></p>
+                    <p><a href="/disconnect">Disconnect</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);$('.pop').removeClass('active');">Engage periodic poll</a></p>
                     <p><hr/></p>

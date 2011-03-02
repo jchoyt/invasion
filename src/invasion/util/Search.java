@@ -76,6 +76,8 @@ public class Search
 
     public static synchronized int performSearch( int type )
     {
+        //TODO remove this once searchodds are worked out
+        type = 2;
         //Check to see if it passes the locatoin % first
         double rate = LocationType.getLocationType(type).getSearchrate();
         if( Math.random() > rate )
@@ -105,7 +107,7 @@ public class Search
     {
         public final static String KEY = SearchDistribution.class.getName();
         public final static Logger log = Logger.getLogger( KEY );
-        static{log.setLevel(Level.FINER);}
+        // static{log.setLevel(Level.FINER);}
         double lowerbound;
         double upperbound;
         double rate;

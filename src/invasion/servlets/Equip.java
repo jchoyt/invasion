@@ -103,7 +103,6 @@ public class Equip extends HttpServlet
             ps.execute();
             wazzit.getAlt().setEquippedWeapon( id );
             //update wazzit - weapon name, ammo, etc
-            wazzit.reload();
             DatabaseUtility.close(ps);
             //now decrement AP
             wazzit.getAlt().decrementAp(conn, 1);

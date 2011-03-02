@@ -66,7 +66,10 @@ public class Logout extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
+        Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+        int altid = wazzit.getAlt().getId();
         request.getSession().invalidate();
+        Alt.uncache( altid );
         response.sendRedirect( "/index.jsp" );
     }
 

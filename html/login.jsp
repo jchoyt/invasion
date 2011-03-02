@@ -44,7 +44,7 @@ String message = WebUtils.getOptionalParameter(request, "message", null);
        </p>
        <p style="text-align:center">
          <input class="link_button ui-state-default ui-corner-all" type="submit" value="Submit"/><br/><br/>
-         <a href="registration.jsp">Register a New Account</a>
+         <a href="/registration.jsp">Register a New Account</a>
        </p>
 
      </fieldset>

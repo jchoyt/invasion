@@ -25,7 +25,7 @@ public class InvasionConnection
 
     public final static String KEY = InvasionConnection.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
     private Connection conn = null;
     private Statement stmt = null;
 

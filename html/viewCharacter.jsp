@@ -40,15 +40,19 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
     }
     if( Skills.hasSkill( thisguy, skill ) )
     {
-        out.write( skill.getName() );
+        out.write( "<b>" + skill.getName() + "</b>" );
         for( Skill s : skill.getChildren() )
         {
             printCanBuy( thisguy, s, false, out );
         }
     }
+    else if( thisguy.getCp() > skill.getCost() )
+    {
+        out.write( "<a href=\"#\" onclick=\"doPurchase( " + thisguy.getId() + ", " + skill.getId() + ")\">Purchase " + skill.getName() + " ( " + skill.getCost() + " CP )" + "</a>" );
+    }
     else
     {
-        out.write( " &raquo <a href=\"#\" onclick=\"doPurchase( " + thisguy.getId() + ", " + skill.getId() + ")\">Purchase " + skill.getName() + "</a>" );
+        out.write( "<span class=\"toomuch\">" + skill.getName() + " ( " + skill.getCost() + " CP )</span>" );
     }
 }
 
@@ -72,6 +76,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
             <script type="text/javascript" src="${js}/jquery.validate.js"></script>
             <style type="text/css">
                 .box { width:250px;padding:10px; }
+                .toomuch { color: gray;  }
             </style>
             <script type="text/javascript">
                 $(function(){
@@ -92,7 +97,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
 
                 function doPurchase( altid, skillid, skilltype)
                 {
-                    resource = "purchaseSkill.jsp?altid=" + altid + "&skillid=" + skillid;
+                    resource = "purchaseSkill?altid=" + altid + "&skillid=" + skillid;
                     $('#dialog').load(resource);
                     $('#dialog').dialog('open');
                     return false;

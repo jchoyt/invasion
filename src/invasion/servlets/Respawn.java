@@ -39,25 +39,6 @@ public class Respawn extends HttpServlet
         super();
     }
 
-
-
-    /**
-     *  Description of the Method
-     *
-     * @param  config                Description of the Parameter
-     * @exception  ServletException  Description of the Exception
-     */
-    public void init( ServletConfig config )
-        throws ServletException
-    {
-        log.entering( KEY, "init" );
-        /*
-         *  required for all Servlets
-         */
-        super.init( config );
-    }
-
-
     /**
      *  Description of the Method
      *
@@ -90,7 +71,6 @@ public class Respawn extends HttpServlet
                 return;
             }
             Whatzit wazzit = new Whatzit( altid );
-            wazzit.reload();
             request.getSession().setAttribute( Whatzit.KEY,  wazzit );
 
             new Message( conn, altid, Message.SELF, "You step out of the cloning chamber and look around with your new old eyes.  You see rows of identical chambers around the room.  Moving around experimentally, you determine everything appears to be as it should be.");

@@ -27,7 +27,7 @@ public class Login {
 
     public final static String KEY = Login.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
     /**
      *  source of random bytes for the cyptography
      */

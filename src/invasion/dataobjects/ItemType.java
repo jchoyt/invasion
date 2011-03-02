@@ -13,7 +13,7 @@ public class ItemType{
 
     public final static String KEY = ItemType.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     protected int typeid = 0;
     protected int weight = 0;
@@ -24,6 +24,8 @@ public class ItemType{
     protected String type = null;
     protected String damageType = null;
     protected boolean usesammo = false;
+	protected int accuracy = 0;
+
 
 
 
@@ -31,7 +33,7 @@ public class ItemType{
 
 
     public ItemType(int typeid, int weight, int capacity, String damage,
-             boolean consumable, String name, String type, String damageType, boolean usesammo){
+             boolean consumable, String name, String type, String damageType, int accuracy, boolean usesammo){
         this.typeid = typeid;
         this.weight = weight;
         this.capacity = capacity;
@@ -67,6 +69,7 @@ public class ItemType{
                 rs.getString("name"),
                 rs.getString("type"),
                 rs.getString("damageType"),
+                rs.getInt("accuracy"),
                 rs.getBoolean("usesammo"));
                 itemTypes.put(rs.getInt("typeid"), type);
             }
@@ -115,7 +118,7 @@ public class ItemType{
     public void setType(String type) { this.type = type; }
     public String getDamageType() { return this.damageType; }
     public void setDamageType(String damageType) { this.damageType = damageType; }
-
-
+    public int getAccuracy() { return this.accuracy; }
+	public void setAccuracy(int accuracy) { this.accuracy = accuracy; }
 
 }

@@ -79,7 +79,12 @@ public class Connect extends HttpServlet
                 return;
             }
             Whatzit wazzit = new Whatzit(altid);
-            wazzit.reload();
+            //check if dead
+            if( alt.getLocation() == -57005 || alt.getHp() < 1 )
+            {
+                response.sendRedirect( "/map/dead.jsp");
+                return;
+            }
             request.getSession().setAttribute( Whatzit.KEY,  wazzit );
             response.sendRedirect( "/map/index.jsp" );
         }
