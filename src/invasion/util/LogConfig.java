@@ -51,10 +51,10 @@ public class LogConfig
         // props.setProperty("java.util.logging.FileHandler.formatter","invasion.util.LogFormatter");  //not working
         props.setProperty("java.util.logging.FileHandler.level","FINER");
         props.setProperty("java.util.logging.FileHandler.limit","1000000");
-        props.setProperty("java.util.logging.FileHandler.pattern","/tmp/invasion.log");
+        props.setProperty("java.util.logging.FileHandler.pattern", System.getProperty("java.io.tmpdir") + "/invasion.log");
         props.setProperty("java.util.logging.FileHandler.count","5");
         //for tomcat
-        props.setProperty( "org.apache.juli.FileHandler.pattern", "/tmp/invasion%u.log" );
+        props.setProperty( "org.apache.juli.FileHandler.pattern", System.getProperty("java.io.tmpdir") + "/invasion%u.log" );
 
         //read in the properties as a Stream
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

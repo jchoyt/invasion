@@ -70,6 +70,7 @@ public class Equip extends HttpServlet
         String itemid = WebUtils.getRequiredParameter(request, "weaponid");
         int id = Integer.parseInt(itemid);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+        Alt alt = wazzit.getAlt();
         //do DB inserts
         String query = "select * from item i join itemtype t on i.typeid=t.typeid where itemid = ? and locid = ? and type='weapon'";
         InvasionConnection conn = null;
@@ -79,15 +80,16 @@ public class Equip extends HttpServlet
         JSONObject inventory = null;
         try{
             conn = new InvasionConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, id);
-            ps.setInt(2, wazzit.getAlt().getId());
-            rs = ps.executeQuery();
+            rs = conn.psExecuteQuery( query, "Error retrieving item to be equipped", id, alt.getId() );
             String weaponName = null;
+            int weaponTypeId = -1;
+            int ammo = -1;
             if( rs.next() )
             {
                 weaponName = rs.getString("name");
                 newWeaponNeedsAmmo = rs.getBoolean("usesammo");
+                weaponTypeId = rs.getInt( "typeid" );
+                ammo = rs.getInt("ammoleft");
             }
             else
                 response.sendRedirect( "/map/index.jsp?error=That item is not a weapon or you do not own it.");
@@ -97,16 +99,18 @@ public class Equip extends HttpServlet
             query = "update alt set equippedweapon = ? where id = ?;update item set equipped='f' where locid = ?;update item set equipped='t' where itemid = ?";
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);
-            ps.setInt(2, wazzit.getAlt().getId());
-            ps.setInt(3, wazzit.getAlt().getId());
+            ps.setInt(2, alt.getId());
+            ps.setInt(3, alt.getId());
             ps.setInt(4, id);
             ps.execute();
-            wazzit.getAlt().setEquippedWeapon( id );
+            alt.setEquippedWeapon( id );
+            alt.setEquippedWeaponType(ItemType.getItemType( weaponTypeId ));
+            alt.setAmmo( ammo );
             //update wazzit - weapon name, ammo, etc
             DatabaseUtility.close(ps);
             //now decrement AP
-            wazzit.getAlt().decrementAp(conn, 1);
-            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You switch your equipped weapon. You will now use your " + weaponName + ".");
+            alt.decrementAp(conn, 1);
+            new Message( conn, alt.getId(), Message.NORMAL, "You switch your equipped weapon. You will now use your " + weaponName + ".");
             response.sendRedirect( "/map/index.jsp" );
         }
         catch(Exception e)

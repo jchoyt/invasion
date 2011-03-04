@@ -8,7 +8,7 @@
     <!-- Listener for processing stats on shutdown -->
     <listener>
         <listener-class>invasion.servlets.StatsListener</listener-class>
-    </listener> -->
+    </listener>
 
     <!-- Init Servlet -->
     <servlet>
