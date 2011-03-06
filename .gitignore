@@ -4,3 +4,4 @@ tomcat
 *.war
 research
 !lib/*
+*.log
