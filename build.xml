@@ -27,12 +27,17 @@
             <fileset dir="${jars}">
                 <include name="**/*.jar" />
             </fileset>
+            <fileset dir="/usr/local/tomcat/lib">
+                <include name="**/servlet-api.jar" />
+				<include name="**/jsp-api.jar" />
+				<include name="**/el-api.jar" />
+            </fileset>
         </path>
         <!-- Uncomment this to print the classpath  -->
-        <!--
+        <!---->
             <property name="myclasspath" refid="jarspath"/>
             <echo message="Classpath = ${myclasspath}"/>
-        -->
+<!--        -->
 
     </target>
 
@@ -69,7 +74,7 @@
                 <!-- provided by Tomcat -->
                 <exclude name="servlet-api.jar" />
                 <exclude name="jsp-api.jar" />
-		<exclude name="el-api.jar" />
+				<exclude name="el-api.jar" />
                 <exclude name="commons-logging*" />
                 <!-- flatten out the lib directory -->
                 <exclude name="**/restlet/**"/>
