@@ -17,12 +17,14 @@ a img { border:0px; } /*}}}*/
 .stat_name { font-size:8pt; vertical-align: top; text-align:left;}
 
 .header { padding: 10px; }
-.hp {padding-left: 20px; font-family: "MS Serif", "New York", serif; color:red;}
-.ip {padding-left: 20px; font-family: "MS Serif", "New York", serif; color:#cc9933;}
-.ap {padding-left: 20px; font-family: "MS Serif", "New York", serif; color:blue;}
-.xp {padding-left: 20px; font-family: "MS Serif", "New York", serif; color:black;}
+.stat_counter { padding-left: 20px; font-family: "MS Serif", "New York", serif; }
+.hp {color:red;}
+.ip {color:#cc9933;}
+.ap {color:blue;}
+.xp {color:black;}
 
-.link_button {padding: 10px;text-decoration: none;}.stat { width:75px; background-image: url('../i/stat_bg.jpg'); }
+.link_button {padding: 10px;text-decoration: none;}
+.stat { width:75px; background-image: url('../i/stat_bg.jpg'); }
 
 /* remove padding and scrolling from elements that contain an Accordion OR a content-div */
 .ui-layout-center ,	/* has content-div */
