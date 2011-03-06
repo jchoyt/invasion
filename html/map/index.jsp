@@ -52,36 +52,6 @@
         table { border:none; }
 	</style>
 	<%--}}} --%>
-
-	<%--{{{  javascript --%>
-	<script type="text/javascript">
-        $(function(){
-            // Dialog
-            $('#dialog').dialog({
-                autoOpen: false,
-                width: 600,
-                buttons: {
-                    "Cancel": function() {
-                        $(this).dialog("close");
-                    }
-                }
-            });
-        });
-
-        function chalkWall()
-        {
-            resource = "/map/chalk.jsp";
-            $('#dialog').load(resource, function() {
-				$('#dialog').dialog('open');
-				$('#poll-indicator').hide();
-			});
-			$('poll-indicator').show();
-            return false;
-        }
-
-	</script>
-    <%--}}}--%>
-
 </head>
 	<body>
 
@@ -301,6 +271,37 @@
             DatabaseUtility.close(conn);
         }
     %>
+
+	<!-- So apparently loading JS blocks download 'till it's done. Either way, it's easier to find here. -->
+	<%--{{{  javascript --%>
+	<script type="text/javascript">
+        function chalkWall()
+        {
+            resource = "/map/chalk.jsp";
+            $('#dialog').load(resource, function() {
+				$('#dialog').dialog('open');
+				$('#poll-indicator').hide();
+			});
+			$('poll-indicator').show();
+            return false;
+        }
+
+		// Never try to jquery without making sure the DOM is ready. Ready() ensures that.
+		$(document).ready(function() {
+			// Dialog
+            $('#dialog').dialog({
+                autoOpen: false,
+                width: 600,
+                buttons: {
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+		});
+	</script>
+    <%--}}}--%>
+
 	</body>
 </html>
 
