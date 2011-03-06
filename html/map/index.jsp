@@ -101,7 +101,7 @@
                 // stats.put("stats", obj2);
                 VelocityUtil.applyTemplate(obj, "stats.vm", out);
             %></span></span>
-            <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.png"/></span> Menu<div class="pop">
+            <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.gif"/></span> Menu<div class="pop">
                     <p><a href="/disconnect">Disconnect</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);$('.pop').removeClass('active');">Engage periodic poll</a></p>
@@ -110,7 +110,7 @@
                     <p><a href="http://wiki.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Wiki</a></p>
                     <p><a href="http://forums.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Forums</a></p>
                  </div>
-             </span><br clear="all"/>
+             </span>&nbsp; <!-- &nbsp (or anything, actually) prevents float from collapsing -->
         </div>
         <div id="center-sections" class="ui-layout-content">
             <h6 id="msgs-hdr"><a href="#">Messages and Basic Actions</a></h6>
