@@ -128,7 +128,7 @@ public class Login {
     }
 
 
-    public static String encodePassword(String password, byte [] seed) throws NoSuchAlgorithmException,  UnsupportedEncodingException {
+    /*public static String encodePassword(String password, byte [] seed) throws NoSuchAlgorithmException,  UnsupportedEncodingException {
         if (seed == null) {
             seed = new byte [12];
             secureRandom.nextBytes(seed);
@@ -144,5 +144,5 @@ public class Login {
         System.arraycopy(digest, 0, storedPassword, 12, digest.length);
 
         return new sun.misc.BASE64Encoder().encode(storedPassword);
-    }
+    }*/
 }
