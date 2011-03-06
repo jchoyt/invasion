@@ -27,7 +27,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //}}}
 
     //{{{ Members
-    public static final long CACHELIFE = 3 * 1000 * 60;  //3 minutes
     private int location=-1;
     private int locationType = -1;
     private String name;
@@ -456,16 +455,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
     }
 
-    public static void checkCache()
+    public static void clearCache()
     {
-        long cutoff = System.currentTimeMillis() - CACHELIFE;
-        for( Integer altid : altCache.keySet() )
-        {
-            Alt a = altCache.get( altid );
-            if( a.getLastTouched() < cutoff )
-                altCache.remove( altid );
-        }
-        log.info("Alt cache cleaned out.  " + altCache.size() + " remaining in cache." );
+        altCache.clear();
     }
 
 

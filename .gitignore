@@ -1,7 +1,7 @@
 build
 tomcat
-*.jar
-*.war
+invasion.jar
+invasion.war
 research
 !lib/*
 *.log

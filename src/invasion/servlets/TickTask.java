@@ -52,7 +52,7 @@ public class TickTask extends TimerTask
             checkSanity();
             adjustStats();
             //checkBadges();
-            Alt.checkCache();
+            Alt.clearCache();
             BroodManager.workBroodsForTick();
             log.exiting( KEY, "run" );
         }
