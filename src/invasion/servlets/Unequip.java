@@ -70,6 +70,7 @@ public class Unequip extends HttpServlet
         String itemid = WebUtils.getRequiredParameter(request, "weaponid");
         int id = Integer.parseInt(itemid);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+        Alt alt = wazzit.getAlt();
         //do DB inserts
         String query = "select * from item i join itemtype t on i.typeid=t.typeid where itemid = ? and locid = ? and type='weapon'";
         InvasionConnection conn = null;
@@ -80,7 +81,7 @@ public class Unequip extends HttpServlet
             conn = new InvasionConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);
-            ps.setInt(2, wazzit.getAlt().getId());
+            ps.setInt(2, alt.getId());
             rs = ps.executeQuery();
             String weaponName = null;
             if( rs.next() )
@@ -98,14 +99,16 @@ public class Unequip extends HttpServlet
             query = "update alt set equippedweapon = ? where id = ?;update item set equipped='f' where itemid = ?";
             ps = conn.prepareStatement(query);
             ps.setNull(1, Types.INTEGER);
-            ps.setInt(2, wazzit.getAlt().getId());
+            ps.setInt(2, alt.getId());
             ps.setInt(3, id);
             ps.execute();
             DatabaseUtility.close(ps);
-            wazzit.getAlt().setEquippedWeapon( id );
+            alt.setEquippedWeapon( 0 );
+            alt.setEquippedWeaponType(null);
+            alt.setAmmo( 0 );
             //now decrement AP
-            wazzit.getAlt().decrementAp(conn, 1);
-            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You have unequipped your " + weaponName + ".");
+            alt.decrementAp(conn, 1);
+            new Message( conn, alt.getId(), Message.NORMAL, "You have unequipped your " + weaponName + ".");
             response.sendRedirect( "/map/index.jsp" );
         }
         catch(Exception e)
