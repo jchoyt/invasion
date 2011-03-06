@@ -3,3 +3,4 @@ tomcat
 *.jar
 *.war
 research
+!lib/*
