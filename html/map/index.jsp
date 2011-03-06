@@ -93,7 +93,7 @@
             out.write( "<h3 class=\"info\">" + infoMsg + "</h3>");
         }%>
         <div id="announcements"></div>
-        <div class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
+        <div id="topBar" class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
             <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <%=alt.getName()%><span id="stats-area">
             <%
                 // JSONObject obj2 = Alt.getStats(conn, alt.getId());

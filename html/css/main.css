@@ -4,6 +4,8 @@ body{
     font-size:10pt;
 }
 
+#topBar, .descbox { font-family: "Georgia", "New York", serif; }
+
 td { border:1px solid black; text-align:center; font-size:10pt; padding:5px;}
 th { border:1px solid black; text-align:center; background-color: #c5dbec; font-size:10pt; padding:5px;}
 table {border: 1px solid black; border-collapse:collapse; }
@@ -17,7 +19,7 @@ a img { border:0px; } /*}}}*/
 .stat_name { font-size:8pt; vertical-align: top; text-align:left;}
 
 .header { padding: 10px; }
-.stat_counter { padding-left: 20px; font-family: "MS Serif", "New York", serif; }
+.stat_counter { padding-left: 20px; }
 .hp {color:red;}
 .ip {color:#cc9933;}
 .ap {color:blue;}
@@ -80,7 +82,6 @@ h3, h4 { /* Headers & Footer in Center & East panes */
 .descbox {
     border:1px solid black;
     width:100%;
-    font-family: "MS Serif", "New York", serif;
     font-size:10pt;
 }
 
