@@ -71,8 +71,11 @@
         function chalkWall()
         {
             resource = "/map/chalk.jsp";
-            $('#dialog').load(resource);
-            $('#dialog').dialog('open');
+            $('#dialog').load(resource, function() {
+				$('#dialog').dialog('open');
+				$('#poll-indicator').hide();
+			});
+			$('poll-indicator').show();
             return false;
         }
 
