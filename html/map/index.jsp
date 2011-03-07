@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*, java.io.*" %><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
     public final static String KEY = "/map/index.jsp";
@@ -174,7 +175,6 @@
                         %>
                     </tbody>
                 </table>
-                <center><div id="att-box" style="color:red"></div></center>
             </div>
             <h6 id="critters"><a href="#">Critters</a></h6>
             <div>
@@ -304,8 +304,9 @@
 			// Close the popup menu upon clicking a link.
 			
 			$('.open_attack').live('click', function() {
-				$('.do_attack').hide();
-				$("#" + $(this).attr('id') + ".do_attack").show();
+				var myID = "#" + $(this).attr('id');
+				$(':not(' + myID + ').do_attack').hide();
+				$(myID + ".do_attack").toggle();
 				return false;
 			});
 		});
