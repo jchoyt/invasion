@@ -178,7 +178,7 @@
             </div>
             <h6 id="critters"><a href="#">Critters</a></h6>
             <div>
-                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" id="occ-table">
+                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" id="pet-table">
                     <thead>
                         <tr>
                             <th>Type</th>
@@ -195,7 +195,6 @@
                         %>
                     </tbody>
                 </table>
-                <center><div id="att-pet-box" style="color:red"></div></center>
             </div>
             <h6><a href="#">Items</a></h6>
             <div>
@@ -285,7 +284,8 @@
 		// Never try to jquery without making sure the DOM is ready. Ready() ensures that.
 		$(document).ready(function() {
 			$("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
-		
+			// Scroll the message pane.
+			
 			// Dialog
             $('#dialog').dialog({
                 autoOpen: false,
@@ -299,6 +299,13 @@
 			
 			$('.pop_menu > p > a').click(function() {
 				$('.pop').removeClass('active');
+				return false;
+			});
+			// Close the popup menu upon clicking a link.
+			
+			$('.open_attack').live('click', function() {
+				$('.do_attack').hide();
+				$("#" + $(this).attr('id') + ".do_attack").show();
 				return false;
 			});
 		});
