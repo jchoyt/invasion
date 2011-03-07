@@ -323,7 +323,7 @@ t.p( occ.id);
 t.p('" class="open_attack" href="');
 t.p('#">>></a></td></tr><tr id="occ');
 t.p( occ.id);
-t.p('" class="do_attack" style="display:none; color:red;">	<td colspan="3" style="text-align:center;">		<a href="');
+t.p('" class="do_attack" style="display:none; color:red;">	<td colspan="4" style="text-align:center;">		<a href="');
 t.p('#" onclick="attack(');
 t.p( occ.id);
 t.p(')">Attack ');

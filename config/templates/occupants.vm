@@ -6,7 +6,7 @@
     <td><a id="occ${occ.id}" class="open_attack" href="#">>></a></td>
 </tr>
 <tr id="occ${occ.id}" class="do_attack" style="display:none; color:red;">
-	<td colspan="3" style="text-align:center;">
+	<td colspan="4" style="text-align:center;">
 		<a href="#" onclick="attack(${occ.id})">Attack ${occ.name}</a>
 	</td>
 </tr>
