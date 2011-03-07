@@ -103,10 +103,6 @@
                         <button type="submit">Speak (<span id="spts">0</span> AP)</button>
                         <input name="words" type="input" size="50">
                     </form>
-                   <script type="text/javascript">
-                        $("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
-                   </script>
-
                 </div>
             </div>
             <h6 id="basic"><a href="#">Location Description</a></h6>
@@ -288,6 +284,8 @@
 
 		// Never try to jquery without making sure the DOM is ready. Ready() ensures that.
 		$(document).ready(function() {
+			$("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
+		
 			// Dialog
             $('#dialog').dialog({
                 autoOpen: false,
