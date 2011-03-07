@@ -77,11 +77,11 @@
             <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.gif"/></span> Menu<div class="pop">
                     <p><a href="/disconnect">Disconnect</a></p>
                     <p><hr/></p>
-                    <p><a href="#" onclick="setInterval( 'poll()', 10000);$('.pop').removeClass('active');">Engage periodic poll</a></p>
+                    <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage periodic poll</a></p>
                     <p><hr/></p>
-                    <p><a href="#" onclick="alert('No uber map yet');$('.pop').removeClass('active');">Uber Map</a></p>
-                    <p><a href="http://wiki.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Wiki</a></p>
-                    <p><a href="http://forums.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Forums</a></p>
+                    <p><a href="#" onclick="alert('No uber map yet');">Uber Map</a></p>
+                    <p><a href="http://wiki.soulcubes.com" target="_blank" >Wiki</a></p>
+                    <p><a href="http://forums.soulcubes.com" target="_blank" >Forums</a></p>
                  </div>
              </span>&nbsp; <!-- &nbsp (or anything, actually) prevents float from collapsing -->
         </div>
@@ -298,6 +298,11 @@
                     }
                 }
             });
+			
+			$('.pop_menu > p > a').click(function() {
+				$('.pop').removeClass('active');
+				return false;
+			});
 		});
 	</script>
     <%--}}}--%>
