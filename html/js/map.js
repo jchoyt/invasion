@@ -53,15 +53,17 @@ $(document).ready( function() {
     $("#basic").click();
 
     // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
-    $(document).bind('POLL_COMPLETE', function(e, data){ checkForReload(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateMessagePane(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateOccupantPane(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updatePetPane(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateInventory(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateAnnouncements(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateStats2(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateLocation(data); });
+    $(document).bind('POLL_COMPLETE', function(e, data){ 
+		checkForReload(data);
+		updateMessagePane(data);
+		updateOccupantPane(data);
+		updatePetPane(data);
+		updateInventory(data);
+		updateAnnouncements(data);
+		updateStats(data);
+		updateStats2(data);
+		updateLocation(data);
+	});
 
     // setInterval( "poll()", 10000);
 
