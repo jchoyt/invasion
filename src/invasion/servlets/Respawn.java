@@ -50,6 +50,7 @@ public class Respawn extends HttpServlet
         PrintWriter out = response.getWriter();
         String charId = WebUtils.getRequiredParameter(request, "id");
         int altid = Integer.parseInt(charId);
+        Alt.uncache( altid );
         Alt alt = null;
 
         String query = "update alt set hp=hpmax, ip=0, lasthurtby=null, ticksalive=1 where id=? and ticksalive=0;";

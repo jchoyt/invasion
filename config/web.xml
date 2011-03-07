@@ -17,6 +17,18 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>Respawn</servlet-name>
+        <servlet-class>invasion.servlets.Respawn</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Respawn</servlet-name>
+        <url-pattern>/respawn</url-pattern>
+    </servlet-mapping>
+
+
     <!-- Login by form -->
     <login-config>
         <auth-method>FORM</auth-method>
