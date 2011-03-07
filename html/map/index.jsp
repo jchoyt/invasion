@@ -104,7 +104,7 @@
                         <input name="words" type="input" size="50">
                     </form>
                    <script type="text/javascript">
-                        $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
+                        $("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
                    </script>
 
                 </div>
