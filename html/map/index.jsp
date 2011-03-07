@@ -37,13 +37,13 @@
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="pop.css" rel="stylesheet" />
-    <script type="text/javascript" src="${js}/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
     <script type="text/javascript" src="${js}/vel2jstools.js"></script>
     <script type="text/javascript" src="${js}/vel2js.js"></script>
-    <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-ui-1.8.10.custom.min.js"></script>
     <script type="text/javascript" src="jquery.pop.js"></script>
     <script type="text/javascript" src="${js}/map.js"></script>
-    <script type="text/javascript" src="${js}/jquery.layout.min-1.2.0.js"></script>
+    <script type="text/javascript" src="${js}/jquery.layout.min-1.3.0rc29.js"></script>
     <%--}}}--%>
 
     <%--  {{{ css --%>
