@@ -113,7 +113,7 @@
                     VelocityUtil.applyTemplate( obj, "locationDescription.vm", out );
                 %>
             </div>
-            <h6><a href="#">Actions</a></h6>
+            <h6 class="start-closed"><a href="#">Actions</a></h6>
             <div>
                 <p>
                 <%--  <form method="post" action="#" onsubmit="attack(this.target.value); return false">
@@ -196,7 +196,7 @@
                     </tbody>
                 </table>
             </div>
-            <h6><a href="#">Items</a></h6>
+            <h6 class="start-closed"><a href="#">Items</a></h6>
             <div>
                 <p>
                 Cras dictum. Pellentesque habitant morbi tristique senectus et netus
