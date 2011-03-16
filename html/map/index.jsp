@@ -304,6 +304,7 @@
 			// Close the popup menu upon clicking a link.
 			
 			$('.open_attack').live('click', function() {
+			// live() attaches event handlers to all current and future elements matching the selector. Perfect when they're getting ajax'd.
 				var myID = "#" + $(this).attr('id');
 				$(':not(' + myID + ').do_attack').hide();
 				$(myID + ".do_attack").toggle();
