@@ -21,23 +21,17 @@ $(document).ready( function() {
 
     $("#west-sections, #center-sections").addClass("ui-accordion ui-widget ui-helper-reset")
     .find("h6")
-        .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
-        .prepend('<span class="ui-icon ui-icon-triangle-1-e"/>')
+        .addClass("ui-accordion-header ui-helper-reset ui-accordion-header-active ui-state-active ui-corner-top")
+        .prepend('<span class="ui-icon ui-icon-triangle-1-s"/>')
         .click(function() {
-            $(this).toggleClass("ui-accordion-header-active").toggleClass("ui-state-active")
-                .toggleClass("ui-state-default").toggleClass("ui-corner-bottom")
-            .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e").toggleClass("ui-icon-triangle-1-s")
+            $(this).toggleClass("ui-accordion-header-active ui-state-active ui-state-default ui-corner-bottom")
+            .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s")
             .end().next().toggleClass("ui-accordion-content-active").toggle();
             return false;
         })
-        .next().addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom").hide();
+        .next().addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active").css('display', 'block');
 
-
-    $("#map").click();
-    $("#occupants").click();
-    $("#critters").click();
-    $("#msgs-hdr").click();
-    $("#basic").click();
+    $(".start-closed").click();
 
     // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
     $(document).bind('POLL_COMPLETE', function(e, data){ 
