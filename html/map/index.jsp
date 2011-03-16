@@ -34,7 +34,7 @@
 	<meta name="language" content="en">
 
 	<title>Invasion - power has its price</title>
-    <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+    <link type="text/css" href="${css}/redmond/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="pop.css" rel="stylesheet" />
