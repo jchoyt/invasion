@@ -29,6 +29,7 @@ public class TickServlet extends HttpServlet
     public final static String KEY = TickServlet.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
+    protected static Timer timer = null;
 
     /**
      *  Constructor for the PqmServlet object
@@ -48,6 +49,7 @@ public class TickServlet extends HttpServlet
      * @param  config                Description of the Parameter
      * @exception  ServletException  Description of the Exception
      */
+    @Override
     public void init( ServletConfig config )
         throws ServletException
     {
@@ -73,7 +75,7 @@ public class TickServlet extends HttpServlet
             log.finer("start time is: " + startTime);
             //set delay in milliseconds - numbers are ms/sec * sec/min * min/hour * hour/day * days
             long delay = 1000 * 60 * 15;// 15 minutes
-            Timer timer = new Timer( true );
+            timer = new Timer( true );
 
             timer.schedule( task, startTime.getTime(), delay );
         }
@@ -85,6 +87,11 @@ public class TickServlet extends HttpServlet
         log.exiting( KEY, "init" );
     }
 
+
+    public static void killTimer()
+    {
+        timer.cancel();
+    }
 
     /**
      *  Description of the Method

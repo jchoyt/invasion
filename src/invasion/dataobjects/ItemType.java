@@ -25,12 +25,7 @@ public class ItemType{
     protected String damageType = null;
     protected boolean usesammo = false;
 	protected int accuracy = 0;
-
-
-
-
     protected static Map<Integer, ItemType> itemTypes = new HashMap<Integer, ItemType>();
-
 
     public ItemType(int typeid, int weight, int capacity, String damage,
              boolean consumable, String name, String type, String damageType, int accuracy, boolean usesammo){

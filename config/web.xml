@@ -6,9 +6,9 @@
     <display-name>Invasion</display-name>
 
     <!-- Listener for processing stats on shutdown -->
-    <listener>
+    <!-- <listener>
         <listener-class>invasion.servlets.StatsListener</listener-class>
-    </listener>
+    </listener> -->
 
     <!-- Init Servlet -->
     <servlet>
@@ -16,18 +16,6 @@
         <servlet-class>invasion.servlets.InitServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
-    <servlet>
-        <servlet-name>Respawn</servlet-name>
-        <servlet-class>invasion.servlets.Respawn</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Respawn</servlet-name>
-        <url-pattern>/respawn</url-pattern>
-    </servlet-mapping>
-
 
     <!-- Login by form -->
     <login-config>

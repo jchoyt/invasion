@@ -36,4 +36,6 @@ public interface Defender
 
     public int getDodgeLevel();
 
+    public int getHp();
+
 }

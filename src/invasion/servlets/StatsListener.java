@@ -11,6 +11,7 @@ import java.sql.*;
 import java.text.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.annotation.WebListener;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -19,6 +20,7 @@ import javax.servlet.ServletContextListener;
 /**
  *  Class to process Stats on shutdown
  */
+@WebListener
 public class StatsListener implements ServletContextListener
 {
 
@@ -27,6 +29,7 @@ public class StatsListener implements ServletContextListener
     // static{log.setLevel(Level.FINER);}
 	ServletContext context;
 
+	@Override
 	public void contextInitialized(ServletContextEvent contextEvent)
 	{
 		System.out.println("Context Created");
@@ -35,6 +38,7 @@ public class StatsListener implements ServletContextListener
 		context.setAttribute("TEST", "TEST_VALUE");
 	}
 
+	@Override
 	public void contextDestroyed(ServletContextEvent contextEvent)
 	{
 		context = contextEvent.getServletContext();

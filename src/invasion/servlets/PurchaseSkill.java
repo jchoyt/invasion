@@ -71,6 +71,7 @@ public class PurchaseSkill extends HttpServlet
         int skillid = Integer.parseInt( skillid_string );
         Skill s = Skills.getById( skillid );
         InvasionConnection conn = null;
+        PrintWriter out = response.getWriter();
         try
         {
             int altid = Integer.parseInt( altidString );
@@ -95,21 +96,17 @@ public class PurchaseSkill extends HttpServlet
                 okToContinue = hascp && prereq;
             }
             DatabaseUtility.close( rs );
-            if( !okToContinue )
-            {
-                DatabaseUtility.close(conn);
-                response.sendRedirect("naughty.jsp");
-            }
-            else
+            if( okToContinue )
             {
                 query = "update alt set " + column + " = " + column + " | ? where id=?";
                 conn.psExecuteUpdate( query, "error", s.getValue(), altid );
                 query = "update alt set cp = cp - ? where id = ?";
                 conn.psExecuteUpdate( query, "error", s.getCost(), altid );
-                DatabaseUtility.close(conn);
                 Alt.uncache( altid );
-                response.sendRedirect("/map/index.jsp");
+                out.write("<font color=\"green\">Purchase succeeded...reloading page.</font>");
             }
+            else
+                out.write("<font color=\"red\">Purchase failed...reloading page.</font>");
         }
         catch(Exception e)
         { e.printStackTrace();}

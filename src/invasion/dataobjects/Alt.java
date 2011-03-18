@@ -5,6 +5,8 @@ package invasion.dataobjects;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,7 +55,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected long mutateSkills = 0;
 	protected int firearmsAttackLevel = 0;
 	protected long lastTouched = 0;
-	protected boolean reload = false;
+	protected boolean reload = false; //reload the GUI?
+    protected List<String> skillsUsed = new ArrayList<String>();
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
@@ -171,9 +174,14 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     }
 
 
-    public JSONArray attack( Defender defender, InvasionConnection conn )
+   /**
+    * Attack a target
+    * @param
+    * @return
+    *
+    */
+   public JSONArray attack( Defender defender, InvasionConnection conn )
    {
-       int apIncrement = 1;
        JSONArray alerts = null;
         /* check to see if the target ran off */
         try
@@ -188,62 +196,33 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             /* check to see if weapon is equipped */
             if( equippedWeapon == -1 || equippedWeapon == 0 )
             {
+                //TODO check for other improvised weapon to use
                 alerts = new JSONArray();
                 log.finer("No weapon equipped");
                 alerts.put( Poll.createErrorAlert("You must equip a weapon before attacking with it.") );
                 return alerts;
             }
 
-            if(equippedWeaponType.getUsesammo())
+            if(equippedWeaponType.getType().equals("weapon"))
             {
-                //check if char has ammo
-                if( ammo <= 0 )
+                if( equippedWeaponType.getUsesammo() )
                 {
-                    alerts = new JSONArray();
-                    alerts.put( Poll.createErrorAlert("There is no ammunition left in your equipped weapon.") );
-                    return alerts;
+                    // //firearms
+                    // if( ammo <= 0 )
+                    // {
+                    //     alerts = new JSONArray();
+                    //     alerts.put( Poll.createErrorAlert("There is no ammunition left in your equipped weapon.") );
+                    //     return alerts;
+                    // }
+                    attackWithFirearm( conn, defender );
                 }
-                ammo--;  //TODO - adjust this in the database
-                //check if reload necessary
-                if( ammo < 1 )
+                else
                 {
-                    //TODO:  check for ammo
-                    log.finer("reloading");
-                    int capacity = equippedWeaponType.getCapacity();
-                    String query = "update item set ammoleft=? where itemid=?";
-                    ammo = capacity;
-                    conn.psExecuteUpdate( query, "Error occured updating ammunition.", capacity, equippedWeapon );
-                    new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
-                    apIncrement++;
-                } else {
-                    log.finer("decrementing ammo");
-                    String query = "update item set ammoleft=ammoleft-1 where itemid=?";
-                    conn.psExecuteUpdate( query, "Error occured updating ammunition.", equippedWeapon);
+                    //melee weapon
+                    attackWithMelee( conn, defender );
                 }
             }
 
-            // check if you hit
-            double attackChance = Skills.calculateAttackChance( equippedWeaponType.getAccuracy(), firearmsAttackLevel, defender.getDodgeLevel() );
-            log.finer("Attack chance: " + attackChance);
-            if( Math.random() < attackChance )
-            {
-                //hit
-                int damage = equippedWeaponType.getDamage();
-                int damageDone = defender.hit( this, damage, conn, true );
-                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and deal "+ damageDone +" points of damage.  You earned "+ damageDone +" XP.");
-
-                xp = xp + damageDone;
-                update(conn);
-                Stats.addChange(id, Stats.DAMDONE, damageDone);
-            }
-            else
-            {
-                //miss
-                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and miss.");
-               defender.insertMessage(name + " attacked you with a "  + equippedWeaponType.getName() + " and missed.", Message.NORMAL, conn);
-            }
-            defender.notifyAttacked( this, conn );
-            decrementAp(conn, apIncrement);
             return null;
         }
         catch (Exception e)
@@ -254,6 +233,102 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             return alerts;
         }
 
+    }
+
+    /**
+     * Attack with a melee weapon
+     * @param
+     * @return
+     *
+     */
+    public void attackWithMelee( InvasionConnection conn, Defender defender )
+        throws SQLException
+    {
+
+    }
+
+    /**
+     * Fire gun
+     * @param
+     * @return
+     *
+     */
+    protected void attackWithFirearm(InvasionConnection conn, Defender defender)
+        throws SQLException
+    {
+        int apIncrement = 1;
+        ammo--;  //TODO - adjust this in the database
+        int attackLevel = firearmsAttackLevel;
+        int damageBounus = 0;
+        int damageMultiplier = 1;
+        int shots = 1;
+        //calc damage bonus
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS1) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS2) ) > 0 ) damageBounus += 3;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS3) ) > 0 ) damageBounus += 4;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS4) ) > 0 ) damageBounus += 5;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS5) ) > 0 ) damageBounus += 6;
+        if( skillsUsed.contains( Skill.DOUBLE_SHOT ) && ( humanSkills & Skills.getValue(Skill.FIREARMS4) ) > 0 )
+        {
+            attackLevel = firearmsAttackLevel - 1;
+            shots++;
+        }
+        else if( skillsUsed.contains( Skill.KILL_SHOT ) && ( humanSkills & Skills.getValue(Skill.FIREARMS5) ) > 0 )
+        {
+            if( Math.random() < 0.25 )
+                damageMultiplier = 5;
+            apIncrement = 3;
+        }
+        for(int i = 0; i < shots; i++)
+        {
+            //check if reload necessary
+            if( ammo < 1 )
+            {
+                //TODO:  check for ammo
+                log.finer("reloading");
+                int capacity = equippedWeaponType.getCapacity();
+                if( (humanSkills & Skills.getValue(Skill.FIREARMS3)) > 0  )
+                {
+                    capacity *= 2;
+                }
+                String query = "update item set ammoleft=? where itemid=?";
+                ammo = capacity;
+                conn.psExecuteUpdate( query, "Error occured updating ammunition.", capacity, equippedWeapon );
+                new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
+                apIncrement++;
+            } else {
+                log.finer("decrementing ammo");
+                String query = "update item set ammoleft=ammoleft-1 where itemid=?";
+                conn.psExecuteUpdate( query, "Error occured updating ammunition.", equippedWeapon);
+            }
+            // check if you hit
+            double attackChance = Skills.calculateAttackChance( equippedWeaponType.getAccuracy(), attackLevel, defender.getDodgeLevel() );
+            if( Math.random() < attackChance )
+            {
+                //hit;
+                int damage = ( equippedWeaponType.getDamage() + damageBounus ) * damageMultiplier;
+                int damageDone = defender.hit( this, damage, conn, true );
+                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and deal "+ damageDone +" points of damage.  You earned "+ damageDone +" XP.");
+                //TODO - kill message comes before damage message.  Need to swap that
+                xp = xp + damageDone;
+                update(conn);
+                Stats.addChange(id, Stats.DAMDONE, damageDone);
+            }
+            else
+            {
+                //miss
+                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and miss.");
+                defender.insertMessage(name + " attacked you with a "  + equippedWeaponType.getName() + " and missed.", Message.NORMAL, conn);
+            }
+            //check if defender dead - if so stop here
+            if( defender.getHp() < 1 )
+                break;
+            //if attacker is dead, stop here
+            if(hp < 1)
+                break;
+            defender.notifyAttacked( this, conn );
+        }
+        decrementAp(conn, apIncrement);
     }
 
     public int hit( Attacker attacker, int rawAmount, InvasionConnection conn, boolean updateNow ) throws SQLException
@@ -415,6 +490,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS3)) > 0 ) ret.firearmsAttackLevel = 3;
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS2)) > 0 ) ret.firearmsAttackLevel = 2;
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS1)) > 0 ) ret.firearmsAttackLevel = 1;
+                //TODO - make this configurable
+                if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS5)) > 0 ) ret.skillsUsed.add(Skill.KILL_SHOT);
             }
 
             /* TODO Load items */
@@ -651,6 +728,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setLastTouched(long lastTouched) { this.lastTouched = lastTouched; }
     public boolean getReload() { return this.reload; }
     public void setReload( boolean reload) { this.reload = reload; }
+    public List<String> getSkillsUsed() { return this.skillsUsed; }
 
     //}}}
 

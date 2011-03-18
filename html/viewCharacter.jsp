@@ -48,7 +48,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
     }
     else if( thisguy.getCp() > skill.getCost() )
     {
-        out.write( "<a href=\"#\" onclick=\"doPurchase( " + thisguy.getId() + ", " + skill.getId() + ")\">Purchase " + skill.getName() + " ( " + skill.getCost() + " CP )" + "</a>" );
+        out.write( "<a href=\"#\" onclick=\"doPurchase( " + thisguy.getId() + ", " + skill.getId() + ");setTimeout('location.reload();', 1500);\">Purchase " + skill.getName() + " ( " + skill.getCost() + " CP )" + "</a>" );
     }
     else
     {
@@ -194,7 +194,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
             </center>
             <!-- ui-dialog -->
             <div id="dialog" title="Skill Purchase Attempt" style="text-align:center;">
-                <p>Place holder text.</p>
+                <p>Processing...</p>
             </div>
 
         </body>

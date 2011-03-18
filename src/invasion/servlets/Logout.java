@@ -67,6 +67,9 @@ public class Logout extends HttpServlet
         throws IOException, ServletException
     {
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+
+        if( wazzit == null ) return;
+
         int altid = wazzit.getAlt().getId();
         request.getSession().invalidate();
         Alt.uncache( altid );

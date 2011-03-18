@@ -48,6 +48,9 @@ public class Skill implements java.io.Serializable
     public final static String HACKER5 = "Hacker 5";
     public final static String MEDIC1 = "Medic 1";
     public final static String MEDIC2 = "Medic 2";
+
+    public final static String DOUBLE_SHOT = "Double Shot";
+    public final static String KILL_SHOT = "Kill Shot";
     //}}}
 
     //{{{ Constuctors

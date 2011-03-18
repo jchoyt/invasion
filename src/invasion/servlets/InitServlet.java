@@ -7,11 +7,13 @@ package invasion.servlets;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import invasion.dataobjects.*;
 import invasion.pets.*;
 import invasion.ui.VelocityUtil;
@@ -31,13 +33,12 @@ import invasion.util.*;
  *@version    1.0
  *@see        javax.servlet.http
  */
-
 public class InitServlet extends HttpServlet
 {
 
     public final static String KEY = InitServlet.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the PqmServlet object
@@ -64,9 +65,9 @@ public class InitServlet extends HttpServlet
          */
         super.init( config );
         /* Set up logging */
-        // System.setProperty( "java.util.logging.config.class", "invasion.util.LogConfig" );
-        // LogConfig.reloadLogManagerProperties();
-        // System.out.println( LogConfig.getConfiguration() );
+        System.setProperty( "java.util.logging.config.class", "invasion.util.LogConfig" );
+        LogConfig.reloadLogManagerProperties();
+        System.out.println( LogConfig.getConfiguration() );
         /*
          *  Grab the name for the currently deployed webapp.  It's possible this could be in error if the webapp is deployed
          *  as a subdirectory (i.e., The docbase is http://localhost:8080/first/sub).  If this ever gets deployed that way it will
