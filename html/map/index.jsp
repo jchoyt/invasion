@@ -278,7 +278,7 @@
             <h3><a href="#">Skills</a></h3>
             <div>
                 <p>
-                There are skills.  Yours don't do anything.
+                <tags:UseSkill/>
                 </p>
             </div>
         </div>

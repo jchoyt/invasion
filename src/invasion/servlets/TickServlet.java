@@ -32,7 +32,7 @@ public class TickServlet extends HttpServlet
     protected static Timer timer = null;
 
     /**
-     *  Constructor for the PqmServlet object
+     *  Constructor for the Servlet object
      *
      * @since
      */

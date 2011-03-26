@@ -12,5 +12,6 @@ import java.sql.*;
 
 public class GuiConfig
 {
+
 }
 

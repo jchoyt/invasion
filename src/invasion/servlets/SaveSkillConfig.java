@@ -4,6 +4,8 @@
 
 package invasion.servlets;
 
+import invasion.ui.NaughtyException;
+//import invasion.ui.*;
 import invasion.util.*;
 import invasion.dataobjects.*;
 import java.io.*;
@@ -21,42 +23,13 @@ import org.json.*;
  * @author     jchoyt
  * @created
  */
-@WebServlet(urlPatterns = { "/logout" } )
-public class Logout extends HttpServlet
+@WebServlet(urlPatterns = { "/map/saveSkillConfig" } )
+public class SaveSkillConfig extends HttpServlet
 {
 
-    public final static String KEY = Logout.class.getName();
+    public final static String KEY = SaveSkillConfig.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
-
-    /**
-     *  Constructor for the Servlet object
-     *
-     * @since
-     */
-    public Logout()
-    {
-        super();
-    }
-
-
-
-    /**
-     *  Description of the Method
-     *
-     * @param  config                Description of the Parameter
-     * @exception  ServletException  Description of the Exception
-     */
-    public void init( ServletConfig config )
-        throws ServletException
-    {
-        log.entering( KEY, "init" );
-        /*
-         *  required for all Servlets
-         */
-        super.init( config );
-    }
-
 
     /**
      *  Description of the Method
@@ -66,14 +39,17 @@ public class Logout extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+         PrintWriter out = response.getWriter();
+         Whatzit wazzit = (Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+         Alt alt = wazzit.getAlt();
 
-        if( wazzit == null ) return;
+         alt.getSkillsUsed().clear();
+         //process firearms skill
+         String firearmsSkill = WebUtils.getOptionalParameter(request, "firearms", "None" );
+         if( !firearmsSkill.equals("None") )
+             alt.getSkillsUsed().add( firearmsSkill );
 
-        int altid = wazzit.getAlt().getId();
-        request.getSession().invalidate();
-        Alt.uncache( altid );
-        response.sendRedirect( "/index.jsp" );
+         out.write("OK");
     }
 
 

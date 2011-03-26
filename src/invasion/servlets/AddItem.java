@@ -28,7 +28,7 @@ public class AddItem extends HttpServlet
     // static{log.setLevel(Level.FINER);}
 
     /**
-     *  Constructor for the PqmServlet object
+     *  Constructor for the Servlet object
      *
      * @since
      */
