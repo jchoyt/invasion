@@ -15,15 +15,15 @@ public class Critter implements Attacker, Defender
 {
     public final static String KEY = Critter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     //{{{ Constructors
     //}}}
 
-    //{{{ Common class properties
+    //{{{ Members
     protected String description = null;
     protected String name = null;
-    protected char damageType;
+    protected char damageType = 'p';
     protected static float attackAccuracy = 0.40f;
     protected static float defendAccuracy = 0.10f;
     protected int ap = 50;
@@ -101,12 +101,12 @@ public class Critter implements Attacker, Defender
 
     public boolean update()
     {
-        String query = "update critters set name=?, ap=?, hp=?, armor=?, shield=? where id=?";
+        String query = "update critters set name=?, ap=?, hp=?, armor=?, shield=?, lasthurtby=? where id=?";
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection( Brood.PETDB );
-            int count = conn.psExecuteUpdate(query, "Error updating brood in the database", name, ap, hp, armor, shield, id );
+            int count = conn.psExecuteUpdate(query, "Error updating brood in the database", name, ap, hp, armor, shield, lasthurtby, id );
             if( count != 1 )
             {
                 log.warning( "Critter " +  id + " not updated");
@@ -172,21 +172,49 @@ public class Critter implements Attacker, Defender
      * @return
      *
      */
-    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn, boolean updateNow ) throws SQLException
+    public CombatResult hit( Attacker attacker, int rawAmount, char damagetype, InvasionConnection conn, boolean updateNow ) throws SQLException
     {
+        CombatResult result = new CombatResult( rawAmount );
         log.finer( "Critter " + id + " getting hit for " + rawAmount + " damage." );
-        int damageDone = rawAmount;
         //TODO apply soaks
+        if( damagetype == 'p' && armor > 0)
+        {
+            int maxSoak = (int)(0.75 * rawAmount);
+            if( maxSoak > armor )
+            {
+                result.setArmorSoak( armor );
+                armor = 0;
+            }
+            else
+            {
+                result.setArmorSoak( maxSoak );
+                armor -= maxSoak;
+            }
+        }
+        else if( damagetype == 'e' && shield > 0)
+        {
+            int maxSoak = (int)(0.95 * rawAmount);
+            if( maxSoak > shield )
+            {
+                result.setShieldSoak( shield );
+                shield = 0;
+            }
+            else
+            {
+                result.setShieldSoak( maxSoak );
+                shield -= maxSoak ;
+            }
+        }
 
         lasthurtby = attacker.getId();
-        hp = hp - damageDone;
+        hp -= result.getDamageDone();
 
         if( hp < 1 )
             kill( conn );
         else
             if( updateNow )
                 update();
-        return damageDone;
+        return result;
     }
 
     /**
@@ -314,7 +342,7 @@ public class Critter implements Attacker, Defender
             // check if you hit
             if( Math.random() < attackAccuracy )
             {
-                defender.hit( this, attackDamage.roll(), conn, true );
+                defender.hit( this, attackDamage.roll(), damageType, conn, true );
             }
             else
             {

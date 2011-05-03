@@ -30,7 +30,7 @@ public interface Defender
      * @return  final amount of damage done
      *
      */
-    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn, boolean updateNow ) throws SQLException;
+    public CombatResult hit( Attacker attacker, int rawAmount, char damagetype, InvasionConnection conn, boolean updateNow ) throws SQLException;
 
     public void notifyAttacked( Attacker attacker, InvasionConnection conn );
 

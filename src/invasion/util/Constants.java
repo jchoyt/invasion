@@ -18,6 +18,30 @@ public class Constants
             RELOAD_REQUIRED.put("reload", "true");
         }catch (Exception e){}
     }
+
+    /**
+     * Provides "he" or "she" depending on the gender.  Putting this in one place prevents having to do the damn check everywhere.
+     * @param
+     * @return
+     *
+     */
+    public static String getHeShe( char gender, boolean capiltalized )
+    {
+        switch( gender )
+        {
+            case 'm':
+                if(capiltalized)
+                    return "He";
+                else
+                    return "he";
+            default:
+                if(capiltalized)
+                    return "She";
+                else
+                    return "she";
+        }
+    }
+
     //}}}
 
 }

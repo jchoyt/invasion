@@ -10,7 +10,7 @@
     <td><a href="#" onclick="eat(${i.itemid})">Eat</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a></td>
     #elseif ($i.type == "booze")
     <td><a href="#" onclick="drink(${i.itemid})">Drink</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a></td>
-    #elseif ($i.type == "weapon")
+    #elseif ($i.type == "weapon" || $i.type == "armor" || $i.type == "wearable")
         #if ($i.equipped)
             <td><a href="unequip?weaponid=${i.itemid}" >Unequip</a></td>
         #else

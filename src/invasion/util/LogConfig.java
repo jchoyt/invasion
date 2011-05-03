@@ -41,12 +41,12 @@ public class LogConfig
          */
         Properties props = new Properties();
         //set root logger level
-        props.setProperty(".level","INFO");
+        props.setProperty(".level","FINER");
         //set handlers
         props.setProperty("handlers","java.util.logging.ConsoleHandler,java.util.logging.FileHandler,org.apache.juli.FileHandler");
         //configure ConsoleHandler
         // props.setProperty("java.util.logging.ConsoleHandler.formatter","invasion.util.LogFormatter");  //not working
-        props.setProperty("java.util.logging.ConsoleHandler.level","INFO");
+        props.setProperty("java.util.logging.ConsoleHandler.level","FINER");
         //configure FileHandler
         // props.setProperty("java.util.logging.FileHandler.formatter","invasion.util.LogFormatter");  //not working
         props.setProperty("java.util.logging.FileHandler.level","FINER");

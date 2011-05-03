@@ -17,18 +17,24 @@ public class ItemType{
 
     protected int typeid = 0;
     protected int weight = 0;
+    /**
+     * Maximum capacity for firearms, maximum shield/armor HP for armor.
+     */
     protected int capacity = 0;
     protected DiceRoller damage = null;
     protected boolean consumable = false;
     protected String name = null;
     protected String type = null;
-    protected String damageType = null;
+    /**
+     * For weapons - what type of damage it does.  For armor - what kind it soaks
+     */
+    protected char damageType = 'p';
     protected boolean usesammo = false;
 	protected int accuracy = 0;
     protected static Map<Integer, ItemType> itemTypes = new HashMap<Integer, ItemType>();
 
     public ItemType(int typeid, int weight, int capacity, String damage,
-             boolean consumable, String name, String type, String damageType, int accuracy, boolean usesammo){
+             boolean consumable, String name, String type, char damageType, int accuracy, boolean usesammo){
         this.typeid = typeid;
         this.weight = weight;
         this.capacity = capacity;
@@ -63,7 +69,7 @@ public class ItemType{
                 rs.getBoolean("consumable"),
                 rs.getString("name"),
                 rs.getString("type"),
-                rs.getString("damageType"),
+                rs.getString("damageType").charAt(0),
                 rs.getInt("accuracy"),
                 rs.getBoolean("usesammo"));
                 itemTypes.put(rs.getInt("typeid"), type);
@@ -111,8 +117,8 @@ public class ItemType{
     public void setName(String name) { this.name = name; }
     public String getType() { return this.type; }
     public void setType(String type) { this.type = type; }
-    public String getDamageType() { return this.damageType; }
-    public void setDamageType(String damageType) { this.damageType = damageType; }
+    public char getDamageType() { return this.damageType; }
+    public void setDamageType(char damageType) { this.damageType = damageType; }
     public int getAccuracy() { return this.accuracy; }
 	public void setAccuracy(int accuracy) { this.accuracy = accuracy; }
 

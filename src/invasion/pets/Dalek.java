@@ -77,18 +77,20 @@ public class Dalek extends Critter
         apmax = 75;
         hp = 50;
         hpmax = 50;
-        attackDamage = new DiceRoller("2d7");
+        attackDamage = new DiceRoller("4d7");
         cost = -1;
-        armor = 40;
-        armorMax = 40;
-        shield = 40;
-        shieldMax = 40;
+        armor = 120;
+        armorMax = 120;
+        shield = 120;
+        shieldMax = 120;
         name = "Dalek " + id;
         typeid = 1;
+        damageType = 'e';
         if(Math.random() < 0.01) name = "I peed on the doctor";
         deathKnells = new String[] { "You have landed the killing blow.",
             "With a final blow, the lights on the Dalek slowly dim.",
-            "Sparks fly from your target's caraprice and it finally lies motionless."
+            "Sparks fly from your target's caraprice and it finally lies motionless.",
+            "You yell, \"Holy crap! Did you see that shot?!??  Did you?\"  Oh. Yeah. There's nobody else here. You are forever alone."
             };
     }
     //}}}

@@ -25,7 +25,7 @@ public class InvasionConnection
 
     public final static String KEY = InvasionConnection.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
     private Connection conn = null;
     private Statement stmt = null;
 
@@ -177,6 +177,8 @@ public class InvasionConnection
                     ps.setDouble(i, ((Double)param).doubleValue());
                 else if( param instanceof Boolean )
                     ps.setBoolean(i, ((Boolean)param).booleanValue());
+                else if( param instanceof java.lang.Character )
+                    ps.setString( i, String.valueOf( param ) );
                 else if( param == null )
                     throw new NullPointerException("Parameters passed to psExecuteQuery() cannot be null");
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
@@ -232,6 +234,8 @@ public class InvasionConnection
                     ps.setDouble(i, ((Double)param).doubleValue());
                 else if( param instanceof Boolean )
                     ps.setBoolean(i, ((Boolean)param).booleanValue());
+                else if( param instanceof java.lang.Character )
+                    ps.setString( i, String.valueOf( param ) );
                 else if( param == null )
                     throw new NullPointerException("Parameters passed to psExecuteQuery() cannot be null");
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
@@ -282,6 +286,10 @@ public class InvasionConnection
                     ps.setFloat(i, ((Float)param).floatValue());
                 else if( param instanceof Double )
                     ps.setDouble(i, ((Double)param).doubleValue());
+                else if( param instanceof java.lang.Character )
+                    ps.setString( i, String.valueOf( param ) );
+                else if( param instanceof Boolean )
+                    ps.setBoolean(i, ((Boolean)param).booleanValue());
                 else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
                 i++;
             }

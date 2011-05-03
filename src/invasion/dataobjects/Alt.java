@@ -25,7 +25,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //{{{ Logging
     public final static String KEY = Alt.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
     //}}}
 
     //{{{ Members
@@ -39,7 +39,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     private int hp = 50;
     private int hpmax = 50;
     private int speciality;
-    private int equippedWeapon = -1;
+    private Item equippedWeapon = null;
+	protected Item equippedShield = null;
+	protected Item equippedArmor = null;
     private boolean autoReload = true;
 	protected int id = 0;
 	protected String username = null;
@@ -48,15 +50,15 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected int level = 0;
 	protected int lastHurtBy = 0;
 	protected int race = 0;
-    protected ItemType equippedWeaponType = null;
-	protected int ammo = 0;
 	protected long humanSkills = 0;
 	protected long psiSkills = 0;
 	protected long mutateSkills = 0;
 	protected int firearmsAttackLevel = 0;
-	protected long lastTouched = 0;
 	protected boolean reload = false; //reload the GUI?
     protected List<String> skillsUsed = new ArrayList<String>();
+	protected boolean equippedItemsLoaded = false;
+	protected List<String> clothing = new ArrayList<String>();
+	protected char gender = 'f';
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
@@ -67,7 +69,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //{{{ Methods
     public void unequipWeapon()
     {
-        equippedWeapon = -1;
+        equippedWeapon = null;
     }
 
 
@@ -112,10 +114,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public boolean update( InvasionConnection conn )
     {
         log.entering(KEY, "update");
-        String query = "update alt set ap=?, ip=?, hp=?, xp=?, lasthurtby=? ,location=? where id=?";
+        String query = "update alt set ap=?, ip=?, hp=?, xp=?, lasthurtby=?, location=? where id=?";
         int count = conn.psExecuteUpdate(query, "Error updating brood in the database", ap, ip, hp, xp, lastHurtBy, location, id );
         log.finer("query done");
-        setLastTouched( System.currentTimeMillis() );
         if( count != 1 )
         {
             log.warning( "Character " +  id + " not updated");
@@ -194,7 +195,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 return alerts;
             }
             /* check to see if weapon is equipped */
-            if( equippedWeapon == -1 || equippedWeapon == 0 )
+            if( equippedWeapon == null )
             {
                 //TODO check for other improvised weapon to use
                 alerts = new JSONArray();
@@ -203,9 +204,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 return alerts;
             }
 
-            if(equippedWeaponType.getType().equals("weapon"))
+            if(equippedWeapon.getItemtype().getType().equals("weapon"))
             {
-                if( equippedWeaponType.getUsesammo() )
+                if( equippedWeapon.getItemtype().getUsesammo() )
                 {
                     // //firearms
                     // if( ammo <= 0 )
@@ -257,7 +258,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         throws SQLException
     {
         int apIncrement = 1;
-        ammo--;  //TODO - adjust this in the database
         int attackLevel = firearmsAttackLevel;
         int damageBounus = 0;
         int damageMultiplier = 1;
@@ -281,44 +281,48 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
         for(int i = 0; i < shots; i++)
         {
+            equippedWeapon.setAmmoleft( equippedWeapon.getAmmoleft() - 1 );
             //check if reload necessary
-            if( ammo < 1 )
+            if( equippedWeapon.getAmmoleft() < 1 )
             {
                 //TODO:  check for ammo
                 log.finer("reloading");
-                int capacity = equippedWeaponType.getCapacity();
+                int capacity = equippedWeapon.getItemtype().getCapacity();
                 if( (humanSkills & Skills.getValue(Skill.FIREARMS3)) > 0  )
                 {
                     capacity *= 2;
                 }
-                String query = "update item set ammoleft=? where itemid=?";
-                ammo = capacity;
-                conn.psExecuteUpdate( query, "Error occured updating ammunition.", capacity, equippedWeapon );
+                equippedWeapon.setAmmoleft( capacity );
                 new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
                 apIncrement++;
-            } else {
-                log.finer("decrementing ammo");
-                String query = "update item set ammoleft=ammoleft-1 where itemid=?";
-                conn.psExecuteUpdate( query, "Error occured updating ammunition.", equippedWeapon);
             }
+            equippedWeapon.update(conn);
             // check if you hit
-            double attackChance = Skills.calculateAttackChance( equippedWeaponType.getAccuracy(), attackLevel, defender.getDodgeLevel() );
+            double attackChance = Skills.calculateAttackChance( equippedWeapon.getItemtype().getAccuracy(), attackLevel, defender.getDodgeLevel() );
             if( Math.random() < attackChance )
             {
                 //hit;
-                int damage = ( equippedWeaponType.getDamage() + damageBounus ) * damageMultiplier;
-                int damageDone = defender.hit( this, damage, conn, true );
-                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and deal "+ damageDone +" points of damage.  You earned "+ damageDone +" XP.");
-                //TODO - kill message comes before damage message.  Need to swap that
-                xp = xp + damageDone;
+                int damage = ( equippedWeapon.getItemtype().getDamage() + damageBounus ) * damageMultiplier;
+                CombatResult result = defender.hit( this, damage, equippedWeapon.getItemtype().getDamageType(), conn, true );
+                StringBuilder ret = new StringBuilder( "You attack " + defender.getName() + " with your " + equippedWeapon.getItemtype().getName() );
+                ret.append( " and deal " + result.getDamageDone() + " points of damage.");
+                if( result.getArmorSoak() > 0 )
+                    ret.append( " Your victim's armor soaked " + result.getArmorSoak()  + " points." );
+                if( result.getShieldSoak() > 0 )
+                    ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
+                ret.append( " You earned " + result.getDamageDone() +" XP.");
+                new Message( conn, id, Message.NORMAL, ret.toString());
+                for(String msg : result.getAttackerMessages())
+                    new Message( conn, id, Message.NORMAL, msg );
+                xp = xp + result.getDamageDone();
                 update(conn);
-                Stats.addChange(id, Stats.DAMDONE, damageDone);
+                Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
             }
             else
             {
                 //miss
-                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeaponType.getName() + " and miss.");
-                defender.insertMessage(name + " attacked you with a "  + equippedWeaponType.getName() + " and missed.", Message.NORMAL, conn);
+                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeapon.getItemtype().getName() + " and miss.");
+                defender.insertMessage(name + " attacked you with a "  + equippedWeapon.getItemtype().getName() + " and missed.", Message.NORMAL, conn);
             }
             //check if defender dead - if so stop here
             if( defender.getHp() < 1 )
@@ -330,34 +334,71 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
         decrementAp(conn, apIncrement);
     }
+    //}}}
 
-    public int hit( Attacker attacker, int rawAmount, InvasionConnection conn, boolean updateNow ) throws SQLException
+    //{{{ For Defender interface
+    public CombatResult hit( Attacker attacker, int rawAmount, char damagetype, InvasionConnection conn, boolean updateNow ) throws SQLException
     {
-        int damageDone = rawAmount;
-        //TODO apply soaks
-        log.finer( name + " hit for " + damageDone + " dp by " + attacker.getName() );
-        hp = hp - damageDone;
+        CombatResult ret = new CombatResult(rawAmount);
+        //check if armor or shileds have any left
+        Item armor = getEquippedArmor();
+        Item shield = getEquippedShield();
+        log.finer( String.valueOf(armor) );
+        log.finer( String.valueOf(shield) );
+        log.finer( Character.toString(damagetype) );
+        if( damagetype == 'p' && armor != null && armor.getAmmoleft() > 0)
+        {
+            int maxSoak = (int)(0.75 * rawAmount);
+            if( maxSoak > armor.getAmmoleft() )
+            {
+                ret.setArmorSoak( armor.getAmmoleft() );
+                armor.setAmmoleft( 0 );
+            }
+            else
+            {
+                ret.setArmorSoak( maxSoak );
+                armor.setAmmoleft( armor.getAmmoleft() - maxSoak );
+            }
+            armor.update(conn);
+        }
+        else if( damagetype == 'e' && shield != null && shield.getAmmoleft() > 0)
+        {
+            int maxSoak = (int)(0.95 * rawAmount);
+            if( maxSoak > shield.getAmmoleft() )
+            {
+                ret.setShieldSoak( shield.getAmmoleft() );
+                shield.setAmmoleft( 0 );
+            }
+            else
+            {
+                ret.setShieldSoak( maxSoak );
+                shield.setAmmoleft( shield.getAmmoleft() - maxSoak );
+            }
+            shield.update(conn);
+        }
+
+        log.finer( name + " hit for " + ret.getDamageDone() + " dp by " + attacker.getName() );
+        hp = hp - ret.getDamageDone();
         lastHurtBy = attacker.getId();
-        Stats.addChange(id, Stats.DAMTAKEN, damageDone);
-        insertMessage(attacker.getName() + " attacked you and dealt " + damageDone + " points of damage.", Message.NORMAL, conn);
-        //TODO modify for soaks
+        Stats.addChange(id, Stats.DAMTAKEN, ret.getDamageDone());
+        String defenderMessage = attacker.getName() + " attacked you and dealt " + ret.getDamageDone() + " points of damage.";
+        if( ret.getArmorSoak() > 0 ) defenderMessage = defenderMessage + "  Your armor soaked " + ret.getArmorSoak()  + " points.";
+        if( ret.getShieldSoak() > 0 ) defenderMessage = defenderMessage + "  Your shields soaked " + ret.getShieldSoak()  + " points.";
+        insertMessage(defenderMessage, Message.NORMAL, conn);
+
         if( hp < 1 )
         {
-            System.out.println( "He's dead!");
             kill( conn );
             attacker.setReload(true);
         }
         else if( updateNow )
             update( conn );
 
-        return damageDone;
+        return ret;
     }
 
     public void notifyAttacked( Attacker attacker, InvasionConnection conn ){}
 
-    //}}}
-
-    //{{{ For Defender interface
     /**
      *  um....kills off the character.  Sets time till respawn, updates the database, and removes the character from the cache.
      */
@@ -368,6 +409,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         ip = 0;
         location = -57005;
         ap = ap - level;
+        int killerid = lastHurtBy;
+        lastHurtBy = 0;
         update( conn );
         String query = "update alt set ticksalive=0-level where id=?";
         conn.psExecuteUpdate( query, "err", id );
@@ -375,9 +418,10 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
         // update victim's stat
         Stats.addChange( id, Stats.DEATHS, 1);
-        if( lastHurtBy > 0 )
+        if( killerid > 0 )
         {
-            Alt killer = Alt.load( lastHurtBy );
+            //TODO - make sure killerid is always a characdter....not a critter
+            Alt killer = Alt.load( killerid );
             killer.setXp( killer.getXp() + level );
 
             //give kill message to attacker (and ding IP if appropriate)
@@ -397,13 +441,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 killer.setIp( killer.getIp() + ipHit);
             }
             killer.update();
-            Stats.addChange( lastHurtBy, Stats.KILLS, 1);
-            new Message(conn, lastHurtBy, Message.NORMAL, message );
+            Stats.addChange( killerid, Stats.KILLS, 1);
+            new Message(conn, killerid, Message.NORMAL, message );
 
             //give victim death message
             new Message( conn, id, Message.NORMAL, killer.getName() + " has dealt you a death blow.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
             //broadcast killer message
-            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killer.getName() + " killed " + name + "!  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.", lastHurtBy);
+            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killer.getName() + " killed " + name + "!  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.", killerid);
             //TODO IP adjust if others are of the same race (or faction?)
         }
         else
@@ -440,6 +484,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     {
         if( altCache.containsKey( id ) )
         {
+            log.info( "Alt " + id + " returned from cache.");
             return altCache.get(id);
         }
         Alt ret = new Alt();
@@ -451,7 +496,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             rs.next();
             ret.name = rs.getString("name");
             ret.id = id;
-            ret.equippedWeapon=rs.getInt("equippedweapon");
             ret.autoReload = rs.getBoolean("autoreload");
             ret.location = rs.getInt("location");
             ret.locationType = rs.getInt("typeid");
@@ -464,24 +508,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.humanSkills = rs.getLong("humanskill");
             ret.psiSkills = rs.getLong("psiskill");
             ret.mutateSkills = rs.getLong("mutateskill");
-            ret.lastTouched = System.currentTimeMillis();
             ret.xp = rs.getInt("xp");
             ret.cp = rs.getInt("cp");
+            ret.ip = rs.getInt("ip");
             log.finer("in Alt.load(), id is " + id);
             DatabaseUtility.close(rs);
-            /* load equipped weapon */
-            if( ret.equippedWeapon != 0 )
-            {
-                query = "select * from item i join itemtype t on (i.typeid = t.typeid) where itemid=?";
-                rs = conn.psExecuteQuery( query, "Error connecting to " + id, ret.equippedWeapon );
-                if(rs.next())
-                {
-                    int wid = rs.getInt("typeid");
-                    ret.equippedWeaponType = ItemType.getItemType( wid );
-                    ret.ammo = rs.getInt("ammoleft");
-                }
-                DatabaseUtility.close(rs);
-            }
+
             /* Calculate human skill bonuses */
             if( ret.getHumanSkills() > 0 )
             {
@@ -494,7 +526,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS5)) > 0 ) ret.skillsUsed.add(Skill.KILL_SHOT);
             }
 
-            /* TODO Load items */
+            /* load Items */
+            loadEquippedItems( conn, ret );
 
             /* TODO load pets */
 
@@ -631,8 +664,52 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
     }
 
+    protected static void loadEquippedItems( InvasionConnection conn, Alt alt )
+    {
+        alt.clothing = new ArrayList<String>();
+        String query = "select itemid, type, damagetype, name from item i join itemtype t on (i.typeid=t.typeid) where locid=? and equipped=true";
+        ResultSet rs = null;
+        try
+        {
+            rs = conn.psExecuteQuery(query, "Error message", alt.id );
+            while(rs.next())
+            {
+                if( rs.getString( "type" ).equals("weapon")  )
+                {
+                    alt.equippedWeapon = Item.load( conn, rs.getInt( "itemid" ) );
+                }
+                else if( rs.getString( "type" ).equals("armor") && rs.getString( "damagetype" ).equals( "p" )  )
+                {
+                    alt.equippedArmor = Item.load( conn, rs.getInt( "itemid" ) );
+                }
+                else if( rs.getString( "type" ).equals("armor") && rs.getString( "damagetype" ).equals( "e" )  )
+                {
+                    alt.equippedShield = Item.load( conn, rs.getInt( "itemid" ) );
+                }
+                else if( rs.getString( "type" ).equals("wearable")   )
+                {
+                    alt.clothing.add( rs.getString("name") );
+                }
+                else
+                    log.severe("Something ... unusual ... has been equippeed on " + alt.name + " (id=" + alt.id + ").  It's a " + rs.getString("name") + " with the itemid " + rs.getInt("itemid") );
+            }
+            DatabaseUtility.close(rs);
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            DatabaseUtility.close(rs);
+            conn.close();
+        }
+
+    }
+
     /**
-    *  stats: { "ip": 0, "hp":50, "xp": 9001, "ap": 50, "ticksalive": 190, "status": "drunk, dead, encumbered, no body, insane"},
+     *  stats: { "ip": 0, "hp":50, "xp": 9001, "ap": 50, "ticksalive": 190, "status": "drunk, dead, encumbered, no body, insane"},
      */
     public static JSONObject getStats( InvasionConnection conn, int altid )
     throws SQLException, JSONException
@@ -657,6 +734,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         return obj;
     }
 
+
     /**
      * Saves alt current state and takes him out of the cache, forcing a reload
      * @param
@@ -678,8 +756,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //}}}
 
     //{{{ Getters and Setters
-	public ItemType getEquippedWeaponType() { return this.equippedWeaponType; }
-	public void setEquippedWeaponType(ItemType equippedWeaponType) { this.equippedWeaponType = equippedWeaponType; }
     public int getLocation() { return this.location; }
     public void setLocation(int location) { this.location = location; }
     public String getName() { return this.name; }
@@ -693,13 +769,15 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public int getHp() { return this.hp; }
     public void setHp(int hp) { this.hp = hp; }
     public int getIp() { return this.ip; }
-    public void setIp(int hp) { this.ip = ip; }
+    public void setIp(int ip) { this.ip = ip; }
     public int getHpmax() { return this.hpmax; }
     public void setHpmax(int hpmax) { this.hpmax = hpmax; }
-    public void setEquippedWeapon(int item) { equippedWeapon = item; }
-    public int getEquippedWeapon(){ return equippedWeapon; }
-    public int getLocationType() { return this.locationType; }
-    public void setLocationType(int locationType) { this.locationType = locationType; }
+    public Item getEquippedWeapon() { return equippedWeapon; }
+    public void setEquippedWeapon(Item item) { equippedWeapon = item; }
+    public Item getEquippedArmor(){return equippedArmor;}
+    public void setEquippedArmor(Item item) { equippedArmor = item; }
+    public Item getEquippedShield(){return equippedShield;}
+    public void setEquippedShield(Item item) { equippedShield = item; }
 	public int getId() { return this.id; }
 	public void setId(int id) { this.id = id; }
 	public String getUsername() { return this.username; }
@@ -714,8 +792,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setLastHurtBy(int lastHurtBy) { this.lastHurtBy = lastHurtBy; }
 	public int getRace() { return this.race; }
 	public void setRace(int race) { this.race = race; }
-	public int getAmmo() { return this.ammo; }
-	public void setAmmo(int ammo) { this.ammo = ammo; }
     public long getHumanSkills() { return this.humanSkills; }
 	public void setHumanSkills(long humanSkills) { this.humanSkills = humanSkills; }
 	public long getPsiSkills() { return this.psiSkills; }
@@ -724,12 +800,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setMutateSkills(long mutateSkills) { this.mutateSkills = mutateSkills; }
     public int getFirearmsAttackLevel() { return this.firearmsAttackLevel; }
 	public void setFirearmsAttackLevel(int firearmsAttackLevel) { this.firearmsAttackLevel = firearmsAttackLevel; }
-    public long getLastTouched() { return this.lastTouched; }
-	public void setLastTouched(long lastTouched) { this.lastTouched = lastTouched; }
     public boolean getReload() { return this.reload; }
     public void setReload( boolean reload) { this.reload = reload; }
     public List<String> getSkillsUsed() { return this.skillsUsed; }
-
+    public List<String> getClothing() { return this.clothing; }
+	public void setClothing(List<String> clothing) { this.clothing = clothing; }
+    public char getGender() { return this.gender; }
+	public void setGender(char gender) { this.gender = gender; }
     //}}}
 
 }

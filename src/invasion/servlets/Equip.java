@@ -27,7 +27,7 @@ public class Equip extends HttpServlet
 
     public final static String KEY = Equip.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the Servlet object
@@ -71,59 +71,97 @@ public class Equip extends HttpServlet
         int id = Integer.parseInt(itemid);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
         Alt alt = wazzit.getAlt();
-        //do DB inserts
-        String query = "select * from item i join itemtype t on i.typeid=t.typeid where itemid = ? and locid = ? and type='weapon'";
         InvasionConnection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        boolean newWeaponNeedsAmmo = false;
-        JSONObject inventory = null;
         try{
             conn = new InvasionConnection();
-            rs = conn.psExecuteQuery( query, "Error retrieving item to be equipped", id, alt.getId() );
-            String weaponName = null;
-            int weaponTypeId = -1;
-            int ammo = -1;
-            if( rs.next() )
+            Item i = Item.load( conn, id );
+            ItemType it =  i.getItemtype();
+            if( i.getLocid() != alt.getId() )
             {
-                weaponName = rs.getString("name");
-                newWeaponNeedsAmmo = rs.getBoolean("usesammo");
-                weaponTypeId = rs.getInt( "typeid" );
-                ammo = rs.getInt("ammoleft");
+                response.sendRedirect( "/map/index.jsp?error=You do not own that.");
+            }
+
+            if( it.getType().equals( "weapon" ) )
+            {
+                eqiupWeaon(conn, alt, i);
+            }
+            else if( it.getType().equals( "armor" ) )
+            {
+                eqiupArmor(conn, alt, i);
+            }
+            else if( it.getType().equals( "wearable" ) )
+            {
+                eqiupWearable(conn, alt, i);
             }
             else
-                response.sendRedirect( "/map/index.jsp?error=That item is not a weapon or you do not own it.");
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
-            //do both updates in one statement
-            query = "update alt set equippedweapon = ? where id = ?;update item set equipped='f' where locid = ?;update item set equipped='t' where itemid = ?";
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, id);
-            ps.setInt(2, alt.getId());
-            ps.setInt(3, alt.getId());
-            ps.setInt(4, id);
-            ps.execute();
-            alt.setEquippedWeapon( id );
-            alt.setEquippedWeaponType(ItemType.getItemType( weaponTypeId ));
-            alt.setAmmo( ammo );
-            //update wazzit - weapon name, ammo, etc
-            DatabaseUtility.close(ps);
-            //now decrement AP
-            alt.decrementAp(conn, 1);
-            new Message( conn, alt.getId(), Message.NORMAL, "You switch your equipped weapon. You will now use your " + weaponName + ".");
+                response.sendRedirect( "/map/index.jsp?error=That item cannot be equipped.");
+            alt.update(conn);
             response.sendRedirect( "/map/index.jsp" );
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.throwing(KEY, "Error loading item", e);
         }
         finally
         {
-            DatabaseUtility.close(ps);
             DatabaseUtility.close(conn);
         }
     }
 
+    /**
+     * Equips a weapon.  Assumes that the error checking is done already (character owns it, it's a weapon). Calling function must update
+     * the alt to save changes made here.
+     *   @param
+     */
+    protected void eqiupWeaon( InvasionConnection conn, Alt alt, Item item )
+    {
+        //update the item
+        String query = "update item set equipped='f' where locid=? and typeid in (select typeid from itemtype where type='weapon'); update item set equipped='t' where itemid = ?";
+        int count = conn.psExecuteUpdate(query, "Error equipping weapon in database", alt.getId(), item.getItemid());
+        alt.setEquippedWeapon( item );
+        //now decrement AP
+        alt.decrementAp(conn, 1);
+        alt.update(conn);
+        new Message( conn, alt.getId(), Message.NORMAL, "You switch your equipped weapon. You will now use your " + item.getItemtype().getName() + ".");
+    }
+
+    /**
+     * Equip armor or shield.  Assumes that the error checking is done already (character owns it, it's aarmor). Calling function must update
+     * the alt to save changes made here.
+     *   @param
+     */
+    protected void eqiupArmor( InvasionConnection conn, Alt alt, Item item )
+    {
+        //update the item
+        String query = "update item set equipped='f' where locid=? and typeid in (select typeid from itemtype where type='armor' and damagetype=?); update item set equipped='t' where itemid = ?";
+        int count = conn.psExecuteUpdate(query, "Error equipping armor/shield in database", alt.getId(), item.getItemtype().getDamageType(), item.getItemid());
+        if( item.getItemtype().getDamageType() == 'p' )
+            alt.setEquippedArmor( item );
+        else
+            alt.setEquippedShield( item );
+        //now decrement AP
+        alt.decrementAp(conn, 1);
+        alt.update(conn);
+        new Message( conn, alt.getId(), Message.NORMAL, "You change into your " + item.getItemtype().getName() + ".");
+    }
+
+    /**
+     * Equip clothing.  Assumes that the error checking is done already (character owns it, it's something wearable). Calling function must update
+     * the alt to save changes made here.
+     *   @param
+     */
+    protected void eqiupWearable( InvasionConnection conn, Alt alt, Item item )
+    {
+
+        //update the item
+        String query = "update item set equipped='t' where itemid = ?";
+        int count = conn.psExecuteUpdate(query, "Error equipping wearable in database", item.getItemid());
+        alt.getClothing().add( item.getItemtype().getName() );
+        //now decrement AP
+        alt.decrementAp(conn, 1);
+        alt.update(conn);
+        new Message( conn, alt.getId(), Message.NORMAL, "You don your " + item.getItemtype().getName() + ".");
+    }
 
     /**
      *  Description of the Method
@@ -133,7 +171,7 @@ public class Equip extends HttpServlet
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-            doGet( request, response );
+        doGet( request, response );
     }
 
 }

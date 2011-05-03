@@ -71,55 +71,94 @@ public class Unequip extends HttpServlet
         int id = Integer.parseInt(itemid);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
         Alt alt = wazzit.getAlt();
-        //do DB inserts
-        String query = "select * from item i join itemtype t on i.typeid=t.typeid where itemid = ? and locid = ? and type='weapon'";
         InvasionConnection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        JSONObject inventory = null;
         try{
             conn = new InvasionConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, id);
-            ps.setInt(2, alt.getId());
-            rs = ps.executeQuery();
-            String weaponName = null;
-            if( rs.next() )
+            Item i = Item.load( conn, id );
+            ItemType it =  i.getItemtype();
+            if( i.getLocid() != alt.getId() )
             {
-                weaponName = rs.getString("name");
+                response.sendRedirect( "/map/index.jsp?error=You do not own that.");
+            }
+
+            if( it.getType().equals( "weapon" ) )
+            {
+                uneqiupWeaon(conn, alt, i);
+            }
+            else if( it.getType().equals( "armor" ) )
+            {
+                uneqiupArmor(conn, alt, i);
+            }
+            else if( it.getType().equals( "wearable" ) )
+            {
+                uneqiupWearable(conn, alt, i);
             }
             else
-            {
-                response.sendRedirect( "/map/index.jsp?error=That item is not a weapon or you do not own it.");
-                return;
-            }
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
-            //do both updates in one statement
-            query = "update alt set equippedweapon = ? where id = ?;update item set equipped='f' where itemid = ?";
-            ps = conn.prepareStatement(query);
-            ps.setNull(1, Types.INTEGER);
-            ps.setInt(2, alt.getId());
-            ps.setInt(3, id);
-            ps.execute();
-            DatabaseUtility.close(ps);
-            alt.setEquippedWeapon( 0 );
-            alt.setEquippedWeaponType(null);
-            alt.setAmmo( 0 );
-            //now decrement AP
-            alt.decrementAp(conn, 1);
-            new Message( conn, alt.getId(), Message.NORMAL, "You have unequipped your " + weaponName + ".");
+                response.sendRedirect( "/map/index.jsp?error=That item cannot be unequipped.");
+            alt.update(conn);
             response.sendRedirect( "/map/index.jsp" );
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.throwing(KEY, "Error loading item", e);
         }
         finally
         {
-            DatabaseUtility.close(ps);
             DatabaseUtility.close(conn);
         }
+    }
+
+
+    /**
+     * Unequips a weapon.  Assumes that the error checking is done already (character owns it, it's a weapon). Calling function must update
+     * the alt to save changes made here.
+     *   @param
+     */
+    protected void uneqiupWeaon( InvasionConnection conn, Alt alt, Item item )
+    {
+        //update the item
+        String query = "update item set equipped='f' where itemid = ?";
+        int count = conn.psExecuteUpdate(query, "Error unequipping weapon in database", item.getItemid());
+        alt.setEquippedWeapon( null );
+        //now decrement AP
+        alt.decrementAp(conn, 1);
+        alt.update(conn);
+        new Message( conn, alt.getId(), Message.NORMAL, "You put your " + item.getItemtype().getName() + " away.");
+    }
+
+    /**
+     * Unequip armor or shield.  Assumes that the error checking is done already (character owns it, it's aarmor). Calling function must update
+     * the alt to save changes made here.
+     *   @param
+     */
+    protected void uneqiupArmor( InvasionConnection conn, Alt alt, Item item )
+    {
+        //update the item
+        String query = "update item set equipped='f' where itemid = ?";
+        int count = conn.psExecuteUpdate(query, "Error unequipping armor/shield in database", item.getItemid());
+        alt.setEquippedArmor( null );
+        //now decrement AP
+        alt.decrementAp(conn, 1);
+        alt.update(conn);
+        new Message( conn, alt.getId(), Message.NORMAL, "You remove your " + item.getItemtype().getName() + ".");
+    }
+
+    /**
+     * Unequip clothing.  Assumes that the error checking is done already (character owns it, it's something wearable). Calling function must update
+     * the alt to save changes made here.
+     *   @param
+     */
+    protected void uneqiupWearable( InvasionConnection conn, Alt alt, Item item )
+    {
+
+        //update the item
+        String query = "update item set equipped='f' where itemid = ?";
+        int count = conn.psExecuteUpdate(query, "Error unequipping wearable in database", item.getItemid());
+        alt.getClothing().remove( item.getItemtype().getName() );
+        //now decrement AP
+        alt.decrementAp(conn, 1);
+        alt.update(conn);
+        new Message( conn, alt.getId(), Message.NORMAL, "You revmoe your " + item.getItemtype().getName() + ".");
     }
 
 

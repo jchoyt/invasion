@@ -20,14 +20,71 @@ public class Item  implements java.io.Serializable {
     // static{log.setLevel(Level.FINER);}
 
     private int itemid;
-    private int itemtype;
+    private ItemType itemtype;
     private int locid;
+    /**
+     * Ammoleft is ammo for firearms and amount of armor/shields left for armor.
+     */
     private int ammoleft = (int)(Math.random() * 10);
+    /**
+     * For enhancements - how to adjust the max on the item
+     */
     private int capacitymod = 0;
-    private int condition = (int)(Math.random() * 5);
+	protected boolean equipped = false;
+	protected boolean hidden = false;
+
+    private int condition = (int)(Math.random() * 6);
     public static final String[] conditions = { "Destroyed", "Broken", "Battered", "Operational", "Average", "To spec" };
 
     private Item() {
+    }
+
+    public static Item load(InvasionConnection conn, int id)
+    {
+        Item i = new Item();
+        String query = "select * from item i where itemid=?";
+        ResultSet rs = null;
+        try
+        {
+            conn = new InvasionConnection();
+            rs = conn.psExecuteQuery(query, "Error retrieving item from database", id);
+            if(rs.next())
+            {
+                i.itemid = id;
+                i.itemtype = ItemType.getItemType(rs.getInt("typeid"));
+                i.ammoleft = rs.getInt("ammoleft");
+                i.capacitymod = rs.getInt("capacitymod");
+                i.condition = rs.getInt("condition");
+                i.locid = rs.getInt("locid");
+                i.equipped = rs.getBoolean("equipped");
+                i.hidden = rs.getBoolean("hidden");
+            }
+            else
+                return null;
+            DatabaseUtility.close(rs);
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "Error trying to retrieve item from the database", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            DatabaseUtility.close(rs);
+            conn.close();
+        }
+        return i;
+    }
+
+    public void update(InvasionConnection conn)
+    {
+        String query = "update item set ammoleft=?, capacitymod=?, condition=? where itemid=?";
+        ResultSet rs = null;
+        int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, capacitymod, condition, itemid);
+        if( count==0 )
+        {
+            log.severe("Failed to update item " + itemid );
+        }
     }
 
     public Item(InvasionConnection conn, int itemtype, int locationid)
@@ -40,7 +97,7 @@ public class Item  implements java.io.Serializable {
             ps = conn.prepareStatement(query);
             ps.setInt(1,itemtype);
             ps.setInt(2,locationid);
-            ps.setInt(3,newItem.getAmmoleft());
+            ps.setInt(3,(int)(Math.random() * ItemType.getItemType(itemtype).getCapacity()));
             ps.setInt(4,newItem.getCapacitymod());
             ps.setInt(5,newItem.getCondition());
             ps.execute();
@@ -110,7 +167,6 @@ public class Item  implements java.io.Serializable {
         }
     }
 
-
     public static JSONArray getItems( int locid )  //can also be altid
     {
         JSONArray ret = null;
@@ -131,7 +187,6 @@ public class Item  implements java.io.Serializable {
             return ret;
         }
     }
-
 
     public static String getCategory( InvasionConnection conn, int itemid) throws SQLException
     {
@@ -171,13 +226,17 @@ public class Item  implements java.io.Serializable {
     public int getCapacitymod() { return this.capacitymod; }
     public int getCondition() { return this.condition; }
     public int getItemid() { return this.itemid; }
-    public int getItemtype() { return this.itemtype; }
+    public ItemType getItemtype() { return this.itemtype; }
     public void setAmmoleft(int x) { this.ammoleft = x; }
     public void setCapacitymod(int x) { this.capacitymod = x; }
     public void setCondition(int x) { this.condition = x; }
     public void setItemid(int itemid) { this.itemid = itemid; }
-    public void setItemtype(int itemtype) { this.itemtype = itemtype; }
+    // public void setItemtype(int itemtype) { this.itemtype = itemtype; }
     public void setLocid(Integer locid) { this.locid = locid; }
-}
+    public boolean isEquipped() { return this.equipped; }
+	public void setEquipped(boolean equipped) { this.equipped = equipped; }
+	public boolean isHidden() { return this.hidden; }
+	public void setHidden(boolean hidden) { this.hidden = hidden; }
+	}
 
 

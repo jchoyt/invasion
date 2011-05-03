@@ -127,12 +127,31 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                         %>
                     </ul>
                     <div id="tabs-1">
-                        <%
-                            JSONObject obj2 = Alt.getStats(conn, id);
-                            JSONObject stats = new JSONObject();
-                            stats.put("stats", obj2);
-                            VelocityUtil.applyTemplate(stats, "stats2.vm", out);
+                        <div style="float:left;border:1px solid blue;">
+                            <%
+                                JSONObject obj2 = Alt.getStats(conn, id);
+                                JSONObject stats = new JSONObject();
+                                stats.put("stats", obj2);
+                                VelocityUtil.applyTemplate(stats, "stats2.vm", out);
 
+                            %>
+                        </div>
+                        <%
+                            //do summary
+
+                            //do clothing
+                            if(thisguy.getClothing().size() > 0)
+                            {
+                                out.write("<br/>" + Constants.getHeShe( thisguy.getGender(), true) + " is wearing ");
+                                for(int i = 0; i < thisguy.getCloting().size(); i++)
+                                {
+                                    if( i > 0 )
+                                        out.write(", ");
+                                    if( i == (thisguy.getClothing().size() - 1) )
+                                        out.write("and ");
+                                    out.write( thisguy.getClothing().get(i) );
+                                }
+                            }
                         %>
                     </div>
                     <div id="tabs-2">

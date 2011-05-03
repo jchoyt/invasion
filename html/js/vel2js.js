@@ -143,7 +143,7 @@ t.p( i.itemid);
 t.p(');">Drop</a></td>    ');
 }
 else {
-if (i.type == "weapon") {
+if (i.type == "weapon" || i.type == "armor" || i.type == "wearable") {
 t.p('        ');
 if (i.equipped) {
 t.p('            <td><a href="unequip?weaponid=');
