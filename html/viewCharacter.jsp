@@ -143,7 +143,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                             if(thisguy.getClothing().size() > 0)
                             {
                                 out.write("<br/>" + Constants.getHeShe( thisguy.getGender(), true) + " is wearing ");
-                                for(int i = 0; i < thisguy.getCloting().size(); i++)
+                                for(int i = 0; i < thisguy.getClothing().size(); i++)
                                 {
                                     if( i > 0 )
                                         out.write(", ");

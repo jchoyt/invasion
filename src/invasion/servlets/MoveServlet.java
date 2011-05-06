@@ -35,7 +35,7 @@ public class MoveServlet extends HttpServlet
      * @return
      *
      */
-    protected void setNewLoc(InvasionConnection conn, int locid, int altid)
+    protected void setNewLoc(InvasionConnection conn, int locid, int altid, int newLocType)
     {
         Integer[] params = {locid, altid};
         log.entering(KEY, "setNewLoc", params);
@@ -47,7 +47,9 @@ public class MoveServlet extends HttpServlet
             ps.setInt(2, altid);
             int count = ps.executeUpdate();
             log.finer("did query - updated number of rows = " + count);
-            Alt.load(conn, altid).setLocation(locid);
+            Alt a = Alt.load(conn, altid);
+            a.setLocation(locid);
+            a.setLocationType( newLocType );
         }
         catch(Exception e)
         {
@@ -98,12 +100,9 @@ public class MoveServlet extends HttpServlet
                 locid = rs.getInt("id");
                 //DO CHECKS FOR VALID destinations here
                 log.finer("new location: " + locid);
-                setNewLoc(conn, locid, altid );
+                setNewLoc(conn, locid, altid, rs.getInt("typeid") );
                 // notify the listeners
                 pcs.firePropertyChange(KEY, oldloc, locid);
-                // alt is reloaded by DeathFilter anyway
-                // wazzit.getAlt().setLocation(locid);
-                // wazzit.getAlt().setLocationType(rs.getInt("typeid"));
                 wazzit.getAlt().decrementAp(conn, 1);
             }
             else

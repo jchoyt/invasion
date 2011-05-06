@@ -60,7 +60,7 @@ public class Smite extends HttpServlet
             ps.setInt(1, altid);
             int count = ps.executeUpdate();
             new Message( conn, altid, Message.EFFECT, message );
-            alt.kill( conn);
+            alt.kill( conn, null);
             //LATER - lock account
         }
         catch(SQLException e)

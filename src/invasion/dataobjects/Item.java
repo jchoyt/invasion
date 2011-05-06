@@ -114,21 +114,12 @@ public class Item  implements java.io.Serializable {
     }
 
     /**
-     *  Returns current inventory as a JSONArray.  Sample format:
-     *      [
-     *          { "ammoleft": 2, "condition": "Non-functional", "name": "Energy pack ", "typeid": 28, "itemid": 265, "type": "ammo" },
-     *          { "ammoleft": 2, "condition": "Battered", "name": "Energy pack ", "typeid": 28, "itemid": 257, "type": "ammo" },
-     *          { "ammoleft": 5, "condition": "Destroyed", "name": "Energy pack ", "typeid": 28, "itemid": 258, "type": "ammo" },
-     *          { "ammoleft": 1, "condition": "Destroyed", "name": "Vodka", "typeid": 37, "itemid": 264, "type": "booze" },
-     *          { "ammoleft": 2, "condition": "Destroyed", "name": "Vodka", "typeid": 37, "itemid": 259, "type": "booze" },
-     *          { "ammoleft": 7, "condition": "Average", "name": "Vodka", "typeid": 37, "itemid": 268, "type": "booze" }
-     *      ]
-     *  TODO - add wt, hidden, and equipped to this
+     *  Returns current inventory as a JSONArray.  See Poll.java for sample format.
      */
     public static JSONArray getItems( InvasionConnection conn, int locid )
     throws SQLException
     {
-        String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, ammoleft";
+        String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight, damagetype, capacity from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, ammoleft";
         PreparedStatement ps = null;
         ResultSet rs = null;
         JSONArray root = new JSONArray();
@@ -149,6 +140,8 @@ public class Item  implements java.io.Serializable {
                 obj.put("wt", rs.getString("weight"));
                 obj.put("hidden", rs.getBoolean("hidden"));
                 obj.put("equipped", rs.getBoolean("equipped"));
+                obj.put("damagetype", rs.getString("damagetype"));
+                obj.put("capacity", rs.getInt("capacity"));
                 root.put(obj);
             }
             DatabaseUtility.close(rs);

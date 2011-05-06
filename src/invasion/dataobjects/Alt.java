@@ -25,7 +25,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //{{{ Logging
     public final static String KEY = Alt.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
     //}}}
 
     //{{{ Members
@@ -88,17 +88,15 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     /**
      * Convenience method for when you don't already have an InvasionConnection and you still want to kill the alt.  No real work should be done here.
      *
-     * @param
-     * @return
-     *
+     * @param result Conveyor of death messages back to the attacker so they can be reported in the correct order
      */
-    public void kill()
+    public void kill(CombatResult result)
     {
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection();
-            kill( conn );
+            kill( conn, result );
         }
         catch(SQLException e)
         {
@@ -281,22 +279,34 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
         for(int i = 0; i < shots; i++)
         {
-            equippedWeapon.setAmmoleft( equippedWeapon.getAmmoleft() - 1 );
-            //check if reload necessary
-            if( equippedWeapon.getAmmoleft() < 1 )
+            if( equippedWeapon.getAmmoleft() == 0 )
             {
-                //TODO:  check for ammo
-                log.finer("reloading");
-                int capacity = equippedWeapon.getItemtype().getCapacity();
-                if( (humanSkills & Skills.getValue(Skill.FIREARMS3)) > 0  )
+                String reloadResult = invasion.servlets.Recharge.rechargeItem( conn, this, equippedWeapon );
+                if( reloadResult != null )
                 {
-                    capacity *= 2;
+                    new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You don't have anything to reload it with." );
+                    return;
                 }
-                equippedWeapon.setAmmoleft( capacity );
-                new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
-                apIncrement++;
+                else
+                    new Message( conn, id, Message.NORMAL, "Your weapon was out of ammunition, so you reloaded it." );
+            }
+
+            equippedWeapon.setAmmoleft( equippedWeapon.getAmmoleft() - 1 );
+            if( equippedWeapon.getAmmoleft() == 0 )
+            {
+                String reloadResult = invasion.servlets.Recharge.rechargeItem( conn, this, equippedWeapon );
+                if( reloadResult != null )
+                {
+                    new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You don't have anything to reload it with." );
+                }
+                else
+                {
+                    new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
+                    apIncrement++;
+                }
             }
             equippedWeapon.update(conn);
+
             // check if you hit
             double attackChance = Skills.calculateAttackChance( equippedWeapon.getItemtype().getAccuracy(), attackLevel, defender.getDodgeLevel() );
             if( Math.random() < attackChance )
@@ -343,9 +353,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         //check if armor or shileds have any left
         Item armor = getEquippedArmor();
         Item shield = getEquippedShield();
-        log.finer( String.valueOf(armor) );
-        log.finer( String.valueOf(shield) );
-        log.finer( Character.toString(damagetype) );
         if( damagetype == 'p' && armor != null && armor.getAmmoleft() > 0)
         {
             int maxSoak = (int)(0.75 * rawAmount);
@@ -388,7 +395,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
         if( hp < 1 )
         {
-            kill( conn );
+            kill( conn, ret );
             attacker.setReload(true);
         }
         else if( updateNow )
@@ -401,8 +408,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      *  um....kills off the character.  Sets time till respawn, updates the database, and removes the character from the cache.
+     * @param result Conveyor of death messages back to the attacker so they can be reported in the correct order
      */
-    public void kill(InvasionConnection conn)
+    public void kill(InvasionConnection conn, CombatResult result)
     {
         int deathLoc = location;
         hp = 0;
@@ -442,7 +450,11 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             }
             killer.update();
             Stats.addChange( killerid, Stats.KILLS, 1);
-            new Message(conn, killerid, Message.NORMAL, message );
+
+            if( result == null )
+                new Message( conn, killerid, Message.NORMAL, message );
+            else
+                result.getAttackerMessages().add( message );
 
             //give victim death message
             new Message( conn, id, Message.NORMAL, killer.getName() + " has dealt you a death blow.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
@@ -469,7 +481,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     {
         hp = hp - damage;
         if( hp < 1 )
-            kill( conn );
+            kill( conn, null );
         else
             if( updateNow )
                 update();
@@ -484,7 +496,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     {
         if( altCache.containsKey( id ) )
         {
-            log.info( "Alt " + id + " returned from cache.");
+            log.finest( "Alt " + id + " returned from cache.");
             return altCache.get(id);
         }
         Alt ret = new Alt();
@@ -726,6 +738,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             obj.put("cp", rs.getInt("cp"));
             obj.put("level", rs.getInt("level"));
             obj.put("ticksalive", rs.getInt("ticksalive"));
+            obj.put("daysalive", rs.getInt("ticksalive") / 96 );
             if( rs.getInt( "hp" ) < 1 )
             {
                 obj.put("reload", true);
@@ -758,6 +771,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //{{{ Getters and Setters
     public int getLocation() { return this.location; }
     public void setLocation(int location) { this.location = location; }
+    public int getLocationType() { return this.locationType; }
+    public void setLocationType(int locationType) { this.locationType = locationType; }
     public String getName() { return this.name; }
     public void setName(String name) { this.name = name; }
     public int getAp() { return this.ap; }

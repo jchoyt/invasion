@@ -62,6 +62,7 @@ $(document).ready( function() {
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateStats2(data); });
     $(document).bind('POLL_COMPLETE', function(e, data){ updateLocation(data); });
+    $(document).bind('POLL_COMPLETE', function(e, data){ updateActions(data); });
 
     // setInterval( "poll()", 10000);
 
@@ -188,6 +189,19 @@ function updateLocation(data)
     }
 }
 
+function updateActions(data)
+{
+    // recharging area
+    if(data.inv)
+    {
+        $("#recharge-item").html( v2js_rechargeItem(data) );
+    }
+    else
+    {
+        $("#recharge-item").html( "" );
+    }
+}
+
 //}}}
 
 //{{{ Actions
@@ -251,6 +265,15 @@ function show_pet_target(id)
     show = "#pet-desc-" + id;
     $("#att-pet-box").html($(show).html());
 };
+
+
+function recharge(id)
+{
+    var url = "recharge?itemid=" + id;
+    $.getJSON(url, function(json){
+        $(document).trigger('POLL_COMPLETE', json)
+    });
+}
 
 //}}}
 // :collapseFolds=0:folding=explicit:

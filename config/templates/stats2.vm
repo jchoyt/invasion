@@ -1,5 +1,4 @@
-#set ($da = $stats.ticksalive / 96)
-<b>Days alive</b>: $da
+<b>Days alive</b>: $stats.daysalive
 <br/><b>Level</b>: $stats.level
 <br/><b>Unspent CP</b>: $stats.cp
 <br/><span class="hp"><b>HP</b>: $stats.hp</span>

@@ -122,53 +122,65 @@ t.p('</td>    ');
 }
 t.p('    <td>');
 t.p( i.wt);
-t.p('</td>    ');
+t.p('</td><td>    ');
 if (i.type == "food") {
-t.p('    <td><a href="');
+t.p('        <a href="');
 t.p('#" onclick="eat(');
 t.p( i.itemid);
 t.p(')">Eat</a> | <a href="');
 t.p('#" onclick="drop(');
 t.p( i.itemid);
-t.p(');">Drop</a></td>    ');
+t.p(');">Drop</a>    ');
 }
 else {
 if (i.type == "booze") {
-t.p('    <td><a href="');
+t.p('        <a href="');
 t.p('#" onclick="drink(');
 t.p( i.itemid);
 t.p(')">Drink</a> | <a href="');
 t.p('#" onclick="drop(');
 t.p( i.itemid);
-t.p(');">Drop</a></td>    ');
+t.p(');">Drop</a>    ');
 }
 else {
 if (i.type == "weapon" || i.type == "armor" || i.type == "wearable") {
 t.p('        ');
 if (i.equipped) {
-t.p('            <td><a href="unequip?weaponid=');
+t.p('            <a href="unequip?weaponid=');
 t.p( i.itemid);
-t.p('" >Unequip</a></td>        ');
+t.p('" >Unequip</a>        ');
 }
 else {
-t.p('            <td><a href="equip?weaponid=');
+t.p('            <a href="equip?weaponid=');
 t.p( i.itemid);
 t.p('" >Equip</a> | <a href="');
 t.p('#" onclick="drop(');
 t.p( i.itemid);
-t.p(');">Drop</a></td>        ');
+t.p(');">Drop</a>        ');
 }
 t.p('    ');
 }
 else {
-t.p('    <td><a href="');
+if (i.typeid == 49 && context.location.allowrecharage == "t") {
+t.p('        ');
+t.p('        <a href="');
+t.p('#" onclick="recharge(');
+t.p( i.itemid);
+t.p(')" >Recharge</a> | <a href="');
+t.p('#" onclick="drop(');
+t.p( i.itemid);
+t.p(');">Drop</a>    ');
+}
+else {
+t.p('        <a href="');
 t.p('#" onclick="drop(');
 t.p( i.itemid);
 t.p(');">Drop</a></td>    ');
 }
 }
 }
-t.p('</tr>');
+}
+t.p('</td></tr>');
 }
 velocityCount = 0;
 return t.toString();
@@ -205,9 +217,11 @@ t.p(' of ');
 t.p( context.location.station);
 t.p(' station</strong>');
 }
-t.p('<p>');
+if (context.location.description) {
+t.p('    <p>');
 t.p( context.location.description);
 t.p('</p>');
+}
 if (context.location.chalk) {
 t.p('    <p>Someone has written <i>');
 t.p( context.location.chalk);
@@ -333,6 +347,40 @@ t.p('</a></span></td></tr>');
 velocityCount = 0;
 return t.toString();
 }
+function v2js_rechargeItem(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+t.p('<form method="post" action="');
+t.p('#" onsubmit="recharge(');
+t.p('$(\'');
+t.p('#recharge');
+t.p('-itemid\').val()); return false">    <select id="recharge-itemid" name="itemid">        ');
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('            ');
+if (i.type == "weapon" || i.type == "armor") {
+t.p('                ');
+if (i.damagetype == "e" && i.ammoleft < i.capacity) {
+t.p('                    <option value="');
+t.p( i.itemid);
+t.p('">');
+t.p( i.name);
+t.p(' (');
+t.p( i.condition);
+t.p(') (');
+t.p( i.ammoleft);
+t.p(')</option>                ');
+}
+t.p('            ');
+}
+t.p('        ');
+}
+velocityCount = 0;
+t.p('    </select>    <input type="submit" value="Recharge"/></form>');
+return t.toString();
+}
 function v2js_stats(context) { 
 var t = new StringCat();
 var velocityCount = 0;
@@ -350,9 +398,8 @@ function v2js_stats2(context) {
 var t = new StringCat();
 var velocityCount = 0;
 if (context.velocityCount) velocityCount=context.velocityCount;
-var da = ( context.stats.ticksalive / 96 );
 t.p('<b>Days alive</b>: ');
-t.p( da);
+t.p( context.stats.daysalive);
 t.p('<br/><b>Level</b>: ');
 t.p( context.stats.level);
 t.p('<br/><b>Unspent CP</b>: ');

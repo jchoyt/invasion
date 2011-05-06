@@ -94,7 +94,9 @@ public class Equip extends HttpServlet
                 eqiupWearable(conn, alt, i);
             }
             else
+            {
                 response.sendRedirect( "/map/index.jsp?error=That item cannot be equipped.");
+            }
             alt.update(conn);
             response.sendRedirect( "/map/index.jsp" );
         }

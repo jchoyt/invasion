@@ -3,7 +3,9 @@
 #else
     <strong>You are located in a ${location.type} at (${location.x}, ${location.y}) on level ${location.level} of ${location.station} station</strong>
 #end
-<p>${location.description}</p>
+#if(${location.description})
+    <p>${location.description}</p>
+#end
 #if($location.chalk)
     <p>Someone has written <i>$location.chalk</i> on the wall</p>
 #elseif($location.draw)

@@ -96,9 +96,6 @@
         <div class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
             <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <%=alt.getName()%><span id="stats-area">
             <%
-                // JSONObject obj2 = Alt.getStats(conn, alt.getId());
-                // JSONObject stats = new JSONObject();
-                // stats.put("stats", obj2);
                 VelocityUtil.applyTemplate(obj, "stats.vm", out);
             %></span></span>
             <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.png"/></span> Menu<div class="pop">
@@ -119,14 +116,11 @@
                     <div id="amessages" style="height: 200px;border:1px solid black;margin-bottom:5px;" class="ui-layout-content">
                         <ul id="msg-box" class="msgs">
                         <%
-                            // JSONArray a = Message.getInitialMessages(conn, wazzit.getAlt().getId());
-                            // JSONObject obj = new JSONObject();
-                            // obj.put("msgs", a);
                             VelocityUtil.applyTemplate(obj, "messages.vm", out);
                         %>
                         </ul>
                     </div>
-                    <form method="post" action="speak" onsubmit="speak(this); return false">
+                    <form method="post" action="speak">
                         <button type="submit">Speak (<span id="spts">0</span> AP)</button>
                         <input name="words" type="input" size="50">
                     </form>
@@ -139,19 +133,15 @@
             <h6 id="basic"><a href="#">Location Description</a></h6>
             <div id="basic-description">
                 <%
-                    obj.put("location", Location.getSummary( conn, wazzit.getAlt().getLocation() ) );
                     VelocityUtil.applyTemplate( obj, "locationDescription.vm", out );
                 %>
             </div>
             <h6><a href="#">Actions</a></h6>
-            <div>
-                <p>
+            <div id="recharge-item">
+                <% VelocityUtil.applyTemplate(obj, "rechargeItem.vm", out); %>
                 <%--  <form method="post" action="#" onsubmit="attack(this.target.value); return false">
                     <select name="target" id="attacklist">
                         <%
-                            //a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
-                            //obj = new JSONObject();
-                            //obj.put("occs", a);
                             VelocityUtil.applyTemplate(obj, "attacklist.vm", out);
                         %>
                     </select>
@@ -160,15 +150,11 @@
                 <form method="post" action="equip" onsubmit="equip.jsp">
                     <select name="weaponid" id="equiplist">
                     <%
-                        //a = Item.getItems(conn, alt.getId());
-                        //obj = new JSONObject();
-                        //obj.put("inv", a);
                         VelocityUtil.applyTemplate(obj, "equiplist.vm", out);
                     %>
                     </select>
                     <input type="submit" value="Equip Weapon"/>
                 </form> --%>
-                </p>
             </div>
         </div>
         <!-- ui-dialog -->
@@ -198,9 +184,6 @@
                     </thead>
                     <tbody id="occ-pane">
                         <%
-                            // a = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
-                            // obj = new JSONObject();
-                            // obj.put("occs", a);
                             VelocityUtil.applyTemplate(obj, "occupants.vm", out);
                         %>
                     </tbody>
@@ -219,9 +202,6 @@
                     </thead>
                     <tbody id="pet-pane">
                         <%
-                            // a = Critter.petsAtLocation( wazzit.getAlt().getLocation() );
-                            // obj = new JSONObject();
-                            // obj.put("pets", a);
                             VelocityUtil.applyTemplate(obj, "critterpane.vm", out);
                         %>
                     </tbody>
@@ -266,9 +246,6 @@
                     <thead><tr><th>Name</th><th>Wt</th><th>Act</th></tr></thead>
                     <tbody id="inv-body">
                         <%
-                            // a = Item.getItems(conn, alt.getId());
-                            // obj = new JSONObject();
-                            // obj.put("inv", a);
                             VelocityUtil.applyTemplate(obj, "inventory.vm", out);
                         %>
                     </tbody>

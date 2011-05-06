@@ -210,7 +210,7 @@ public class Critter implements Attacker, Defender
         hp -= result.getDamageDone();
 
         if( hp < 1 )
-            kill( conn );
+            kill( conn, result );
         else
             if( updateNow )
                 update();
@@ -233,13 +233,13 @@ public class Critter implements Attacker, Defender
     }
 
 
-    public void kill()
+    public void kill(CombatResult result)
     {
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection();
-            kill( conn );
+            kill( conn, result );
         }
         catch(SQLException e)
         {
@@ -259,7 +259,7 @@ public class Critter implements Attacker, Defender
      * @return
      *
      */
-    public void kill(InvasionConnection conn) throws SQLException
+    public void kill(InvasionConnection conn, CombatResult result) throws SQLException
     {
         if( lasthurtby > 0 )
         {
@@ -293,7 +293,12 @@ public class Critter implements Attacker, Defender
             }
             alt.update();
             Stats.addChange( lasthurtby, Stats.KILLS, 1);
-            new Message(conn, lasthurtby, Message.NORMAL, message );
+            if( result == null )
+            {
+                new Message(conn, lasthurtby, Message.NORMAL, message );
+            }
+            else
+                result.getAttackerMessages().add( message );
             //TODO - broadcast the kill message
         }
         //remove it from the PET database

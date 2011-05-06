@@ -105,7 +105,7 @@ public class Poll
             }
             log.finer( "Pets complete: " + (System.currentTimeMillis()-start) );
             //loction details
-            ret.put("location", Location.getSummary(conn, wazzit.getAlt().getLocation()) );
+            ret.put("location", Location.getSummary(conn, wazzit.getAlt()) );
             log.finer( "Poll results: " + String.valueOf(ret));
             out.write(String.valueOf(ret));
         }

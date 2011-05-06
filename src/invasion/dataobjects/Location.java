@@ -102,11 +102,12 @@ public class Location  implements java.io.Serializable {
      * @return JSONObject with all known information about a location
      *
      */
-    public static JSONObject getSummary(InvasionConnection conn, int locid)
+    public static JSONObject getSummary(InvasionConnection conn, Alt who)
     {
         String query = "select t.name as basetype, s.name as station, l.name as tilename, x, y, level, description, l.id as locid, message, messagetype from location l join locationtype t on l.typeid=t.typeid join station s on l.station=s.id where l.id=?";
         ResultSet rs = null;
         JSONObject mainobj = new JSONObject();
+        int locid = who.getLocation();
         try
         {
             conn = new InvasionConnection();
@@ -123,6 +124,7 @@ public class Location  implements java.io.Serializable {
                 mainobj.put("y", rs.getInt("y"));
                 mainobj.put("name", rs.getString("tilename"));
                 mainobj.put("description", rs.getString("description"));
+                mainobj.put("allowrecharage", Character.toString(canRecharge( who )) );
                 message = rs.getString("message");
                 messagetype = rs.getString("messagetype");
                 if( message != null && messagetype != null )
@@ -151,6 +153,27 @@ public class Location  implements java.io.Serializable {
             return mainobj;
         }
     }
+
+    /**
+     * can recharge in
+     * <ul><li>Security Outpost<li>
+     * <li>Security Depot</li>
+     * <li>Power Distribution</li>
+     * <li>Armory</li></ul>
+     * @param   Alt - from there we can get his current location
+     * @return  't' for true, 'f' for false.  Makes it easier to put into JSON than converting from a boolean.
+     *
+     */
+    public static char canRecharge( Alt who )
+    {
+        if( who.getLocationType() == 3 || who.getLocationType() == 15 || who.getLocationType() == 45 || who.getLocationType() == 46 )
+        {
+            return 't';
+        }
+        // if in stronghold
+        return 'f';
+    }
+
     //}}}
 
     //{{{ Getters and Setters
