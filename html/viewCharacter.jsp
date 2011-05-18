@@ -46,7 +46,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
             printCanBuy( thisguy, s, false, out );
         }
     }
-    else if( thisguy.getCp() > skill.getCost() )
+    else if( thisguy.getCp() >= skill.getCost() )
     {
         out.write( "<a href=\"#\" onclick=\"doPurchase( " + thisguy.getId() + ", " + skill.getId() + ");setTimeout('location.reload();', 1500);\">Purchase " + skill.getName() + " ( " + skill.getCost() + " CP )" + "</a>" );
     }
@@ -147,7 +147,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                                 {
                                     if( i > 0 )
                                         out.write(", ");
-                                    if( i == (thisguy.getClothing().size() - 1) )
+                                    if( thisguy.getClothing().size() > 1 && i == (thisguy.getClothing().size() - 1) )
                                         out.write("and ");
                                     out.write( thisguy.getClothing().get(i) );
                                 }
