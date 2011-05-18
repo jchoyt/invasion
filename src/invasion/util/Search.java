@@ -16,7 +16,7 @@ public class Search
 {
     public final static String KEY = Search.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    //static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     static Map<Integer, List<SearchDistribution>> lookups = new HashMap<Integer, List<SearchDistribution>>();
 
@@ -57,7 +57,7 @@ public class Search
                 SearchDistribution.normalize(dist);
                 lookups.put(new Integer(curLocid), dist);
             }
-            log.info("Loaded " + lookups.size() + " different item types.");
+            log.info("Loaded search data for " + lookups.size() + " different location types.");
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
         }

@@ -95,22 +95,21 @@ public class Location  implements java.io.Serializable {
         }
     }
 
+
     /**
-     * Returns all the information about a location
+     * Returns all the information about a location except whether someone can recharge energy packs here
      * @param conn Currently open databse connection
      * @param locid Location to dump the informatoin about
      * @return JSONObject with all known information about a location
      *
      */
-    public static JSONObject getSummary(InvasionConnection conn, Alt who)
+    public static JSONObject getSummary(InvasionConnection conn, int locid)
     {
         String query = "select t.name as basetype, s.name as station, l.name as tilename, x, y, level, description, l.id as locid, message, messagetype from location l join locationtype t on l.typeid=t.typeid join station s on l.station=s.id where l.id=?";
         ResultSet rs = null;
         JSONObject mainobj = new JSONObject();
-        int locid = who.getLocation();
         try
         {
-            conn = new InvasionConnection();
             rs = conn.psExecuteQuery(query, "Error retrieving basic location information.", locid);
             String message = null;
             String messagetype = null;
@@ -124,7 +123,6 @@ public class Location  implements java.io.Serializable {
                 mainobj.put("y", rs.getInt("y"));
                 mainobj.put("name", rs.getString("tilename"));
                 mainobj.put("description", rs.getString("description"));
-                mainobj.put("allowrecharage", Character.toString(canRecharge( who )) );
                 message = rs.getString("message");
                 messagetype = rs.getString("messagetype");
                 if( message != null && messagetype != null )
@@ -148,19 +146,45 @@ public class Location  implements java.io.Serializable {
         finally
         {
             DatabaseUtility.close(rs);
-            conn.close();
-            mainobj.toString();
+            // mainobj.toString();
             return mainobj;
         }
     }
 
+
     /**
-     * can recharge in
+     * Returns all the information about a location
+     * @param conn Currently open databse connection
+     * @param locid Location to dump the informatoin about
+     * @return JSONObject with all known information about a location
+     *
+     */
+    public static JSONObject getSummary(InvasionConnection conn, Alt who)
+    {
+        JSONObject mainobj = getSummary(conn, who.getLocation() );
+        try
+        {
+            mainobj.put( "allowrecharage", Character.toString( canRecharge( who ) ) );
+        }
+        catch(JSONException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            return mainobj;
+        }
+
+    }
+
+    /**
+     * Specify where an Energy Pack can be recharged.  Can recharge in
      * <ul><li>Security Outpost<li>
      * <li>Security Depot</li>
      * <li>Power Distribution</li>
      * <li>Armory</li></ul>
-     * @param   Alt - from there we can get his current location
+     * @param   who - from there we can get his current location
      * @return  't' for true, 'f' for false.  Makes it easier to put into JSON than converting from a boolean.
      *
      */
@@ -173,6 +197,19 @@ public class Location  implements java.io.Serializable {
         // if in stronghold
         return 'f';
     }
+
+    /**
+     *
+     * @param   what  itemtype...cause it matters
+     * @param   who from there we can get his current location
+     * @return  't' for true, 'f' for false.  Makes it easier to put into JSON than converting from a boolean.
+     *
+     */
+     public static char canRepair( Alt who, ItemType what )
+     {
+         //TODO fix this to actuall do something
+         return 't';
+     }
 
     //}}}
 

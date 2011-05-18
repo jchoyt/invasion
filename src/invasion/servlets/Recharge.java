@@ -76,6 +76,7 @@ public class Recharge extends HttpServlet
                 }
                 String query = "update item set typeid=? where itemid=?"; //change it to a full energy pack
                 int count = conn.psExecuteUpdate( query, "Error changing the empty energy pack in the database", 28, i.getItemid() );
+                new Message( conn, alt.getId(), Message.NORMAL, "You recharge your energy pack using one of dedicated the ports here." );
             }
             else
             {
@@ -107,7 +108,7 @@ public class Recharge extends HttpServlet
      * @return  null if successful, otherwise return an error message suitable for the user to see
      *
      */
-    public static String rechargeItem( InvasionConnection conn, Alt alt, Item i )
+    public synchronized static String rechargeItem( InvasionConnection conn, Alt alt, Item i )
         throws SQLException
     {
         ItemType it = i.getItemtype();
@@ -128,7 +129,7 @@ public class Recharge extends HttpServlet
 
             if( it.getType().equals("weapon") )
             {
-                int capacity = it.getCapacity() + i.getCapacitymod();
+                int capacity = it.getCapacity();
                 if( (alt.getHumanSkills() & Skills.getValue(Skill.FIREARMS3)) > 0  )
                 {
                     capacity *= 2;
@@ -141,14 +142,15 @@ public class Recharge extends HttpServlet
             {
                 //it's a shield....+10 ammo
                 i.setAmmoleft( i.getAmmoleft() + 10 );
-                if( i.getAmmoleft() > (it.getCapacity() + i.getCapacitymod()) )
+                if( i.getAmmoleft() > (it.getCapacity() ) )
                 {
-                    i.setAmmoleft( it.getCapacity() + i.getCapacitymod() );
+                    i.setAmmoleft( it.getCapacity()  );
                 }
             }
             else
                 return "You can't figure out how to attach the energy pack to that.";
             i.update( conn );
+            new Message( conn, alt.getId(), Message.NORMAL, "You recharge your " + i.getItemtype().getName().toLowerCase()  + " using one of your energy packs.  It'll have to be recharged now." );
 
 
             //empty the pack

@@ -25,6 +25,11 @@ public class LocationType  implements java.io.Serializable {
     protected String cssname = null;
     protected double searchrate = 0.2;
 
+    public static int BULKHEAD = 54;
+    public static int WINDOW = 58;
+    public static int DEEP_SPACE = 0;
+    public static int CORRIDOR = 4;
+
     protected static Map<Integer, LocationType> locationTypes = new HashMap<Integer, LocationType>();
 
 

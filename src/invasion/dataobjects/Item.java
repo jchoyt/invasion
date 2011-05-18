@@ -29,7 +29,6 @@ public class Item  implements java.io.Serializable {
     /**
      * For enhancements - how to adjust the max on the item
      */
-    private int capacitymod = 0;
 	protected boolean equipped = false;
 	protected boolean hidden = false;
 
@@ -53,7 +52,6 @@ public class Item  implements java.io.Serializable {
                 i.itemid = id;
                 i.itemtype = ItemType.getItemType(rs.getInt("typeid"));
                 i.ammoleft = rs.getInt("ammoleft");
-                i.capacitymod = rs.getInt("capacitymod");
                 i.condition = rs.getInt("condition");
                 i.locid = rs.getInt("locid");
                 i.equipped = rs.getBoolean("equipped");
@@ -78,9 +76,9 @@ public class Item  implements java.io.Serializable {
 
     public void update(InvasionConnection conn)
     {
-        String query = "update item set ammoleft=?, capacitymod=?, condition=? where itemid=?";
+        String query = "update item set ammoleft=?, condition=? where itemid=?";
         ResultSet rs = null;
-        int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, capacitymod, condition, itemid);
+        int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, condition, itemid);
         if( count==0 )
         {
             log.severe("Failed to update item " + itemid );
@@ -90,7 +88,7 @@ public class Item  implements java.io.Serializable {
     public Item(InvasionConnection conn, int itemtype, int locationid)
     {
         Item newItem = new Item();
-        String query = "insert into item (typeid, locid, ammoleft, capacitymod, condition) values (?,?,?,?,?)";
+        String query = "insert into item (typeid, locid, ammoleft, condition) values (?,?,?,?)";
         PreparedStatement ps = null;
         try
         {
@@ -98,8 +96,7 @@ public class Item  implements java.io.Serializable {
             ps.setInt(1,itemtype);
             ps.setInt(2,locationid);
             ps.setInt(3,(int)(Math.random() * ItemType.getItemType(itemtype).getCapacity()));
-            ps.setInt(4,newItem.getCapacitymod());
-            ps.setInt(5,newItem.getCondition());
+            ps.setInt(4,newItem.getCondition());
             ps.execute();
         }
         catch(SQLException e)
@@ -216,12 +213,10 @@ public class Item  implements java.io.Serializable {
     /* setters and getters */
     public Integer getLocid() { return this.locid; }
     public int getAmmoleft() { return this.ammoleft; }
-    public int getCapacitymod() { return this.capacitymod; }
     public int getCondition() { return this.condition; }
     public int getItemid() { return this.itemid; }
     public ItemType getItemtype() { return this.itemtype; }
     public void setAmmoleft(int x) { this.ammoleft = x; }
-    public void setCapacitymod(int x) { this.capacitymod = x; }
     public void setCondition(int x) { this.condition = x; }
     public void setItemid(int itemid) { this.itemid = itemid; }
     // public void setItemtype(int itemtype) { this.itemtype = itemtype; }

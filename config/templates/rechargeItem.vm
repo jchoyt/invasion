@@ -1,12 +1,28 @@
-<form method="post" action="#" onsubmit="recharge($('\#recharge-itemid').val()); return false">
-    <select id="recharge-itemid" name="itemid">
-        #foreach($i in $inv)
-            #if ($i.type == "weapon" || $i.type == "armor")
-                #if( $i.damagetype == "e" && $i.ammoleft < $i.capacity)
-                    <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
+#set( $canRecharge = "f" )
+#set( $needRecharge = "f" )
+
+#foreach($i in $inv)
+    #if ($i.name == "Energy pack" )
+        #set( $canRecharge = "t" )
+    #end
+    #if ($i.type == "weapon" || $i.type == "armor")
+        #if( $i.damagetype == "e" && $i.ammoleft < $i.capacity)
+            #set( $needRecharge = "t" )
+        #end
+    #end
+#end
+
+#if( $needRecharge == "t"  && $canRecharge == "t" )
+    <form method="post" action="#" onsubmit="recharge($('\#recharge-itemid').val()); return false">
+        <select id="recharge-itemid" name="itemid">
+            #foreach($i in $inv)
+                #if ($i.type == "weapon" || $i.type == "armor")
+                    #if( $i.damagetype == "e" && $i.ammoleft < $i.capacity)
+                        <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
+                    #end
                 #end
             #end
-        #end
-    </select>
-    <input type="submit" value="Recharge"/>
-</form>
+        </select>
+        <input type="submit" value="Recharge"/>
+    </form>
+#end

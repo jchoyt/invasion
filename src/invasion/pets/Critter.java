@@ -285,7 +285,7 @@ public class Critter implements Attacker, Defender
             // {
             //     ipHit = 2;
             // }
-            String message = getRandomKillMessage() + "  You have been awarded an additional 10 XP.";
+            String message = RandomUtilities.pickRandom(deathKnells) + "  You have been awarded an additional 10 XP.";
             if( ipHit > 0 )
             {
                 message = message + "  As you view the remanants of your slaughter, your stomach churns (+" + ipHit + " IP).";
@@ -323,12 +323,6 @@ public class Critter implements Attacker, Defender
         {
             petConn.close();
         }
-    }
-
-    public String getRandomKillMessage()
-    {
-        int i = (int)(Math.random() * deathKnells.length);
-        return deathKnells[i];
     }
 
 
