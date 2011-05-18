@@ -29,6 +29,22 @@ public class SearchServlet extends HttpServlet
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
 
+    public final static String[] nothing = { "You search and find nothing.",
+        "You search and find a small hole in the wall. It's empty.",
+        "You search and find a handful of wet fish scales. You shake them off your hand in disgust.",
+        "As you search in a dark recess, you think you feel a breath on your hand.",
+        "You search and find not a damn thing.",
+        "You search and find yourself and nothing else.",
+        "You have a look and come up empty-handed.",
+        "You look around and find nothing useful.",
+        "You take a look around and still cant find what you are looking for.",
+        "You search and find that someone was already here and found all the good stuff."};
+
+    public final static String[] nothingSpecial = {
+        "You search and find the droids you were looking for.",
+        "You search and find a fleeting image of hope in a lost and forlorn hope, a small ray of light shining in the dark abyss, a feeble bright light announcing it's presence in a world of blackness...",
+        "You search and find something so horrific you throw up in your mouth a little."};
+
     /**
      *  Constructor for the Servlet object
      *
@@ -76,18 +92,31 @@ public class SearchServlet extends HttpServlet
         try{
             conn = new InvasionConnection();
             conn.setAutoCommit(false);
+            String message = null;
             for(int i = 0; i < reps; i++)
             {
-                int itemFound = Search.performSearch(alt.getLocation());
+                int itemFound = Search.performSearch(alt.getLocationType());
+                log.finer("Found " + itemFound );
                 if( itemFound == -1 )
                 {
-                    new Message( conn, alt.getId(), Message.NORMAL, "You search and find nothing.");
+                    double rand = Math.random();
+                    if( rand < 0.99 )
+                    {
+                        message = "You search and find nothing.";
+                    }
+                    else if( rand < 0.9999 )
+                    {
+                        message = RandomUtilities.pickRandom( nothing );
+                    }
+                    else
+                        message = RandomUtilities.pickRandom( nothingSpecial );
                 }
                 else
                 {
                     new Item(conn, itemFound, alt.getId());
-                    new Message( conn, alt.getId(), Message.NORMAL, "You search and find a " + ItemType.getItemType(itemFound).getName() + ".");
+                    message = "You search and find a " + ItemType.getItemType(itemFound).getName() + ".";
                 }
+                new Message( conn, alt.getId(), Message.NORMAL, message );
             }
             conn.commit();
             conn.setAutoCommit(true);
