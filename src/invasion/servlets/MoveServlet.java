@@ -29,38 +29,7 @@ public class MoveServlet extends HttpServlet
     public static final int[] xdelta = { -1, 0, 1, -1, 0, 1, -1, 0, 1};
     public static final int[] ydelta = { -1, -1, -1, 0, 0, 0, 1, 1, 1};
 
-    /**
-     * Update the database to show the new location
-     * @param
-     * @return
-     *
-     */
-    protected void setNewLoc(InvasionConnection conn, int locid, int altid, int newLocType)
-    {
-        Integer[] params = {locid, altid};
-        log.entering(KEY, "setNewLoc", params);
-        String query = "update alt set location = ? where id = ?";
-        PreparedStatement ps = null;
-        try{
-            ps = conn.prepareStatement(query);
-            ps.setInt(1,locid);
-            ps.setInt(2, altid);
-            int count = ps.executeUpdate();
-            log.finer("did query - updated number of rows = " + count);
-            Alt a = Alt.load(conn, altid);
-            a.setLocation(locid);
-            a.setLocationType( newLocType );
-        }
-        catch(Exception e)
-        {
-            log.throwing(KEY, "setNewLoc", e);
-        }
-        finally
-        {
-            DatabaseUtility.close(ps);
-        }
-    }
-
+    public static final String[] deepSpaceDeaths = {"Your head explodes in a flash decompresssion event. Some of your brains smash against the station...the rest will float forever in the depths of space."};
 
     /**
      *  Description of the Method
@@ -77,33 +46,50 @@ public class MoveServlet extends HttpServlet
         String direction = WebUtils.getRequiredParameter(request, "dir");
         int dir = Integer.parseInt(direction);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
-        int altid = wazzit.getAlt().getId();
-        int locid = wazzit.getAlt().getLocation();
-        int oldloc = locid;
+        Alt a = wazzit.getAlt();
+        int oldloc = a.getLocation();
 
-        log.finer("old location: " + locid);
+        log.finer("old location: " + oldloc);
         boolean valid = true;
 
         String query = "select * from location l where (station, level, x, y) in (select station, level, x + " + xdelta[dir] + ", y + " + ydelta[dir] + " from location s where id=?)";
         log.finer( query );
 
         InvasionConnection conn = null;
-        PreparedStatement ps = null;
         ResultSet rs = null;
+        int moveCost = 1;
         try{
             conn = new InvasionConnection();
-            ps =  conn.prepareStatement(query);
-            ps.setInt(1,locid);
-            rs = ps.executeQuery();
+
+            //if existing locaiton is bulkhead or window, you can't move - this is here to utilize the database connection
+            if( a.getLocationType() == LocationType.BULKHEAD || a.getLocationType() == LocationType.WINDOW )
+            {
+                new Message( conn, a.getId(), Message.SELF, "You try to move, but find that the phenomenon that let you INTO this location is now working against you.  You could be stuck here until the star you are orbiting expands to engulf the station and claims what rigthfully belongs to it." );
+                response.sendRedirect("index.jsp");
+                return;
+            }
+
+            rs = conn.psExecuteQuery(query, "Error getting new location.", a.getLocation());
             if(rs.next())
             {
-                locid = rs.getInt("id");
                 //DO CHECKS FOR VALID destinations here
-                log.finer("new location: " + locid);
-                setNewLoc(conn, locid, altid, rs.getInt("typeid") );
+                //if new location is in deep space, kill character horrifically
+                //if new location is bulkhead, give message
+                //if new location is water, drown
+                a.setLocation(rs.getInt("id"));
+                a.setLocationType( rs.getInt("typeid") );
+                a.update(conn);
+
+                if( a.getLocationType() == LocationType.CORRIDOR )
+                {
+                    moveCost = 0;
+                }
                 // notify the listeners
-                pcs.firePropertyChange(KEY, oldloc, locid);
-                wazzit.getAlt().decrementAp(conn, 1);
+                pcs.firePropertyChange(KEY, oldloc, a.getLocation());
+                if( moveCost > 0 )
+                {
+                    wazzit.getAlt().decrementAp(conn, moveCost);
+                }
             }
             else
             {
@@ -119,7 +105,6 @@ public class MoveServlet extends HttpServlet
         finally
         {
             DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
             conn.close();
         }
         response.sendRedirect("index.jsp");
