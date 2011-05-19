@@ -97,6 +97,10 @@ public class Repair extends HttpServlet
             {
                 return "You do not own that.";
             }
+            else if( what.canRepair() == 'f' )
+            {
+                return "You cannot repair that.";
+            }
             else if( Location.canRepair( who, it ) == 'f' )
             {
                 return "You cannnot repair that in this location.";
@@ -128,7 +132,7 @@ public class Repair extends HttpServlet
         }
         catch (Exception e)
         {
-            return "Something went horribly wrong.  Good thing you didn't spend too much time working on that.  Unfortunately the laws of physics seem to be ... off ... at the moment.";
+            return "Something went horribly wrong.  Good thing you didn't spend too much time working on that.  Unfortunately the laws of physics seem to be ... off ... at the moment.";d
         }
         return null;
     }

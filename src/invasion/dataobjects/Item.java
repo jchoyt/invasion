@@ -210,6 +210,17 @@ public class Item  implements java.io.Serializable {
         return ret;
     }
 
+    /**
+     * @return  't' for true, 'f' for false.  Makes it easier to put into JSON than converting from a boolean.
+     */
+     public char canRepair()
+     {
+         if( itemtype.getType().equals("armor") || itemtype.getType().equals("weapon") )
+             return 't';
+         else
+             return 'f';
+     }
+
     /* setters and getters */
     public Integer getLocid() { return this.locid; }
     public int getAmmoleft() { return this.ammoleft; }

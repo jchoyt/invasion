@@ -404,6 +404,57 @@ t.p('        </select>        <input type="submit" value="Recharge"/>    </form>
 }
 return t.toString();
 }
+function v2js_repairItem(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+var needRepair = "f";
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('    ');
+if (i.type == "weapon" || i.type == "armor") {
+t.p('        ');
+if (i.condition != "To spec") {
+needRepair = "t";
+t.p('        ');
+}
+t.p('    ');
+}
+}
+velocityCount = 0;
+if (needRepair == "t") {
+t.p('    <form method="post" action="');
+t.p('#" onsubmit="repair(');
+t.p('$(\'');
+t.p('#repair');
+t.p('-itemid\').val()); return false">        <select id="repair-itemid" name="itemid">            ');
+for (var i2=0;  i2<context.inv.length; i2++) {
+var i = context.inv[i2];
+velocityCount = i2;
+t.p('                 ');
+if (i.type == "weapon" || i.type == "armor") {
+t.p('                    ');
+if (i.condition != "To spec") {
+t.p('                        <option value="');
+t.p( i.itemid);
+t.p('">');
+t.p( i.name);
+t.p(' (');
+t.p( i.condition);
+t.p(') (');
+t.p( i.ammoleft);
+t.p(')</option>                    ');
+}
+t.p('                ');
+}
+t.p('            ');
+}
+velocityCount = i1;
+t.p('        </select>        <input type="submit" value="Repair"/>    </form>');
+}
+return t.toString();
+}
 function v2js_stats(context) { 
 var t = new StringCat();
 var velocityCount = 0;

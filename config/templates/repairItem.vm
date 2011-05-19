@@ -1,0 +1,24 @@
+#set( $needRepair = "f" )
+
+#foreach($i in $inv)
+    #if ($i.type == "weapon" || $i.type == "armor")
+        #if ($i.condition != "To spec" )
+            #set( $needRepair = "t" )
+        #end
+    #end
+#end
+
+#if( $needRepair == "t" )
+    <form method="post" action="#" onsubmit="repair($('\#repair-itemid').val()); return false">
+        <select id="repair-itemid" name="itemid">
+            #foreach($i in $inv)
+                 #if ($i.type == "weapon" || $i.type == "armor")
+                    #if ($i.condition != "To spec" )
+                        <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
+                    #end
+                #end
+            #end
+        </select>
+        <input type="submit" value="Repair"/>
+    </form>
+#end

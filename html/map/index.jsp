@@ -137,24 +137,13 @@
                 %>
             </div>
             <h6><a href="#">Actions</a></h6>
-            <div id="recharge-item">
-                <% VelocityUtil.applyTemplate(obj, "rechargeItem.vm", out); %>
-                <%--  <form method="post" action="#" onsubmit="attack(this.target.value); return false">
-                    <select name="target" id="attacklist">
-                        <%
-                            VelocityUtil.applyTemplate(obj, "attacklist.vm", out);
-                        %>
-                    </select>
-                    <input type="submit" value="Attack"/>
-                </form>
-                <form method="post" action="equip" onsubmit="equip.jsp">
-                    <select name="weaponid" id="equiplist">
-                    <%
-                        VelocityUtil.applyTemplate(obj, "equiplist.vm", out);
-                    %>
-                    </select>
-                    <input type="submit" value="Equip Weapon"/>
-                </form> --%>
+            <div id="actions">
+                <div id="recharge-item">
+                    <% VelocityUtil.applyTemplate(obj, "rechargeItem.vm", out); %>
+                </div>
+                <div id="repair-item">
+                    <% VelocityUtil.applyTemplate(obj, "repairItem.vm", out); %>
+                </div>
             </div>
         </div>
         <!-- ui-dialog -->

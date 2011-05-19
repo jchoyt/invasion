@@ -191,14 +191,16 @@ function updateLocation(data)
 
 function updateActions(data)
 {
-    // recharging area
+    // recharging and repair areas
     if(data.inv)
     {
         $("#recharge-item").html( v2js_rechargeItem(data) );
+        $("#repair-item").html( v2js_repairItem(data) );
     }
     else
     {
         $("#recharge-item").html( "" );
+        $("#repair-item").html( "" );
     }
 }
 
@@ -270,6 +272,14 @@ function show_pet_target(id)
 function recharge(id)
 {
     var url = "recharge?itemid=" + id;
+    $.getJSON(url, function(json){
+        $(document).trigger('POLL_COMPLETE', json)
+    });
+}
+
+function repair(id)
+{
+    var url = "repair?itemid=" + id;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
