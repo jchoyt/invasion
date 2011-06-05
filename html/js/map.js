@@ -82,7 +82,7 @@ function updateMessagePane(data)
     if(data.msgs)
     {
         $("#msg-box").html(v2js_messages(data));
-        $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
+        $("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
     }
 }
 
