@@ -40,6 +40,8 @@ public class InitServlet extends HttpServlet
     public final static Logger log = Logger.getLogger( KEY );
     static{log.setLevel(Level.FINER);}
 
+    public static String BASE_PATH = "/";
+
     /**
      *  Constructor for the Servlet object
      *
@@ -85,6 +87,8 @@ public class InitServlet extends HttpServlet
         getServletContext().setAttribute("js",  webapp + "js");
         getServletContext().setAttribute("css",  webapp + "css");
         System.out.println("Attributes set in InitServlet");
+
+        BASE_PATH = webapp;
 
         /* initialize the velocity template utility so we can use the same templates serverside as client side. */
         String base_path = config.getServletContext().getRealPath( "/" );
