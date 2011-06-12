@@ -75,12 +75,12 @@ public class Respawn extends HttpServlet
             request.getSession().setAttribute( Whatzit.KEY,  wazzit );
 
             new Message( conn, altid, Message.SELF, "You step out of the cloning chamber and look around with your new old eyes.  You see rows of identical chambers around the room.  Moving around experimentally, you determine everything appears to be as it should be.");
-            response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp" );
+            response.sendRedirect( InitServlet.BASE_PATH + "map/index.jsp" );
         }
         catch(Exception e)
         {
             log.throwing(KEY, "Body", e);
-            response.sendRedirect( InitServlet.BASE_URL + "index.jsp" );
+            response.sendRedirect( InitServlet.BASE_PATH + "index.jsp" );
         }
         finally
         {

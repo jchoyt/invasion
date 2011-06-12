@@ -78,7 +78,7 @@ public class Unequip extends HttpServlet
             ItemType it =  i.getItemtype();
             if( i.getLocid() != alt.getId() )
             {
-                response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp?error=You do not own that.");
+                response.sendRedirect( InitServlet.BASE_PATH + "map/index.jsp?error=You do not own that.");
             }
 
             if( it.getType().equals( "weapon" ) )
@@ -94,9 +94,9 @@ public class Unequip extends HttpServlet
                 uneqiupWearable(conn, alt, i);
             }
             else
-                response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp?error=That item cannot be unequipped.");
+                response.sendRedirect( InitServlet.BASE_PATH + "map/index.jsp?error=That item cannot be unequipped.");
             alt.update(conn);
-            response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp" );
+            response.sendRedirect( InitServlet.BASE_PATH + "map/index.jsp" );
         }
         catch(Exception e)
         {

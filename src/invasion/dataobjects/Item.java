@@ -225,26 +225,18 @@ public class Item  implements java.io.Serializable {
      * Add a defect appropriate to this item - it makes the change in the memory-based object and the database
      */
     public void addDefect(InvasionConnection conn)
+        throws BotReportException
     {
         //query to get a random defect
         //select id from modtype where type='b' or type='?' and fault=true order by random() limit 1;
         String query = "insert into itemmod (itemid, type) values ( ?, (select id from modtype where type='b' or type='?' and fault=true order by random() limit 1) );";
-        try
+        int count = conn.psExecuteUpdate(query, "Error message", itemid, itemtype.getDamageType() );
+        if( count == 0 )
         {
-            int count = conn.psExecuteUpdate(query, "Error message", id, itemtype.getDamageType() );
-            if( count == 0 )
-            {
-                throw new BotReportException( "Failed to add defect to item " + id, e );
-            }
-            //TODO do a range of messages for this
-            new Message( conn, locid, Message.NORMAL, "As you work, you see something that didn't look quite right.  You review your notes, but it doesn't appear you did anything incorrectly." );
-
+            throw new BotReportException( "Failed to add defect to item " + itemid );
         }
-        catch(SQLException e)
-        {
-            log.throwing( KEY, "a useful message", e);
-            throw new RuntimeException(e);
-        }
+        //TODO do a range of messages for this
+        new Message( conn, locid, Message.NORMAL, "As you work, you see something that didn't look quite right.  You review your notes, but it doesn't appear you did anything incorrectly." );
 
     }
 

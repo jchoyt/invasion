@@ -1,7 +1,7 @@
 /*
  *  Copyright 2011 Jeffrey Hoyt.  All rights reserved.
  */
-package invasion;
+package invasion.util;
 
 /**
  * Class created so critical errors can be flagged.  There should be an &lt;error-page&gt; entry in web.xml to catch this and use a bot to announce the error
@@ -14,22 +14,22 @@ public class BotReportException extends Exception
     //}}}
 
     //{{{ Constuctors
-    BotReportException()
+    public BotReportException()
     {
         super();
     }
 
-    BotReportException(String message)
+    public BotReportException(String message)
     {
         super(message);
     }
 
-    BotReportException(String message, Throwable cause)
+    public BotReportException(String message, Throwable cause)
     {
-        super(messageg, cause);
+        super(message, cause);
     }
 
-    BotReportException(Throwable cause) )
+    public BotReportException(Throwable cause)
     {
         super(cause);
     }

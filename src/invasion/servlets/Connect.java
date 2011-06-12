@@ -82,16 +82,16 @@ public class Connect extends HttpServlet
             //check if dead
             if( alt.getLocation() == -57005 || alt.getHp() < 1 )
             {
-                response.sendRedirect( InitServlet.BASE_URL + "map/dead.jsp");
+                response.sendRedirect( InitServlet.BASE_PATH + "map/dead.jsp");
                 return;
             }
             request.getSession().setAttribute( Whatzit.KEY,  wazzit );
-            response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp" );
+            response.sendRedirect( InitServlet.BASE_PATH + "map/index.jsp" );
         }
         catch(Exception e)
         {
             log.throwing(KEY, "Body", e);
-            response.sendRedirect( InitServlet.BASE_URL + "index.jsp" );
+            response.sendRedirect( InitServlet.BASE_PATH + "index.jsp" );
         }
     }
 
