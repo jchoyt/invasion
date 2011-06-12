@@ -89,9 +89,9 @@ function poll()
 {
     $("#poll-indicator").show();
     $.getJSON("/poll", function(json){
-        $(document).trigger('POLL_COMPLETE', json)
+        $(document).trigger('POLL_COMPLETE', json);
+		$("#poll-indicator").hide();
     });
-    $("#poll-indicator").hide();
 }
 
 

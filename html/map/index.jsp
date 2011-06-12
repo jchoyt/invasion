@@ -37,13 +37,13 @@
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="pop.css" rel="stylesheet" />
-    <script type="text/javascript" src="${js}/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
     <script type="text/javascript" src="${js}/vel2jstools.js"></script>
     <script type="text/javascript" src="${js}/vel2js.js"></script>
-    <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-ui-1.8.10.custom.min.js"></script>
     <script type="text/javascript" src="jquery.pop.js"></script>
     <script type="text/javascript" src="${js}/map.js"></script>
-    <script type="text/javascript" src="${js}/jquery.layout.min-1.2.0.js"></script>
+    <script type="text/javascript" src="${js}/jquery.layout.min-1.3.0rc29.js"></script>
     <%--}}}--%>
 
     <%--  {{{ css --%>
@@ -52,33 +52,6 @@
         table { border:none; }
 	</style>
 	<%--}}} --%>
-
-	<%--{{{  javascript --%>
-	<script type="text/javascript">
-        $(function(){
-            // Dialog
-            $('#dialog').dialog({
-                autoOpen: false,
-                width: 600,
-                buttons: {
-                    "Cancel": function() {
-                        $(this).dialog("close");
-                    }
-                }
-            });
-        });
-
-        function chalkWall()
-        {
-            resource = "/map/chalk.jsp";
-            $('#dialog').load(resource);
-            $('#dialog').dialog('open');
-            return false;
-        }
-
-	</script>
-    <%--}}}--%>
-
 </head>
 	<body>
 
@@ -93,21 +66,21 @@
             out.write( "<h3 class=\"info\">" + infoMsg + "</h3>");
         }%>
         <div id="announcements"></div>
-        <div class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
+        <div id="topBar" class="header ui-accordion-header ui-helper-reset ui-corner-top ui-accordion-header-active ui-state-active">
             <span style="float:left"><i>Welcome to Invasion!</i> &nbsp; You are <%=alt.getName()%><span id="stats-area">
             <%
                 VelocityUtil.applyTemplate(obj, "stats.vm", out);
             %></span></span>
-            <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.png"/></span> Menu<div class="pop">
+            <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.gif"/></span> Menu<div class="pop">
                     <p><a href="/disconnect">Disconnect</a></p>
                     <p><hr/></p>
-                    <p><a href="#" onclick="setInterval( 'poll()', 10000);$('.pop').removeClass('active');">Engage periodic poll</a></p>
+                    <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage periodic poll</a></p>
                     <p><hr/></p>
-                    <p><a href="#" onclick="alert('No uber map yet');$('.pop').removeClass('active');">Uber Map</a></p>
-                    <p><a href="http://wiki.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Wiki</a></p>
-                    <p><a href="http://forums.soulcubes.com" target="_blank" onclick="$('.pop').removeClass('active');">Forums</a></p>
+                    <p><a href="#" onclick="alert('No uber map yet');">Uber Map</a></p>
+                    <p><a href="http://wiki.soulcubes.com" target="_blank" >Wiki</a></p>
+                    <p><a href="http://forums.soulcubes.com" target="_blank" >Forums</a></p>
                  </div>
-             </span><br clear="all"/>
+             </span>&nbsp; <!-- &nbsp (or anything, actually) prevents float from collapsing -->
         </div>
         <div id="center-sections" class="ui-layout-content">
             <h6 id="msgs-hdr"><a href="#">Messages and Basic Actions</a></h6>
@@ -124,10 +97,6 @@
                         <button type="submit">Speak (<span id="spts">0</span> AP)</button>
                         <input name="words" type="input" size="50">
                     </form>
-                   <script type="text/javascript">
-                        $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
-                   </script>
-
                 </div>
             </div>
             <h6 id="basic"><a href="#">Location Description</a></h6>
@@ -264,6 +233,44 @@
             DatabaseUtility.close(conn);
         }
     %>
+
+	<!-- So apparently loading JS blocks download 'till it's done. Either way, it's easier to find here. -->
+	<%--{{{  javascript --%>
+	<script type="text/javascript">
+        function chalkWall()
+        {
+            resource = "/map/chalk.jsp";
+            $('#dialog').load(resource, function() {
+				$('#dialog').dialog('open');
+				$('#poll-indicator').hide();
+			});
+			$('poll-indicator').show();
+            return false;
+        }
+
+		// Never try to jquery without making sure the DOM is ready. Ready() ensures that.
+		$(document).ready(function() {
+			$("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
+		
+			// Dialog
+            $('#dialog').dialog({
+                autoOpen: false,
+                width: 600,
+                buttons: {
+                    "Cancel": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+			
+			$('.pop_menu > p > a').click(function() {
+				$('.pop').removeClass('active');
+				return false;
+			});
+		});
+	</script>
+    <%--}}}--%>
+
 	</body>
 </html>
 

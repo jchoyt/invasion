@@ -4,3 +4,4 @@ invasion.jar
 invasion.war
 research
 !lib/*
+*.log

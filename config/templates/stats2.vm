@@ -1,8 +1,8 @@
 <b>Days alive</b>: $stats.daysalive
 <br/><b>Level</b>: $stats.level
 <br/><b>Unspent CP</b>: $stats.cp
-<br/><span class="hp"><b>HP</b>: $stats.hp</span>
-<br/><span class="ip"><b>IP</b>: $stats.ip</span>
-<br/><span class="ap"><b>AP</b>: $stats.ap</span>
-<br/><span class="xp"><b>XP</b>: $stats.xp</span>
+<br/><span class="stat_counter hp"><b>HP</b>: $stats.hp</span>
+<br/><span class="stat_counter ip"><b>IP</b>: $stats.ip</span>
+<br/><span class="stat_counter ap"><b>AP</b>: $stats.ap</span>
+<br/><span class="stat_counter xp"><b>XP</b>: $stats.xp</span>
 
