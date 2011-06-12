@@ -78,7 +78,7 @@ public class Equip extends HttpServlet
             ItemType it =  i.getItemtype();
             if( i.getLocid() != alt.getId() )
             {
-                response.sendRedirect( "map/index.jsp?error=You do not own that.");
+                response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp?error=You do not own that.");
             }
 
             if( it.getType().equals( "weapon" ) )
@@ -95,10 +95,10 @@ public class Equip extends HttpServlet
             }
             else
             {
-                response.sendRedirect( "map/index.jsp?error=That item cannot be equipped.");
+                response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp?error=That item cannot be equipped.");
             }
             alt.update(conn);
-            response.sendRedirect( "map/index.jsp" );
+            response.sendRedirect( InitServlet.BASE_URL + "map/index.jsp" );
         }
         catch(Exception e)
         {
