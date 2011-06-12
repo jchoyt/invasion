@@ -62,25 +62,25 @@ public class Respawn extends HttpServlet
             if( count == 0 )
             {
                 //ticksalive is not 0, so someone is trying to cheat and respawn early
-                response.sendRedirect("/naughty.jsp");
+                response.sendRedirect("naughty.jsp");
                 return;
             }
             alt = Alt.load(altid);
             if( !alt.getUsername().equals(request.getRemoteUser()) )
             {
-                response.sendRedirect("/naughty.jsp");
+                response.sendRedirect("naughty.jsp");
                 return;
             }
             Whatzit wazzit = new Whatzit( altid );
             request.getSession().setAttribute( Whatzit.KEY,  wazzit );
 
             new Message( conn, altid, Message.SELF, "You step out of the cloning chamber and look around with your new old eyes.  You see rows of identical chambers around the room.  Moving around experimentally, you determine everything appears to be as it should be.");
-            response.sendRedirect( "/map/index.jsp" );
+            response.sendRedirect( "map/index.jsp" );
         }
         catch(Exception e)
         {
             log.throwing(KEY, "Body", e);
-            response.sendRedirect( "/index.jsp" );
+            response.sendRedirect( "index.jsp" );
         }
         finally
         {

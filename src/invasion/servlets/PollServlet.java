@@ -55,7 +55,7 @@ public class PollServlet extends HttpServlet
         {
             //not logged in
             log.warning("User not logged in.");
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("index.jsp");
             return;
         }
         Poll.fullPoll( response.getWriter(), wazzit, null );
@@ -74,7 +74,7 @@ public class PollServlet extends HttpServlet
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
-        response.sendRedirect("/naughty.jsp");
+        response.sendRedirect("naughty.jsp");
     }
 
 }

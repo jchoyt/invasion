@@ -35,16 +35,8 @@
   <body>
   <center>
         <div class="floating-text" style="margin-top:10em;width:750px">
-            <p>In processing your request, an error has occurred.
-            <% if( messageGiven )
-            {%>
-               The error message reported was:</p>
-                <p style="font-style:italic;"><%=message%></p>
-                <p>
-                Please report
-            <%} else {%>
-             Unfortunately, no error message was provided.  See the link below for more information, or report
-            <%}%>
+            <p>
+             Well.  This is embarassing.  There was an error that Entomo didn't catch properly.   Package up a little love note for him explaining what you were doing when this occurred.  The URL of this page would be very helpful, as would the time.  It is now <%=new Date()%>.
             </p>
         </div>
     </center>

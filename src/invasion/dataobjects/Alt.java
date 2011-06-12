@@ -54,6 +54,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected long psiSkills = 0;
 	protected long mutateSkills = 0;
 	protected int firearmsAttackLevel = 0;
+	protected int tinkererLevel = 0;
 	protected boolean reload = false; //reload the GUI?
     protected List<String> skillsUsed = new ArrayList<String>();
 	protected boolean equippedItemsLoaded = false;
@@ -537,6 +538,17 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 //TODO - make this configurable
                 if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS5)) > 0 ) ret.skillsUsed.add(Skill.KILL_SHOT);
             }
+            if( ret.getHumanSkills() > 0 )
+            {
+                if( (ret.getHumanSkills() & Skills.getValue(Skill.TINKERER5)) > 0 ) ret.tinkererLevel = 5;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.TINKERER4)) > 0 ) ret.tinkererLevel = 4;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.TINKERER3)) > 0 ) ret.tinkererLevel = 3;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.TINKERER2)) > 0 ) ret.tinkererLevel = 2;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.TINKERER1)) > 0 ) ret.tinkererLevel = 1;
+            }
+
+
+
 
             /* load Items */
             loadEquippedItems( conn, ret );
@@ -822,6 +834,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setClothing(List<String> clothing) { this.clothing = clothing; }
     public char getGender() { return this.gender; }
 	public void setGender(char gender) { this.gender = gender; }
+    public int getTinkererLevel() { return this.tinkererLevel; }
+	public void setTinkererLevel(int tinkererLevel) { this.tinkererLevel = tinkererLevel; }
     //}}}
 
 }

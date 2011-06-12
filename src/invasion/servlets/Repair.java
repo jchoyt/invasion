@@ -28,6 +28,27 @@ public class Repair extends HttpServlet
     public final static String KEY = Repair.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
+    /**
+     * Base XP for repairing from <i>index</i> condition.  Indexes conform to indexes of Item.conditions.
+     */
+    public final static double[] xp = { 35, 30, 20, 15, 10 };
+    /**
+     * Base AP for repairing from <i>index</i> condition.  Indexes conform to indexes of Item.conditions.
+     */
+    public final static double[] ap = { 25, 20, 15, 12, 10 };
+    /**
+     * Scaling factor for XP - less XP for repairs you really aren't qualified to do and almost none for stuff that's "old hat".  Indexes are the "delta" between
+     * the Tinker skill level and the condition of the item calculated as follows:  Tinker Level - (4 - Condition)
+     */
+    public final static double[] xpFactor = { 0.5, 1.0, .9, .6, .2, 0 };
+    /**
+     * Scaling factor for AP - it's easier to do repairs that are "old hat" and harder for stuff you probably shouldn't be doing anyway.
+     * Indexes are the "delta" between the Tinkerer skill level and the condition of the item calculated as follows:  <br/>
+     *  Tinkerer Level - (4 - Condition)
+     * <br/>  Example - Tinker level is 3 and item is 3 (Operational):  delta is 4  and the repair would take 30% of the full AP and the character would get 20%
+     * of the full amount for the repair.
+     */
+     public final static double[] apFactor = { 1.25, 1, 0.9, 0.7, 0.3, 0.25 };
 
     /**
      *  Constructor for the servlet
@@ -88,6 +109,11 @@ public class Repair extends HttpServlet
      */
     public String repairItem( InvasionConnection conn, Alt who, Item what )
     {
+        /*
+         * delta is used to figure XP and AP scaling as well as what you are able to repair.  It's a measure of the difference between the character's skill
+         * and the difficulty of the repair.  A negative delta means it's too hard.  0 is above your pay grade, but you can give it a shot.
+         */
+        int delta = who.getTinkererLevel() - ( 4 - what.getCondition() );
         try
         {
             ItemType it =  what.getItemtype();
@@ -109,17 +135,25 @@ public class Repair extends HttpServlet
             {
                 return "That item is already in the best condition it's ever been in.  You're a fool if you think you can improve it further.";
             }
+            else if( delta < 0 ) //it's too hard to repair
+            {
+                return "You ponder the job for some time, but decide it's far beyond your skillset.";
+            }
 
             //check for botched repair
-
+            double roll = Math.random();
+            if( delta == 0 && roll < 0.25 )
+            {
+                what.addDefect( conn );
+            }
 
             //update item
             what.setCondition( what.getCondition() + 1 );
             what.update( conn );
 
             //update XP and AP
-            who.setAp( who.getAp() - calculateAp(who, what) );
-            who.setXp( who.getXp() + calculateXp(who, what) );
+            who.setAp( who.getAp() - calculateAp(what.getCondition(), delta) );
+            who.setXp( who.getXp() + calculateXp(what.getCondition(), delta) );
             if(who.update(conn))
             {
                 new Message( conn, who.getId(), Message.NORMAL, "You repair your " + it.getName() + " using the tools and facilities you find here." );
@@ -132,24 +166,36 @@ public class Repair extends HttpServlet
         }
         catch (Exception e)
         {
-            return "Something went horribly wrong.  Good thing you didn't spend too much time working on that.  Unfortunately the laws of physics seem to be ... off ... at the moment.";d
+            return "Something went horribly wrong.  Good thing you didn't spend too much time working on that.  Unfortunately the laws of physics seem to be ... off ... at the moment.";
         }
         return null;
     }
 
-    public int calculateXp( Alt alt, Item i )
+    /**
+     * Method to calculate the XP gain for a given item condition and delta.  I"d precalculate this, but using it this wasy is easeri to understand.
+     * @param
+     * @return
+     *
+     */
+    public int calculateXp( int itemCondition, int delta )
     {
-        return 10;
+        return (int)(xp[itemCondition] * xpFactor[delta]);
     }
 
-    public int calculateAp( Alt alt, Item i )
+    /**
+     * Method to calculate the AP cost for a given item condition and delta.  I"d precalculate this, but using it this wasy is easeri to understand.
+     * @param
+     * @return
+     *
+     */
+    public int calculateAp( int itemCondition, int delta )
     {
-        return 10;
+        return (int)(ap[itemCondition] * apFactor[delta]);
     }
 
 
     /**
-     *  Description of the Method
+     *  Redirect to doGet().
      *
      */
     @Override

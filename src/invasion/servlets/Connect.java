@@ -75,23 +75,23 @@ public class Connect extends HttpServlet
             alt = Alt.load( altid );
             if( !alt.getUsername().equals(request.getRemoteUser()) )
             {
-                response.sendRedirect("/naughty.jsp");
+                response.sendRedirect("naughty.jsp");
                 return;
             }
             Whatzit wazzit = new Whatzit(altid);
             //check if dead
             if( alt.getLocation() == -57005 || alt.getHp() < 1 )
             {
-                response.sendRedirect( "/map/dead.jsp");
+                response.sendRedirect( "map/dead.jsp");
                 return;
             }
             request.getSession().setAttribute( Whatzit.KEY,  wazzit );
-            response.sendRedirect( "/map/index.jsp" );
+            response.sendRedirect( "map/index.jsp" );
         }
         catch(Exception e)
         {
             log.throwing(KEY, "Body", e);
-            response.sendRedirect( "/index.jsp" );
+            response.sendRedirect( "index.jsp" );
         }
     }
 

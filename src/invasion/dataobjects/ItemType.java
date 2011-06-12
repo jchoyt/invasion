@@ -102,7 +102,6 @@ public class ItemType{
     }
 
     /* setters and getters */
-
 	public boolean getUsesammo() { return this.usesammo; }
 	public void setUsesammo(boolean usesammo) { this.usesammo = usesammo; }
     public int getTypeid() { return this.typeid; }

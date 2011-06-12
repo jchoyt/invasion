@@ -99,7 +99,7 @@ public class MoveServlet extends HttpServlet
             else
             {
                 log.severe("Location not found!");
-                response.sendRedirect("/naughty.jsp");
+                response.sendRedirect("naughty.jsp");
                 return;
             }
         }
@@ -128,6 +128,6 @@ public class MoveServlet extends HttpServlet
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
-        response.sendRedirect("/naughty.jsp");
+        response.sendRedirect("naughty.jsp");
     }
 }

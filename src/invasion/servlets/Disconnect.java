@@ -48,7 +48,7 @@ public class Disconnect extends HttpServlet
         throws IOException, ServletException
     {
         request.getSession().removeAttribute(Whatzit.KEY);
-        response.sendRedirect( "/index.jsp" );
+        response.sendRedirect( "index.jsp" );
     }
 
 

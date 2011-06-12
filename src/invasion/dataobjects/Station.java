@@ -52,8 +52,8 @@ public class Station
         {
             DatabaseUtility.close(rs);
             conn.close();
-            return newloc;
         }
+        return newloc;
 
     }
     //}}}
