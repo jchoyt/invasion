@@ -19,50 +19,33 @@ $(document).ready( function() {
         autoHeight: false
     });
 
-    $("#west-sections").addClass("ui-accordion ui-widget ui-helper-reset")
+    $("#west-sections, #center-sections").addClass("ui-accordion ui-widget ui-helper-reset")
     .find("h6")
-        .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
-        .prepend('<span class="ui-icon ui-icon-triangle-1-e"/>')
+        .addClass("ui-accordion-header ui-helper-reset ui-accordion-header-active ui-state-active ui-corner-top")
+        .prepend('<span class="ui-icon ui-icon-triangle-1-s"/>')
         .click(function() {
-            $(this).toggleClass("ui-accordion-header-active").toggleClass("ui-state-active")
-                .toggleClass("ui-state-default").toggleClass("ui-corner-bottom")
-            .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e").toggleClass("ui-icon-triangle-1-s")
+            $(this).toggleClass("ui-accordion-header-active ui-state-active ui-state-default ui-corner-bottom")
+            .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s")
             .end().next().toggleClass("ui-accordion-content-active").toggle();
             return false;
         })
-        .next().addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom").hide();
+        .next().addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active").css('display', 'block');
 
-
-    $("#center-sections").addClass("ui-accordion ui-widget ui-helper-reset")
-    .find("h6")
-        .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
-        .prepend('<span class="ui-icon ui-icon-triangle-1-e"/>')
-        .click(function() {
-            $(this).toggleClass("ui-accordion-header-active").toggleClass("ui-state-active")
-                .toggleClass("ui-state-default").toggleClass("ui-corner-bottom")
-            .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e").toggleClass("ui-icon-triangle-1-s")
-            .end().next().toggleClass("ui-accordion-content-active").toggle();
-            return false;
-        })
-        .next().addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom").hide();
-
-    $("#map").click();
-    $("#occupants").click();
-    $("#critters").click();
-    $("#msgs-hdr").click();
-    $("#basic").click();
+    $(".start-closed").click();
 
     // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
-    $(document).bind('POLL_COMPLETE', function(e, data){ checkForReload(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateMessagePane(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateOccupantPane(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updatePetPane(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateInventory(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateAnnouncements(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateStats(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateStats2(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateLocation(data); });
-    $(document).bind('POLL_COMPLETE', function(e, data){ updateActions(data); });
+    $(document).bind('POLL_COMPLETE', function(e, data){
+		checkForReload(data);
+		updateMessagePane(data);
+		updateOccupantPane(data);
+		updatePetPane(data);
+		updateInventory(data);
+		updateAnnouncements(data);
+		updateStats(data);
+		updateStats2(data);
+		updateLocation(data);
+		updateActions(data);
+	});
 
     // setInterval( "poll()", 10000);
 
@@ -100,7 +83,7 @@ function updateMessagePane(data)
     if(data.msgs)
     {
         $("#msg-box").html(v2js_messages(data));
-        $("#amessages").attr({ scrollTop: $("#amessages").attr("scrollHeight") });
+        $("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
     }
 }
 

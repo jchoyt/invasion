@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*, java.io.*" %><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
     public final static String KEY = "/map/index.jsp";
@@ -33,7 +34,7 @@
 	<meta name="language" content="en">
 
 	<title>Invasion - power has its price</title>
-    <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+    <link type="text/css" href="${css}/redmond/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="pop.css" rel="stylesheet" />
@@ -106,6 +107,7 @@
                 %>
             </div>
             <h6><a href="#">Actions</a></h6>
+            <h6 class="start-closed"><a href="#">Actions</a></h6>
             <div id="actions">
                 <div id="recharge-item">
                     <% VelocityUtil.applyTemplate(obj, "rechargeItem.vm", out); %>
@@ -146,11 +148,10 @@
                         %>
                     </tbody>
                 </table>
-                <center><div id="att-box" style="color:red"></div></center>
             </div>
             <h6 id="critters"><a href="#">Critters</a></h6>
             <div>
-                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" id="occ-table">
+                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" id="pet-table">
                     <thead>
                         <tr>
                             <th>Type</th>
@@ -164,9 +165,8 @@
                         %>
                     </tbody>
                 </table>
-                <center><div id="att-pet-box" style="color:red"></div></center>
             </div>
-            <h6><a href="#">Items</a></h6>
+            <h6 class="start-closed"><a href="#">Items</a></h6>
             <div>
                 <p>
                 Cras dictum. Pellentesque habitant morbi tristique senectus et netus
@@ -251,7 +251,8 @@
 		// Never try to jquery without making sure the DOM is ready. Ready() ensures that.
 		$(document).ready(function() {
 			$("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
-		
+			// Scroll the message pane.
+
 			// Dialog
             $('#dialog').dialog({
                 autoOpen: false,
@@ -262,9 +263,18 @@
                     }
                 }
             });
-			
+
 			$('.pop_menu > p > a').click(function() {
 				$('.pop').removeClass('active');
+				return false;
+			});
+			// Close the popup menu upon clicking a link.
+
+			$('.open_attack').live('click', function() {
+			// live() attaches event handlers to all current and future elements matching the selector. Perfect when they're getting ajax'd.
+				var myID = "#" + $(this).attr('id');
+				$(':not(' + myID + ').do_attack').hide();
+				$(myID + ".do_attack").toggle();
 				return false;
 			});
 		});

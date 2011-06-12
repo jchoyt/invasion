@@ -1,7 +1,12 @@
 #foreach($pet in $pets)
-<tr id="${pet.id}" class="petrow">
+<tr>
     <td><a href="/viewOwner.jsp?id=${pet.id}">${pet.name}</a></td>
     <td><img alt="" src="/i/hp-${pet.hp}.png"/></td>
-    <td><a href="#" onclick="show_pet_target(${pet.id})">>></a><span style="display:none" id="pet-desc-${pet.id}"><a href="#" onclick="attack_pet(${pet.id})">Attack ${pet.name}</a></span></td>
+    <td><a id="pet${pet.id}" class="open_attack" href="#">>></a></td>
+</tr>
+<tr id="pet${pet.id}" class="do_attack" style="display:none; color:red;">
+	<td colspan="3" style="text-align:center;">
+		<a href="#" onclick="attack_pet(${pet.id})">Attack ${pet.name}</a>
+	</td>
 </tr>
 #end
