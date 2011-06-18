@@ -547,9 +547,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.TINKERER1)) > 0 ) ret.tinkererLevel = 1;
             }
 
-
-
-
             /* load Items */
             loadEquippedItems( conn, ret );
 
@@ -715,7 +712,10 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                     alt.clothing.add( rs.getString("name") );
                 }
                 else
+                {
                     log.severe("Something ... unusual ... has been equippeed on " + alt.name + " (id=" + alt.id + ").  It's a " + rs.getString("name") + " with the itemid " + rs.getInt("itemid") );
+                    //TODO - bot announcement
+                }
             }
             DatabaseUtility.close(rs);
         }

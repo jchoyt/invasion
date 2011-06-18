@@ -16,19 +16,18 @@ public class ItemMods
 
     public final static String KEY = ItemMods.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    //static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     /**
      * For weapon enhancements and defects
      */
-	protected float scaleDamage = 0.0f;
-	protected float scaleAccuracy = 0.0f;
+	protected float scaleDamage = 1.0f;
+	protected float scaleAccuracy = 1.0f;
 	protected float misfireRate = 0.0f;
-	protected float shortCircuitRate = 1.0f;
-	protected float backFireRate = 1.0f;
-	protected int weightChange
- = 0;
+	protected float shortCircuitRate = 0.0f;
+	protected float backFireRate = 0.0f;
+	protected int weightChange = 0;
 	protected int fireDamage = 0;
 	protected int acidDamage = 0;
 	protected int electricalDamage = 0;
@@ -60,7 +59,7 @@ public class ItemMods
                 //process
                 if( effect.equals("scale accuracy") )
                 {
-                    ret.scaleAccuracy = ret.adjustScale( ret.scaleAccuracy, amount );
+                    ret.scaleAccuracy = adjustScale( ret.scaleAccuracy, amount );
                 }
                 else if( effect.equals("scale damage") )
                 {
@@ -68,7 +67,7 @@ public class ItemMods
                 }
                 else if( effect.equals("backfire") )
                 {
-                    ret.backFireRate = ret.adjustScale( ret.backFireRate, amount );
+                    ret.backFireRate = adjustScale( ret.backFireRate, amount );
                 }
                 else if( effect.equals("weight change") )
                 {
@@ -76,11 +75,11 @@ public class ItemMods
                 }
                 else if( effect.equals("misfire") )
                 {
-                    ret.misfireRate = 1-ret.adjustScale( 1.0f-ret.misfireRate, amount );
+                    ret.misfireRate = 1-adjustScale( 1.0f-ret.misfireRate, amount );
                 }
                 else if( effect.equals("short circuit") )
                 {
-                    ret.shortCircuitRate = 1-ret.adjustScale( 1.0f-ret.shortCircuitRate, amount );
+                    ret.shortCircuitRate = 1-adjustScale( 1.0f-ret.shortCircuitRate, amount );
                 }
                 else if( effect.equals("acid damage") )
                 {
@@ -96,7 +95,7 @@ public class ItemMods
                 }
                 else //NEW TYPE!  PANIC TIME!
                 {
-                    throw new BotReportException( "A new item modification type was detected in the database.  " + effect + " is not handled in the code in invasion.dataobjects.ItemMods" );
+                    throw new BotReportException( "A new item modification type was detected in the database.  " + effect + " is not handled in the code in invasion.dataobjects.ItemMods.  Check item " + itemid );
                 }
             }
             DatabaseUtility.close(rs);
@@ -121,7 +120,7 @@ public class ItemMods
      * @return  new value of the base
      *
      */
-    public float adjustScale( float base, float amount )
+    public static float adjustScale( float base, float amount )
     {
         return base * (1.0f - amount );
     }

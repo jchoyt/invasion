@@ -31,7 +31,10 @@ public class Item  implements java.io.Serializable {
      */
 	protected boolean equipped = false;
 	protected boolean hidden = false;
-	protected ItemMods mods = new ItemMods();
+	/**
+     * Item mods are enhancements or defects in weapons and armor that reduce their effectiveness
+     */
+    protected ItemMods mods = new ItemMods();
 
     private int condition = (int)(Math.random() * 6);
     public static final String[] conditions = { "Destroyed", "Broken", "Battered", "Operational", "Average", "To spec" };
