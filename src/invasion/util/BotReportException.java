@@ -7,7 +7,7 @@ package invasion.util;
  * Class created so critical errors can be flagged.  There should be an &lt;error-page&gt; entry in web.xml to catch this and use a bot to announce the error
  * the admin channel
  */
-public class BotReportException extends Exception
+public class BotReportException extends RuntimeException
 {
 
     //{{{ Members

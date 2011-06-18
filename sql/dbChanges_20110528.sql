@@ -27,14 +27,15 @@ insert into modType (effect, amount, type, fault) values ( 'short circuit', 0.25
 insert into modType (effect, amount, type, fault) values ( 'backfire', 0.05, 'e', true );  --amount is % of remaining ammo
 insert into modType (effect, amount, type, fault) values ( 'backfire', 0.1, 'e', true );
 insert into modType (effect, amount, type, fault) values ( 'backfire', 0.25, 'e', true );
-
+insert into modType (effect, amount, type, fault) values ( 'weight change', 1, 'b', true );
+insert into modType (effect, amount, type, fault) values ( 'weight change', 2, 'b', true );
 
 
 --enhancements
 insert into modType (effect, amount, type, fault) values ( 'fire damage', 5, 'e', false );
 insert into modType (effect, amount, type, fault) values ( 'acid damage', 5, 'e', false );
 insert into modType (effect, amount, type, fault) values ( 'electrical damage', 5, 'e', false );
-insert into modType (effect, amount, type, fault) values ( 'decrease weight', 1, 'b', false );
+insert into modType (effect, amount, type, fault) values ( 'weight change', 1, 'b', false );
 
 
 create table itemmod (
@@ -43,11 +44,50 @@ create table itemmod (
     type int references modtype (id)
 );
 
-/*
-delete capacitymod from item table
+
+alter table item drop column capacitymod;
 
 /*
-Affects at repair time
+
+add items for repairs remove crafting?
+
+regular
+
+typa A circuit boards
+type A processing unit
+typa B circuit boards
+type B processing unit
+typa C circuit boards
+type C processing unit
+wire
+chunk of steel
+carbon nanotube XXXXXXXXXXXXx
+carbon-based lubricant
+a roll of pleather
+a sheet of plastic
+bulk plastic
+metal pipe
+chunk of brass
+chunk of titanium
+crystal array
+memory crystal
+
+
+exotic
+
+bioXXXXXXXXXXx
+small bottle of acid
+small bottle of poison <- use something else
+small general purpose medicine pack  <- heals poison
+sleeping pills
+LSD
+small canister of nerve toxin
+pack of hypodermic darts
+
+*/
+
+/*
+Effects at repair time
 	explode
 	machinery jams, harming you
 */

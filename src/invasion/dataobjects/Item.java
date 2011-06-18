@@ -31,6 +31,7 @@ public class Item  implements java.io.Serializable {
      */
 	protected boolean equipped = false;
 	protected boolean hidden = false;
+	protected ItemMods mods = new ItemMods();
 
     private int condition = (int)(Math.random() * 6);
     public static final String[] conditions = { "Destroyed", "Broken", "Battered", "Operational", "Average", "To spec" };
@@ -58,8 +59,12 @@ public class Item  implements java.io.Serializable {
                 i.hidden = rs.getBoolean("hidden");
             }
             else
-                return null;
+                throw new BotReportException("Failed to load item " + id + " from the database.");
             DatabaseUtility.close(rs);
+            if( i.canRepair() == 't' )
+            {
+                i.mods = ItemMods.load( conn, i.itemid );
+            }
         }
         catch(SQLException e)
         {
@@ -256,6 +261,8 @@ public class Item  implements java.io.Serializable {
 	public void setEquipped(boolean equipped) { this.equipped = equipped; }
 	public boolean isHidden() { return this.hidden; }
 	public void setHidden(boolean hidden) { this.hidden = hidden; }
-	}
+    public ItemMods getMods() { return this.mods; }
+	public void setMods(ItemMods mods) { this.mods = mods; }
+}
 
 
