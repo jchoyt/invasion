@@ -205,10 +205,11 @@ public class Location  implements java.io.Serializable {
      * @return  't' for true, 'f' for false.  Makes it easier to put into JSON than converting from a boolean.
      *
      */
-     public static char canRepair( Alt who, ItemType what )
+     public static boolean canRepair( Alt who, ItemType what )
      {
          //TODO fix this to actuall do something
-         return 't';
+
+         return true;
      }
 
     //}}}

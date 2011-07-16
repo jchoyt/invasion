@@ -3,6 +3,9 @@
  */
 package invasion.util;
 
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.*;
 import java.util.Arrays;
 import javax.servlet.ServletRequest;
@@ -19,7 +22,17 @@ import javax.servlet.jsp.PageContext;
 public class WebUtils
 {
 
+    public final static String KEY = WebUtils.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
+
     public static final String EMPTY_STR = "";
+    public static final String NEWLINE = "\n";
+
+    public static String BASE = "/game/";
+    public static String IMAGES = "/game/i";
+    public static String BASE_PATH = "/tmp";
+    public static String BASE_URL = "http://soulcubes.com" + BASE;
 
     private static final String[] movementClasses = buildNavigationLookup();
     /**
@@ -252,14 +265,14 @@ public class WebUtils
     {
         String[] temp = new String[25];
         Arrays.fill( temp, EMPTY_STR );
-        temp[6] =  "<a href=\"/map/move?dir=0\")><img src=\"/i/nw.png\"/></a>";
-        temp[7] =  "<a href=\"/map/move?dir=1\")><img src=\"/i/n.png\"/></a>";
-        temp[8] =  "<a href=\"/map/move?dir=2\")><img src=\"/i/ne.png\"/></a>";
-        temp[11] = "<a href=\"/map/move?dir=3\")><img src=\"/i/w.png\"/></a>";
-        temp[13] = "<a href=\"/map/move?dir=5\")><img src=\"/i/e.png\"/></a>";
-        temp[16] = "<a href=\"/map/move?dir=6\")><img src=\"/i/sw.png\"/></a>";
-        temp[17] = "<a href=\"/map/move?dir=7\")><img src=\"/i/s.png\"/></a>";
-        temp[18] = "<a href=\"/map/move?dir=8\")><img src=\"/i/se.png\"/></a>";
+        temp[6] =  "<a href=\"" + BASE + "map/move?dir=0\")><img src=\"" + IMAGES + "/nw.png\"/></a>";
+        temp[7] =  "<a href=\"" + BASE + "map/move?dir=1\")><img src=\"" + IMAGES + "/n.png\"/></a>";
+        temp[8] =  "<a href=\"" + BASE + "map/move?dir=2\")><img src=\"" + IMAGES + "/ne.png\"/></a>";
+        temp[11] = "<a href=\"" + BASE + "map/move?dir=3\")><img src=\"" + IMAGES + "/w.png\"/></a>";
+        temp[13] = "<a href=\"" + BASE + "map/move?dir=5\")><img src=\"" + IMAGES + "/e.png\"/></a>";
+        temp[16] = "<a href=\"" + BASE + "map/move?dir=6\")><img src=\"" + IMAGES + "/sw.png\"/></a>";
+        temp[17] = "<a href=\"" + BASE + "map/move?dir=7\")><img src=\"" + IMAGES + "/s.png\"/></a>";
+        temp[18] = "<a href=\"" + BASE + "map/move?dir=8\")><img src=\"" + IMAGES + "/se.png\"/></a>";
         return temp;
     }
 
@@ -272,6 +285,36 @@ public class WebUtils
 //    {
 //        DO IT
 //    }
+
+    /**
+     * Creates an error file and returns the location.
+     */
+    public static String dumpError( Throwable t )
+    {
+        log.entering( KEY, "dumpError");
+
+        PrintWriter out = null;
+        File errFile = new File( BASE_PATH + "admin/err", System.currentTimeMillis() + ".err" );
+        String ret = BASE_URL + "/admin/err/" + errFile.getName();
+        try
+        {
+            out = new PrintWriter( new BufferedWriter( new FileWriter( errFile, true ) ) );
+            t.printStackTrace( out );
+            out.flush();
+            out.close();
+        }
+        catch(IOException e)
+        {
+            //do nothihg
+            ret = "Error dumping error file.  How ironic, eh?" + e.getMessage();
+            log.throwing(KEY, "dumpError", e );
+        }
+        finally
+        {
+            return ret;
+        }
+    }
+
 
 }
 

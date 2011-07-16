@@ -43,6 +43,10 @@
         <jar jarfile="${jarfile}" basedir="${build}">
             <include name="*/**" />
             <exclude name="**/test/**" />
+            <fileset dir="${config}">
+                <include name="*.txt"/>
+                <include name="vasionbot.properties" />
+            </fileset>
         </jar>
     </target>
 

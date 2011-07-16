@@ -6,5 +6,5 @@ for( String bug : list )
     out.write(  "<br/> ");
 }
 %>
-Done.  <a href="/admin/index.jsp">Back to admin main</a>
+Done.  <a href="${base}admin/index.jsp">Back to admin main</a>
 

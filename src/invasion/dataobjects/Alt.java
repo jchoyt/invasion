@@ -262,11 +262,11 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         int damageMultiplier = 1;
         int shots = 1;
         //calc damage bonus
-        if( ( humanSkills & Skills.getValue(Skill.FIREARMS1) ) > 0 ) damageBounus += 2;
-        if( ( humanSkills & Skills.getValue(Skill.FIREARMS2) ) > 0 ) damageBounus += 3;
-        if( ( humanSkills & Skills.getValue(Skill.FIREARMS3) ) > 0 ) damageBounus += 4;
-        if( ( humanSkills & Skills.getValue(Skill.FIREARMS4) ) > 0 ) damageBounus += 5;
-        if( ( humanSkills & Skills.getValue(Skill.FIREARMS5) ) > 0 ) damageBounus += 6;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS1) ) > 0 ) damageBounus += 1;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS2) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS3) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS4) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.FIREARMS5) ) > 0 ) damageBounus += 3;
         if( skillsUsed.contains( Skill.DOUBLE_SHOT ) && ( humanSkills & Skills.getValue(Skill.FIREARMS4) ) > 0 )
         {
             attackLevel = firearmsAttackLevel - 1;
@@ -310,10 +310,14 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
             // check if you hit
             double attackChance = Skills.calculateAttackChance( equippedWeapon.getItemtype().getAccuracy(), attackLevel, defender.getDodgeLevel() );
+            //adjust for modifications
+            attackChance = attackChance * equippedWeapon.getMods().getScaleAccuracy();
             if( Math.random() < attackChance )
             {
                 //hit;
-                int damage = ( equippedWeapon.getItemtype().getDamage() + damageBounus ) * damageMultiplier;
+                float rawDamage = ( equippedWeapon.getItemtype().getDamage() + damageBounus ) * damageMultiplier;
+                //adjust for modifications
+                int damage = Math.round(rawDamage * equippedWeapon.getMods().getScaleDamage());
                 CombatResult result = defender.hit( this, damage, equippedWeapon.getItemtype().getDamageType(), conn, true );
                 StringBuilder ret = new StringBuilder( "You attack " + defender.getName() + " with your " + equippedWeapon.getItemtype().getName() );
                 ret.append( " and deal " + result.getDamageDone() + " points of damage.");
@@ -727,7 +731,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         finally
         {
             DatabaseUtility.close(rs);
-            conn.close();
         }
 
     }

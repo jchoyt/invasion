@@ -4,7 +4,7 @@
 	.naughty {
 	    width:1200;
         height:900;
-        background-image:url('/i/naughty.jpg');
+        background-image:url('${images}/naughty.jpg');
         text-align:center;
         vertical-align:middle;
         color:red;

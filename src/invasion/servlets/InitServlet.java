@@ -18,6 +18,7 @@ import invasion.dataobjects.*;
 import invasion.pets.*;
 import invasion.ui.VelocityUtil;
 import invasion.util.*;
+import invasion.bot.*;
 
 /**
  *  This allows for initial setup, inlcuding
@@ -40,7 +41,7 @@ public class InitServlet extends HttpServlet
     public final static Logger log = Logger.getLogger( KEY );
     static{log.setLevel(Level.FINER);}
 
-    public static String BASE_PATH = "/";
+    protected static Thread botThread = null;
 
     /**
      *  Constructor for the Servlet object
@@ -88,12 +89,14 @@ public class InitServlet extends HttpServlet
         getServletContext().setAttribute("css",  webapp + "css");
         System.out.println("Attributes set in InitServlet");
 
-        BASE_PATH = webapp;
-
         /* initialize the velocity template utility so we can use the same templates serverside as client side. */
         String base_path = config.getServletContext().getRealPath( "/" );
         String config_dir = base_path + "WEB-INF/";
         VelocityUtil.init( config_dir + "templates");
+
+        WebUtils.BASE = webapp;
+        WebUtils.IMAGES = webapp + "i";
+        WebUtils.BASE_PATH = base_path;
 
         /* pre-load itemtype and locationtype data */
         ItemType.load();
@@ -106,6 +109,9 @@ public class InitServlet extends HttpServlet
         LocationCache.load();
         /* load up the broods */
         BroodManager.load();
+        /* start up the error reporting bot */
+        botThread = new Thread( new BotRunner( "vasionbot.properties" ), "VasionBot" );
+        botThread.start();
     }
 
     /**
@@ -135,4 +141,27 @@ public class InitServlet extends HttpServlet
     {
     }
 }
+
+class BotRunner implements Runnable
+{
+    String configLoc;
+
+    private BotRunner()
+    {}
+
+
+    public BotRunner( String key )
+    {
+        configLoc = key;
+    }
+
+    /**
+     *  Main processing method for the AsynchronousMetaDataLoader object
+     */
+    public void run()
+    {
+        VasionBot bot = new VasionBot( configLoc );
+    }
+}
+
 

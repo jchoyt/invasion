@@ -3,7 +3,7 @@
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     if( wazzit == null )
     {  //nobody is logged in
-        response.sendRedirect("/index.jsp");
+        response.sendRedirect(WebUtils.BASE + "index.jsp");
         return;
     }
 

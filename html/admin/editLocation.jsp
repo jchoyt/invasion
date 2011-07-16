@@ -26,7 +26,7 @@
         request.setAttribute("conn", conn);
 %>
 
-<a href="/admin/stationEdit.jsp?locid=<%=locid%>">Recenter map here</a><br/>
+<a href="${base}admin/stationEdit.jsp?locid=<%=locid%>">Recenter map here</a><br/>
 -OR-<br/>
 Edit this tile:
 <form action="editLocationProcess.jsp" method="post">

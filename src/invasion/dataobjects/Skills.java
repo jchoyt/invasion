@@ -149,7 +149,7 @@ public class Skills implements java.io.Serializable
       */
      public static double calculateAttackChance ( double baserate, int attackerLevel, int dodgeLevel)
      {
-         return ( 1.25 - Math.pow( 0.25d, attackerLevel / 6.0d ) ) * ( 1 - Math.cos( ( Math.PI / 2 ) - ( dodgeLevel * Math.PI / 15 ) ) );
+         return ( 1.0d + baserate - Math.pow( baserate, attackerLevel / 6.0d ) ) * ( 1 - Math.cos( ( Math.PI / 2 ) - ( dodgeLevel * Math.PI / 15 ) ) );
      }
     //}}}
 

@@ -4,6 +4,10 @@
 
 package invasion.bot;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jibble.pircbot.*;
 
 import java.io.*;
@@ -20,25 +24,24 @@ import java.util.*;
   */
 public class VasionBot extends PircBot
 {
+
+    public final static String KEY = VasionBot.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
+
     /**
      * The line separator for the OS this is running on.  While everyone should be running Linux or MacOS, I recognize
      * some are unfortunate enough to run Windows.
      */
     public final static String LINESEP = System.getProperty( "line.separator" );
-
-    public List<String> channels = new ArrayList<String>();
-
+    private static List<String> channels = new ArrayList<String>();
     private Timer timer = new Timer(true);
-
     private List<BotCommandHandler> doers = new ArrayList<BotCommandHandler>();
-
     private Config config = null;
-
     public ChannelCommands channelCommands;
-
     private static List<String> owners = null;
-
     private List<String> ignoreList = null;
+    private static VasionBot bot = null;
 
     /**
      * Creates a new VasionBot object.  These hardcoded instances should be changed if you reuse this code.  Preferably, they
@@ -46,25 +49,32 @@ public class VasionBot extends PircBot
      */
     public VasionBot( String propsFile )
     {
-        System.out.println( "starting" );
-        config = new Config(propsFile);
+        log.entering( KEY, "Constructor", "starting" );
+        InputStream resource = getClass().getClassLoader().getResourceAsStream( propsFile );
+        System.setProperty("http.agent", "EKs pants");
+        if( resource == null )
+        {
+            log.severe( "Did not find a config file named " + propsFile );
+        }
+        else
+        {
+            VasionBot.bot = this;
+            config = new Config( resource );
 
-        //set bot info
-        this.setName( config.getValue("name") );
-        owners = Arrays.asList( config.getValue("owner").split(",") );
-        this.setLogin( owners.get(0) );
+            //set bot info
+            this.setName( config.getValue("name") );
+            owners = Arrays.asList( config.getValue("owner").split(",") );
+            this.setLogin( owners.get(0) );
 
-        reload();
+            reload();
 
-        //set up handlers
-        channelCommands = new ChannelCommands();
-        doers.add(channelCommands);
-        // doers.add(new YocsCommands());
-        doers.add(new MessageCommands());
-        // doers.add(new RaidCommands());
-        // doers.add(new ShCommands(this));
-        join();
-
+            //set up handlers
+            channelCommands = new ChannelCommands();
+            doers.add(channelCommands);
+            doers.add(new GoofyRestCommands() );
+            // doers.add(new MessageCommands());
+            join();
+        }
     }
 
     /**
@@ -72,6 +82,7 @@ public class VasionBot extends PircBot
      */
     protected  void  onPrivateMessage(String sender, String login, String hostname, String message)
     {
+        log.entering(KEY, "onPrivateMessage()");
         if( ignoreList.contains( sender ) )
         {
             return;
@@ -109,17 +120,18 @@ public class VasionBot extends PircBot
      */
     protected void onMessage( String channel, String sender, String login, String hostname, String message )
     {
-        // System.out.println(ignoreList);
+        log.entering(KEY, "onMessage()");
         if( ignoreList.contains( sender ) )
         {
             return;
         }
-        if( message.equals("!help" ) )
-        {
-            sendMessage( channel, "Help for " + getName() + " can be found at " + config.getValue("helpUrl") );
-            return;
-        }
+        // if( message.equals("!help" ) )
+        // {
+        //     sendMessage( channel, "Help for " + getName() + " can be found at " + config.getValue("helpUrl") );
+        //     return;
+        // }
         Info info = new Info( this,  channel,  sender,  login,  hostname,  message );
+        System.out.println("Sending to doers");
         for(BotCommandHandler doer : doers )
         {
             if(doer.handleMessage( info )) break;
@@ -132,16 +144,16 @@ public class VasionBot extends PircBot
                         String sourceHostname,
                         String channel)
     {
-        channel = channel.replace("#", "");
-        String[] channels = config.getValues("room");
-        for(int i = 0; i < channels.length; i++)
-        {
-            if( channel.equals(channels[i] ) )
-            {
-                channelCommands.join(channel, this);
-                break;
-            }
-        }
+        // channel = channel.replace("#", "");
+        // String[] channels = config.getValues("room");
+        // for(int i = 0; i < channels.length; i++)
+        // {
+        //     if( channel.equals(channels[i] ) )
+        //     {
+        //         channelCommands.join(channel, this);
+        //         break;
+        //     }
+        // }
     }
 
 
@@ -188,7 +200,8 @@ public class VasionBot extends PircBot
         if( args.length < 1 )
         {
             usage();
-            System.exit(1);
+            //System.exit(1);
+            return;
         }
 
         // Now start our bot up.
@@ -225,12 +238,13 @@ public class VasionBot extends PircBot
         try{
             // Connect to the IRC server.
             connect( config.getValue("server"), Integer.parseInt(config.getValue("port")) );
-            System.out.println( "Connected to " + config.getValue("server") );
+            log.info( "Connected to " + config.getValue("server") );
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            System.exit(1);
+            //System.exit(1);
+            return;
         }
 
         if(config.getValue("authenticate") != null)
@@ -240,8 +254,10 @@ public class VasionBot extends PircBot
         for(int i = 0; i < channels.length; i++)
         {
             channelCommands.join(channels[i], this);
-            System.out.println( "Joined to " +  channels[i] );
+            log.info( "Joined to " +  channels[i] );
+            VasionBot.channels.add( channels[i] );
         }
+        VasionBot.bot.sendMessage( VasionBot.channels.get(0), "Don't try to get me to do stuff..I'm not here for your entertainment.  I report errors.  That's about all.");
     }
 
     public static boolean isOwner(String nick)
@@ -265,7 +281,12 @@ public class VasionBot extends PircBot
 
     public static void announce( String msg )
     {
-        //bot.sendMessage( channel, msg );
+        bot.sendMessage( channels.get(0), msg );
+    }
+
+    public static void shutdown()
+    {
+        bot.disconnect();
     }
 }
 

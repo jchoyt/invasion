@@ -10,10 +10,10 @@
         LocationType loctype = LocationType.getLocationType(id);
 %><html>
 <head>
-    <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+    <link type="text/css" href="${css}/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
-    <script type="text/javascript" src="${js}/jquery-1.3.2.min.js"></script>
-    <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
     <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <style type="text/css">
         .box { width:250px;padding:10px; }
@@ -91,7 +91,7 @@
                         {
                             srid = rs.getString("id");
                             out.write( "<tr><td>" + rs.getString("name") + "</td><td>" + rs.getString("odds") + "</td>");
-                            out.write("<td id=\"sr" + srid + "\"><img src=\"/i/pencil.png\" onclick=\"buildSrForm(" + srid + ");\" title=\"edit search rate\"/><img src=\"/i/delete.png\" onclick=\"deleteSr(" + srid + ");\" title=\"delete this item from this location\"/></td></tr>\n");
+                            out.write("<td id=\"sr" + srid + "\"><img src=\"" + WebUtils.IMAGES + "/pencil.png\" onclick=\"buildSrForm(" + srid + ");\" title=\"edit search rate\"/><img src=\"/game/i/delete.png\" onclick=\"deleteSr(" + srid + ");\" title=\"delete this item from this location\"/></td></tr>\n");
                         }
                         DatabaseUtility.close(rs);
                     %>
@@ -144,7 +144,7 @@
                 --%>
             </div>
         </div>
-        <br clear="all"/><a href="/admin">Back</a>
+        <br clear="all"/><a href="${base}admin">Back</a>
     </center>
     <!-- ui-dialog -->
     <div id="dialog" title="Add a new item" style="text-align:center;">

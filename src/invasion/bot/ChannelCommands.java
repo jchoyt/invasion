@@ -88,7 +88,8 @@ public class ChannelCommands implements BotCommandHandler
         else if( message.equals( "!shutdown" ) )
         {
             info.getBot().quitServer( info.getBot().getNick() + " is shutting down." );
-            System.exit(0);
+            //System.exit(0);
+            //TODO restart bot?
         }
         else if( message.equals("!help") )
         {

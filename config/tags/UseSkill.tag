@@ -12,7 +12,7 @@ function saveConfig()
     // alert(dataString);//return false;
     $.ajax({
         type: "POST",
-        url: "/map/saveSkillConfig",
+        url: "${base}map/saveSkillConfig",
         data: dataString
         /* ,
         success: function() {

@@ -4,6 +4,9 @@
 
 package invasion.bot;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.text.*;
 import java.util.regex.*;
 import org.jibble.pircbot.*;
@@ -14,6 +17,10 @@ import java.util.*;
 
 public class Utils
 {
+
+    public final static String KEY = Utils.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
     /**
      *  URL to hit for accurate current time
      */
@@ -111,16 +118,9 @@ public class Utils
         return false;
     }
 
-
-    public static boolean shouldDefer( Info info )
-    {
-        return isPresent( info, stooges );
-    }
-
-
     public static boolean nickIsOp(Info info, String name, String chan)
     {
-    	System.out.println(name + " " + chan);
+    	// System.out.println(name + " " + chan);
     	User[] currentUsers = (User[]) info.getBot().getUsers(chan);
     	for (int i=0; i<currentUsers.length; i++)
     	{
@@ -130,31 +130,8 @@ public class Utils
     	return false;
     }
 
+
     /**
-     * Selects a user at random from those currently logged on.
-     *
-     * @param channel DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public static String getRandomUser( Info info )
-    {
-        User[] users = info.getBot().getUsers( info.getChannel() );
-        int userNum = ( int ) ( Math.random(  ) * users.length );
-        int count=0;
-        while((users[userNum].getNick().equals(info.getBot().getName())
-            || stooges.contains(users[userNum].getNick()))
-            && count < 5 )
-        {
-            System.out.println( userNum );
-            userNum = ( int ) ( Math.random(  ) * users.length );
-            count++;
-        }
-        return users[userNum].getNick();
-    }
-
-
-        /**
      * Generic function to load a text file into a List of Strings
      *
      * @param filename DOCUMENT ME!
@@ -168,14 +145,15 @@ public class Utils
 
         try
         {
-            File inFile = new File( filename );
+            InputStream resource = filename.getClass().getClassLoader().getResourceAsStream( filename );
 
-            if ( !inFile.exists(  ) )
+            if( resource == null )
             {
+                log.warning( "Could not load " + filename );
                 return null;
             }
 
-            BufferedReader br = new BufferedReader( new FileReader( inFile ) );
+            BufferedReader br = new BufferedReader( new InputStreamReader( resource ) );
             String tmp;
             tmp = br.readLine(  ); // read first line of file.
 

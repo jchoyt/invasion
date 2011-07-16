@@ -16,7 +16,7 @@
     {
         String id = rs.getString("id");
         out.write( "<tr><td>");
-        out.write( "<a href=\"/viewCharacter.jsp?id=" + id + "\">" + rs.getString( "alt" ) + "</a>");
+        out.write( "<a href=\"" + WebUtils.BASE + "viewCharacter.jsp?id=" + id + "\">" + rs.getString( "alt" ) + "</a>");
         String sname = rs.getString( "sname" );
         out.write( "</td><td>");
         out.write( sname );
@@ -45,13 +45,13 @@
         {
             out.write( "</td><td>");
             out.write( rs.getString("loc"));
-            out.write( "</td><td><a class=\"link_button\" href=\"/respawn?id="+ id +"\">Respawn</a>");
+            out.write( "</td><td><a class=\"link_button\" href=\"" + WebUtils.BASE + "respawn?id="+ id +"\">Respawn</a>");
         }
         else
         {
             out.write( "</td><td>");
             out.write( rs.getString("loc"));
-            out.write( "</td><td><a class=\"link_button\" href=\"/connect?id="+ id +"\">Connect</a>");
+            out.write( "</td><td><a class=\"link_button\" href=\"" + WebUtils.BASE + "connect?id="+ id +"\">Connect</a>");
         }
         out.write( "</td></tr>\n" );
         slotsUsed++;

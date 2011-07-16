@@ -4,6 +4,8 @@
 
 package invasion.bot;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.Array;
@@ -17,6 +19,10 @@ import java.lang.reflect.Array;
  */
 public final class Config extends Object implements Serializable
 {
+
+    public final static String KEY = Config.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
     private HashMap<String,String[]> nvPairs;
     public static int RANDOM_PRIME_NUMBER = 215;
 
@@ -30,18 +36,18 @@ public final class Config extends Object implements Serializable
         nvPairs = new HashMap<String,String[]>();
     }
 
-    public Config(String file)
+    public Config(InputStream is)
     {
         nvPairs = new HashMap<String,String[]>();
-        load(file);
+        load(is);
     }
 
 
-    protected void load(String filename)
+    protected void load(InputStream is)
     {
         try
         {
-            BufferedReader br = new BufferedReader( new FileReader( filename ) );
+            BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
             String tmp;
             String line = br.readLine(  ); // read first line of file.
 
@@ -69,7 +75,7 @@ public final class Config extends Object implements Serializable
         {
             e.printStackTrace(  );
         }
-        System.out.println( toString() );
+        log.info( toString() );
     }
 
     /**

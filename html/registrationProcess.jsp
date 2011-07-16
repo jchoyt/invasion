@@ -17,7 +17,7 @@ catch ( NullPointerException e) {
 }
 if( loginResult.equals( Login.LOGIN_OK ))
 {
-    response.sendRedirect( "/index.jsp" );
+    response.sendRedirect( WebUtils.BASE + "/index.jsp" );
     return;
 }
 %>

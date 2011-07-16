@@ -38,6 +38,7 @@ public class Item  implements java.io.Serializable {
 
     private int condition = (int)(Math.random() * 6);
     public static final String[] conditions = { "Destroyed", "Broken", "Battered", "Operational", "Average", "To spec" };
+    public static final String DEFECT_MESSAGE = "As you work, you see something that didn't look quite right.  You review your notes, but it doesn't appear you did anything incorrectly.";
 
     private Item() {
     }
@@ -49,7 +50,6 @@ public class Item  implements java.io.Serializable {
         ResultSet rs = null;
         try
         {
-            conn = new InvasionConnection();
             rs = conn.psExecuteQuery(query, "Error retrieving item from database", id);
             if(rs.next())
             {
@@ -64,7 +64,7 @@ public class Item  implements java.io.Serializable {
             else
                 throw new BotReportException("Failed to load item " + id + " from the database.");
             DatabaseUtility.close(rs);
-            if( i.canRepair() == 't' )
+            if( i.canRepair() )
             {
                 i.mods = ItemMods.load( conn, i.itemid );
             }
@@ -77,12 +77,11 @@ public class Item  implements java.io.Serializable {
         finally
         {
             DatabaseUtility.close(rs);
-            conn.close();
         }
         return i;
     }
 
-    public void update(InvasionConnection conn)
+    public boolean update(InvasionConnection conn)
     {
         String query = "update item set ammoleft=?, condition=? where itemid=?";
         ResultSet rs = null;
@@ -90,7 +89,9 @@ public class Item  implements java.io.Serializable {
         if( count==0 )
         {
             log.severe("Failed to update item " + itemid );
+            return false;
         }
+        return true;
     }
 
     public Item(InvasionConnection conn, int itemtype, int locationid)
@@ -221,12 +222,9 @@ public class Item  implements java.io.Serializable {
     /**
      * @return  't' for true, 'f' for false.  Makes it easier to put into JSON than converting from a boolean.
      */
-     public char canRepair()
+     public boolean canRepair()
      {
-         if( itemtype.getType().equals("armor") || itemtype.getType().equals("weapon") )
-             return 't';
-         else
-             return 'f';
+         return ( itemtype.getType().equals("armor") || itemtype.getType().equals("weapon") );
      }
 
     /**
@@ -244,7 +242,7 @@ public class Item  implements java.io.Serializable {
             throw new BotReportException( "Failed to add defect to item " + itemid );
         }
         //TODO do a range of messages for this
-        new Message( conn, locid, Message.NORMAL, "As you work, you see something that didn't look quite right.  You review your notes, but it doesn't appear you did anything incorrectly." );
+        new Message( conn, locid, Message.NORMAL, DEFECT_MESSAGE );
 
     }
 

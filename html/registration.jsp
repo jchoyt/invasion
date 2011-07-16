@@ -1,14 +1,14 @@
 <%@ page import="invasion.util.*" %>
 <html>
 <head>
-    <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+    <link type="text/css" href="${css}/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <style type="text/css">
         label { float:left; width:45%; margin-right:0.5em; padding-top:0.2em; text-align:right; font-weight:bold; }
         p { clear: both; }
     </style>
-    <script type="text/javascript" src="${js}/jquery-1.3.2.min.js"></script>
-    <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
     <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <script>
         $(document).ready(function(){
@@ -56,7 +56,7 @@
                   </p>
                   <center><input type="submit" value="Register"/></center>
                 </fieldset>
-                <sup>1</sup>By creating an account, you agree to be bound by the <a href="/tos.html">terms of service and certify that you are at least 13 years of age.</a>.<br/>
+                <sup>1</sup>By creating an account, you agree to be bound by the <a href="${base}tos.html">terms of service and certify that you are at least 13 years of age.</a>.<br/>
                 <sup>2</sup>You are only allowed one user account.  You may have multiple characters per account.<br/>
                 <sup>3</sup>Read the disclaimer and privacy policy.  Short version is "this is for emergency use only."<br/>
             </form>

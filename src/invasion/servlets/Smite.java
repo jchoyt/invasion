@@ -56,9 +56,7 @@ public class Smite extends HttpServlet
             int altid = Integer.parseInt(altidString);
             conn = new InvasionConnection();
             Alt alt = Alt.load( conn, altid );
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, altid);
-            int count = ps.executeUpdate();
+            int count =  conn.psExecuteUpdate(query, "", altid);
             new Message( conn, altid, Message.EFFECT, message );
             alt.kill( conn, null);
             //LATER - lock account

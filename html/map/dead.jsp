@@ -1,11 +1,11 @@
 <%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, java.util.logging.*,org.json.*" %><%!
-    public final static String KEY = "/map/index.jsp";
+    public final static String KEY = WebUtils.BASE + "map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}%><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = wazzit.getAlt();
-    String errorMsg = wazzit.getAlt().getName() + " is dead. <a href=\"/disconnect\">Go back</a> and select another character.";
+    String errorMsg = wazzit.getAlt().getName() + " is dead. <a href=\"${base}disconnect\">Go back</a> and select another character.";
 
     //set up db connection
     InvasionConnection conn = null;
@@ -20,14 +20,14 @@
 	<meta name="language" content="en">
 
 	<title>Invasion - power has its price</title>
-    <link type="text/css" href="${css}/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+    <link type="text/css" href="${css}/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="pop.css" rel="stylesheet" />
-    <script type="text/javascript" src="${js}/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
     <script type="text/javascript" src="${js}/vel2jstools.js"></script>
     <script type="text/javascript" src="${js}/vel2js.js"></script>
-    <script type="text/javascript" src="${js}/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
     <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <script type="text/javascript" src="jquery.pop.js"></script>
     <script type="text/javascript" src="${js}/map.js"></script>
@@ -57,7 +57,7 @@
                 VelocityUtil.applyTemplate(stats, "stats.vm", out);
             %></span></span>
             <span style="float:right;margin-right:10px">Menu<div class="pop">
-                    <p><a href="/disconnect">Disconnect</a></p>
+                    <p><a href="${base}disconnect">Disconnect</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage regular poll</a></p>
                     <p><hr/></p>
@@ -101,7 +101,7 @@
             <h3><a href="#">Character Info</a></h3>
             <div>
                 <img alt="Invasion banner" src="${images}/banner_sm.png"/>
-                <br/>You are <a href="/viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a>
+                <br/>You are <a href="${base}viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a>
                 <br/>Faction: None
                 <br/><span id="stats-area2">
                 <%

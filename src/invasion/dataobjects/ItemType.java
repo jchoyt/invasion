@@ -87,7 +87,7 @@ public class ItemType{
         {
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
-            conn.close();
+            DatabaseUtility.close(conn);
         }
     }
 

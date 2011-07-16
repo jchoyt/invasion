@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import invasion.bot.*;
 import invasion.util.*;
 import invasion.dataobjects.*;
 import java.io.*;
@@ -89,8 +90,8 @@ public class Repair extends HttpServlet
         }
         catch(SQLException e)
         {
-            log.throwing( KEY, "Error processing repair", e);
-            throw new RuntimeException(e);
+            log.throwing( KEY, "Error repairing item", e);
+            throw new BotReportException(e);
         }
         finally
         {
@@ -123,11 +124,11 @@ public class Repair extends HttpServlet
             {
                 return "You do not own that.";
             }
-            else if( what.canRepair() == 'f' )
+            else if( !what.canRepair() )
             {
                 return "You cannot repair that.";
             }
-            else if( Location.canRepair( who, it ) == 'f' )
+            else if( !Location.canRepair( who, it ) )
             {
                 return "You cannnot repair that in this location.";
             }
@@ -141,38 +142,42 @@ public class Repair extends HttpServlet
             }
 
             //check for botched repair
-            double roll = Math.random();
-            if( delta == 0 && roll < 0.25 )
+            if( delta == 0 && Math.random() < 0.15 )
             {
                 what.addDefect( conn );
+            }
+            else if (Math.random() < 0.02)
+            {
+                new Message( conn, who.getId(), Message.NORMAL, Item.DEFECT_MESSAGE );
             }
 
             //update item
             what.setCondition( what.getCondition() + 1 );
-            what.update( conn );
-
             //update XP and AP
             who.setAp( who.getAp() - calculateAp(what.getCondition(), delta) );
             who.setXp( who.getXp() + calculateXp(what.getCondition(), delta) );
-            if(who.update(conn))
+            if(who.update(conn) && what.update( conn ))
             {
                 new Message( conn, who.getId(), Message.NORMAL, "You repair your " + it.getName() + " using the tools and facilities you find here." );
             }
             else
             {
-                new Message( conn, who.getId(), Message.SELF, "Something is amiss.  But you feel energized and ready to try again." );
+                new Message( conn, who.getId(), Message.SELF, "Something is amiss.  That didn't seem to work.  But you feel ready to try again." );
             }
 
         }
         catch (Exception e)
         {
+            log.throwing(KEY, "repairItem", e );
+            String errFile = WebUtils.dumpError(e);
+            VasionBot.announce("Error processing a repair for " + who.getName() + ". Details can be found at " + errFile );
             return "Something went horribly wrong.  Good thing you didn't spend too much time working on that.  Unfortunately the laws of physics seem to be ... off ... at the moment.";
         }
         return null;
     }
 
     /**
-     * Method to calculate the XP gain for a given item condition and delta.  I"d precalculate this, but using it this wasy is easeri to understand.
+     * Method to calculate the XP gain for a given item condition and delta.  I'd precalculate this, but using it this wasy is easier to understand.
      * @param
      * @return
      *

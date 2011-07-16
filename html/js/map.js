@@ -1,5 +1,10 @@
 //{{{ on page ready
 var myLayout; // init global vars
+var base_url="/game/";
+var map_url = base_url + "/map/index.jsp";
+var poll_url = base_url + "/poll";
+
+
 $(document).ready( function() {
 
     myLayout = $('body').layout({
@@ -59,11 +64,11 @@ function checkForReload( data )
 {
     if( data.reload )
     {
-        window.location="/map/index.jsp";
+        window.location=map_url;
     }
     if( data.stats.reload )
     {
-        window.location="/map/index.jsp";
+        window.location=map_url;
     }
 }
 
@@ -71,7 +76,7 @@ function checkForReload( data )
 function poll()
 {
     $("#poll-indicator").show();
-    $.getJSON("/poll", function(json){
+    $.getJSON(poll_url, function(json){
         $(document).trigger('POLL_COMPLETE', json);
 		$("#poll-indicator").hide();
     });

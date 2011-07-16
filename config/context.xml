@@ -2,20 +2,20 @@
    <Resource name="jdbc/postgres" auth="Container"
           type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
           url="jdbc:postgresql://127.0.0.1:5432/invasion"
-          username="jchoyt" password="ou812ic" maxActive="100" maxIdle="10" maxWait="-1"/>
+          username="webuser" password="sOulcu8es" maxActive="100" maxIdle="10" maxWait="-1"/>
 
    <Resource name="jdbc/critterdb" auth="Container"
           type="javax.sql.DataSource" driverClassName="org.hsqldb.jdbcDriver"
           url="jdbc:hsqldb:critters"
-          username="jchoyt" password="ou812ic" maxActive="100" maxIdle="10" maxWait="-1"/>
+          username="webuser" password="sOulcu8es" maxActive="100" maxIdle="10" maxWait="-1"/>
 
           <!-- Realm for invasion -->
       <Realm className="org.apache.catalina.realm.JDBCRealm"
             debug="99"
             driverName="org.postgresql.Driver"
             connectionURL="jdbc:postgresql:invasion"
-            connectionName="jchoyt"
-            connectionPassword="ou812ic"
+            connectionName="webuser"
+            connectionPassword="sOulcu8es"
             userTable="player"
             userNameCol="username"
             userCredCol="password"

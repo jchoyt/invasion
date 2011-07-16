@@ -5,6 +5,7 @@
 package invasion.servlets;
 
 import java.io.*;
+import invasion.bot.*;
 import invasion.util.*;
 import invasion.dataobjects.*;
 import java.sql.*;
@@ -67,7 +68,8 @@ public class StatsListener implements ServletContextListener
         {
             conn.close();
         }
-		System.out.println("Context Destroyed");
+        VasionBot.shutdown();
+		// System.out.println("Context Destroyed");
 	}
 }
 

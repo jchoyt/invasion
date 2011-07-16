@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*, java.io.*" %><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
-    public final static String KEY = "/map/index.jsp";
+    public final static String KEY = WebUtils.BASE + "map/index.jsp";
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}%><%
     log.finer("entering /map/index.jsp");
@@ -10,7 +10,7 @@
     if( alt == null )
     {  //nobody is logged in
         log.warning("didn't find the alt in wazzit");
-        response.sendRedirect("/index.jsp");
+        response.sendRedirect( WebUtils.BASE + "index.jsp");
         return;
     }
     String errorMsg = WebUtils.getOptionalParameter(request, "error");
@@ -34,14 +34,14 @@
 	<meta name="language" content="en">
 
 	<title>Invasion - power has its price</title>
-    <link type="text/css" href="${css}/redmond/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+    <link type="text/css" href="${css}/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="pop.css" rel="stylesheet" />
     <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
     <script type="text/javascript" src="${js}/vel2jstools.js"></script>
     <script type="text/javascript" src="${js}/vel2js.js"></script>
-    <script type="text/javascript" src="${js}/jquery-ui-1.8.10.custom.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
     <script type="text/javascript" src="jquery.pop.js"></script>
     <script type="text/javascript" src="${js}/map.js"></script>
     <script type="text/javascript" src="${js}/jquery.layout.min-1.3.0rc29.js"></script>
@@ -72,8 +72,8 @@
             <%
                 VelocityUtil.applyTemplate(obj, "stats.vm", out);
             %></span></span>
-            <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="/i/transmit.gif"/></span> Menu<div class="pop">
-                    <p><a href="/disconnect">Disconnect</a></p>
+            <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="${images}/transmit.gif"/></span> Menu<div class="pop">
+                    <p><a href="${base}disconnect">Disconnect</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage periodic poll</a></p>
                     <p><hr/></p>
@@ -106,7 +106,6 @@
                     VelocityUtil.applyTemplate( obj, "locationDescription.vm", out );
                 %>
             </div>
-            <h6><a href="#">Actions</a></h6>
             <h6 class="start-closed"><a href="#">Actions</a></h6>
             <div id="actions">
                 <div id="recharge-item">
@@ -190,7 +189,7 @@
             <h3><a href="#">Character Info</a></h3>
             <div>
                 <img alt="Invasion banner" src="${images}/banner_sm.png"/>
-                <br/>You are <a href="/viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a>
+                <br/>You are <a href="${base}viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a>
                 <br/>Faction: None
                 <br/><span id="stats-area2">
                 <%
@@ -239,7 +238,7 @@
 	<script type="text/javascript">
         function chalkWall()
         {
-            resource = "/map/chalk.jsp";
+            resource = "${base}map/chalk.jsp";
             $('#dialog').load(resource, function() {
 				$('#dialog').dialog('open');
 				$('#poll-indicator').hide();

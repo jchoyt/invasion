@@ -1,6 +1,6 @@
 <%@ page import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*,javax.sql.*" %>
 
-<form action="${base}map/chalk" method="post">
+<form action="chalk" method="post">
     Message: <br/><textarea name="message" cols="50" rows="5"></textarea><br/>
     <input type="Submit" value="Write Message"/>
 </form>

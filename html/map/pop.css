@@ -8,7 +8,7 @@
     -webkit-border-radius: 3px; }
 
 .pop .pop_toggle {
-    background-image: url(/i/sort_desc.png);
+    background-image: url(/game/i/sort_desc.png);
     background-repeat: no-repeat;
     background-position: center center;
     width: 20px;
@@ -30,4 +30,4 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-image: url(/i/sort_asc.png); }
+  background-image: url(/game/i/sort_asc.png); }

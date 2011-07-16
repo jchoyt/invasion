@@ -23,7 +23,7 @@
     else
         out.write("DNE");
 
-    out.write("<br/><br/><br/><a href=\"/map/index.jsp\">Back</a>");
+    out.write("<br/><br/><br/><a href=\"/game/map/index.jsp\">Back</a>");
     DatabaseUtility.close(rs);
     DatabaseUtility.close(ps);
     conn.close();

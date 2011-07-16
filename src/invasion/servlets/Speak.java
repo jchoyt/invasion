@@ -76,10 +76,10 @@ public class Speak extends HttpServlet
         //prepare message
         if( emote )
         {
-            message = "<a href=\"/viewCharacter.jsp?id=" + wazzit.getAlt().getId() + "\">" + wazzit.getAlt().getName() + "</a> " + message.substring(8);
+            message = "<a href=\"" +  getServletContext().getAttribute("base") + "viewCharacter.jsp?id=" + wazzit.getAlt().getId() + "\">" + wazzit.getAlt().getName() + "</a> " + message.substring(8);
         }
         else
-            message = "<a href=\"/viewCharacter.jsp?id=" + wazzit.getAlt().getId() + "\">" + wazzit.getAlt().getName() + "</a> said, \"" + message + "\"";
+            message = "<a href=\"" +  getServletContext().getAttribute("base") + "viewCharacter.jsp?id=" + wazzit.getAlt().getId() + "\">" + wazzit.getAlt().getName() + "</a> said, \"" + message + "\"";
 
         //do DB inserts
         String query = "insert into messages (message, altid) select ?, id from alt where location = ?";
