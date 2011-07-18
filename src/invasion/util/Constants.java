@@ -17,8 +17,9 @@ public class Constants
         try{
             RELOAD_REQUIRED.put("reload", "true");
         }catch (Exception e){}
-    }
+    } //}}}
 
+    //{{{ Methods
     /**
      * Provides "he" or "she" depending on the gender.  Putting this in one place prevents having to do the damn check everywhere.
      * @param
@@ -42,6 +43,52 @@ public class Constants
         }
     }
 
+    /**
+     * Provides "his" or "hers" depending on the gender.  Putting this in one place prevents having to do the damn check everywhere.
+     * @param
+     * @return
+     *
+     */
+    public static String getHisHers( char gender, boolean capiltalized )
+    {
+        switch( gender )
+        {
+            case 'm':
+                if(capiltalized)
+                    return "His";
+                else
+                    return "his";
+            default:
+                if(capiltalized)
+                    return "Hers";
+                else
+                    return "hers";
+        }
+    }
+
+
+    /**
+     * Provides "his" or "hers" depending on the gender.  Putting this in one place prevents having to do the damn check everywhere.
+     * @param
+     * @return
+     *
+     */
+    public static String getHimHer( char gender, boolean capiltalized )
+    {
+        switch( gender )
+        {
+            case 'm':
+                if(capiltalized)
+                    return "Him";
+                else
+                    return "him";
+            default:
+                if(capiltalized)
+                    return "Her";
+                else
+                    return "her";
+        }
+    }
     //}}}
 
 }

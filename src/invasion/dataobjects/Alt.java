@@ -280,32 +280,94 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
         for(int i = 0; i < shots; i++)
         {
-            if( equippedWeapon.getAmmoleft() == 0 )
+            //check if you have ammo BEFORE the shot - reload if possible
+            checkReload(conn);
+            //check for misfire
+            if( Math.random() < equippedWeapon.getMods().getMisfireRate() )
             {
-                String reloadResult = invasion.servlets.Recharge.rechargeItem( conn, this, equippedWeapon );
-                if( reloadResult != null )
-                {
-                    new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You don't have anything to reload it with." );
-                    return;
-                }
-                else
-                    new Message( conn, id, Message.NORMAL, "Your weapon was out of ammunition, so you reloaded it." );
+                new Message( conn, id, Message.EFFECT, "You hear a faint click, but nothing happens." );
+                continue;
             }
 
-            equippedWeapon.setAmmoleft( equippedWeapon.getAmmoleft() - 1 );
-            if( equippedWeapon.getAmmoleft() == 0 )
+            //check for backfire and short circuit
+            if( equippedWeapon.getItemtype().getDamageType() == 'e' )
             {
-                String reloadResult = invasion.servlets.Recharge.rechargeItem( conn, this, equippedWeapon );
-                if( reloadResult != null )
+                if( Math.random() < equippedWeapon.getMods().getShortCircuitRate() )
                 {
-                    new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You don't have anything to reload it with." );
-                }
-                else
-                {
-                    new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
-                    apIncrement++;
+                    int damage = equippedWeapon.getAmmoleft() * equippedWeapon.getItemtype().getDamage();
+                    if( damage >= hp )
+                    {   //deaded
+                        new Message( conn, id, Message.EFFECT, "As you pull the trigger, it doesn't fire, but suddenly gets very, very hot.  Too late, you figure out that it's short circuiting...energy streams out around your upper body and burns you for " +
+                            damage + " points of damage.  Darkness falls, and the pain subsides.");
+                        //adjust stats
+                        Stats.addChange(id, Stats.DAMTAKEN, damage);
+                        //notify everyone else in the area
+                        Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
+                            Constants.getHisHers( gender, false) + " weapon but it short circuited.  You watch in horror as half " +
+                            Constants.getHisHers( gender, false) + " torso is absolutely torched - there wasn't even time for " +
+                            Constants.getHimHer( gender, false) + " to scream.", id);
+                        lastHurtBy = 0;
+                        kill( conn, null );
+                    }
+                    else
+                    { //just hurt
+                        new Message( conn, id, Message.EFFECT, "As you pull the trigger, it doesn't fire, but suddenly gets very, very hot.  Too late, you figure out that it's short circuiting...energy streams out around your upper body and burns you for " +
+                            damage + " points of damage.");
+                        //adjust stats
+                        Stats.addChange(id, Stats.DAMTAKEN, damage);
+                        //notify everyone else in the area
+                        Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
+                            Constants.getHisHers( gender, false) + " weapon but it short circuited.  The released energy dances over " +
+                            Constants.getHisHers( gender, false) + " body.  You can only watch while " +
+                            Constants.getHeShe( gender, false) + " screams in pain.", id);
+                    }
+                    equippedWeapon.setAmmoleft(0);
+                    equippedWeapon.update(conn);
+                    update(conn);
+                    return;
                 }
             }
+            else //if( equippedWeapon.getItemtype().getDamageType() == 'e' )
+            {
+                if( Math.random() < equippedWeapon.getMods().getBackFireRate() )
+                {
+                    int damage =  2 * equippedWeapon.getItemtype().getDamage();
+                    if( damage >= hp )
+                    {   //deaded
+                        new Message( conn, id, Message.EFFECT, "As you pull the trigger, the bullet jams and the weapon backfires.  The resulting explosion causes " +
+                            damage + " points of damage.  On top of your existing wounds, this is too much for your body.");
+                        //adjust stats
+                        Stats.addChange(id, Stats.DAMTAKEN, damage);
+                        //notify everyone else in the area
+                        Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
+                            Constants.getHisHers( gender, false) + " weapon but it blew back into  " +
+                            Constants.getHisHers( gender, false) + " face.  With a curdled scream, " +
+                            Constants.getHeShe( gender, false) + " crumples to the ground, dead.", id);
+                        lastHurtBy = 0;
+                        kill( conn, null );
+                    }
+                    else
+                    { //just hurt
+                        new Message( conn, id, Message.EFFECT, "As you pull the trigger, but instead of delivering death to your target, the weapon backfires causing " +
+                            damage + " points of damage.");
+                        //adjust stats
+                        Stats.addChange(id, Stats.DAMTAKEN, damage);
+                        //notify everyone else in the area
+                        Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
+                            Constants.getHisHers( gender, false) + " weapon but it blew back into  " +
+                            Constants.getHisHers( gender, false) + " face.", id);
+                    }
+                    equippedWeapon.setAmmoleft( equippedWeapon.getAmmoleft() - 1 );
+                    checkReload(conn);
+                    equippedWeapon.update(conn);
+                    update(conn);
+                    return;
+                }
+            }
+
+            //adjust ammo and reload if necessary
+            equippedWeapon.setAmmoleft( equippedWeapon.getAmmoleft() - 1 );
+            checkReload(conn);
             equippedWeapon.update(conn);
 
             // check if you hit
@@ -471,7 +533,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         {
             //death message with no killer
             new Message( conn, id, Message.SELF, "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
-            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, name + " died.  Who the hell knows how this happens anymore?");
+            //Message.locationBroadcast( conn, deathLoc, Message.NORMAL, name + " died.  Who the hell knows how this happens anymore?");
         }
         altCache.remove( id );
    }
@@ -736,7 +798,10 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     }
 
     /**
-     *  stats: { "ip": 0, "hp":50, "xp": 9001, "ap": 50, "ticksalive": 190, "status": "drunk, dead, encumbered, no body, insane"},
+     * Characters statistics for the gui.  Supports The Poll.
+     * @param id of the character to describe
+     * @return JSON representation of a character's current stats. See Poll.java for example
+     * @see Poll.java
      */
     public static JSONObject getStats( InvasionConnection conn, int altid )
     throws SQLException, JSONException
@@ -761,6 +826,28 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
         return obj;
     }
+
+    /**
+     * Checks the equipped weapon and reloads it if necessary.  Gives an appropriate messages.
+     * @param
+     * @return
+     *
+     */
+     protected void checkReload( InvasionConnection conn )
+        throws SQLException
+     {
+        if( equippedWeapon.getAmmoleft() == 0 )
+        {
+            String reloadResult = invasion.servlets.Recharge.rechargeItem( conn, this, equippedWeapon );
+            if( reloadResult != null )
+            {
+                new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You don't have anything to reload it with." );
+                return;
+            }
+            else
+                new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
+        }
+     }
 
 
     /**

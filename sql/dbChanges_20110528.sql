@@ -1,6 +1,6 @@
 -- script for database changes to support crafting
 -- started 2011-05-27
--- finished 2011-06-XX
+-- finished 2011-07-XX
 
 create table modType (
     id serial primary key,
@@ -24,9 +24,9 @@ insert into modType (effect, amount, type, fault) values ( 'misfire', 0.5, 'b', 
 insert into modType (effect, amount, type, fault) values ( 'short circuit', 0.05, 'e', true );  --amount is % of remaining charge
 insert into modType (effect, amount, type, fault) values ( 'short circuit', 0.1, 'e', true );
 insert into modType (effect, amount, type, fault) values ( 'short circuit', 0.25, 'e', true );
-insert into modType (effect, amount, type, fault) values ( 'backfire', 0.05, 'e', true );  --amount is % of remaining ammo
-insert into modType (effect, amount, type, fault) values ( 'backfire', 0.1, 'e', true );
-insert into modType (effect, amount, type, fault) values ( 'backfire', 0.25, 'e', true );
+insert into modType (effect, amount, type, fault) values ( 'backfire', 0.05, 'p', true );  --amount is % of remaining ammo
+insert into modType (effect, amount, type, fault) values ( 'backfire', 0.1, 'p', true );
+insert into modType (effect, amount, type, fault) values ( 'backfire', 0.25, 'p', true );
 insert into modType (effect, amount, type, fault) values ( 'weight change', 1, 'b', true );
 insert into modType (effect, amount, type, fault) values ( 'weight change', 2, 'b', true );
 
