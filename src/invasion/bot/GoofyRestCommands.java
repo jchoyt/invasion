@@ -47,7 +47,7 @@ public class GoofyRestCommands implements BotCommandHandler
                 while((line = br.readLine()) != null){
                     sb.append(line);
                 }
-                String htmlContent = sb.toString();
+                String htmlContent = info.getBot().getName() + " vends " + sb.toString();
                 info.sendMessage( htmlContent );
             }
             catch( Throwable t )
