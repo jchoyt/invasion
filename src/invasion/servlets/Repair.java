@@ -156,7 +156,7 @@ public class Repair extends HttpServlet
             who.setXp( who.getXp() + calculateXp(what.getCondition(), delta) );
             //update item
             what.setCondition( what.getCondition() + 1 );
-            Stats.addChange(who.getId(), Stats.REPAIR, 1);
+            Stats.addChange(who.getId(), Stats.REPAIRS, 1);
             if(who.update(conn) && what.update( conn ))
             {
                 new Message( conn, who.getId(), Message.NORMAL, "You repair your " + it.getName() + " using the tools and facilities you find here." );
