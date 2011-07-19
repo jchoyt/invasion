@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<%@ page isErrorPage="true"%><%@ page import="java.io.*, org.mitre.mrald.util.*" %>
+<%@ page isErrorPage="true"%><%@ page import="java.io.*, java.util.Date, org.mitre.mrald.util.*" %>
     <%-- Exception Handler --%><%
     /* exceptions get put into the request object under one of two names
      * "javax.servlet.jsp.jspException"  or "javax.servlet.error.exception",
