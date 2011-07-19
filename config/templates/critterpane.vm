@@ -1,6 +1,6 @@
 #foreach($pet in $pets)
 <tr>
-    <td><a href="viewOwner.jsp?id=${pet.id}">${pet.name}</a></td>
+    <td><a href="/game/viewOwner.jsp?id=${pet.id}">${pet.name}</a></td>
     <td><img alt="" src="/game/i/hp-${pet.hp}.png"/></td>
     <td><a id="pet${pet.id}" class="open_attack" href="#">>></a></td>
 </tr>

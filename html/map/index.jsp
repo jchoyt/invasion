@@ -78,8 +78,8 @@
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage periodic poll</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="alert('No uber map yet');">Uber Map</a></p>
-                    <p><a href="http://wiki.soulcubes.com" target="_blank" >Wiki</a></p>
-                    <p><a href="http://forums.soulcubes.com" target="_blank" >Forums</a></p>
+                    <p><a href="http://soulcubes.com/docs" target="_blank" >Wiki</a></p>
+                    <p><a href="http://soulcubes.com/boards" target="_blank" >Forums</a></p>
                  </div>
              </span>&nbsp; <!-- &nbsp (or anything, actually) prevents float from collapsing -->
         </div>

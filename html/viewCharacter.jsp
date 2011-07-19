@@ -118,7 +118,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                     <ul>
                         <li><a href="#tabs-1">Summary</a></li>
                         <li><a href="#tabs-2">Skills</a></li>
-                        <li><a href="#tabs-3">Achievments</a></li>
+                        <li><a href="#tabs-3">Achievements</a></li>
                         <%
                         if( thisguy.getUsername().equals( request.getRemoteUser() ) )
                         {

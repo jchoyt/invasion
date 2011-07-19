@@ -18,7 +18,7 @@
                 out.write(" | <a href=\"" + WebUtils.BASE + "/admin\">Admin area</a>");
             }
         %>
-        <br/><a href="http://forums.soulcubes.com" target="_blank">Forums</a> | <a href="http://wiki.soulcubes.com" target="_blank">Wiki</a>
+        <br/><a href="http://soulcubes.com/boards" target="_blank">Forums</a> | <a href="http://soulcubes.com/docs" target="_blank">Wiki</a>
     </center>
 </body>
 </html>
