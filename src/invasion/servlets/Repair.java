@@ -151,11 +151,11 @@ public class Repair extends HttpServlet
                 new Message( conn, who.getId(), Message.NORMAL, Item.DEFECT_MESSAGE );
             }
 
-            //update item
-            what.setCondition( what.getCondition() + 1 );
             //update XP and AP
             who.setAp( who.getAp() - calculateAp(what.getCondition(), delta) );
             who.setXp( who.getXp() + calculateXp(what.getCondition(), delta) );
+            //update item
+            what.setCondition( what.getCondition() + 1 );
             if(who.update(conn) && what.update( conn ))
             {
                 new Message( conn, who.getId(), Message.NORMAL, "You repair your " + it.getName() + " using the tools and facilities you find here." );
