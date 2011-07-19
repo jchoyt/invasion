@@ -64,7 +64,7 @@ public class VasionBot extends PircBot
             //set bot info
             this.setName( config.getValue("name") );
             owners = Arrays.asList( config.getValue("owner").split(",") );
-            this.setLogin( owners.get(0) );
+            this.setLogin( config.getValue("name") );
 
             reload();
 
