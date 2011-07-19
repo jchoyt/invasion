@@ -257,7 +257,7 @@ public class VasionBot extends PircBot
             log.info( "Joined to " +  channels[i] );
             VasionBot.channels.add( channels[i] );
         }
-        VasionBot.bot.sendMessage( VasionBot.channels.get(0), "Don't try to get me to do stuff..I'm not here for your entertainment.  I report errors.  That's about all.");
+        // VasionBot.bot.sendMessage( VasionBot.channels.get(0), "Don't try to get me to do stuff..I'm not here for your entertainment.  I report errors.  That's about all.");
     }
 
     public static boolean isOwner(String nick)

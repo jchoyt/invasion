@@ -6,6 +6,7 @@ package invasion.servlets;
 
 import invasion.util.*;
 import invasion.dataobjects.*;
+import invasion.bot.VasionBot;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -91,6 +92,8 @@ public class Connect extends HttpServlet
         catch(Exception e)
         {
             log.throwing(KEY, "Body", e);
+            String errFile = WebUtils.dumpError(e);
+            VasionBot.announce("Character connection failed for character " + charId + ". Details can be found at " + errFile );
             response.sendRedirect( WebUtils.BASE + "index.jsp" );
         }
     }

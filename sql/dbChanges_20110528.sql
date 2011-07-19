@@ -1,6 +1,6 @@
 -- script for database changes to support crafting
 -- started 2011-05-27
--- finished 2011-07-XX
+-- finished 2011-07-18
 
 create table modType (
     id serial primary key,

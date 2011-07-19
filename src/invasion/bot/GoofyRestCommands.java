@@ -23,7 +23,7 @@ public class GoofyRestCommands implements BotCommandHandler
 
     public final static String KEY = GoofyRestCommands.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     public GoofyRestCommands()
     {

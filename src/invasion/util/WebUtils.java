@@ -24,7 +24,7 @@ public class WebUtils
 
     public final static String KEY = WebUtils.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     public static final String EMPTY_STR = "";
     public static final String NEWLINE = "\n";
