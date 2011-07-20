@@ -265,7 +265,6 @@
 
 			$('.pop_menu > p > a').click(function() {
 				$('.pop').removeClass('active');
-				return false;
 			});
 			// Close the popup menu upon clicking a link.
 
