@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import invasion.bot.VasionBot;
 import invasion.dataobjects.*;
 import invasion.util.*;
 import java.io.*;
@@ -63,12 +64,14 @@ public class Respawn extends HttpServlet
             {
                 //ticksalive is not 0, so someone is trying to cheat and respawn early
                 response.sendRedirect("naughty.jsp");
+                VasionBot.announce( request.getRemoteUser() + " attempted to respawn character " + charId + " but the new body isn't done growing (they hacked the page)." );
                 return;
             }
             alt = Alt.load(altid);
             if( !alt.getUsername().equals(request.getRemoteUser()) )
             {
                 response.sendRedirect("naughty.jsp");
+                VasionBot.announce( request.getRemoteUser() + " attempted to respawn " + alt.getName() + " but that's not their character." );
                 return;
             }
             Whatzit wazzit = new Whatzit( altid );

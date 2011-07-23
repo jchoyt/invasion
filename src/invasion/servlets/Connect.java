@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import invasion.bot.VasionBot;
 import invasion.util.*;
 import invasion.dataobjects.*;
 import invasion.bot.VasionBot;
@@ -77,6 +78,7 @@ public class Connect extends HttpServlet
             if( !alt.getUsername().equals(request.getRemoteUser()) )
             {
                 response.sendRedirect("naughty.jsp");
+                VasionBot.announce( request.getRemoteUser() + " attempted to log in as " + alt.getName() + " and that's not his character." );
                 return;
             }
             Whatzit wazzit = new Whatzit(altid);
