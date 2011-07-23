@@ -17,7 +17,19 @@ public class Constants
         try{
             RELOAD_REQUIRED.put("reload", "true");
         }catch (Exception e){}
-    } //}}}
+    }
+
+    public final static int MIN_CHAR_ID = 0;
+    public final static int MAX_CHAR_ID = 1000000;
+    public final static int MIN_LOCATION_ID = MAX_CHAR_ID + 1;
+    public final static int MAX_LOCATION_ID = 2000000;
+    public final static int MIN_FACTION_ID = MAX_LOCATION_ID + 1;
+    public final static int MAX_FACTION_ID = 3000000;;
+    public final static int MIN_LOCKER_ID = MAX_FACTION_ID + 1;
+    public final static int MAX_LOCKER_ID = 4000000;
+
+
+    //}}}
 
     //{{{ Methods
     /**
