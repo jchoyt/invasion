@@ -7,7 +7,7 @@
         label { float:left; width:45%; margin-right:0.5em; padding-top:0.2em; text-align:right; font-weight:bold; }
         p { clear: both; }
     </style>
-    <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
     <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <script>

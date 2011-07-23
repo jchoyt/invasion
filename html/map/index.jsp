@@ -38,7 +38,7 @@
     <link type="text/css" href="${css}/main.css" rel="stylesheet" />
     <link type="text/css" href="layout-default-latest.css" rel="stylesheet" />
     <link type="text/css" href="pop.css" rel="stylesheet" />
-    <script type="text/javascript" src="${js}/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="${js}/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="${js}/vel2jstools.js"></script>
     <script type="text/javascript" src="${js}/vel2js.js"></script>
     <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
@@ -207,6 +207,7 @@
                         %>
                     </tbody>
                 </table>
+                <center><a href="#" onclick="alert('will open facility to manage inventory');" class="command">Manage Inventory</a></center>
                 </form>
             </div>
             <h3><a href="#">Skills</a></h3>

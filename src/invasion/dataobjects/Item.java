@@ -125,7 +125,7 @@ public class Item  implements java.io.Serializable {
     public static JSONArray getItems( InvasionConnection conn, int locid )
     throws SQLException
     {
-        String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight, damagetype, capacity from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, ammoleft";
+        String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight, damagetype, capacity from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, condition, ammoleft";
         PreparedStatement ps = null;
         ResultSet rs = null;
         JSONArray root = new JSONArray();
@@ -186,6 +186,38 @@ public class Item  implements java.io.Serializable {
             return ret;
         }
     }
+
+    // public static JSONArray getStackedItems( InvasionConnection conn, int locid )
+    // throws SQLException
+    // {
+    //     String query = "select min(itemid), typeid, count(*) from item i where locid=1 group by typeid where locid=?";
+    //     ResultSet rs = null;
+    //     JSONArray root = new JSONArray();
+    //     try
+    //     {
+    //         rs = conn.psExecuteQuery(query, "", locid);
+    //         while(rs.next())
+    //         {
+    //             JSONObject obj = new JSONObject();
+    //             obj.put("typeid", rs.getInt("typeid"));
+    //             obj.put("itemid", rs.getInt("min"));
+    //             obj.put("name", ItemType.getItemType(rs.getInt("typeid")).getName());
+    //             obj.put("count", rs.getInt("ammoleft"));
+    //             root.put(obj);
+    //         }
+    //         DatabaseUtility.close(rs);
+    //     }
+    //     catch(SQLException e)
+    //     {
+    //         log.throwing( KEY, "Error retrieving Item list", e);
+    //         throw e;
+    //     }
+    //     finally
+    //     {
+    //         DatabaseUtility.close(rs);
+    //         return root;
+    //     }
+    // }
 
     public static String getCategory( InvasionConnection conn, int itemid) throws SQLException
     {
