@@ -193,7 +193,7 @@ public class InvasionConnection
         }
         catch(SQLException e)
         {
-            log.throwing( KEY, errorMsg, e);
+            log.log( Level.SEVERE, errorMsg, e)
             log.severe("Query failed:  Query is " + String.valueOf(ps));
             return null;
         }
@@ -209,7 +209,7 @@ public class InvasionConnection
      *
      * @param  sSQL        Query string suitable for creating a PreparedStatment
      * @param Object...    Comma delimited list of parameters, in order!
-     * @return             ResultSet of the query
+     * @return             Count of objects modified
      * @exception  SQLException  Description of the Exception
      */
     public int psExecuteUpdate(String query, String errorMsg, Object... params)
@@ -247,7 +247,7 @@ public class InvasionConnection
         }
         catch(SQLException e)
         {
-            log.throwing( KEY, errorMsg, e);
+            log.log( Level.SEVERE, errorMsg, e)
             return -1;
         }
         finally
@@ -305,7 +305,7 @@ public class InvasionConnection
         }
         catch(SQLException e)
         {
-            log.throwing( KEY, errorMsg, e);
+            log.log( Level.SEVERE, errorMsg, e);
         }
         finally
         {
