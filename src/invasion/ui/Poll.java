@@ -93,7 +93,7 @@ public class Poll
             }
             log.finer( "Occupants complete: " + (System.currentTimeMillis()-start) );
             //Announcements (errors, info)
-            if( alerts != null )
+            if( alerts != null && alerts.length() > 0)
             {
                 ret.put("announce", alerts);
             }

@@ -193,7 +193,7 @@ public class InvasionConnection
         }
         catch(SQLException e)
         {
-            log.log( Level.SEVERE, errorMsg, e)
+            log.log( Level.SEVERE, errorMsg, e );
             log.severe("Query failed:  Query is " + String.valueOf(ps));
             return null;
         }
@@ -247,7 +247,7 @@ public class InvasionConnection
         }
         catch(SQLException e)
         {
-            log.log( Level.SEVERE, errorMsg, e)
+            log.log( Level.SEVERE, errorMsg, e );
             return -1;
         }
         finally
