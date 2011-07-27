@@ -5,7 +5,7 @@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = wazzit.getAlt();
-    String errorMsg = wazzit.getAlt().getName() + " is dead. <a href=\"${base}disconnect\">Go back</a> and select another character.";
+    String errorMsg = wazzit.getAlt().getName() + " is dead. <a href=\"" + WebUtils.BASE + "disconnect\">Go back</a> and select another character.";
 
     //set up db connection
     InvasionConnection conn = null;
@@ -31,7 +31,7 @@
     <script type="text/javascript" src="${js}/jquery.validate.js"></script>
     <script type="text/javascript" src="jquery.pop.js"></script>
     <script type="text/javascript" src="${js}/map.js"></script>
-    <script type="text/javascript" src="${js}/jquery.layout.min-1.2.0.js"></script>
+    <script type="text/javascript" src="${js}/jquery.layout.min-1.3.0rc29.js"></script>
     <%--}}}--%>
 
     <%--  {{{ css --%>
