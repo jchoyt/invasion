@@ -3,5 +3,5 @@
     #if( $msg.reps > 1 )
         ( $msg.reps times )
     #end
-    $msg.text ( $msg.date )</span></span></li>
+    $msg.text ($msg.date)</span></span></li>
 #end

@@ -250,15 +250,45 @@ public class Message  implements java.io.Serializable {
     public JSONObject toJson()
         throws JSONException
     {
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd (EEE) HH:mm:ss Z");
         JSONObject ret = new JSONObject();
         ret.put("read", read);
         ret.put("type", type);
         ret.put("reps", reps);
         ret.put("text", message);
-        ret.put("date", f.format(messagedate));
+        ret.put("date", formatDate(messagedate));
         return ret;
-    } //}}}
+    }
+
+    protected String formatDate( Date messagedate )
+    {
+        String ret = null;
+        // SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        //ret = f.format(messagedate);
+        long now = System.currentTimeMillis();
+        long diffInSec = ( now - messagedate.getTime() ) / 1000;
+        if( diffInSec < 90 )
+        {
+            ret = diffInSec + " sec ago";
+        }
+        else if( diffInSec < 3000 )
+        {
+            ret = Math.round(diffInSec/60.0) + " min ago";
+        }
+        else if( diffInSec < 165600 ) // just under two days
+        {
+            ret = Math.round(diffInSec/3600.0) + " hr ago";
+        }
+        else if( diffInSec < 600000 ) //just under 7 days
+        {
+            ret = Math.round(diffInSec/86400.0) + " days ago";
+        }
+        else
+        {
+            ret = "long ago";
+        }
+
+        return ret;
+    }//}}}
 
     //{{{ Getters and Setters
     public int getMessageid() { return this.messageid; }
