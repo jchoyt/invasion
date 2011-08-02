@@ -2,11 +2,7 @@
 <tr>
     <td><a href="/game/viewOwner.jsp?id=${pet.id}">${pet.name}</a></td>
     <td><img alt="" src="/game/i/hp-${pet.hp}.png"/></td>
-    <td><a id="pet${pet.id}" class="open_attack" href="#">>></a></td>
+    <td><a id="pet${pet.id}" onclick="show_pet_target(${pet.id})">>></a></td>
 </tr>
-<tr id="pet${pet.id}" class="do_attack" style="color:red;">  #* display:none; *#
-	<td colspan="3" style="text-align:center;">
-		<a href="#" onclick="attack_pet(${pet.id})">Attack ${pet.name}</a>
-	</td>
-</tr>
+<span id="pet-desc-${pet.id}" style="display:none;"><a href="#" onclick="attack_pet(${pet.id})">Attack ${pet.name}</a></span>
 #end

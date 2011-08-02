@@ -54,7 +54,7 @@
 	</style>
 	<%--}}} --%>
 </head>
-	<body>
+	<body id="wholeEnchilada" style="height:100%;">
 
     <%--{{{  center pane--%>
     <div class="ui-layout-center">
@@ -106,7 +106,7 @@
                     VelocityUtil.applyTemplate( obj, "locationDescription.vm", out );
                 %>
             </div>
-            <h6 class="start-closed"><a href="#">Actions</a></h6>
+            <h6<%--  class="start-closed" --%>><a href="#">Actions</a></h6>
             <div id="actions">
                 <div id="recharge-item">
                     <% VelocityUtil.applyTemplate(obj, "rechargeItem.vm", out); %>
@@ -114,12 +114,9 @@
                 <div id="repair-item">
                     <% VelocityUtil.applyTemplate(obj, "repairItem.vm", out); %>
                 </div>
+                <a href="#" onclick="$('#inv-mgmt-dlg').dialog('open');return false;" class="command">Manage Inventory</a>
             </div>
         </div>
-        <!-- ui-dialog -->
-		<div id="dialog" title="Dialog Title">
-			<p>There has been an exception.  Check <a href="editLocation.jsp?locid=1001625">here</a> to see what the problem may have been</p>
-		</div>
     </div> <%--}}}--%>
 
     <%--{{{  west pane --%>
@@ -164,20 +161,25 @@
                         %>
                     </tbody>
                 </table>
+                <center>
+                    <div id="att-pet-box"></div>
+                </center>
             </div>
-            <h6 class="start-closed"><a href="#">Items</a></h6>
+            <h6 <%-- class="start-closed" --%>><a href="#">Items</a></h6>
             <div>
-                <p>
-                Cras dictum. Pellentesque habitant morbi tristique senectus et netus
-                et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
-                faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
-                mauris vel est.
-                </p>
-                <p>
-                Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
-                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-                inceptos himenaeos.
-                </p>
+                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" id="item-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="item-pane">
+                        <%
+                            VelocityUtil.applyTemplate(obj, "itempane.vm", out);
+                        %>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -199,15 +201,15 @@
             <h3 id="inv-pane"><a href="#">Inventory</a></h3>
             <div>
                 <form id="inv-form">
-                <table style="width:320px" cellpadding="0" cellspacing="0" border="0">
-                    <thead><tr><th>Name</th><th>Wt</th><th>Act</th></tr></thead>
+                <table style="width:100%" cellpadding="0" cellspacing="0" border="0">
+                    <thead><tr><th>Name</th><th>#</th></th><th>Wt</th><th>Act</th></tr></thead>
                     <tbody id="inv-body">
                         <%
                             VelocityUtil.applyTemplate(obj, "inventory.vm", out);
                         %>
                     </tbody>
                 </table>
-                <center><a href="#" onclick="alert('will open facility to manage inventory');" class="command">Manage Inventory</a></center>
+                <center><a href="#" onclick="$('#inv-mgmt-dlg').dialog('open');return false;" class="command">Manage Inventory</a></center>
                 </form>
             </div>
             <h3><a href="#">Skills</a></h3>
@@ -221,61 +223,59 @@
         <%-- <h4>Accordion inside DIV.ui-layout-content</h4> --%>
     </div>
     <%--}}}--%>
+
+    <%--{{{ dialogs --%>
+    <div id="inv-mgmt-dlg" title="Inventory Management">
+        <form>
+            <select name="action">
+                <option>Drop</option>
+                <option>Place on Ground</option>
+                <option>Give to...</option>
+                <option>Put in locker...</option>
+                <option>Put in faction safe</option>
+            </select>
+            <br/>
+            <select style="float:left;" name="itemid" id="inv-list" size="10" multiple="true">
+                <%
+                    VelocityUtil.applyTemplate(obj, "inventoryManagement.vm", out);
+                %>
+            </select> * Ctrl+click to select multiple items to operate on at once.
+        </form>
+    </div>
+    <%--}}}--%>
     <%
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            out.write("Error retrieving stats");
+            log.throwing(KEY, "Body", e);
+            String errFile = WebUtils.dumpError(e);
+            out.write("Error retrieving stats. Details can be found at " + errFile );
         }
         finally
         {
             DatabaseUtility.close(conn);
         }
     %>
-
-	<!-- So apparently loading JS blocks download 'till it's done. Either way, it's easier to find here. -->
 	<%--{{{  javascript --%>
 	<script type="text/javascript">
-        function chalkWall()
-        {
-            resource = "${base}map/chalk.jsp";
-            $('#dialog').load(resource, function() {
-				$('#dialog').dialog('open');
-				$('#poll-indicator').hide();
-			});
-			$('poll-indicator').show();
-            return false;
-        }
-
-		// Never try to jquery without making sure the DOM is ready. Ready() ensures that.
+		// Never try to jquery without making sure the DOM is ready. Ready() ensures that...once working, move this stuff to map.js
 		$(document).ready(function() {
 			$("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
 			// Scroll the message pane.
 
 			// Dialog
-            $('#dialog').dialog({
+            $('#inv-mgmt-dlg').dialog({
                 autoOpen: false,
-                width: 600,
+                width: 400,
                 buttons: {
                     "Cancel": function() {
                         $(this).dialog("close");
+                    },
+                    "Submit": function() {
+                        alert('Do ajax submit');
                     }
                 }
             });
-
-			$('.pop_menu > p > a').click(function() {
-				$('.pop').removeClass('active');
-			});
-			// Close the popup menu upon clicking a link.
-
-			$('.open_attack').live('click', function() {
-			// live() attaches event handlers to all current and future elements matching the selector. Perfect when they're getting ajax'd.
-				var myID = "#" + $(this).attr('id');
-				$(':not(' + myID + ').do_attack').hide();
-				$(myID + ".do_attack").toggle();
-				return false;
-			});
 		});
 	</script>
     <%--}}}--%>
