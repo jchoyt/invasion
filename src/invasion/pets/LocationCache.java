@@ -76,7 +76,7 @@ public class LocationCache implements PropertyChangeListener
             DatabaseUtility.close(rs);
 
             //items count per location
-            query = "select locid, count(itemid) from item where locid >= 1000000 group by locid order by locid";
+            query = "select locid, count(itemid) from item where locid >= 1000000 and locid < 2000000 group by locid order by locid";
             rs = conn.executeQuery(query);
             while(rs.next())
                 setItemsAtLoc(rs.getInt(1), rs.getInt(2));
