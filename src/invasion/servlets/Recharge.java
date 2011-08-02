@@ -77,6 +77,7 @@ public class Recharge extends HttpServlet
                 String query = "update item set typeid=? where itemid=?"; //change it to a full energy pack
                 int count = conn.psExecuteUpdate( query, "Error changing the empty energy pack in the database", 28, i.getItemid() );
                 new Message( conn, alt.getId(), Message.NORMAL, "You recharge your energy pack using one of dedicated the ports here." );
+                alt.decrementAp(conn, 1);
             }
             else
             {
@@ -150,7 +151,7 @@ public class Recharge extends HttpServlet
             else
                 return "You can't figure out how to attach the energy pack to that.";
             i.update( conn );
-            new Message( conn, alt.getId(), Message.NORMAL, "You recharge your " + i.getItemtype().getName().toLowerCase()  + " using one of your energy packs.  It'll have to be recharged now." );
+            new Message( conn, alt.getId(), Message.NORMAL, "You recharge your " + i.getItemtype().getName().toLowerCase()  + " using one of your energy packs.  The energy pack is now empty and will have to be recharged." );
 
 
             //empty the pack
