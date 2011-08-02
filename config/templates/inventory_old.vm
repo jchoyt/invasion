@@ -1,0 +1,39 @@
+#foreach($i in $inv)
+    #if ($i.equipped)
+        <tr>
+            #if ($i.type == "weapon" || $i.type == "armor")
+                <td>$i.name ($i.condition) ($i.ammoleft)</td>
+            #else
+                <td>$i.name</td>
+            #end
+            <td>$i.wt</td><td>
+            <a href="unequip?weaponid=${i.itemid}" >Unequip</a>
+        </td></tr>
+    #end
+#end
+
+#foreach($i in $inv)
+    #if ($i.equipped)
+    #else
+        <tr>
+            #if ($i.type == "weapon" || $i.type == "armor")
+                <td>$i.name ($i.condition) ($i.ammoleft)</td>
+            #else
+                <td>$i.name</td>
+            #end
+            <td>$i.wt</td><td>
+            #if ($i.type == "food")
+                <a href="#" onclick="eat(${i.itemid})">Eat</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a>
+            #elseif ($i.type == "booze")
+                <a href="#" onclick="drink(${i.itemid})">Drink</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a>
+            #elseif ($i.type == "weapon" || $i.type == "armor" || $i.type == "wearable")
+                <a href="equip?weaponid=${i.itemid}" >Equip</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a>
+            #elseif ($i.typeid == 49 && $location.allowrecharage == "t")
+                ##empty energy packs
+                <a href="#" onclick="recharge(${i.itemid})" >Recharge</a> | <a href="#" onclick="drop(${i.itemid});">Drop</a>
+            #else
+                <a href="#" onclick="drop(${i.itemid});">Drop</a></td>
+            #end
+        </td></tr>
+    #end
+#end

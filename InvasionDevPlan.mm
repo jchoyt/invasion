@@ -3,7 +3,7 @@
 <node COLOR="#000034" CREATED="1311387694546" ID="Freemind_Link_658598462" MODIFIED="1311473536364" STYLE="NodeMasterGraphic" TEXT="Invasion Development Plan">
 <edge COLOR="#309eff"/>
 <font NAME="SansSerif" SIZE="16"/>
-<node COLOR="#000034" CREATED="1311387694546" ID="Freemind_Link_1818393271" MODIFIED="1311469219661" POSITION="right" STYLE="NodeTextGraphic" TEXT="pre-alpha">
+<node COLOR="#000034" CREATED="1311387694546" ID="Freemind_Link_1818393271" MODIFIED="1311508071355" POSITION="right" STYLE="NodeTextGraphic" TEXT="pre-alpha">
 <edge COLOR="#309eff"/>
 <node CREATED="1311469298582" ID="ID_1508245124" MODIFIED="1311469307397" TEXT="Item management">
 <node CREATED="1311469307398" ID="ID_1437042794" MODIFIED="1311469312970" TEXT="Transfer to/from">
@@ -20,12 +20,15 @@
 <node CREATED="1311469937052" ID="ID_1221987248" MODIFIED="1311469951016" TEXT="enhancements to make them more powerful"/>
 </node>
 <node CREATED="1311469366247" ID="ID_828604465" MODIFIED="1311469672389" TEXT="list of items and where to find them"/>
-<node CREATED="1311469333700" ID="ID_1722906997" MODIFIED="1311469344975" TEXT="psi and mutate races">
+<node CREATED="1311469333700" ID="ID_1722906997" MODIFIED="1311614952426" TEXT="psi and mutate races">
 <node CREATED="1311469344976" ID="ID_385443179" MODIFIED="1311469348442" TEXT="soul cubes"/>
-<node CREATED="1311469348812" ID="ID_26802540" MODIFIED="1311469352477" TEXT="psi skills"/>
-<node CREATED="1311469353027" ID="ID_1338877911" MODIFIED="1311469355026" TEXT="mutate skills"/>
+<node CREATED="1311469348812" ID="ID_26802540" MODIFIED="1311615010911" TEXT="psi skills">
+<arrowlink DESTINATION="ID_1706363951" ENDARROW="Default" ENDINCLINATION="512;0;" ID="Arrow_ID_177021020" STARTARROW="None" STARTINCLINATION="512;0;"/>
+</node>
+<node CREATED="1311469353027" ID="ID_1338877911" MODIFIED="1311614995938" TEXT="mutate skills"/>
 </node>
 <node CREATED="1311469391288" ID="ID_882692320" MODIFIED="1311469392460" TEXT="factions"/>
+<node CREATED="1311508072367" ID="ID_1523109386" MODIFIED="1311508088322" TEXT="non-custom location descriptions"/>
 </node>
 <node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_947844843" MODIFIED="1311387694547" POSITION="left" STYLE="NodeTextGraphic" TEXT="bizarre ideas">
 <edge COLOR="#309eff"/>
@@ -217,7 +220,7 @@
 </node>
 <node CREATED="1311469974138" ID="ID_1986059071" MODIFIED="1311469987177" TEXT="Items in really  bad shape will require components to fix"/>
 </node>
-<node CREATED="1311473537461" ID="ID_1555687791" MODIFIED="1311474581305" POSITION="right" TEXT="races">
+<node CREATED="1311473537461" ID="ID_1555687791" MODIFIED="1311614977684" POSITION="right" TEXT="races">
 <node CREATED="1311473540890" ID="ID_372724597" MODIFIED="1311473686424">
 <richcontent TYPE="NODE"><html>
   <head>
@@ -228,8 +231,7 @@
       Players can start out as human, psi, or mutate.&#160;&#160;If they start out as non-human, that's it for the game.&#160;&#160;Humans can make a one-time switch to another race by use of a soul cube, which must be constructed by the character at considerable AP cost.&#160;&#160;
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node CREATED="1311473689903" ID="ID_191145415" MODIFIED="1311473691436" TEXT="Non humans can purchase human skills can be purchased at extra CP cost, though (50% extra?).   "/>
 <node CREATED="1311473693238" FOLDED="true" ID="ID_1939420360" MODIFIED="1311474254769" TEXT="Human">
@@ -269,7 +271,7 @@
 </node>
 </node>
 </node>
-<node CREATED="1311474256657" FOLDED="true" ID="ID_1706363951" MODIFIED="1311474892403" TEXT="PSI ">
+<node CREATED="1311474256657" ID="ID_1706363951" MODIFIED="1311615010912" TEXT="PSI ">
 <node CREATED="1311474275763" ID="ID_717484904" MODIFIED="1311474358474" TEXT="Mind-related powers - think psionics.  "/>
 <node CREATED="1311474360093" ID="ID_1819491704" MODIFIED="1311474365388" TEXT="Should be more powerful than humans but have some weaknesses"/>
 <node CREATED="1311474377027" ID="ID_383344254" MODIFIED="1311474388888" TEXT="Geared towards group action and defense"/>
@@ -294,11 +296,12 @@
 </node>
 </node>
 </node>
-<node CREATED="1311474583772" FOLDED="true" ID="ID_1701776003" MODIFIED="1311474893775" TEXT="Mutate">
+<node CREATED="1311474583772" ID="ID_1701776003" MODIFIED="1311614894433" TEXT="Mutate">
 <node CREATED="1311474586632" ID="ID_668443398" MODIFIED="1311474612306" TEXT="body-related powers"/>
 <node CREATED="1311474612939" ID="ID_253336396" MODIFIED="1311474626665" TEXT="Should be more powerful than humans but have some weaknesses"/>
 <node CREATED="1311474627297" ID="ID_15147991" MODIFIED="1311474637701" TEXT="Geared towards individual combat and hunting"/>
-<node CREATED="1311474639259" FOLDED="true" ID="ID_1563018345" MODIFIED="1311474889626" TEXT="skills">
+<node CREATED="1311474639259" FOLDED="true" ID="ID_1563018345" MODIFIED="1311614995937" TEXT="skills">
+<arrowlink DESTINATION="ID_1338877911" ENDARROW="Default" ENDINCLINATION="562;0;" ID="Arrow_ID_1216943905" STARTARROW="None" STARTINCLINATION="702;0;"/>
 <node CREATED="1311474641857" ID="ID_419860199" MODIFIED="1311474645441" TEXT="pets">
 <node CREATED="1311474645445" ID="ID_1819911935" MODIFIED="1311474653109" TEXT="more &quot;do damage&quot;"/>
 <node CREATED="1311474653837" ID="ID_1549519698" MODIFIED="1311474660516" TEXT="output from their own bodies"/>

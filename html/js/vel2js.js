@@ -46,16 +46,16 @@ t.p('</a></td>    <td><img alt="" src="/game/i/hp-');
 t.p( pet.hp);
 t.p('.png"/></td>    <td><a id="pet');
 t.p( pet.id);
-t.p('" class="open_attack" href="');
-t.p('#">>></a></td></tr><tr id="pet');
+t.p('" onclick="show_pet_target(');
 t.p( pet.id);
-t.p('" class="do_attack" style="color:red;">  ');
-t.p('	<td colspan="3" style="text-align:center;">		<a href="');
+t.p(')">>></a></td></tr><span id="pet-desc-');
+t.p( pet.id);
+t.p('" style="display:none;"><a href="');
 t.p('#" onclick="attack_pet(');
 t.p( pet.id);
 t.p(')">Attack ');
 t.p( pet.name);
-t.p('</a>	</td></tr>');
+t.p('</a></span>');
 }
 velocityCount = 0;
 return t.toString();
@@ -106,82 +106,311 @@ if (context.velocityCount) velocityCount=context.velocityCount;
 for (var i1=0;  i1<context.inv.length; i1++) {
 var i = context.inv[i1];
 velocityCount = i1;
-t.p('<tr>    ');
+t.p('    ');
+if (i.equipped) {
+t.p('        <tr>            ');
 if (i.type == "weapon" || i.type == "armor") {
-t.p('        <td>');
+t.p('                <td>');
 t.p( i.name);
 t.p(' (');
 t.p( i.condition);
 t.p(') (');
 t.p( i.ammoleft);
-t.p(')</td>    ');
+t.p(')</td>            ');
 }
 else {
-t.p('        <td>');
+t.p('                <td>');
 t.p( i.name);
-t.p('</td>    ');
+t.p('</td>            ');
 }
-t.p('    <td>');
+t.p('            <td>1</td><td>');
 t.p( i.wt);
-t.p('</td><td>    ');
-if (i.type == "food") {
-t.p('        <a href="');
-t.p('#" onclick="eat(');
+t.p('</td><td>            <a href="unequip?weaponid=');
 t.p( i.itemid);
-t.p(')">Eat</a> | <a href="');
-t.p('#" onclick="drop(');
-t.p( i.itemid);
-t.p(');">Drop</a>    ');
+t.p('" >Unequip</a>        </td></tr>    ');
 }
-else {
-if (i.type == "booze") {
-t.p('        <a href="');
-t.p('#" onclick="drink(');
-t.p( i.itemid);
-t.p(')">Drink</a> | <a href="');
-t.p('#" onclick="drop(');
-t.p( i.itemid);
-t.p(');">Drop</a>    ');
 }
-else {
-if (i.type == "weapon" || i.type == "armor" || i.type == "wearable") {
-t.p('        ');
+velocityCount = 0;
+var lastItem = -1;
+var lastDisplayName = "Fred";
+var count = 1;
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('    ');
 if (i.equipped) {
-t.p('            <a href="unequip?weaponid=');
-t.p( i.itemid);
-t.p('" >Unequip</a>        ');
-}
-else {
-t.p('            <a href="equip?weaponid=');
-t.p( i.itemid);
-t.p('" >Equip</a> | <a href="');
-t.p('#" onclick="drop(');
-t.p( i.itemid);
-t.p(');">Drop</a>        ');
-}
 t.p('    ');
 }
 else {
-if (i.typeid == 49 && context.location.allowrecharage == "t") {
 t.p('        ');
-t.p('        <a href="');
-t.p('#" onclick="recharge(');
-t.p( i.itemid);
-t.p(')" >Recharge</a> | <a href="');
-t.p('#" onclick="drop(');
-t.p( i.itemid);
-t.p(');">Drop</a>    ');
+t.p('        ');
+if (i.type == "weapon" || i.type == "armor") {
+var displayName = ( ( ( ( ( i.name + " (" ) + i.condition ) + ") (" ) + i.ammoleft ) + ")" );
+t.p('        ');
 }
 else {
-t.p('        <a href="');
-t.p('#" onclick="drop(');
-t.p( i.itemid);
-t.p(');">Drop</a></td>    ');
+var displayName = i.name;
+t.p('        ');
+}
+t.p('        ');
+t.p('        ');
+if (lastItem == -1) {
+lastItem = i;
+lastDisplayName = displayName;
+t.p('        ');
+t.p('        ');
+}
+else {
+if (lastDisplayName == displayName) {
+count = ( count + 1 );
+t.p('        ');
+}
+else {
+var wt = ( lastItem.wt * count );
+t.p('            <tr>                <td>');
+t.p( lastDisplayName);
+t.p('</td>                <td>');
+t.p( count);
+t.p('</td>                <td>');
+t.p( wt);
+t.p('</td><td>                ');
+if (lastItem.type == "food") {
+t.p('                    <a href="');
+t.p('#" onclick="eat(');
+t.p( lastItem.itemid);
+t.p(')">Eat</a>                ');
+}
+else {
+if (lastItem.type == "booze") {
+t.p('                    <a href="');
+t.p('#" onclick="drink(');
+t.p( lastItem.itemid);
+t.p(')">Drink</a>                ');
+}
+else {
+if (lastItem.type == "weapon" || lastItem.type == "armor" || lastItem.type == "wearable") {
+t.p('                    <a href="equip?weaponid=');
+t.p( lastItem.itemid);
+t.p('" >Equip</a>                ');
+}
+else {
+if (lastItem.typeid == 49 && context.location.allowrecharage == "t") {
+t.p('                    ');
+t.p('                    <a href="');
+t.p('#" onclick="recharge(');
+t.p( lastItem.itemid);
+t.p(')" >Recharge</a>                ');
+}
+}
+}
+}
+t.p('            </td></tr>            ');
+lastItem = i;
+lastDisplayName = displayName;
+count = 1;
+t.p('        ');
+}
+}
+t.p('    ');
+}
+}
+velocityCount = 0;
+var wt = ( lastItem.wt * count );
+t.p('<tr><td>');
+t.p( lastDisplayName);
+t.p('</td><td>');
+t.p( count);
+t.p('</td><td>');
+t.p( wt);
+t.p('</td><td>');
+if (lastItem.type == "food") {
+t.p('<a href="');
+t.p('#" onclick="eat(');
+t.p( lastItem.itemid);
+t.p(')">Eat</a>');
+}
+else {
+if (lastItem.type == "booze") {
+t.p('<a href="');
+t.p('#" onclick="drink(');
+t.p( lastItem.itemid);
+t.p(')">Drink</a>');
+}
+else {
+if (lastItem.type == "weapon" || lastItem.type == "armor" || lastItem.type == "wearable") {
+t.p('<a href="equip?weaponid=');
+t.p( lastItem.itemid);
+t.p('" >Equip</a>');
+}
+else {
+if (lastItem.typeid == 49 && context.location.allowrecharage == "t") {
+t.p('<a href="');
+t.p('#" onclick="recharge(');
+t.p( lastItem.itemid);
+t.p(')" >Recharge</a>');
 }
 }
 }
 }
 t.p('</td></tr>');
+return t.toString();
+}
+function v2js_inventoryManagement(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('    ');
+if (i.equipped) {
+t.p('        <option value="');
+t.p( i.itemid);
+t.p('" disabled="true">');
+t.p( i.name);
+t.p(' (equipped)</option>    ');
+}
+else {
+t.p('        <option value="');
+t.p( i.itemid);
+t.p('"s>');
+t.p( i.name);
+t.p('</option>    ');
+}
+}
+velocityCount = 0;
+return t.toString();
+}
+function v2js_inventory_old(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('    ');
+if (i.equipped) {
+t.p('        <tr>            ');
+if (i.type == "weapon" || i.type == "armor") {
+t.p('                <td>');
+t.p( i.name);
+t.p(' (');
+t.p( i.condition);
+t.p(') (');
+t.p( i.ammoleft);
+t.p(')</td>            ');
+}
+else {
+t.p('                <td>');
+t.p( i.name);
+t.p('</td>            ');
+}
+t.p('            <td>');
+t.p( i.wt);
+t.p('</td><td>            <a href="unequip?weaponid=');
+t.p( i.itemid);
+t.p('" >Unequip</a>        </td></tr>    ');
+}
+}
+velocityCount = 0;
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('    ');
+if (i.equipped) {
+t.p('    ');
+}
+else {
+t.p('        <tr>            ');
+if (i.type == "weapon" || i.type == "armor") {
+t.p('                <td>');
+t.p( i.name);
+t.p(' (');
+t.p( i.condition);
+t.p(') (');
+t.p( i.ammoleft);
+t.p(')</td>            ');
+}
+else {
+t.p('                <td>');
+t.p( i.name);
+t.p('</td>            ');
+}
+t.p('            <td>');
+t.p( i.wt);
+t.p('</td><td>            ');
+if (i.type == "food") {
+t.p('                <a href="');
+t.p('#" onclick="eat(');
+t.p( i.itemid);
+t.p(')">Eat</a> | <a href="');
+t.p('#" onclick="drop(');
+t.p( i.itemid);
+t.p(');">Drop</a>            ');
+}
+else {
+if (i.type == "booze") {
+t.p('                <a href="');
+t.p('#" onclick="drink(');
+t.p( i.itemid);
+t.p(')">Drink</a> | <a href="');
+t.p('#" onclick="drop(');
+t.p( i.itemid);
+t.p(');">Drop</a>            ');
+}
+else {
+if (i.type == "weapon" || i.type == "armor" || i.type == "wearable") {
+t.p('                <a href="equip?weaponid=');
+t.p( i.itemid);
+t.p('" >Equip</a> | <a href="');
+t.p('#" onclick="drop(');
+t.p( i.itemid);
+t.p(');">Drop</a>            ');
+}
+else {
+if (i.typeid == 49 && context.location.allowrecharage == "t") {
+t.p('                ');
+t.p('                <a href="');
+t.p('#" onclick="recharge(');
+t.p( i.itemid);
+t.p(')" >Recharge</a> | <a href="');
+t.p('#" onclick="drop(');
+t.p( i.itemid);
+t.p(');">Drop</a>            ');
+}
+else {
+t.p('                <a href="');
+t.p('#" onclick="drop(');
+t.p( i.itemid);
+t.p(');">Drop</a></td>            ');
+}
+}
+}
+}
+t.p('        </td></tr>    ');
+}
+}
+velocityCount = 0;
+return t.toString();
+}
+function v2js_itempane(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+for (var i1=0;  i1<context.ground.length; i1++) {
+var item = context.ground[i1];
+velocityCount = i1;
+t.p('<tr>    <td>');
+t.p( item.name);
+t.p('</td>    <td><a href="');
+t.p('#" onclick="pickUp(');
+t.p( item.itemid);
+t.p(',');
+t.p( context.location.locid);
+t.p(',');
+t.p( context.stats.altid);
+t.p(')">Pick up</a> | <a href="');
+t.p('#" onclick="alert(\'Not implemmented yet\');">Shoot</a></td></tr>');
 }
 velocityCount = 0;
 return t.toString();
@@ -311,9 +540,9 @@ t.p(' times )    ');
 }
 t.p('    ');
 t.p( msg.text);
-t.p(' ( ');
+t.p(' (');
 t.p( msg.date);
-t.p(' )</span></span></li>');
+t.p(')</span></span></li>');
 }
 velocityCount = 0;
 return t.toString();

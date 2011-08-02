@@ -806,11 +806,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public static JSONObject getStats( InvasionConnection conn, int altid )
     throws SQLException, JSONException
     {
-        String query = "select hp, ip, ap, cp, level, xp, ticksalive from alt where id=?";
+        String query = "select id, hp, ip, ap, cp, level, xp, ticksalive from alt where id=?";
         ResultSet rs = conn.psExecuteQuery( query, "Error retrieving character stats", altid );
         JSONObject obj = new JSONObject();
         if(rs.next())
         {
+            obj.put("altid", rs.getInt("id"));
             obj.put("hp", rs.getInt("hp"));
             obj.put("ap", rs.getInt("ap"));
             obj.put("ip", rs.getInt("ip"));

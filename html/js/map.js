@@ -7,11 +7,11 @@ var poll_url = base_url + "/poll";
 
 $(document).ready( function() {
 
-    myLayout = $('body').layout({
+    myLayout = $('#wholeEnchilada').layout({
         // RESIZE Accordion widget when panes resize
         // west__onresize:		function () { $("#accordion1").accordion("resize"); },
         //east__onresize:		function () { $("#accordion").accordion("resize"); },
-        east:  {initClosed: false, slideTrigger_open: "click", size: 350 },
+        east:  {initClosed: false, slideTrigger_open: "click", size: 300 },
         west: { size: 320, resizable: false },
         north:  {initClosed: true }
     });
@@ -38,6 +38,12 @@ $(document).ready( function() {
 
     $(".start-closed").click();
 
+
+    // Close the popup menu upon clicking a link.
+    $('.pop_menu > p > a').click(function() {
+        $('.pop').removeClass('active');
+    });
+
     // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
     $(document).bind('POLL_COMPLETE', function(e, data){
 		checkForReload(data);
@@ -50,6 +56,8 @@ $(document).ready( function() {
 		updateStats2(data);
 		updateLocation(data);
 		updateActions(data);
+		updateItemPane(data);
+		updateItemInventoryDialog(data);
 	});
 
     // setInterval( "poll()", 10000);
@@ -192,6 +200,30 @@ function updateActions(data)
     }
 }
 
+function updateItemPane(data)
+{
+    if(data.ground)
+    {
+        $('#item-pane').html( v2js_itempane(data) );
+    }
+    else
+    {
+        $('#item-pane').html("");
+    }
+}
+
+function updateItemInventoryDialog(data)
+{
+    if(data.inv)
+    {
+        $('#inv-list').html( v2js_inventoryManagement(data) );
+    }
+    else
+    {
+        $('#inv-list').html("");
+    }
+}
+
 //}}}
 
 //{{{ Actions
@@ -273,5 +305,22 @@ function repair(id)
     });
 }
 
+function pickUp( itemid, src, dest )
+{
+    var url = "transferItem?itemid=" + itemid + "&src=" + src + "&dest=" + dest;
+    $.getJSON(url, function(json){
+        $(document).trigger('POLL_COMPLETE', json)
+    });
+}
+function chalkWall()
+{
+    resource = "${base}map/chalk.jsp";
+    $('#dialog').load(resource, function() {
+        $('#dialog').dialog('open');
+        $('#poll-indicator').hide();
+    });
+    $('poll-indicator').show();
+    return false;
+}
 //}}}
 // :collapseFolds=0:folding=explicit:

@@ -1,0 +1,7 @@
+#foreach($i in $inv)
+    #if ($i.equipped)
+        <option value="${i.itemid}" disabled="true">${i.name} (equipped)</option>
+    #else
+        <option value="${i.itemid}"s>${i.name}</option>
+    #end
+#end

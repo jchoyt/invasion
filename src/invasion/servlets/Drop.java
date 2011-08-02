@@ -67,32 +67,37 @@ public class Drop extends HttpServlet
         throws IOException, ServletException
     {
         PrintWriter out = response.getWriter();
-        String itemid = WebUtils.getRequiredParameter(request, "itemid");
-        int id = Integer.parseInt(itemid);
+        String[] itemids = WebUtils.getRequiredParameterValues(request, "itemid");
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+        int altid = wazzit.getAlt().getId();
         String query = "delete from item where itemid = ? and locid = ? and equipped='f'";
         InvasionConnection conn = null;
         PreparedStatement ps = null;
-        JSONArray alerts = null;
+        JSONArray alerts = new JSONArray();
         try{
             conn = new InvasionConnection();
             ps = conn.prepareStatement(query);
-            String itemName = Item.getName(conn, id);
-            if( itemName == null )
+            for( String itemid : itemids )
             {
-                alerts = new JSONArray();
-                alerts.put( Poll.createErrorAlert("You do not own that item.") );
-                return;
+                int id = Integer.parseInt(itemid);
+                String itemName = Item.getName(conn, id);
+                if( itemName == null )
+                {
+                    alerts.put( Poll.createErrorAlert("You do not own that item.") );
+                    return;
+                }
+                ps.setInt(1, Integer.parseInt(itemid));
+                ps.setInt(2, altid);
+                ps.executeUpdate();
+                //TODO drop a random object if count==0
+                new Message( conn, altid, Message.NORMAL, "You drop your " + itemName + ".");
             }
-            ps.setInt(1, Integer.parseInt(itemid));
-            ps.setInt(2, wazzit.getAlt().getId());
-            ps.executeUpdate();
-            //TODO drop a random object if count==0
-            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You drop your " + itemName + ".");
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.log( Level.SEVERE, "Error dropping items.", e );
+            alerts.put( Poll.createErrorAlert("You, apparently, can't even drop stuff on the floor correctly.") );
+            return;
         }
         finally
         {

@@ -61,8 +61,7 @@ public class WebUtils
 
 
     /**
-     *  Retrieves a list of parameters from a passed request in comma delimited
-     *  format. If the parameter is not found, an NPE is thrown.
+     *  Retrieves a list of parameters from a passed request. If the parameter is not found, an NPE is thrown.
      *
      * @param  req                       Request object to look in
      * @param  name                      the name of the field from the html
@@ -72,27 +71,15 @@ public class WebUtils
      * @exception  NullPointerException  thrown if the name was not in the html
      *      form
      */
-    public static String getRequiredParameterValues( ServletRequest req, String name )
+    public static String[] getRequiredParameterValues( ServletRequest req, String name )
         throws NullPointerException
     {
-        String[]      values  = req.getParameterValues( name );
-
+        String[] values = req.getParameterValues( name );
         if ( values == null )
         {
             throw new NullPointerException( "This form requires a \"" + name + "\" parameter, which was missing from the submitted request." );
         }
-
-        StringBuffer  ret     = new StringBuffer();
-
-        for ( int i = 0; i < values.length; i++ )
-        {
-            if ( i > 0 )
-            {
-                ret.append( ',' );
-            }
-            ret.append( values[i] );
-        }
-        return ret.toString();
+        return values;
     }
 
 

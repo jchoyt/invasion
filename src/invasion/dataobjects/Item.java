@@ -83,9 +83,9 @@ public class Item  implements java.io.Serializable {
 
     public boolean update(InvasionConnection conn)
     {
-        String query = "update item set ammoleft=?, condition=? where itemid=?";
+        String query = "update item set ammoleft=?, condition=?, locid=? where itemid=?";
         ResultSet rs = null;
-        int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, condition, itemid);
+        int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, condition, locid, itemid);
         if( count==0 )
         {
             log.severe("Failed to update item " + itemid );

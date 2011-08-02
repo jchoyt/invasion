@@ -106,6 +106,13 @@ public class Poll
             log.finer( "Pets complete: " + (System.currentTimeMillis()-start) );
             //loction details
             ret.put("location", Location.getSummary(conn, wazzit.getAlt()) );
+            //items on the ground
+            items = Item.getItems(conn, wazzit.getAlt().getLocation() );
+            if( items.length() > 0 )
+            {
+                ret.put("ground", items);
+            }
+            log.finer( "Location items complete: " + (System.currentTimeMillis()-start) );
             log.finer( "Poll results: " + String.valueOf(ret));
             out.write(String.valueOf(ret));
         }
@@ -169,139 +176,222 @@ public class Poll
 
     /*
      *  Sample data
-     *  {
-     *      "msgs": [
-     *          {
-     *              "text": "You attack Dalek323 with your Energy pistol and miss.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:29:02 -0500",
-     *              "type": 0
-     *          },
-     *          {
-     *              "text": "Dalek323 attacked you and missed.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:29:02 -0500",
-     *              "type": 0
-     *          },
-     *          {
-     *              "text": "You attack Dalek323 with your Energy pistol and miss.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
-     *              "type": 0
-     *          },
-     *          {
-     *              "text": "Dalek323 attacked you and missed.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
-     *              "type": 0
-     *          },
-     *          {
-     *              "text": "You attack Dalek323 with your Energy pistol and deal 5 points of damage.  You earned 5 XP.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
-     *              "type": 0
-     *          },
-     *          {
-     *              "text": "Dalek323 attacked you and dealt 9 points of damage.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
-     *              "type": 0
-     *          },
-     *          {
-     *              "text": "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:29:03 -0500",
-     *              "type": 1
-     *          },
-     *          {
-     *              "text": "After some contemplation on your experiences, you have a major insight.  You have levelled up!",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:30:00 -0500",
-     *              "type": 4
-     *          },
-     *          {
-     *              "text": "Your new body has been started.  It will be ready in approximately 3 tick(s).",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 18:30:00 -0500",
-     *              "type": 1
-     *          },
-     *          {
-     *              "text": "You step out of the cloning chamber and look around with your new old eyes.  You see rows of identical chambers around the room.  Moving around experimentally, you determine everything appears to be as it should be.",
-     *              "reps": 1,
-     *              "read": true,
-     *              "date": "2010-11-15 (Mon) 22:35:02 -0500",
-     *              "type": 1
-     *          },
-     *          {
-     *              "text": "You attack Dalek447 with your Energy pistol and miss.",
-     *              "reps": 1,
-     *              "read": false,
-     *              "date": "2010-11-15 (Mon) 22:35:13 -0500",
-     *              "type": 0
-     *          },
-     *          {
-     *              "text": "Dalek447 attacked you and missed.",
-     *              "reps": 1,
-     *              "read": false,
-     *              "date": "2010-11-15 (Mon) 22:35:13 -0500",
-     *              "type": 0
-     *          }
-     *      ],
-     *      "stats": {
-     *          "hp": 50,
-     *          "level": 3,
-     *          "cp": 20,
-     *          "ap": 21,
-     *          "xp": 232,
-     *          "ticksalive": 1,
-     *          "ip": 0
-     *      },
-     *      "pets": [
-     *          {
-     *              "id": "447",
-     *              "hp": 0,
-     *              "name": "Dalek447"
-     *          },
-     *          {
-     *              "id": "536",
-     *              "hp": 0,
-     *              "name": "Dalek536"
-     *          }
-     *      ],
-     *      "inv": [
-     *          {
-     *              "ammoleft": 8,
-     *              "condition": "Average",
-     *              "hidden": false,
-     *              "name": "Energy pack",
-     *              "typeid": 28,
-     *              "equipped": false,
-     *              "itemid": 937,
-     *              "type": "ammo",
-     *              "wt": "2"
-     *          },
-     *          {
-     *              "ammoleft": 2,
-     *              "condition": "Broken",
-     *              "hidden": false,
-     *              "name": "Energy pistol",
-     *              "typeid": 26,
-     *              "equipped": true,
-     *              "itemid": 938,
-     *              "type": "weapon",
-     *              "wt": "3"
-     *          }
-     *      ]
-     *  }
-     *
+{
+    "msgs": [
+        {
+            "text": "You open the Vodka and start drinking.  All too soon, it's gone.",
+            "reps": 4,
+            "read": true,
+            "date": "2011-07-28 (Thu) 21:57:05 -0400",
+            "type": 0
+        },
+        {
+            "text": "You open the Canned goods and  start eating.  It tastes horrible, but you must keep your strength up.",
+            "reps": 1,
+            "read": true,
+            "date": "2011-07-28 (Thu) 21:57:06 -0400",
+            "type": 0
+        },
+        {
+            "text": "You pick up a Energy pack(empty) from the ground.",
+            "reps": 1,
+            "read": false,
+            "date": "2011-07-28 (Thu) 22:09:16 -0400",
+            "type": 0
+        }
+    ],
+    "location": {
+        "chalk": "Some message here.",
+        "level": "1",
+        "allowrecharage": "t",
+        "locid": "1004213",
+        "station": "Crescent",
+        "name": "Strickland Energy and Energy Accessories",
+        "type": "Power Distribution",
+        "y": 36,
+        "x": 36
+    },
+    "stats": {
+        "hp": 53,
+        "level": 8,
+        "cp": 255,
+        "ap": 44,
+        "daysalive": 0,
+        "xp": 1294,
+        "ticksalive": 6,
+        "ip": 0
+    },
+    "inv": [
+        {
+            "ammoleft": 0,
+            "condition": "Destroyed",
+            "hidden": false,
+            "name": "Energy pack",
+            "typeid": 28,
+            "capacity": 1,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2522,
+            "type": "ammo",
+            "wt": "1"
+        },
+        {
+            "ammoleft": 0,
+            "condition": "Destroyed",
+            "hidden": false,
+            "name": "Energy pack",
+            "typeid": 28,
+            "capacity": 1,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2426,
+            "type": "ammo",
+            "wt": "1"
+        },
+        {
+            "ammoleft": 0,
+            "condition": "Destroyed",
+            "hidden": false,
+            "name": "Energy pack",
+            "typeid": 28,
+            "capacity": 1,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2509,
+            "type": "ammo",
+            "wt": "1"
+        },
+        {
+            "ammoleft": 0,
+            "condition": "Battered",
+            "hidden": false,
+            "name": "Energy pack",
+            "typeid": 28,
+            "capacity": 1,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2439,
+            "type": "ammo",
+            "wt": "1"
+        },
+        {
+            "ammoleft": 0,
+            "condition": "Operational",
+            "hidden": false,
+            "name": "Energy pack",
+            "typeid": 28,
+            "capacity": 1,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2405,
+            "type": "ammo",
+            "wt": "1"
+        },
+        {
+            "ammoleft": 0,
+            "condition": "To spec",
+            "hidden": false,
+            "name": "Energy pack",
+            "typeid": 28,
+            "capacity": 1,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2411,
+            "type": "ammo",
+            "wt": "1"
+        },
+        {
+            "ammoleft": 0,
+            "condition": "Operational",
+            "hidden": false,
+            "name": "Energy pack(empty)",
+            "typeid": 49,
+            "capacity": 1,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2355,
+            "type": "ammo",
+            "wt": "1"
+        },
+        {
+            "ammoleft": 50,
+            "condition": "To spec",
+            "hidden": false,
+            "name": "Personal shield",
+            "typeid": 35,
+            "capacity": 50,
+            "equipped": true,
+            "damagetype": "e",
+            "itemid": 2319,
+            "type": "armor",
+            "wt": "3"
+        },
+        {
+            "ammoleft": 18,
+            "condition": "Battered",
+            "hidden": false,
+            "name": "Riot armor",
+            "typeid": 36,
+            "capacity": 100,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2523,
+            "type": "armor",
+            "wt": "15"
+        },
+        {
+            "ammoleft": 37,
+            "condition": "To spec",
+            "hidden": false,
+            "name": "Riot armor",
+            "typeid": 36,
+            "capacity": 100,
+            "equipped": false,
+            "damagetype": "p",
+            "itemid": 2528,
+            "type": "armor",
+            "wt": "15"
+        },
+        {
+            "ammoleft": 96,
+            "condition": "To spec",
+            "hidden": false,
+            "name": "Riot armor",
+            "typeid": 36,
+            "capacity": 100,
+            "equipped": true,
+            "damagetype": "p",
+            "itemid": 2292,
+            "type": "armor",
+            "wt": "15"
+        },
+        {
+            "ammoleft": 20,
+            "condition": "Operational",
+            "hidden": false,
+            "name": "Energy pistol",
+            "typeid": 26,
+            "capacity": 10,
+            "equipped": false,
+            "damagetype": "e",
+            "itemid": 2532,
+            "type": "weapon",
+            "wt": "3"
+        },
+        {
+            "ammoleft": 20,
+            "condition": "To spec",
+            "hidden": false,
+            "name": "Energy pistol",
+            "typeid": 26,
+            "capacity": 10,
+            "equipped": true,
+            "damagetype": "e",
+            "itemid": 2347,
+            "type": "weapon",
+            "wt": "3"
+        }
+    ]
+}     *
      */
 }
