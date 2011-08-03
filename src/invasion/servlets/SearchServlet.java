@@ -82,7 +82,6 @@ public class SearchServlet extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        log.entering(KEY, "doGet");
         PrintWriter out = response.getWriter();
         String count = WebUtils.getRequiredParameter(request, "count");
         int reps = Integer.parseInt(count);
@@ -138,8 +137,7 @@ public class SearchServlet extends HttpServlet
         finally
         {
             Poll.fullPoll( conn, out, wazzit, null );
-            DatabaseUtility.close(conn);
-            log.exiting(KEY, "doGet");
+            conn.close();
         }
     }
 

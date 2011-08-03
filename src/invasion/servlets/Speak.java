@@ -65,7 +65,6 @@ public class Speak extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        PrintWriter out = response.getWriter();
         String ME = "/me ";
         String message = WebUtils.getRequiredParameter(request, "words");
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);

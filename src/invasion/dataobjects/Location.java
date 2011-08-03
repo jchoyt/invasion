@@ -58,17 +58,11 @@ public class Location  implements java.io.Serializable {
     public static JSONArray getOccupants(InvasionConnection conn, int locid, int you)
     {
         String query = "select * from alt where location = ? and id != ? and ticksalive > 0";
-        // InvasionConnection conn = null;
-        PreparedStatement ps = null;
         ResultSet rs = null;
         JSONArray root = new JSONArray();
         try
         {
-            // conn = new InvasionConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1,locid);
-            ps.setInt(2,you);
-            rs = ps.executeQuery();
+            rs = conn.psExecuteQuery( query, "Retrieving Occupants for Poll", locid, you );
             while(rs.next())
             {
                 JSONObject obj = new JSONObject();
@@ -79,19 +73,16 @@ public class Location  implements java.io.Serializable {
                 root.put(obj);
             }
             DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
+            return root;
         }
-        catch(SQLException e)
+        catch(Exception e)
         {
-            log.throwing( KEY, "Error forming the message queue", e);
+            log.throwing( KEY, "Error adding occupants for Poll", e);
             throw new RuntimeException(e);
         }
         finally
         {
             DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
-            // conn.close();
-            return root;
         }
     }
 

@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import java.io.*;
 import org.json.*;
 import invasion.dataobjects.*;
-import invasion.util.*;
 import java.sql.*;
 
 
@@ -55,7 +54,7 @@ public class Poll
         catch(Exception e)
         {
             log.throwing( KEY, "Error occurred during polling", e);
-            try {out.write(ERROR);} catch (Exception ee){};
+            try {out.write(ERROR);} catch (Exception ee){}
             return;
         }
         finally
@@ -113,13 +112,13 @@ public class Poll
                 ret.put("ground", items);
             }
             log.finer( "Location items complete: " + (System.currentTimeMillis()-start) );
-            log.finer( "Poll results: " + String.valueOf(ret));
+            log.finer( "Poll results: " + ret);
             out.write(String.valueOf(ret));
         }
         catch(Exception e)
         {
             log.throwing( KEY, "Error occurred during polling", e);
-            try {out.write(ERROR);} catch (Exception ee){};
+            try {out.write(ERROR);} catch (Exception ee){}
             return;
         }
         log.finer("Exiting: " + (System.currentTimeMillis()-start));
@@ -136,7 +135,7 @@ public class Poll
         catch(Exception e)
         {
             log.throwing( KEY, "Error occurred during polling", e);
-            try {out.write(ERROR);} catch (Exception ee){};
+            try {out.write(ERROR);} catch (Exception ee){}
             return;
         }
     }

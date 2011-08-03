@@ -48,7 +48,6 @@ public class Respawn extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        PrintWriter out = response.getWriter();
         String charId = WebUtils.getRequiredParameter(request, "id");
         int altid = Integer.parseInt(charId);
         Alt.uncache( altid );

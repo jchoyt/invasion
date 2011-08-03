@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import invasion.servlets.*;
-import invasion.servlets.*;
 import invasion.util.*;
 public class LocationCache implements PropertyChangeListener
 {
@@ -173,7 +172,6 @@ public class LocationCache implements PropertyChangeListener
 
     public void propertyChange(PropertyChangeEvent evt)
     {
-        log.finer( "Event received: " + String.valueOf(evt) + ".  Property name is " + evt.getPropertyName());
         if( evt.getPropertyName().equals( MoveServlet.KEY ) )
         {
             log.finer("Adjusting location counts.");

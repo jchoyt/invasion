@@ -24,21 +24,6 @@ public class PollServlet extends HttpServlet
     /**
      *  Description of the Method
      *
-     *@param  config                Description of the Parameter
-     *@exception  ServletException  Description of the Exception
-     */
-    public void init( ServletConfig config )
-        throws ServletException
-    {
-        /*
-         *  required for all Servlets
-         */
-        super.init( config );
-    }
-
-    /**
-     *  Description of the Method
-     *
      *@param  req                   Description of the Parameter
      *@param  resp                  Description of the Parameter
      *@exception  ServletException  Description of the Exception

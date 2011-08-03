@@ -530,8 +530,6 @@ public final class EscapeChars {
         } else{
             if (aIdx <= 99) {
                 padding = "0";
-            } else {
-                //no prefix
             }
         }
 

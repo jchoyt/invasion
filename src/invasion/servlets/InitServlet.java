@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import invasion.dataobjects.*;
 import invasion.pets.*;
 import invasion.ui.VelocityUtil;
@@ -160,7 +159,7 @@ class BotRunner implements Runnable
      */
     public void run()
     {
-        VasionBot bot = new VasionBot( configLoc );
+        new VasionBot( configLoc );
     }
 }
 

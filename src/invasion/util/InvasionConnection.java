@@ -194,7 +194,7 @@ public class InvasionConnection
         catch(SQLException e)
         {
             log.log( Level.SEVERE, errorMsg, e );
-            log.severe("Query failed:  Query is " + String.valueOf(ps));
+            log.severe("Query failed:  Query is " + ps);
             return null;
         }
         finally

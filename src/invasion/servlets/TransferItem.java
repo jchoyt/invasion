@@ -62,7 +62,7 @@ public class TransferItem extends HttpServlet
                 src = Integer.parseInt( WebUtils.getRequiredParameter(request, "src") );
                 dest = Integer.parseInt( WebUtils.getRequiredParameter(request, "dest") );
             }
-            catch (NullPointerException e)
+            catch (NumberFormatException e)
             {
                 alerts.put( Poll.createErrorAlert("Request error. " + e.getMessage() ) );
                 Poll.fullPoll( conn, out, wazzit, alerts );
@@ -246,15 +246,12 @@ public class TransferItem extends HttpServlet
                 }
             }
             //alt.decrementAp(conn, 1);
+            return alerts;
         }
         catch(Exception e)
         {
             log.throwing( KEY, "a useful message", e);
             throw new RuntimeException(e);
-        }
-        finally
-        {
-            return alerts;
         }
     }
 

@@ -3,10 +3,16 @@
  */
 package invasion.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.*;
 
 public class Constants
 {
+
+    public final static String KEY = Constants.class.getName();
+    public final static Logger log = Logger.getLogger( KEY );
+    static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     public final static float ARMOR_SOAK_PERCENT = 0.5f;
@@ -16,7 +22,9 @@ public class Constants
     static{
         try{
             RELOAD_REQUIRED.put("reload", "true");
-        }catch (Exception e){}
+        }catch (Exception e){
+            log.throwing(KEY, "error setting up Constants", e) ;
+        }
     }
 
     public final static int MIN_CHAR_ID = 0;

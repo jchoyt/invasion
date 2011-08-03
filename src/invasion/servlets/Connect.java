@@ -7,7 +7,6 @@ package invasion.servlets;
 import invasion.bot.VasionBot;
 import invasion.util.*;
 import invasion.dataobjects.*;
-import invasion.bot.VasionBot;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -68,7 +67,6 @@ public class Connect extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        PrintWriter out = response.getWriter();
         String charId = WebUtils.getRequiredParameter(request, "id");
         Alt alt = null;
         int altid = Integer.parseInt(charId);

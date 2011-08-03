@@ -66,7 +66,6 @@ public class Chalk extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        PrintWriter out = response.getWriter();
         String message = WebUtils.getRequiredParameter(request, "message");
 
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);

@@ -45,12 +45,19 @@ public class Stats {
         return names[index];
     }
 
-    public static void writeLog( java.io.Writer out ) throws IOException
+    public static void writeLog( java.io.Writer out )
     {
-        for(StatAdjustment a : queue)
+        try{
+            for(StatAdjustment a : queue)
+            {
+                out.write( a.toString() );
+                out.write( "\n" );
+            }
+        }
+        catch (IOException e)
         {
-            out.write( a.toString() );
-            out.write( "\n" );
+            //do nothing
+            log.throwing( KEY, "Error writing out stats log", e );
         }
     }
 

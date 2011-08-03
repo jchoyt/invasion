@@ -64,7 +64,6 @@ public class UberEditLocationServlet extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        PrintWriter out = response.getWriter();
         String locid = WebUtils.getRequiredParameter(request, "locid");
         String name = WebUtils.getRequiredParameter(request, "name");
         String type = WebUtils.getRequiredParameter(request, "type");

@@ -133,7 +133,7 @@ public class TickTask extends TimerTask
         catch (SQLException e)
         {
             StringWriter w = new StringWriter();
-            try{Stats.writeLog(w);}catch(Exception ey){}
+            Stats.writeLog(w);
             log.warning( w.toString() );
             return;
         }

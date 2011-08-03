@@ -84,7 +84,6 @@ public class Item  implements java.io.Serializable {
     public boolean update(InvasionConnection conn)
     {
         String query = "update item set ammoleft=?, condition=?, locid=? where itemid=?";
-        ResultSet rs = null;
         int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, condition, locid, itemid);
         if( count==0 )
         {
@@ -150,8 +149,6 @@ public class Item  implements java.io.Serializable {
                 obj.put("capacity", rs.getInt("capacity"));
                 root.put(obj);
             }
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
         }
         catch(SQLException e)
         {
@@ -168,12 +165,11 @@ public class Item  implements java.io.Serializable {
 
     public static JSONArray getItems( int locid )  //can also be altid
     {
-        JSONArray ret = null;
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection();
-            ret = getItems( conn, locid );
+            return getItems( conn, locid );
         }
         catch(SQLException e)
         {
@@ -183,7 +179,6 @@ public class Item  implements java.io.Serializable {
         finally
         {
             conn.close();
-            return ret;
         }
     }
 

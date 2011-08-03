@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import org.json.*;
 
 /**

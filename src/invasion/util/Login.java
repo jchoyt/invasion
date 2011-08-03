@@ -4,7 +4,6 @@
 
 package invasion.util;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -28,10 +27,6 @@ public class Login {
     public final static String KEY = Login.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
-    /**
-     *  source of random bytes for the cyptography
-     */
-    private static final SecureRandom secureRandom = new SecureRandom();
 
     public static final String COOKIE_TAG = "chocolate_invasion_cookie";
     public static final String LOGIN_OK = "OK";
@@ -126,23 +121,4 @@ public class Login {
         }
         return buf.toString();
     }
-
-
-    /*public static String encodePassword(String password, byte [] seed) throws NoSuchAlgorithmException,  UnsupportedEncodingException {
-        if (seed == null) {
-            seed = new byte [12];
-            secureRandom.nextBytes(seed);
-        }
-
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(seed);
-        md.update(password.getBytes("UTF8"));
-        byte []digest = md.digest();
-        byte []storedPassword = new byte [ digest.length + 12];
-
-        System.arraycopy(seed, 0, storedPassword, 0, 12);
-        System.arraycopy(digest, 0, storedPassword, 12, digest.length);
-
-        return new sun.misc.BASE64Encoder().encode(storedPassword);
-    }*/
 }

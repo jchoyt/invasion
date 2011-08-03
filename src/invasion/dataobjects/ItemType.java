@@ -44,6 +44,7 @@ public class ItemType{
         this.type =type;
         this.damageType = damageType;
         this.usesammo = usesammo;
+        this.accuracy = accuracy;
     }
 
     public ItemType() { }

@@ -76,7 +76,6 @@ public class Eat extends HttpServlet
         String query = "delete from item where itemid = ? and locid = ?";
         InvasionConnection conn = null;
         PreparedStatement ps = null;
-        JSONObject inventory = null;
         try{
             conn = new InvasionConnection();
             ps = conn.prepareStatement(query);
@@ -96,8 +95,6 @@ public class Eat extends HttpServlet
             else
                 throw new NaughtyException("What are you trying to do?");
 
-            // inventory = Item.getItems(conn, wazzit.getAlt().getId());
-            // out.write(String.valueOf(inventory));
             wazzit.getAlt().decrementAp(conn, 1);
             new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You open the " +  itemName + " and  start eating.  It tastes horrible, but you must keep your strength up.");
         }

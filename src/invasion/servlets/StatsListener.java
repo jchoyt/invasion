@@ -58,7 +58,7 @@ public class StatsListener implements ServletContextListener
             catch(Exception ex)
             {
                 StringWriter w = new StringWriter();
-                try{Stats.writeLog(w);}catch(Exception ey){}
+                Stats.writeLog(w);
                 log.warning( w.toString() );
             }
             log.throwing(KEY, "body", e);

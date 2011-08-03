@@ -66,7 +66,6 @@ public class Unequip extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        PrintWriter out = response.getWriter();
         String itemid = WebUtils.getRequiredParameter(request, "weaponid");
         int id = Integer.parseInt(itemid);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);

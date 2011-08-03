@@ -182,50 +182,46 @@ public class Brood
         }
 
         //combine if possible
-        if( ownerId == -1 ) // if feral
+        if( ownerId == -1 && LocationCache.getBroodsAtLoc(location) > 1 ) // if feral and other ferals exist
         {
-            //check for other ferals
-            if( LocationCache.getBroodsAtLoc(location) > 1 )
+            try
             {
-                try
+                //if(conn == null)
+                conn = new InvasionConnection( PETDB );
+                query = "select b.id from brood b where owner = -1 and location = ? and id != ?";
+                rs = conn.psExecuteQuery(query, "Error grabbing list of feral broods to merge with", location, id);
+                while(rs.next())
                 {
-                    //if(conn == null)
-                    conn = new InvasionConnection( PETDB );
-                    query = "select b.id from brood b where owner = -1 and location = ? and id != ?";
-                    rs = conn.psExecuteQuery(query, "Error grabbing list of feral broods to merge with", location, id);
-                    while(rs.next())
+                    int broodId = rs.getInt(1);
+                    Brood b = BroodManager.getFeralBrood( broodId );
+                    if( b == null )
                     {
-                        int broodId = rs.getInt(1);
-                        Brood b = BroodManager.getFeralBrood( broodId );
-                        if( b == null )
-                        {
-                            b = BroodManager.getFeralBrood( broodId );
-                            BroodManager.addBrood( b );
-                        }
-                        if( b.getPowerRating() > this.getPowerRating() )
-                        {
-                            this.mergeInto(conn, b);
-                            this.delete(conn);
-                            break;
-                        }
-                        else  //merge the new brood into this one
-                        {
-                            b.mergeInto(conn, this);
-                            b.delete(conn);
-                        }
+                        b = BroodManager.getFeralBrood( broodId );
+                        BroodManager.addBrood( b );
                     }
-                    DatabaseUtility.close(rs);
+                    if( b.getPowerRating() > this.getPowerRating() )
+                    {
+                        this.mergeInto(conn, b);
+                        this.delete(conn);
+                        break;
+                    }
+                    else  //merge the new brood into this one
+                    {
+                        b.mergeInto(conn, this);
+                        b.delete(conn);
+                    }
                 }
-                catch(SQLException e)
-                {
-                    log.throwing( KEY, "a useful message", e);
-                    throw new RuntimeException(e);
-                }
-                finally
-                {
-                    DatabaseUtility.close(rs);
-                    conn.close();
-                }
+                DatabaseUtility.close(rs);
+            }
+            catch(SQLException e)
+            {
+                log.throwing( KEY, "a useful message", e);
+                throw new RuntimeException(e);
+            }
+            finally
+            {
+                DatabaseUtility.close(rs);
+                conn.close();
             }
         }
         //rebuild target list to see if there's someone to attack in the *new* location
