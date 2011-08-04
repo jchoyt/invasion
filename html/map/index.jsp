@@ -226,21 +226,9 @@
 
     <%--{{{ dialogs --%>
     <div id="inv-mgmt-dlg" title="Inventory Management">
-        <form>
-            <select name="action">
-                <option>Drop</option>
-                <option>Place on Ground</option>
-                <option>Give to...</option>
-                <option>Put in locker...</option>
-                <option>Put in faction safe</option>
-            </select>
-            <br/>
-            <select style="float:left;" name="itemid" id="inv-list" size="10" multiple="true">
-                <%
-                    VelocityUtil.applyTemplate(obj, "inventoryManagement.vm", out);
-                %>
-            </select> * Ctrl+click to select multiple items to operate on at once.
-        </form>
+        <%
+            VelocityUtil.applyTemplate(obj, "inventoryManagement.vm", out);
+        %>
     </div>
     <%--}}}--%>
     <%
@@ -272,7 +260,21 @@
                         $(this).dialog("close");
                     },
                     "Submit": function() {
-                        alert('Do ajax submit');
+                        var str= "src=" + $("#src").val() + "&dest=" + $("#dest").val();
+                        $("#inv-list :selected").each(function () {
+                            str += "&itemid=" + $(this).val();
+                        });
+                        $.getJSON('transferItem?' +  str, function(json){
+                            $(document).trigger('POLL_COMPLETE', json)
+                        });
+                    //     $.ajax({
+                    //        type: "POST",
+                    //        url: "transferItem",
+                    //        data: str,
+                    //        success: function(msg){
+                    //           $(document).trigger('POLL_COMPLETE', msg);
+                    //        }
+                    //      });
                     }
                 }
             });

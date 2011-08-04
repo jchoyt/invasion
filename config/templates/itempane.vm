@@ -1,6 +1,6 @@
 #foreach($item in $ground)
 <tr>
     <td>${item.name}</td>
-    <td><a href="#" onclick="pickUp(${item.itemid},${location.locid},${stats.altid})">Pick up</a> | <a href="#" onclick="alert('Not implemmented yet');">Shoot</a></td>
+    <td><a href="#" onclick="doTransfer(${item.itemid},${location.locid},${stats.altid})">Pick up</a> | <a href="#" onclick="alert('Not implemmented yet');">Shoot</a></td>
 </tr>
 #end

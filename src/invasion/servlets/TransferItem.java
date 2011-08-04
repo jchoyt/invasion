@@ -58,7 +58,6 @@ public class TransferItem extends HttpServlet
             try
             {
                 itemid_strings = WebUtils.getRequiredParameterValues(request, "itemid");
-                // String typeid = WebUtils.getOptionalParameter(request, "typeid", null);
                 src = Integer.parseInt( WebUtils.getRequiredParameter(request, "src") );
                 dest = Integer.parseInt( WebUtils.getRequiredParameter(request, "dest") );
             }
@@ -68,22 +67,30 @@ public class TransferItem extends HttpServlet
                 Poll.fullPoll( conn, out, wazzit, alerts );
                 return;
             }
+            //check if I'm supposed to drop them
             wazzit = (Whatzit) request.getSession().getAttribute(Whatzit.KEY);
             Alt alt = wazzit.getAlt();
-            for( String s: itemid_strings )
+            if( dest == -1 )
             {
-                try
+                alerts = doDrop( conn, itemid_strings, alt );
+            }
+            else
+            {
+                for( String s: itemid_strings )
                 {
-                    itemid = Integer.parseInt( s );
-                }
-                catch (NumberFormatException e)
-                {
-                    alerts.put( Poll.createErrorAlert("You need to make up your mind and choose what to move.") );
-                    return;
-                }
+                    try
+                    {
+                        itemid = Integer.parseInt( s );
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        alerts.put( Poll.createErrorAlert("You need to make up your mind and choose what to move.") );
+                        return;
+                    }
 
-                alerts = doTransfer( conn, itemid, src, dest, alt );
-                if( alerts.length() > 0 ) break;
+                    alerts = doTransfer( conn, itemid, src, dest, alt );
+                    if( alerts.length() > 0 ) break;
+                }
             }
         }
         catch (Throwable t)
@@ -99,6 +106,55 @@ public class TransferItem extends HttpServlet
 
     }
 
+
+    /**
+     * Drops all items selected
+     * @param
+     * @return
+     *
+     */
+    protected JSONArray doDrop( InvasionConnection conn, String[] itemids, Alt alt )
+    {
+        String query = "delete from item where itemid = ? and locid = ? and equipped='f'";
+        PreparedStatement ps = null;
+        try{
+            conn = new InvasionConnection();
+            ps = conn.prepareStatement(query);
+            int count = 0;
+            for( String itemid : itemids )
+            {
+                int id = Integer.parseInt(itemid);
+                String itemName = Item.getName(conn, id);
+                if( itemName == null )
+                {
+                    JSONArray alerts = new JSONArray();
+                    alerts.put( Poll.createErrorAlert("You do not own that item.") );
+                    return alerts;
+                }
+                ps.setInt(1, id);
+                ps.setInt(2, alt.getId());
+                count = ps.executeUpdate();
+
+                if( count != 0 )
+                {
+                    //TODO drop a random object if count==0
+                }
+                new Message( conn, alt.getId(), Message.NORMAL, "You drop your " + itemName + ".");
+            }
+            return null;
+        }
+        catch( Exception e)
+        {
+            log.log( Level.SEVERE, "Error dropping items.", e );
+            JSONArray alerts = new JSONArray();
+            alerts.put( Poll.createErrorAlert("You, apparently, can't even drop stuff on the floor correctly.") );
+            return alerts;
+        }
+        finally
+        {
+            DatabaseUtility.close(ps);
+        }
+    }
 
     /**
      * Does the transfer of a single item from source to destination, including all appropriate checks
@@ -171,6 +227,7 @@ public class TransferItem extends HttpServlet
                     }
                     Alt recipient = Alt.load( conn, dest );
                     new Message( conn, alt.getId(), Message.NORMAL, "You give your " + item.getItemtype().getName() + " to " + recipient.getName() +".");
+                    new Message( conn, recipient.getId(), Message.NORMAL, alt.getName() + " gave you a(n) " + item.getItemtype().getName() + ".");
                     alt.decrementAp( conn, 1 );
                 }
                 else if( dest < Constants.MIN_FACTION_ID ) //transfer to the ground
@@ -267,7 +324,7 @@ public class TransferItem extends HttpServlet
         if( otherLoc < Constants.MIN_LOCATION_ID ) //dest is a character
         {
             Alt giftee = Alt.load( conn, otherLoc );
-            return giftee.getId() == altLoc;
+            return giftee.getLocation() == altLoc;
         }
         else if( otherLoc < Constants.MIN_FACTION_ID ) //dest is tile
         {

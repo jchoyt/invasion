@@ -142,7 +142,7 @@ public class Item  implements java.io.Serializable {
                 obj.put("ammoleft", rs.getInt("ammoleft"));
                 obj.put("condition", Item.conditions[rs.getInt("condition")]);
                 obj.put("type", rs.getString("type"));
-                obj.put("wt", rs.getString("weight"));
+                obj.put("wt", rs.getInt("weight"));
                 obj.put("hidden", rs.getBoolean("hidden"));
                 obj.put("equipped", rs.getBoolean("equipped"));
                 obj.put("damagetype", rs.getString("damagetype"));

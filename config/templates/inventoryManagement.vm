@@ -1,7 +1,24 @@
-#foreach($i in $inv)
-    #if ($i.equipped)
-        <option value="${i.itemid}" disabled="true">${i.name} (equipped)</option>
-    #else
-        <option value="${i.itemid}"s>${i.name}</option>
+<form>
+    <input type="hidden" id="src" value="${stats.altid}" />
+    <select id="dest">
+        <option value="-1">Drop</option>
+        <option value="${location.locid}">Place on Ground</option>
+        #if($occs)
+            #foreach($occ in $occs)
+                <option value="${occ.id}">Give to ${occ.name}</option>
+            #end
+        #end
+        <option>Put in locker...</option>
+        <option>Put in faction safe</option>
+    </select>
+    <br/>
+    <select style="float:left;" name="itemid" id="inv-list" size="10" multiple="true">
+    #foreach($i in $inv)
+        #if ($i.equipped)
+            <option value="${i.itemid}" disabled="true">${i.name} (equipped)</option>
+        #else
+            <option value="${i.itemid}"s>${i.name}</option>
+        #end
     #end
-#end
+    </select> * Ctrl+click to select multiple items to operate on at once.
+</form>

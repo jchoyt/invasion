@@ -259,26 +259,48 @@ function v2js_inventoryManagement(context) {
 var t = new StringCat();
 var velocityCount = 0;
 if (context.velocityCount) velocityCount=context.velocityCount;
+t.p('<form>    <input type="hidden" id="src" value="');
+t.p( context.stats.altid);
+t.p('" />    <select id="dest">        <option value="-1">Drop</option>        <option value="');
+t.p( context.location.locid);
+t.p('">Place on Ground</option>        ');
+if (context.occs) {
+t.p('            ');
+for (var i2=0;  i2<context.occs.length; i2++) {
+var occ = context.occs[i2];
+velocityCount = i2;
+t.p('                <option value="');
+t.p( occ.id);
+t.p('">Give to ');
+t.p( occ.name);
+t.p('</option>            ');
+}
+velocityCount = i1;
+t.p('        ');
+}
+t.p('        <option>Put in locker...</option>        <option>Put in faction safe</option>    </select>    <br/>    <select style="float:left;" name="itemid" id="inv-list" size="10" multiple="true">    ');
 for (var i1=0;  i1<context.inv.length; i1++) {
 var i = context.inv[i1];
 velocityCount = i1;
-t.p('    ');
+t.p('        ');
 if (i.equipped) {
-t.p('        <option value="');
+t.p('            <option value="');
 t.p( i.itemid);
 t.p('" disabled="true">');
 t.p( i.name);
-t.p(' (equipped)</option>    ');
+t.p(' (equipped)</option>        ');
 }
 else {
-t.p('        <option value="');
+t.p('            <option value="');
 t.p( i.itemid);
 t.p('"s>');
 t.p( i.name);
-t.p('</option>    ');
+t.p('</option>        ');
 }
+t.p('    ');
 }
 velocityCount = 0;
+t.p('    </select> * Ctrl+click to select multiple items to operate on at once.</form>');
 return t.toString();
 }
 function v2js_inventory_old(context) { 
@@ -403,7 +425,7 @@ velocityCount = i1;
 t.p('<tr>    <td>');
 t.p( item.name);
 t.p('</td>    <td><a href="');
-t.p('#" onclick="pickUp(');
+t.p('#" onclick="doTransfer(');
 t.p( item.itemid);
 t.p(',');
 t.p( context.location.locid);

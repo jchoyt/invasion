@@ -74,7 +74,7 @@ function checkForReload( data )
     {
         window.location=map_url;
     }
-    if( data.stats.reload )
+    if( data.stats && data.stats.reload )
     {
         window.location=map_url;
     }
@@ -216,25 +216,17 @@ function updateItemInventoryDialog(data)
 {
     if(data.inv)
     {
-        $('#inv-list').html( v2js_inventoryManagement(data) );
+        $('#inv-mgmt-dlg').html( v2js_inventoryManagement(data) );
     }
     else
     {
-        $('#inv-list').html("");
+        $('#inv-mgmt-dlg').html("");
     }
 }
 
 //}}}
 
 //{{{ Actions
-
-function drop( itemid )
-{
-    var url = "drop?itemid=" + itemid;
-    $.getJSON(url, function(json){
-        $(document).trigger('POLL_COMPLETE', json)
-    });
-}
 
 function eat( itemid )
 {
@@ -305,7 +297,7 @@ function repair(id)
     });
 }
 
-function pickUp( itemid, src, dest )
+function doTransfer( itemid, src, dest )
 {
     var url = "transferItem?itemid=" + itemid + "&src=" + src + "&dest=" + dest;
     $.getJSON(url, function(json){
