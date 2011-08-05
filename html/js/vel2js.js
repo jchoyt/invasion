@@ -432,7 +432,7 @@ t.p( context.location.locid);
 t.p(',');
 t.p( context.stats.altid);
 t.p(')">Pick up</a> | <a href="');
-t.p('#" onclick="alert(\'Not implemmented yet\');">Shoot</a></td></tr>');
+t.p('#" onclick="alert(\'Not implemented yet\');">Shoot</a></td></tr>');
 }
 velocityCount = 0;
 return t.toString();
