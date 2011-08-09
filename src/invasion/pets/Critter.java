@@ -76,7 +76,7 @@ public class Critter implements Attacker, Defender
         {
             conn = new InvasionConnection( Brood.PETDB );
             conn.setAutoCommit(false);
-            conn.psExecuteInsert(query, "Error adding new brood to the database", brood.getId(), typeid, name, ap, hp, armor, shield );
+            conn.psExecuteUpdate(query, "Error adding new brood to the database", brood.getId(), typeid, name, ap, hp, armor, shield );
             //get the new brood id
             query="select max(id) as id from critters";
             rs = conn.executeQuery( query );

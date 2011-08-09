@@ -181,7 +181,6 @@ public class TickTask extends TimerTask
         s.addBatch( "update alt set cp=cp+10,level=level+1 where xp > 99 and level < 2");
         s.addBatch( "update alt set cp=cp+10,level=level+1, apmax=apmax+2 where xp > 199 and level < 3");
         s.addBatch( "update alt set cp=cp+10,level=level+1 where xp > 299 and level < 4");
-        s.addBatch( "update alt set cp=cp+10,level=level+1 where xp > 299 and level < 4");
         s.addBatch( "update alt set cp=cp+10,level=level+1, hpmax=hpmax+3, hp=hp+3 where xp > 499 and level < 5");
         s.addBatch( "update alt set cp=cp+15,level=level+1, apmax=apmax+2 where xp > 699 and level < 6");
         s.addBatch( "update alt set cp=cp+15,level=level+1 where xp > 899 and level < 7");

@@ -175,21 +175,12 @@ public class Message  implements java.io.Serializable {
     public static void locationBroadcast(InvasionConnection conn, int locid, int type, String message)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where location=?";
-        PreparedStatement ps = null;
         try{
-            ps = conn.prepareStatement(query);
-            ps.setString(1, message);
-            ps.setInt(2, type);
-            ps.setInt(3, locid);
-            ps.executeUpdate();
+            conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, message, type, locid );
         }
         catch(Exception e)
         {
             log.throwing(KEY, "constructor", e);
-        }
-        finally
-        {
-            DatabaseUtility.close(ps);
         }
 
     }
