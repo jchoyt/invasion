@@ -11,4 +11,5 @@ create table locker (
 --change starting sequence to 3M
 alter sequence locker_id_seq restart with 3000000;
 
-
+--new critter for low level guys
+insert into crittertype values ( 2, 'Gremlin', 'invasion.pets.Gremlin', 75, 20, 15, 15, -1 );
