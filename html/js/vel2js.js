@@ -513,34 +513,33 @@ t.p( context.name);
 t.p(', it is a ');
 t.p( context.type);
 t.p('<br/><br/><u>Characters here</u><ul>');
-for (var i1=0;  i1<context.chars.length; i1++) {
-var o = context.chars[i1];
+for (var i1=0;  i1<context.occs.length; i1++) {
+var o = context.occs[i1];
 velocityCount = i1;
-t.p('    <li>');
+t.p('    <li><a href="../viewCharacter.jsp?id=');
+t.p( o.id);
+t.p('">');
 t.p( o.name);
-t.p(' (L');
+t.p('</a> (L');
 t.p( o.level);
 t.p(')</li>');
 }
 velocityCount = 0;
 t.p('</ul><u>Critters here</u><ul>');
-for (var i1=0;  i1<context.critters.length; i1++) {
-var o = context.critters[i1];
+for (var i1=0;  i1<context.pets.length; i1++) {
+var p = context.pets[i1];
 velocityCount = i1;
-t.p('    <li>');
-t.p( o.type);
-t.p(' named ');
-t.p( o.name);
-t.p(' in brood ');
-t.p( o.brood);
-t.p(' (owned by ');
-t.p( o.owner);
-t.p(')');
+t.p('    ');
+t.p('    <li><a href="viewCritter.jsp?id=');
+t.p( p.id);
+t.p('">');
+t.p( p.name);
+t.p('</a></li>');
 }
 velocityCount = 0;
-t.p('</ul><form action="sendMessageLocation.jsp">    <input type="hidden" name="locid" value="');
+t.p('</ul><form action="broadcastLocation">    <input type="hidden" name="locid" value="');
 t.p( context.locid);
-t.p('">    Send message to this location: <input type="text" name="msg" width="40" value="This doesn\'t work yet"/><input type="submit"/></form>');
+t.p('">    Send message to this location: <input type="text" name="msg" width="40" value=""/><input type="submit"/>    <br/>Note: message will show up as "etherial"</form>');
 return t.toString();
 }
 function v2js_messages(context) { 

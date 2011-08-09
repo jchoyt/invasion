@@ -44,7 +44,7 @@
                     ID: <input type="text" name="station"/><br/>
                     <input type="submit"/>
                 </form>
-                <form action="sendStationMessage.jsp">
+                <form action="broadcastStation">
                 <h3>Send message to entire station</h3>
                     ID: <input type="text" name="station"/><br/>
                     Type: <select name="type"><option value="0">Normal (black)</option>

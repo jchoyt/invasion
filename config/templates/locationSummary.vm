@@ -4,18 +4,20 @@ Located at ($x, $y) on level $level of $station station
 <br/>
 <br/><u>Characters here</u>
 <ul>
-#foreach($o in $chars)
-    <li>$o.name (L$o.level)</li>
+#foreach($o in $occs)
+    <li><a href="../viewCharacter.jsp?id=${o.id}">$o.name</a> (L$o.level)</li>
 #end
 </ul>
 <u>Critters here</u>
 <ul>
-#foreach($o in $critters)
-    <li>$o.type named $o.name in brood $o.brood (owned by $o.owner)
+#foreach($p in $pets)
+    ##<li>$o.type named $o.name in brood $o.brood (owned by $o.owner)
+    <li><a href="viewCritter.jsp?id=${p.id}">$p.name</a></li>
 #end
 </ul>
 
-<form action="sendMessageLocation.jsp">
-    <input type="hidden" name="locid" value="$locid">
-    Send message to this location: <input type="text" name="msg" width="40" value="This doesn't work yet"/><input type="submit"/>
+<form action="broadcastLocation">
+    <input type="hidden" name="locid" value="${locid}">
+    Send message to this location: <input type="text" name="msg" width="40" value=""/><input type="submit"/>
+    <br/>Note: message will show up as "etherial"
 </form>

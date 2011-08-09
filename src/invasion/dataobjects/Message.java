@@ -172,68 +172,28 @@ public class Message  implements java.io.Serializable {
     /**
      *  Inserts a message into the database for every character at the given location
      */
-    public static void locationBroadcast(InvasionConnection conn, int locid, int type, String message)
+    public static int locationBroadcast(InvasionConnection conn, int locid, int type, String message)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where location=?";
-        try{
-            conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, message, type, locid );
-        }
-        catch(Exception e)
-        {
-            log.throwing(KEY, "constructor", e);
-        }
-
+        return conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, message, type, locid );
     }
 
     /**
      *  Inserts a message into the database for every character at the given location except the one given
      */
-    public static void locationBroadcast(InvasionConnection conn, int locid, int type, String message, int exceptAlt)
+    public static int locationBroadcast(InvasionConnection conn, int locid, int type, String message, int exceptAlt)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where location=? and id != ?";
-        PreparedStatement ps = null;
-        try{
-            ps = conn.prepareStatement(query);
-            ps.setString(1, message);
-            ps.setInt(2, type);
-            ps.setInt(3, locid);
-            ps.setInt(4, exceptAlt);
-            ps.executeUpdate();
-        }
-        catch(Exception e)
-        {
-            log.throwing(KEY, "constructor", e);
-        }
-        finally
-        {
-            DatabaseUtility.close(ps);
-        }
-
+        return conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, message, type, locid, exceptAlt );
     }
 
     /**
      *  Inserts a message into the database for every character who should be in the given station
      */
-    public static void stationBroadcast(InvasionConnection conn, int station, int type, String message)
+    public static int stationBroadcast(InvasionConnection conn, int station, int type, String message)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where station=?";
-        PreparedStatement ps = null;
-        try{
-            ps = conn.prepareStatement(query);
-            ps.setString(1, message);
-            ps.setInt(2, type);
-            ps.setInt(3, station);
-            ps.executeUpdate();
-        }
-        catch(Exception e)
-        {
-            log.throwing(KEY, "constructor", e);
-        }
-        finally
-        {
-            DatabaseUtility.close(ps);
-        }
-
+        return conn.psExecuteUpdate(query, "Error broadcasting to the entire station", message, type, station);
     }
 
     public JSONObject toJson()

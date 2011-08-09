@@ -2,7 +2,7 @@
  *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
  */
 
-package invasion.servlets;
+package invasion.servlets.admin;
 
 import invasion.util.*;
 import invasion.dataobjects.*;
