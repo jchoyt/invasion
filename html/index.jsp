@@ -11,7 +11,7 @@
     <center><img alt="logo" src="${images}/banner.png"/>
         <br/><br/>
         <tags:CharacterList/>
-        <br/><br/><a href="${base}newCharacter.html">Create a new character</a> | <a href="/logout">Log out</a>
+        <br/><br/><a href="${base}newCharacter.html">Create a new character</a> | <a href="${base}logout">Log out</a>
         <%
             if( request.isUserInRole("Admin") )
             {
