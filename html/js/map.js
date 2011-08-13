@@ -21,7 +21,8 @@ $(document).ready( function() {
         //fillSpace: true,
         active: 1,
         collapsible: true,
-        autoHeight: false
+        autoHeight: false,
+        navigation: true
     });
 
     $("#west-sections, #center-sections").addClass("ui-accordion ui-widget ui-helper-reset")

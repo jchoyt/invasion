@@ -35,7 +35,6 @@ a img { border:0px; } /*}}}*/
 .ui-layout-east ,	/* has content-div ... */
 .ui-layout-east .ui-layout-content { /* content-div has Accordion */
     padding: 0;
-    overflow: hidden;
 }
 .ui-layout-center P.ui-layout-content {
     line-height:	1.4em;
