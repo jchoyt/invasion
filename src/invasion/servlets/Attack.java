@@ -80,6 +80,7 @@ public class Attack extends HttpServlet
             if( wazzit.getAlt().getReload() )
             {
                 Poll.sendReloadCommand(out);
+                wazzit.getAlt().setReload(false);
                 return;
             }
             Poll.fullPoll( conn, out, wazzit, alerts );

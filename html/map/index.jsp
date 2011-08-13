@@ -144,7 +144,9 @@
                         %>
                     </tbody>
                 </table>
-            </div>
+                <center>
+                    <div id="att-box"></div>
+                </center>            </div>
             <h6 id="critters"><a href="#">Critters</a></h6>
             <div>
                 <table style="width:100%" cellpadding="0" cellspacing="0" border="0" id="pet-table">
@@ -248,7 +250,7 @@
 	<script type="text/javascript">
 		// Never try to jquery without making sure the DOM is ready. Ready() ensures that...once working, move this stuff to map.js
 		$(document).ready(function() {
-			$("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
+			$("#amessages").prop({ scrollTop: $("#amessages").prop("scrollHeight") });
 			// Scroll the message pane.
 
 			// Dialog

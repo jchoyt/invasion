@@ -3,11 +3,7 @@
     <td><a href="/game/viewCharacter.jsp?id=${occ.id}">${occ.name}</a></td>
     <td>${occ.level}</td>
     <td><img alt="" src="/game/i/hp-${occ.hp}.png"/></td>
-    <td><a id="occ${occ.id}" class="open_attack" href="#">>></a></td>
+    <td><a id="occ${occ.id}" onclick="showtarget(${occ.id})" href="#">>></a></td>
 </tr>
-<tr id="occ${occ.id}" class="do_attack" style="color:red;">  #* display:none *#
-	<td colspan="4" style="text-align:center;">
-		<a href="#" onclick="attack(${occ.id})">Attack ${occ.name}</a>
-	</td>
-</tr>
+<span id="desc-${occ.id}" style="display:none;"><a href="#" onclick="attack(${occ.id})">Attack ${occ.name}</a></span>
 #end

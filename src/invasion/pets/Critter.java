@@ -210,7 +210,10 @@ public class Critter implements Attacker, Defender
         hp -= result.getDamageDone();
 
         if( hp < 1 )
+        {
             kill( conn, result );
+            attacker.setReload(true);
+        }
         else
             if( updateNow )
                 update();
