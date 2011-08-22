@@ -121,7 +121,7 @@ public class Location  implements java.io.Serializable {
                     mainobj.put( messagetype, message );
                 }
                 else
-                    log.info("Chalk message not put in " + message + messagetype );
+                    log.fine("Chalk message not put in " + message + messagetype );
 
             }
             else

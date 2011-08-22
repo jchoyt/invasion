@@ -60,7 +60,7 @@ public class Drink extends HttpServlet
 
 
     /**
-     *  Description of the Method
+     *  Imbibe the alcohol and suffer the consequences.
      *
      */
     @Override
@@ -71,6 +71,7 @@ public class Drink extends HttpServlet
         String itemid = WebUtils.getRequiredParameter(request, "itemid");
         int id = Integer.parseInt(itemid);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+        Alt alt = wazzit.getAlt();
         //do DB inserts
         String query = "delete from item where itemid = ? and locid = ?";
         InvasionConnection conn = null;
@@ -82,22 +83,24 @@ public class Drink extends HttpServlet
             String itemName = Item.getName(conn, id);
             if( !category.equals("booze") )
             {
-                throw new NaughtyException("That does not seem to be alcohol.");
+                throw new NaughtyException("That does not seem to be something to drink.");
             }
             ps.setInt(1, id);
-            ps.setInt(2, wazzit.getAlt().getId());
+            ps.setInt(2, alt.getId());
             int count = ps.executeUpdate();
             if( count == 1 )
             {
-                Stats.addChange(wazzit.getAlt().getId(), Stats.BOOZE, 1);
+                Stats.addChange(alt.getId(), Stats.BOOZE, 1);
             }
             else
                 throw new NaughtyException("What are you trying to do?");
 
-            // inventory = Item.getItems(conn, wazzit.getAlt().getId());
             // out.write(String.valueOf(inventory));
-            wazzit.getAlt().decrementAp(conn, 1);
-            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You open the " +  itemName + " and start drinking.  All too soon, it's gone.");
+            alt.heal( 2 );
+            alt.healIp( 1 );
+            //the AP decrement below will save this change
+            alt.decrementAp(conn, 1);
+            new Message( conn, alt.getId(), Message.NORMAL, "You open the " +  itemName + " and start drinking.  As you finish, you feel a bit better.");
 
             //TODO death by alcohol poisoning
         }

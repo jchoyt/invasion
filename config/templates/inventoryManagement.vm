@@ -20,5 +20,5 @@
             <option value="${i.itemid}"s>${i.name}</option>
         #end
     #end
-    </select> * Ctrl+click to select multiple items to operate on at once.
+    </select> * Ctrl+click (Command+click for Mac users) to select multiple items to operate on at once.
 </form>

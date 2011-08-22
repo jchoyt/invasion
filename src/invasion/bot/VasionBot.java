@@ -220,6 +220,12 @@ public class VasionBot extends PircBot
         System.out.println( "usage: java -jar invasion.bot.jar <properties file>"  );
     }
 
+    /**
+     * This method carries out the actions to be performed when the PircBot gets disconnected. This may happen if the PircBot quits from the server, or if the connection is unexpectedly lost.
+     * @param
+     * @return
+     *
+     */
     protected void onDisconnect()
     {
         try
@@ -235,16 +241,19 @@ public class VasionBot extends PircBot
 
     protected void join()
     {
-        try{
-            // Connect to the IRC server.
-            connect( config.getValue("server"), Integer.parseInt(config.getValue("port")) );
-            log.info( "Connected to " + config.getValue("server") );
-        }
-        catch(Exception e)
+        int attempts = 0;
+        while( !isConnected() && attempts++ < 5)
         {
-            e.printStackTrace();
-            //System.exit(1);
-            return;
+            try
+            {
+                // Connect to the IRC server.
+                connect( config.getValue("server"), Integer.parseInt(config.getValue("port")) );
+                log.info( "Connected to " + config.getValue("server") );
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         if(config.getValue("authenticate") != null)

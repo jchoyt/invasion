@@ -3,10 +3,10 @@
  */
 package invasion.dataobjects;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,7 +63,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
-    protected static Map<Integer, Alt> altCache = new HashMap<Integer, Alt>();
+    protected static Map<Integer, Alt> altCache = new ConcurrentHashMap<Integer, Alt>();
 
     //}}}
 
@@ -165,7 +165,29 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         else
             return 0;
     }
-    //}}}
+
+    /**
+     * Heals the character. Takes care of checking to ensure your not healing above the max.  Does NOT save the new state.
+     * @param
+     * @return
+     *
+     */
+     public void heal( int amt )
+     {
+         hp = ( hp + amt <= hpmax ) ? hp + amt : hpmax;
+     }
+
+     /**
+      * "Heals" the character's IP, i.e., lowers it.
+      * @param
+      * @return
+      *
+      */
+     public void healIp( int amt )
+     {
+         ip = ( ip - amt > 0 ) ? ip - amt : 0;
+     }
+     //}}}
 
     //{{{ For Attacker interface
     public void insertMessage(String message, int type, InvasionConnection conn)
@@ -866,10 +888,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             a.update();
             altCache.remove( altid );
         }
-    }//}}}
+    }
 
-    //{{{ Constructors
-    private Alt() {}
     //}}}
 
     //{{{ Getters and Setters

@@ -72,6 +72,7 @@ public class Eat extends HttpServlet
         String itemid = WebUtils.getRequiredParameter(request, "itemid");
         int id = Integer.parseInt(itemid);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+        Alt alt = wazzit.getAlt();
         //do DB inserts
         String query = "delete from item where itemid = ? and locid = ?";
         InvasionConnection conn = null;
@@ -86,17 +87,19 @@ public class Eat extends HttpServlet
                 throw new NaughtyException("That does not seem to be food.");
             }
             ps.setInt(1, id);
-            ps.setInt(2, wazzit.getAlt().getId());
+            ps.setInt(2, alt.getId());
             int count = ps.executeUpdate();
             if( count == 1 )
             {
-                Stats.addChange(wazzit.getAlt().getId(), Stats.FOOD, 1);
+                Stats.addChange(alt.getId(), Stats.FOOD, 1);
             }
             else
                 throw new NaughtyException("What are you trying to do?");
 
-            wazzit.getAlt().decrementAp(conn, 1);
-            new Message( conn, wazzit.getAlt().getId(), Message.NORMAL, "You open the " +  itemName + " and  start eating.  It tastes horrible, but you must keep your strength up.");
+            alt.heal(2);
+            //the AP decrement below will save this change
+            alt.decrementAp(conn, 1);
+            new Message( conn, alt.getId(), Message.NORMAL, "You open the " +  itemName + " and  start eating.  It tastes horrible, but you must keep your strength up.  As you finish, you feel a bit better.");
         }
         catch(Exception e)
         {
