@@ -237,7 +237,7 @@ public class VasionBot extends PircBot
     {
         try{
             // Connect to the IRC server.
-            connect( config.getValue("server"), Integer.parseInt(config.getValue("port")) );
+            connect( config.getValue("server"), Integer.parseInt(config.getValue("port")), config.getValue("password") );
             log.info( "Connected to " + config.getValue("server") );
         }
         catch(Exception e)
