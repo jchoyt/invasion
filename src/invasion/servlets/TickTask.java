@@ -99,6 +99,9 @@ public class TickTask extends TimerTask
         s.addBatch( "update alt set ticksalive = ticksalive + 1 where ticksalive != 0 " );
         //clear "lasthurtby" where hp=hpmax
         s.addBatch( "update alt set lasthurtby=null where hp=hpmax and lasthurtby is not null " );
+        //decrement statuses
+        s.addBatch( "update status set duration = duration -1" );
+        s.addBatch( "delete from status where duration < 1" );
         s.executeBatch();
         DatabaseUtility.close(s);
     }

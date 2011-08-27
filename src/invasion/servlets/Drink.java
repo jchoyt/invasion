@@ -29,6 +29,8 @@ public class Drink extends HttpServlet
     public final static String KEY = Drink.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
+    public final static int BLACK_OUT_THRESHOLD = 30;
+    public final static int ALCHOHOL_POISONING = 50;
 
     /**
      *  Constructor for the Servlet object
@@ -98,11 +100,19 @@ public class Drink extends HttpServlet
             // out.write(String.valueOf(inventory));
             alt.heal( 2 );
             alt.healIp( 1 );
+            alt.getEffects().increment(Effects.DRUNK, 3);
+
             //the AP decrement below will save this change
             alt.decrementAp(conn, 1);
             new Message( conn, alt.getId(), Message.NORMAL, "You open the " +  itemName + " and start drinking.  As you finish, you feel a bit better.");
 
-            //TODO death by alcohol poisoning
+            //check if died of alcohol poisoning
+            if( alt.getEffects().getDuration( Effects.DRUNK ) > 49 && ( Math.random() < ( 1.0 - .08 * (60 - alt.getEffects().getDuration( Effects.DRUNK ) ) ) ) ) //20% chance at 50, 100% chance at 60
+            {
+                new Message( conn, alt.getId(), Message.NORMAL, "As the last drops are drunk, you feel dizzy and fall over.  Slowly your body succumbs to the alcohol and shuts down.  You have died.");
+                alt.setLastHurtBy( 0 );
+                alt.kill(conn, null);
+            }
         }
         catch(Exception e)
         {

@@ -60,6 +60,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected boolean equippedItemsLoaded = false;
 	protected List<String> clothing = new ArrayList<String>();
 	protected char gender = 'f';
+	protected Effects effects = new Effects();
+	protected int ticksalive = 0;
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
@@ -121,8 +123,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             log.warning( "Character " +  id + " not updated");
             return false;
         }
-        else
-            return true;
+        if( !effects.update( conn, id ) )
+            return false;
+        return true;
     }
 
     public boolean update( )
@@ -613,6 +616,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.cp = rs.getInt("cp");
             ret.ip = rs.getInt("ip");
             ret.ap = rs.getInt("ap");
+            ret.ticksalive = rs.getInt("ticksalive");
             log.finer("in Alt.load(), id is " + id);
             DatabaseUtility.close(rs);
 
@@ -641,6 +645,10 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
             /* TODO load pets */
 
+            /* TODO Load effects */
+            ret.effects.load( conn, id );
+
+            /* Set tin cache and go */
             altCache.put( id, ret );
             return ret;
         }
@@ -829,25 +837,19 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public static JSONObject getStats( InvasionConnection conn, int altid )
     throws SQLException, JSONException
     {
-        String query = "select id, hp, ip, ap, cp, level, xp, ticksalive from alt where id=?";
-        ResultSet rs = conn.psExecuteQuery( query, "Error retrieving character stats", altid );
+        Alt alt = Alt.load( conn, altid );
         JSONObject obj = new JSONObject();
-        if(rs.next())
-        {
-            obj.put("altid", rs.getInt("id"));
-            obj.put("hp", rs.getInt("hp"));
-            obj.put("ap", rs.getInt("ap"));
-            obj.put("ip", rs.getInt("ip"));
-            obj.put("xp", rs.getInt("xp"));
-            obj.put("cp", rs.getInt("cp"));
-            obj.put("level", rs.getInt("level"));
-            obj.put("ticksalive", rs.getInt("ticksalive"));
-            obj.put("daysalive", rs.getInt("ticksalive") / 96 );
-            if( rs.getInt( "hp" ) < 1 )
-            {
-                obj.put("reload", true);
-            }
-        }
+        obj.put("altid", alt.id );
+        obj.put("hp", alt.hp );
+        obj.put("ap", alt.ap );
+        obj.put("ip", alt.ip );
+        obj.put("xp", alt.xp );
+        obj.put("cp", alt.cp );
+        obj.put("level", alt.level );
+        obj.put("ticksalive", alt.ticksalive );
+        obj.put("daysalive", alt.ticksalive / 96 );
+        if( alt.hp < 1 ) obj.put("reload", true);
+        obj.put("effects", alt.effects.getEffectsString() );
         return obj;
     }
 
@@ -948,6 +950,10 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setGender(char gender) { this.gender = gender; }
     public int getTinkererLevel() { return this.tinkererLevel; }
 	public void setTinkererLevel(int tinkererLevel) { this.tinkererLevel = tinkererLevel; }
+    public Effects getEffects() { return this.effects; }
+	public void setEffects(Effects effects) { this.effects = effects; }
+    public int getTicksalive() { return this.ticksalive; }
+	public void setTicksalive(int ticksalive) { this.ticksalive = ticksalive; }
     //}}}
 
 }

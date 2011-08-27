@@ -26,6 +26,7 @@ a img { border:0px; } /*}}}*/
 .ip {color:#cc9933;}
 .ap {color:blue;}
 .xp {color:black;}
+.effects {color:green;}
 
 .link_button {padding: 10px;text-decoration: none;}
 .stat { width:75px; background-image: url('../i/stat_bg.jpg'); }

@@ -21,8 +21,8 @@ public class Stats {
 
     //TODO read this directly from the DB
     private static final String[] names = { "Locations Hacked", "Alcohol Consumed", "Food Consumed", "Damage Inflicted", "Damage Suffered",
-        "Survival Streak", "Books Read", "Items Repaired", "Items Crafted", "Murder-Death-Kills",
-        "Trips to the Mainframe" };
+        "Survival Streak", "Books Read", "Items Repaired", "Items Crafted", "Kills",
+        "Deaths", "Drunkenness" };
     public static final int HACK = 0;
     public static final int BOOZE = 1;
     public static final int FOOD = 2;
@@ -34,9 +34,11 @@ public class Stats {
     public static final int CRAFTED = 8;
     public static final int KILLS = 9;
     public static final int DEATHS = 10;
+    public static final int MOST_DRUNK = 11;
+    public static final int BLACK_OUTS = 12;
 
-    public static synchronized void addChange(int altid, int statid,
-             int increment) {
+    public static synchronized void addChange(int altid, int statid, int increment)
+    {
         queue.add(new StatAdjustment( altid, statid, increment ));
     }
 

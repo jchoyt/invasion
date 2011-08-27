@@ -300,7 +300,7 @@ t.p('</option>        ');
 t.p('    ');
 }
 velocityCount = 0;
-t.p('    </select> * Ctrl+click to select multiple items to operate on at once.</form>');
+t.p('    </select> * Ctrl+click (Command+click for Mac users) to select multiple items to operate on at once.</form>');
 return t.toString();
 }
 function v2js_inventory_old(context) { 
@@ -718,6 +718,8 @@ t.p('</span><span class="stat_counter ip">IP: ');
 t.p( context.stats.ip);
 t.p('</span><span class="stat_counter ap">AP: ');
 t.p( context.stats.ap);
+t.p('</span><span class="stat_counter effects">');
+t.p( context.stats.effects);
 t.p('</span>');
 return t.toString();
 }

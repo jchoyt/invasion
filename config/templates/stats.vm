@@ -1,3 +1,4 @@
 <span class="stat_counter hp">HP: $stats.hp</span>
 <span class="stat_counter ip">IP: $stats.ip</span>
 <span class="stat_counter ap">AP: $stats.ap</span>
+<span class="stat_counter effects">$stats.effects</span>
