@@ -42,7 +42,7 @@ DAMAGE.
 <link rel='alternate' type='application/rss+xml' title='RSS' href='index.xml'/>
 <!--}}}-->
 <!--PRE-HEAD-END-->
-<title> Invasion Documentation - personal documentation for Soul Cubes: Invasion </title>
+<title> Invasion Player Guide </title>
 <style type="text/css">
 #saveTest {display:none;}
 #messageArea {display:none;}
@@ -545,31 +545,34 @@ Humanity is being torn and brought into a racial civil war millennia old. Will i
 | 78450 | 34 | 96 | 96 | 45 | 680 |
 | 117675 | 35 | 105 | 105 | 50 | 730 |</pre>
 </div>
-<div title="DefaultTiddlers" modifier="Entomo" modified="201109271246" created="201109270042" changecount="3">
-<pre>[[Introduction]]</pre>
+<div title="DefaultTiddlers" modifier="Entomo" modified="201109271501" created="201109270042" changecount="4">
+<pre>WelcomeToInvasion</pre>
 </div>
-<div title="Glossary" modifier="Entomo" modified="201109271320" created="201109271303" changecount="5">
+<div title="Glossary" modifier="Entomo" modified="201109271455" created="201109271303" changecount="7">
 <pre>;Action Points (AP)
 :The basic limiting factor on being able to play. Most actions require an action point to perform, however characters gain 1 AP every 15 minutes up to their limit. Once you run out of action points your character cannot take any actions until more are accrued. 
 ;Character Points (CP)
 :Means to purchase new skills and improve your character.  New characters are quite weak, but will level relatively quickly.  With each new level, a character gains CP - CP can be saved (aka, banked) until you have enough for a desired skill.
 ;Experience Points (XP) 
-:Game mechanic used track how a character learns and grows. Many actions gain XP for a character and when enough are accumulated, the character reaches a new level.  XP cannot be lost. See CharacterGrowth for a detailed listing of how a character grows over time. </pre>
+:Game mechanic used track how a character learns and grows. Many actions gain XP for a character and when enough are accumulated, the character reaches a new level.  XP cannot be lost. See CharacterGrowth for a detailed listing of how a character grows over time. 
+;Respawn
+:Bring your character back to life.  Respawning a character is free, but the dying process is not.  You will lose Level/2 AP upon death and have to wait a number of ticks equal to your level  (see below) before you can respawn.
+;Tick
+:Every 15 minutes ( top of the hour and every 15 minutes after that) the game &quot;ticks&quot;.  You will gain AP, lose IP, CharacterEffects decrement, etc.  It's the fundamental measure of time in-game
+;Insanity Points (IP)
+:Not a good thing  //TODO - add description//</pre>
 </div>
-<div title="Introduction" modifier="Entomo" modified="201109271246" created="201109270043" changecount="2">
-<pre>Invasion is a browser-based massively-multiplayer online roleplaying game wherein characters and their cadres struggle for control over resources and territories and maybe humanity itself within isolated space stations across space.
-
-This is the official documentation for the game.  XXXXXXXXXXXXXXXXXXXXX</pre>
-</div>
-<div title="MainMenu" modifier="Entomo" modified="201109271336" created="201109270205" changecount="14">
+<div title="MainMenu" modifier="Entomo" modified="201109271510" created="201109270205" changecount="15">
 <pre>!!!Game Reference
 [[Items]]
 [[Races]]
 [[Skills]]
+[[Factions]]
 !!!New Players
 [[Introduction]]
 NewPlayerGuide
 [[Glossary]]
+[[IRC]]
 !!!External Links
 [[Play the Game|http://soulcubes.com/game]]
 [[Boards|http://soulcubes.com/boards]]
@@ -590,6 +593,48 @@ NewPlayerGuide
 ;Melee 5
 :+3 additional damage (+10 total), provides benefits of [[Dodge]] 3, adds.....something cool</pre>
 </div>
+<div title="NewPlayerGuide" modifier="Entomo" modified="201109271500" created="201109271428" changecount="8">
+<pre>!!Overview
+Invasion is a browser-based massively-multiplayer online roleplaying game wherein characters and their cadres struggle for control over resources and territories and maybe humanity itself within isolated space stations across space.  You interact in this world through one of several characters (you start with 2 plus a bonus).  As characters in the game progress, they will become more powerful and gain interesting new abilities.   
+!!Goals
+What is the goal of Invasion?  That's up to you.  We set up the world and you decide what goes on within it.  There is a vast amount that won't be under your control, but what you do with your characters is up to you.  Most people spend time hunting down other characters and killing them.  Why?  Invasion is, at it's core, a game about war.  A Millennia-old civil war that humanity has arrived on humanity's doorstep - some First Contact, huh?  Characters can choose to start as one of the races in this war, or start as a human.  Humans can later choose to become one of these other races as well, but more on that later.   Many characters will band together and form [[Faction]]s to better serve this need, while others will remain solo (though, joining a faction is highly recommended, especially for new players).
+!Playing the Game
+The first thing that is important to note is the following, incontrovertible truth: You will die.  ''You will die a lot''.  You will die from being stabbed, from being axed, shot, clawed, burnt, and pummeled.  You may get vaporized by station defenses or sent out an airlock.  But make no mistake: //you will die//.
+
+But that's not a problem, because this is science fiction!  We have cloning chambers and helpful robots to gather all your gear and deliver it to you newly-growing body.  Once it's done, with the click of a button, you're back in the game, good as new (well, almost).  
+
+So, now that //that// expectation has been set...
+!!Action Points
+Characters have a limited amount of [[Action Point|Glossary]]s (or ''AP'') available to them per day.  Most activities in the game require the expenditure of 1 or more Action Points (some actions will require more than 1 - the actions are more difficult or tiring).  When a character runs out of Action Points, he or she can do nothing else until more Action Points accrue.  All characters are granted a single Action Point every fifteen minutes of real time (which roughly translates to about 100 per day).  Initially, a character can only ''store'' a maximum of 50 Action Points at any one time.  As a character gains [[experience|CharacterGrowth]], this maximum will increase.  If a character's Action Point total is at their maximum, then they will stop accruing Action Points.
+
+!!!Hit Points, Injury, and Death
+A character's [[Hit Point|Glossary]]s (or ''HP'') represent their overall health.  When characters are injured, their Hit Point totals will go down.  When they are healed, the Hit Point total goes up (but does not go above the maximum).  Starting characters have a maximum of 50 Hit Points which increases as the [[character's level|CharacterGrowth]] increases.
+
+If a character's Hit Point total drops to 0 or lower, he or she has been killed and must [[Respawn]].  This is accomplished by clicking the &quot;Respawn&quot; button on the character page.  Note that you won't be able to [[Respawn]] right away.   Any [[Items]] that the character possesses will be collected by helpful little maintenance bots and delivered to your new body.  However, items may become [[Decay|damaged]] due to death and sometimes (rarely) the bots may miss an item.  If this happens, the character will be alerted to that fact.
+
+When a character dies, the corpse is also collected and the station does...[[something|http://en.wikipedia.org/wiki/Soylent_Green]]...with it.
+
+===Skills===
+As a character gains experience in the game, they will learn different [[Skill]]s which they can use to better survive.  These skills may take the form of combat skills, such as [[Melee Combat]] or [[Ranged Combat]], utility skills, such as [[Lockpicking]] or [[Swim]]ming, or [[spell]]s like [[Ice Dart]] and [[The Crushing]].
+
+Skills characters choose determine what their character will be best at, and determine their style of play - a character with only healing skills, for instance, will not be very effective when hitting someone with a sword.  What skills you choose are entirely up to you, but certain skills can only be used by certain [[Class|Character Classes]] (only [[Pariah]]s, for instance, may take the [[Blood Claws]] skill).
+
+Skills are purchased with [[Character Point]]s (see below).  Over time, the character will earn a great many of these.  When the character has accrued enough Character Points to buy a skill, he can do so by clicking on the &quot;Buy Skills&quot; button (located in the top box of the [[Interface|map interface]] or in the character's profile page).
+
+The skill purchase screen will have sections for each [[class]] that the character possess (starting characters are always [[Mortal]]s).  Clicking on the black bar will open the list (if it's closed) or close it (if it's open).  Skills that are available for purchase will have a &quot;Buy Skill&quot; button next to them, with the cost of the skill (in Character Points) next to it.  Click the button and BAM!  New skill.
+
+===Character Points===
+When a character levels up, they are given a certain amount of [[Character Points]]  (or ''CP'').  These Character Points are then used to purchase skills and spells.  Character Points must be spent to be of any value, and there is a limit to the number of Character Points that a character can &quot;save up&quot; during a class change. (40 at tier 2, 70 at tier 3). Character Points may also be gained from [[Badges]] gained for certain Accomplishments and Explorations.
+
+===Experience Points===
+Characters gain [[Experience Points|Glossary]] by performing certain actions within the game.  These may range from healing other players to reading books or repairing equipment to attacking and killing other players' characters.  Experience Points are needed to level up your character and get more Character Points with which to purchase additional [[Skills]].
+
+==Multi-Account Abuse==
+The creation of multiple Nexus War accounts by one person is not permitted, and when identified, will be punished by the smiting of all characters and locking of the account, followed by deletion of the account at an appropriate maintenance time. Multi-account abuse is also called [[zerging]].
+
+If your account has been locked and you feel this is in error, please contact jorm via PM at the [http://forums.nexuswar.com/ official Nexus War forums].
+</pre>
+</div>
 <div title="PageTemplate" modifier="TiddlyThemes" modified="200708091512" created="200701130013" tags="ClassicTheme">
 <pre>&lt;div class='header'&gt;
 &lt;div class='titleLine'&gt;
@@ -608,11 +653,11 @@ NewPlayerGuide
 &lt;div id='tiddlerDisplay'&gt;&lt;/div&gt;
 &lt;/div&gt;</pre>
 </div>
-<div title="SiteSubtitle" modifier="Entomo" created="201109270039" changecount="1">
-<pre>personal documentation for Soul Cubes: Invasion</pre>
+<div title="SiteSubtitle" modifier="Entomo" modified="201109271506" created="201109270039" changecount="2">
+<pre></pre>
 </div>
-<div title="SiteTitle" modifier="Entomo" created="201109270038" changecount="1">
-<pre>Invasion Documentation</pre>
+<div title="SiteTitle" modifier="Entomo" modified="201109271504" created="201109270038" changecount="3">
+<pre>Invasion Player Guide</pre>
 </div>
 <div title="Skills" modifier="Entomo" modified="201109270227" created="201109270208" changecount="2">
 <pre>HumanSkills
@@ -1035,6 +1080,9 @@ color: #999999;
  background: #c90;
 }
 /*}}}*/</pre>
+</div>
+<div title="WelcomeToInvasion" modifier="Entomo" modified="201109271506" created="201109271502" changecount="6">
+<pre>//Welcome to Invasion a futuristic, browser-based massively-multiplayer online roleplaying game. Join in the fight for power and control with characters, creatures and dark forces as you forge the future for your kind. Secure resources and territories as you hurl through space wondering if it is your mind you are hearing or something else. Generations have lived off-world for centuries and you are not the first to inhabit this place. But now something strange and frightening is happening on these deep space stations. It all started with the voices. At first people thought they were dreams, but clear that what is happening here is real. Is it the station trying to communicate or something else? Strange, ethereal messages are being heard throughout the station and none of them are the same. People are going mad, some are mutating. Some people hear nothing and fear for their lives. Join the fight, scramble for your sanity, delight in the rewards of being victorious. Can you make it through ... ''Invasion''? //</pre>
 </div>
 </div>
 <!--POST-STOREAREA-->
