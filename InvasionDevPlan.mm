@@ -20,7 +20,7 @@
 <node CREATED="1311469391288" ID="ID_882692320" MODIFIED="1311469392460" TEXT="factions"/>
 <node CREATED="1311508072367" ID="ID_1523109386" MODIFIED="1311508088322" TEXT="non-custom location descriptions"/>
 </node>
-<node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_947844843" MODIFIED="1311387694547" POSITION="left" STYLE="NodeTextGraphic" TEXT="bizarre ideas">
+<node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_947844843" MODIFIED="1317693787733" POSITION="left" STYLE="NodeTextGraphic" TEXT="bizarre ideas">
 <edge COLOR="#309eff"/>
 <node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_495182617" MODIFIED="1311387694547" STYLE="NodeTextGraphic" TEXT="XP for dying?">
 <edge COLOR="#309eff"/>
@@ -31,6 +31,7 @@
 <node COLOR="#000034" CREATED="1311387694551" ID="Freemind_Link_1878677950" MODIFIED="1311387694551" STYLE="NodeTextGraphic" TEXT="move through ventilation/access tunnels?">
 <edge COLOR="#309eff"/>
 </node>
+<node CREATED="1317693789580" ID="ID_638843832" MODIFIED="1317693822912" TEXT="&quot;rat tails&quot; - crafted from towels - weapon that does 1d4 damage"/>
 </node>
 <node COLOR="#000034" CREATED="1311387694549" FOLDED="true" ID="Freemind_Link_938009294" MODIFIED="1311469638687" POSITION="left" STYLE="NodeTextGraphic" TEXT="items">
 <edge COLOR="#309eff"/>

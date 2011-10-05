@@ -80,11 +80,7 @@ public class Equip extends HttpServlet
                 response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=You do not own that.");
             }
 
-            if( it.getType().equals( "weapon" ) )
-            {
-                eqiupWeaon(conn, alt, i);
-            }
-            else if( it.getType().equals( "armor" ) )
+            if( it.getType().equals( "armor" ) )
             {
                 eqiupArmor(conn, alt, i);
             }
@@ -94,7 +90,8 @@ public class Equip extends HttpServlet
             }
             else
             {
-                response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=That item cannot be equipped.");
+                //response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=That item cannot be equipped.");
+                eqiupWeaon(conn, alt, i);
             }
             alt.update(conn);
             response.sendRedirect( WebUtils.BASE + "map/index.jsp" );
@@ -117,7 +114,7 @@ public class Equip extends HttpServlet
     protected void eqiupWeaon( InvasionConnection conn, Alt alt, Item item )
     {
         //update the item
-        String query = "update item set equipped='f' where locid=? and typeid in (select typeid from itemtype where type='weapon'); update item set equipped='t' where itemid = ?";
+        String query = "update item set equipped='f' where locid=?; update item set equipped='t' where itemid = ?";
         int count = conn.psExecuteUpdate(query, "Error equipping weapon in database", alt.getId(), item.getItemid());
         alt.setEquippedWeapon( item );
         //now decrement AP

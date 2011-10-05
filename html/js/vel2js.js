@@ -60,6 +60,28 @@ t.p('</a></span>');
 velocityCount = 0;
 return t.toString();
 }
+function v2js_equipImprovised(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+t.p('<form action="equip" method="post">    Select improvised weapon:    <select name="weaponid" id="equipment-list">    ');
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('        ');
+if (!( i.equipped ) && i.type != "wearable" && i.type != "armor" && i.type != "weapon") {
+t.p('            <option value="');
+t.p( i.itemid);
+t.p('"s>');
+t.p( i.name);
+t.p('</option>        ');
+}
+t.p('    ');
+}
+velocityCount = 0;
+t.p('    </select>    <br/>    <input type="Submit"/></form>');
+return t.toString();
+}
 function v2js_equiplist(context) { 
 var t = new StringCat();
 var velocityCount = 0;
@@ -216,43 +238,46 @@ t.p('    ');
 }
 velocityCount = 0;
 var wt = ( lastItem.wt * count );
-t.p('<tr><td>');
+if (lastDisplayName != "Fred") {
+t.p('    <tr>    <td>');
 t.p( lastDisplayName);
-t.p('</td><td>');
+t.p('</td>    <td>');
 t.p( count);
-t.p('</td><td>');
+t.p('</td>    <td>');
 t.p( wt);
-t.p('</td><td>');
+t.p('</td><td>    ');
 if (lastItem.type == "food") {
-t.p('<a href="');
+t.p('    <a href="');
 t.p('#" onclick="eat(');
 t.p( lastItem.itemid);
-t.p(')">Eat</a>');
+t.p(')">Eat</a>    ');
 }
 else {
 if (lastItem.type == "booze") {
-t.p('<a href="');
+t.p('    <a href="');
 t.p('#" onclick="drink(');
 t.p( lastItem.itemid);
-t.p(')">Drink</a>');
+t.p(')">Drink</a>    ');
 }
 else {
 if (lastItem.type == "weapon" || lastItem.type == "armor" || lastItem.type == "wearable") {
-t.p('<a href="equip?weaponid=');
+t.p('    <a href="equip?weaponid=');
 t.p( lastItem.itemid);
-t.p('" >Equip</a>');
+t.p('" >Equip</a>    ');
 }
 else {
 if (lastItem.typeid == 49 && context.location.allowrecharage == "t") {
-t.p('<a href="');
+t.p('    ');
+t.p('    <a href="');
 t.p('#" onclick="recharge(');
 t.p( lastItem.itemid);
-t.p(')" >Recharge</a>');
+t.p(')" >Recharge</a>    ');
 }
 }
 }
 }
-t.p('</td></tr>');
+t.p('    </td></tr>');
+}
 return t.toString();
 }
 function v2js_inventoryManagement(context) { 

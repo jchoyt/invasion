@@ -114,7 +114,8 @@
                 <div id="repair-item">
                     <% VelocityUtil.applyTemplate(obj, "repairItem.vm", out); %>
                 </div>
-                <a href="#" onclick="$('#inv-mgmt-dlg').dialog('open');return false;" class="command">Manage Inventory</a>
+                <a href="#" onclick="$('#inv-mgmt-dlg').dialog('open');return false;" class="command">Manage Inventory</a><br/>
+                <a href="#" onclick="$('#equip-improvised').dialog('open');return false;" class="command">Equip Improvised Weapon</a>
             </div>
         </div>
     </div> <%--}}}--%>
@@ -232,6 +233,13 @@
             VelocityUtil.applyTemplate(obj, "inventoryManagement.vm", out);
         %>
     </div>
+    <div id="equip-improvised" title="Equip Improvised Weapon">
+        <%
+            VelocityUtil.applyTemplate(obj, "equipImprovised.vm", out);
+        %>
+    </div>
+
+
     <%--}}}--%>
     <%
         }
@@ -254,32 +262,13 @@
 			// Scroll the message pane.
 
 			// Dialog
-            $('#inv-mgmt-dlg').dialog({
+            $('#equip-improvised').dialog({
                 autoOpen: false,
-                width: 400,
-                buttons: {
-                    "Cancel": function() {
-                        $(this).dialog("close");
-                    },
-                    "Submit": function() {
-                        var str= "src=" + $("#src").val() + "&dest=" + $("#dest").val();
-                        $("#inv-list :selected").each(function () {
-                            str += "&itemid=" + $(this).val();
-                        });
-                        $.getJSON('transferItem?' +  str, function(json){
-                            $(document).trigger('POLL_COMPLETE', json)
-                        });
-                    //     $.ajax({
-                    //        type: "POST",
-                    //        url: "transferItem",
-                    //        data: str,
-                    //        success: function(msg){
-                    //           $(document).trigger('POLL_COMPLETE', msg);
-                    //        }
-                    //      });
-                    }
-                }
+                width: 400
             });
+
+
+
 		});
 	</script>
     <%--}}}--%>

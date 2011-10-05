@@ -80,11 +80,8 @@ public class Unequip extends HttpServlet
                 response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=You do not own that.");
             }
 
-            if( it.getType().equals( "weapon" ) )
-            {
-                uneqiupWeaon(conn, alt, i);
-            }
-            else if( it.getType().equals( "armor" ) )
+
+            if( it.getType().equals( "armor" ) )
             {
                 uneqiupArmor(conn, alt, i);
             }
@@ -93,7 +90,11 @@ public class Unequip extends HttpServlet
                 uneqiupWearable(conn, alt, i);
             }
             else
-                response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=That item cannot be unequipped.");
+            {
+                // response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=That item cannot be unequipped.");
+                uneqiupWeaon(conn, alt, i);
+            }
+
             alt.update(conn);
             response.sendRedirect( WebUtils.BASE + "map/index.jsp" );
         }

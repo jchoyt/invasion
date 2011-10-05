@@ -27,7 +27,7 @@ public class SaveSkillConfig extends HttpServlet
 
     public final static String KEY = SaveSkillConfig.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     /**
      *  Description of the Method
@@ -44,8 +44,14 @@ public class SaveSkillConfig extends HttpServlet
          alt.getSkillsUsed().clear();
          //process firearms skill
          String firearmsSkill = WebUtils.getOptionalParameter(request, "firearms", "None" );
+         log.finer( "firearms skill used: " + firearmsSkill );
          if( !firearmsSkill.equals("None") )
              alt.getSkillsUsed().add( firearmsSkill );
+
+         String meleeSkill = WebUtils.getOptionalParameter(request, "melee", "None" );
+         log.finer( "melee skill used: " + meleeSkill );
+         if( !meleeSkill.equals("None") )
+             alt.getSkillsUsed().add( meleeSkill );
 
          out.write("OK");
     }

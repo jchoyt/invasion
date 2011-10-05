@@ -41,6 +41,11 @@ public class Skill implements java.io.Serializable
     public final static String TINKERER3 = "Tinkerer 3";
     public final static String TINKERER4 = "Tinkerer 4";
     public final static String TINKERER5 = "Tinkerer 5";
+    public final static String MELEE1 = "Melee 1";
+    public final static String MELEE2 = "Melee 2";
+    public final static String MELEE3 = "Melee 3";
+    public final static String MELEE4 = "Melee 4";
+    public final static String MELEE5 = "Melee 5";
     public final static String HACKER1 = "Hacker 1";
     public final static String HACKER2 = "Hacker 2";
     public final static String HACKER3 = "Hacker 3";
@@ -51,6 +56,11 @@ public class Skill implements java.io.Serializable
 
     public final static String DOUBLE_SHOT = "Double Shot";
     public final static String KILL_SHOT = "Kill Shot";
+
+    public final static String GOLIATH = "Goliath";
+    public final static String WHIRLWIND = "Whirlwind";
+    public final static String BRUTALITY = "Brutality";
+
     //}}}
 
     //{{{ Constuctors

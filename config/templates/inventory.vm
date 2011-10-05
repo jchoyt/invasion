@@ -57,18 +57,20 @@
 #end
 ##duplicate of what's just a few lines up to handle the last item.
 #set($wt = ${lastItem.wt} * ${count})
-<tr>
-<td>$lastDisplayName</td>
-<td>$count</td>
-<td>$wt</td><td>
-#if ($lastItem.type == "food")
-<a href="#" onclick="eat(${lastItem.itemid})">Eat</a>
-#elseif ($lastItem.type == "booze")
-<a href="#" onclick="drink(${lastItem.itemid})">Drink</a>
-#elseif ($lastItem.type == "weapon" || $lastItem.type == "armor" || $lastItem.type == "wearable")
-<a href="equip?weaponid=${lastItem.itemid}" >Equip</a>
-#elseif ($lastItem.typeid == 49 && $location.allowrecharage == "t")
-##empty energy packs
-<a href="#" onclick="recharge(${lastItem.itemid})" >Recharge</a>
+#if ($lastDisplayName != "Fred" )
+    <tr>
+    <td>$lastDisplayName</td>
+    <td>$count</td>
+    <td>$wt</td><td>
+    #if ($lastItem.type == "food")
+    <a href="#" onclick="eat(${lastItem.itemid})">Eat</a>
+    #elseif ($lastItem.type == "booze")
+    <a href="#" onclick="drink(${lastItem.itemid})">Drink</a>
+    #elseif ($lastItem.type == "weapon" || $lastItem.type == "armor" || $lastItem.type == "wearable")
+    <a href="equip?weaponid=${lastItem.itemid}" >Equip</a>
+    #elseif ($lastItem.typeid == 49 && $location.allowrecharage == "t")
+    ##empty energy packs
+    <a href="#" onclick="recharge(${lastItem.itemid})" >Recharge</a>
+    #end
+    </td></tr>
 #end
-</td></tr>

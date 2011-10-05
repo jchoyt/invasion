@@ -83,7 +83,7 @@ public class Drink extends HttpServlet
             ps = conn.prepareStatement(query);
             String category = Item.getCategory(conn, id);
             String itemName = Item.getName(conn, id);
-            if( !category.equals("booze") )
+            if( !"booze".equals(category) )
             {
                 throw new NaughtyException("That does not seem to be something to drink.");
             }
@@ -104,12 +104,15 @@ public class Drink extends HttpServlet
 
             //the AP decrement below will save this change
             alt.decrementAp(conn, 1);
-            new Message( conn, alt.getId(), Message.NORMAL, "You open the " +  itemName + " and start drinking.  As you finish, you feel a bit better.");
+            new Message( conn, alt.getId(), Message.NORMAL, "You open the " +  itemName + " and start drinking.  You feel a bit better.");
+            //TODO only append "you feel better" when actual healing occurs
+
+            //TDOD check if blacked out
 
             //check if died of alcohol poisoning
             if( alt.getEffects().getDuration( Effects.DRUNK ) > 49 && ( Math.random() < ( 1.0 - .08 * (60 - alt.getEffects().getDuration( Effects.DRUNK ) ) ) ) ) //20% chance at 50, 100% chance at 60
             {
-                new Message( conn, alt.getId(), Message.NORMAL, "As the last drops are drunk, you feel dizzy and fall over.  Slowly your body succumbs to the alcohol and shuts down.  You have died.");
+                new Message( conn, alt.getId(), Message.NORMAL, "Chugging that last one was a mistake.  The world spins; you feel dizzy and fall over.  Slowly your body succumbs to the alcohol and shuts down.  You have died.");
                 alt.setLastHurtBy( 0 );
                 alt.kill(conn, null);
             }

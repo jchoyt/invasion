@@ -1,0 +1,12 @@
+<form action="equip" method="post">
+    Select improvised weapon:
+    <select name="weaponid" id="equipment-list">
+    #foreach($i in $inv)
+        #if (!$i.equipped && $i.type != "wearable" && $i.type != "armor" && $i.type != "weapon" )
+            <option value="${i.itemid}"s>${i.name}</option>
+        #end
+    #end
+    </select>
+    <br/>
+    <input type="Submit"/>
+</form>

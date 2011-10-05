@@ -4,9 +4,8 @@
 
 package invasion.servlets;
 
-import invasion.pets.*;
-import invasion.dataobjects.*;
 import invasion.util.*;
+import invasion.dataobjects.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -22,45 +21,21 @@ import org.json.*;
  * @author     jchoyt
  * @created
  */
-@WebServlet(urlPatterns = { "/map/attackPet" } )
-public class AttackPet extends HttpServlet
+@WebServlet(urlPatterns = { "/map/throw" } )
+public class ThrowItem extends HttpServlet
 {
 
-    public final static String KEY = AttackPet.class.getName();
+    public final static String KEY = ThrowItem.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
-    /**
-     *  Constructor for the Servlet object
-     *
-     * @since
-     */
-    public AttackPet()
+    public ThrowItem()
     {
         super();
     }
 
-
-
     /**
-     *  Description of the Method
-     *
-     * @param  config                Description of the Parameter
-     * @exception  ServletException  Description of the Exception
-     */
-    public void init( ServletConfig config )
-        throws ServletException
-    {
-        log.entering( KEY, "init" );
-        /*
-         *  required for all Servlets
-         */
-        super.init( config );
-    }
-
-
-    /**
-     *  Description of the Method
+     *  Standard get method.  doPost redirects here.
      *
      */
     @Override
@@ -76,15 +51,7 @@ public class AttackPet extends HttpServlet
         try
         {
             conn = new InvasionConnection();
-            Defender defender = CritterFactory.loadCritter( conn, targetid );
-            if( defender == null )
-            {
-                log.finer("No defender found");
-                alerts = new JSONArray();
-                alerts.put( Poll.createErrorAlert("Your target is no longer in this location.") );
-                return;
-            }
-            log.finer("Character " + wazzit.getAlt().getId() + " about to attack pet " + target );
+            Defender defender = Alt.load( targetid );
             alerts = wazzit.getAlt().attack( defender, conn );
             if( wazzit.getAlt().getReload() )
             {
@@ -108,7 +75,7 @@ public class AttackPet extends HttpServlet
 
 
     /**
-     *  Description of the Method
+     *  Redirect to doGet()
      *
      */
     @Override

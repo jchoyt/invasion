@@ -59,9 +59,31 @@ $(document).ready( function() {
 		updateActions(data);
 		updateItemPane(data);
 		updateItemInventoryDialog(data);
+		updateEquipImprovisedDialog(data);
 	});
 
     // setInterval( "poll()", 10000);
+
+
+    // Inventory management Dialog
+    $('#inv-mgmt-dlg').dialog({
+        autoOpen: false,
+        width: 400,
+        buttons: {
+            "Cancel": function() {
+                $(this).dialog("close");
+            },
+            "Submit": function() {
+                var str= "src=" + $("#src").val() + "&dest=" + $("#dest").val();
+                $("#inv-list :selected").each(function () {
+                    str += "&itemid=" + $(this).val();
+                });
+                $.getJSON('transferItem?' +  str, function(json){
+                    $(document).trigger('POLL_COMPLETE', json)
+                });
+            }
+        }
+    });
 
     //set popup menu
     $.pop();
@@ -222,6 +244,18 @@ function updateItemInventoryDialog(data)
     else
     {
         $('#inv-mgmt-dlg').html("");
+    }
+}
+
+function updateEquipImprovisedDialog(data)
+{
+    if(data.inv)
+    {
+        $('#equip-improvised').html( v2js_equipImprovised(data) );
+    }
+    else
+    {
+        $('#equip-improvised').html("");
     }
 }
 

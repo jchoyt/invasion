@@ -101,6 +101,7 @@ public class TickTask extends TimerTask
         s.addBatch( "update alt set lasthurtby=null where hp=hpmax and lasthurtby is not null " );
         //decrement statuses
         s.addBatch( "update effects set duration = duration - 1" );
+        s.addBatch( "insert into messages (message, type, altid) select 'You feel the effects of ' || et.name || ' fade.', 1, a.id from alt a join effects e on (a.id=e.altid) join effecttype et on (et.id=e.effectid) where duration < 1" );
         s.addBatch( "delete from effects where duration < 1" );
         s.executeBatch();
         DatabaseUtility.close(s);

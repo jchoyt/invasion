@@ -25,7 +25,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //{{{ Logging
     public final static String KEY = Alt.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
     //}}}
 
     //{{{ Members
@@ -54,6 +54,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected long psiSkills = 0;
 	protected long mutateSkills = 0;
 	protected int firearmsAttackLevel = 0;
+	protected int meleeAttackLevel = 0;
 	protected int tinkererLevel = 0;
 	protected boolean reload = false; //reload the GUI?
     protected List<String> skillsUsed = new ArrayList<String>();
@@ -227,26 +228,17 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 alerts.put( Poll.createErrorAlert("You must equip a weapon before attacking with it.") );
                 return alerts;
             }
-
-            if(equippedWeapon.getItemtype().getType().equals("weapon"))
+            if( equippedWeapon.getItemtype().getUsesammo() )
             {
-                if( equippedWeapon.getItemtype().getUsesammo() )
-                {
-                    // //firearms
-                    // if( ammo <= 0 )
-                    // {
-                    //     alerts = new JSONArray();
-                    //     alerts.put( Poll.createErrorAlert("There is no ammunition left in your equipped weapon.") );
-                    //     return alerts;
-                    // }
-                    attackWithFirearm( conn, defender );
-                }
-                else
-                {
-                    //melee weapon
-                    attackWithMelee( conn, defender );
-                }
+                attackWithFirearm( conn, defender );
             }
+            else
+            {
+                attackWithMelee( conn, defender );
+            }
+
+            //TODO check for Goliath
+
 
             return null;
         }
@@ -261,7 +253,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     }
 
     /**
-     * Attack with a melee weapon
+     * Attack with a melee weapon, improvised or otherwise
      * @param
      * @return
      *
@@ -269,6 +261,83 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public void attackWithMelee( InvasionConnection conn, Defender defender )
         throws SQLException
     {
+        log.entering(KEY, "attackWithMelee");
+        int apIncrement = 1;
+        int attackLevel = meleeAttackLevel;
+        int damageBounus = 0;
+        int damageMultiplier = 1;
+        int shots = 1;
+        //calc damage bonus
+        if( ( humanSkills & Skills.getValue(Skill.MELEE1) ) > 0 ) damageBounus += 1;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE2) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE3) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE4) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE5) ) > 0 ) damageBounus += 3;
+
+        if( skillsUsed.contains( Skill.WHIRLWIND ) && ( humanSkills & Skills.getValue(Skill.MELEE4) ) > 0 )
+        {
+            attackLevel = meleeAttackLevel - 2;
+            shots = 2;
+        }
+        else if( skillsUsed.contains( Skill.BRUTALITY ) && ( humanSkills & Skills.getValue(Skill.MELEE5) ) > 0 )
+        {
+            if( Math.random() < 0.80 )
+                damageMultiplier = 3;
+            apIncrement = 2;
+        }
+
+        for(int i = 0; i < shots; i++)
+        {
+            //check for misfire
+            if( Math.random() < equippedWeapon.getMods().getMisfireRate() )
+            {
+                new Message( conn, id, Message.EFFECT, "As you swing the weapon, something feels terribly wrong and it takes you off-balance; you miss." );
+                continue;
+            }
+
+            //TODO - types of failure
+
+            // check if you hit
+            double attackChance = Skills.calculateAttackChance( equippedWeapon.getItemtype().getAccuracy(), attackLevel, defender.getDodgeLevel() );
+            //adjust for modifications
+            attackChance = attackChance * equippedWeapon.getMods().getScaleAccuracy();
+            if( Math.random() < attackChance )
+            {
+                //hit;
+                float rawDamage = ( equippedWeapon.getItemtype().getDamage() + damageBounus ) * damageMultiplier;
+                //adjust for modifications
+                int damage = Math.round(rawDamage * equippedWeapon.getMods().getScaleDamage());
+                CombatResult result = defender.hit( this, damage, equippedWeapon.getItemtype().getDamageType(), conn, true );
+                StringBuilder ret = new StringBuilder( "You attack " + defender.getName() + " with your " + equippedWeapon.getItemtype().getName() );
+                ret.append( " and deal " + result.getDamageDone() + " points of damage.");
+                if( result.getArmorSoak() > 0 )
+                    ret.append( " Your victim's armor soaked " + result.getArmorSoak()  + " points." );
+                if( result.getShieldSoak() > 0 )
+                    ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
+                ret.append( " You earned " + result.getDamageDone() +" XP.");
+                new Message( conn, id, Message.NORMAL, ret.toString());
+                for(String msg : result.getAttackerMessages())
+                    new Message( conn, id, Message.NORMAL, msg );
+                xp = xp + result.getDamageDone();
+                update(conn);
+                Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
+                //TODO - destroy consumable improvised - only on kill (complements of EK)
+            }
+            else
+            {
+                //miss
+                new Message( conn, id, Message.NORMAL, "You attack " + defender.getName() + " with your "  + equippedWeapon.getItemtype().getName() + " and miss." );
+                defender.insertMessage( name + " attacked you with a "  + equippedWeapon.getItemtype().getName() + " and missed.", Message.NORMAL, conn );
+            }
+            //check if defender dead - if so stop here
+            if( defender.getHp() < 1 )
+                break;
+            //if attacker is dead, stop here
+            if( hp < 1 )
+                break;
+            defender.notifyAttacked( this, conn );
+        }
+        decrementAp(conn, apIncrement);
 
     }
 
@@ -281,6 +350,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     protected void attackWithFirearm(InvasionConnection conn, Defender defender)
         throws SQLException
     {
+        log.entering(KEY, "attackWithFirearm");
         int apIncrement = 1;
         int attackLevel = firearmsAttackLevel;
         int damageBounus = 0;
@@ -294,14 +364,14 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         if( ( humanSkills & Skills.getValue(Skill.FIREARMS5) ) > 0 ) damageBounus += 3;
         if( skillsUsed.contains( Skill.DOUBLE_SHOT ) && ( humanSkills & Skills.getValue(Skill.FIREARMS4) ) > 0 )
         {
-            attackLevel = firearmsAttackLevel - 1;
+            attackLevel = firearmsAttackLevel - 2;
             shots++;
         }
         else if( skillsUsed.contains( Skill.KILL_SHOT ) && ( humanSkills & Skills.getValue(Skill.FIREARMS5) ) > 0 )
         {
-            if( Math.random() < 0.25 )
+            if( Math.random() < 0.5 )
                 damageMultiplier = 5;
-            apIncrement = 3;
+            apIncrement = 2;
         }
         for(int i = 0; i < shots; i++)
         {
@@ -436,6 +506,72 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
         decrementAp(conn, apIncrement);
     }
+
+
+    /**
+     * Throw item at someone/-thing.  This will verify the character owns the object to be used as a missle.
+     * @param
+     * @return
+     *
+     */
+    public void throwAttack( InvasionConnection conn, Defender defender, int missileId )
+        throws SQLException
+    {
+        int apIncrement = 1;
+        int attackLevel = meleeAttackLevel;
+        int damageBounus = 0;
+        int shots = 1;
+        boolean usingGoliath = false;
+
+        //grab the weapon used
+        Item missile = Item.load( conn, missileId );
+
+        //calc damage bonus
+        if( ( humanSkills & Skills.getValue(Skill.MELEE1) ) > 0 ) damageBounus += 1;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE2) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE3) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE4) ) > 0 ) damageBounus += 2;
+        if( ( humanSkills & Skills.getValue(Skill.MELEE5) ) > 0 ) damageBounus += 3;
+
+        if( skillsUsed.contains( Skill.GOLIATH ) && ( humanSkills & Skills.getValue(Skill.MELEE5) ) > 0 )
+        {
+            apIncrement = 2;
+            usingGoliath = true;
+        }
+
+        // check if you hit
+        double attackChance = Skills.calculateAttackChance( missile.getItemtype().getAccuracy(), attackLevel, defender.getDodgeLevel() );
+        if( Math.random() < attackChance )
+        {
+            //hit;
+            int damage = missile.getItemtype().getDamage() + damageBounus ;
+
+            CombatResult result = defender.hit( this, damage, 'p', conn, true );
+            StringBuilder ret = new StringBuilder( "You hurl your  " + missile.getItemtype().getName() + " at " + defender.getName() );
+            ret.append( " and deal " + result.getDamageDone() + " points of damage.");
+            if( result.getArmorSoak() > 0 )
+                ret.append( " Your victim's armor soaked " + result.getArmorSoak()  + " points." );
+            if( result.getShieldSoak() > 0 )
+                ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
+            ret.append( " You earned " + result.getDamageDone() +" XP.");
+            new Message( conn, id, Message.NORMAL, ret.toString());
+            for(String msg : result.getAttackerMessages())
+                new Message( conn, id, Message.NORMAL, msg );
+            xp = xp + result.getDamageDone();
+            update(conn);
+            Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
+        }
+        else
+        {
+            //miss
+            new Message( conn, id, Message.NORMAL, "You hurl your "  + missile.getItemtype().getName() + " at " + defender.getName() + " and miss." );
+            defender.insertMessage( name + " threw a "  + missile.getItemtype().getName() + " at you and missed.", Message.NORMAL, conn );
+        }
+        defender.notifyAttacked( this, conn );
+
+        decrementAp(conn, apIncrement);
+
+    }
     //}}}
 
     //{{{ For Defender interface
@@ -508,7 +644,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         hp = 0;
         ip = 0;
         location = -57005;
-        ap = ap - level;
+        ap = ap - (level/2);
         int killerid = lastHurtBy;
         lastHurtBy = 0;
         update( conn );
@@ -623,13 +759,18 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             /* Calculate human skill bonuses */
             if( ret.getHumanSkills() > 0 )
             {
+                //firearms
                 if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS5)) > 0 ) ret.firearmsAttackLevel = 5;
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS4)) > 0 ) ret.firearmsAttackLevel = 4;
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS3)) > 0 ) ret.firearmsAttackLevel = 3;
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS2)) > 0 ) ret.firearmsAttackLevel = 2;
                 else if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS1)) > 0 ) ret.firearmsAttackLevel = 1;
-                //TODO - make this configurable
-                if( (ret.getHumanSkills() & Skills.getValue(Skill.FIREARMS5)) > 0 ) ret.skillsUsed.add(Skill.KILL_SHOT);
+                //melee
+                if( (ret.getHumanSkills() & Skills.getValue(Skill.MELEE5)) > 0 ) ret.meleeAttackLevel = 5;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.MELEE4)) > 0 ) ret.meleeAttackLevel = 4;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.MELEE3)) > 0 ) ret.meleeAttackLevel = 3;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.MELEE2)) > 0 ) ret.meleeAttackLevel = 2;
+                else if( (ret.getHumanSkills() & Skills.getValue(Skill.MELEE1)) > 0 ) ret.meleeAttackLevel = 1;
             }
             if( ret.getHumanSkills() > 0 )
             {
@@ -792,11 +933,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             rs = conn.psExecuteQuery(query, "Error message", alt.id );
             while(rs.next())
             {
-                if( rs.getString( "type" ).equals("weapon")  )
-                {
-                    alt.equippedWeapon = Item.load( conn, rs.getInt( "itemid" ) );
-                }
-                else if( rs.getString( "type" ).equals("armor") && rs.getString( "damagetype" ).equals( "p" )  )
+                if( rs.getString( "type" ).equals("armor") && rs.getString( "damagetype" ).equals( "p" )  )
                 {
                     alt.equippedArmor = Item.load( conn, rs.getInt( "itemid" ) );
                 }
@@ -808,11 +945,15 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 {
                     alt.clothing.add( rs.getString("name") );
                 }
-                else
+                else //if( rs.getString( "type" ).equals("weapon")  )
                 {
-                    log.severe("Something ... unusual ... has been equippeed on " + alt.name + " (id=" + alt.id + ").  It's a " + rs.getString("name") + " with the itemid " + rs.getInt("itemid") );
-                    //TODO - bot announcement
+                    alt.equippedWeapon = Item.load( conn, rs.getInt( "itemid" ) );
                 }
+            //     else
+            //     {
+            //         log.severe("Something ... unusual ... has been equippeed on " + alt.name + " (id=" + alt.id + ").  It's a " + rs.getString("name") + " with the itemid " + rs.getInt("itemid") );
+            //         //TODO - bot announcement
+            //     }
             }
             DatabaseUtility.close(rs);
         }
