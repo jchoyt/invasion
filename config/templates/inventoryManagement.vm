@@ -17,7 +17,11 @@
         #if ($i.equipped)
             <option value="${i.itemid}" disabled="true">${i.name} (equipped)</option>
         #else
-            <option value="${i.itemid}"s>${i.name}</option>
+            #if ($i.type == "weapon" || $i.type == "armor")
+                <option value="${i.itemid}">${i.name} ($i.condition) ($i.ammoleft)</option>
+            #else
+                <option value="${i.itemid}">${i.name}</option>
+            #end
         #end
     #end
     </select> * Ctrl+click (Command+click for Mac users) to select multiple items to operate on at once.
