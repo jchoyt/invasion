@@ -55,7 +55,19 @@ public class AltTest
     }
     //}}}
 
+    @Test
+    public void testSkillLevelExtract()
+        throws Exception
+    {
+        //test extraction algoritm
+        testee.setHumanSkills( 4063232L ); ///set skills to all and only melee levels
+        assertEquals( 5.0, Math.log(Long.highestOneBit((testee.getHumanSkills() & 4063232L ) >> 16) ) / Math.log(2.0), 0.0001); //Math.log(x)/Math.log(2) =? log base 2 of the number
+        testee.setHumanSkills( 917504L ); ///set skills to all and only melee levels
+        assertEquals( 3.0, Math.log(Long.highestOneBit((testee.getHumanSkills() & 4063232L ) >> 16) ) / Math.log(2.0), 0.0001); //Math.log(x)/Math.log(2) =? log base 2 of the number
+        testee.setHumanSkills( 131072L ); ///set skills to all and only melee levels
+        assertEquals( 1.0, Math.log(Long.highestOneBit((testee.getHumanSkills() & 4063232L ) >> 16) ) / Math.log(2.0), 0.0001); //Math.log(x)/Math.log(2) =? log base 2 of the number
 
+    }
 }
 
 // :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:

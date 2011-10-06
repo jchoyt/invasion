@@ -25,7 +25,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     //{{{ Logging
     public final static String KEY = Alt.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
     //}}}
 
     //{{{ Members
@@ -63,6 +63,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected char gender = 'f';
 	protected Effects effects = new Effects();
 	protected int ticksalive = 0;
+	protected long stunned = 0;
+
+
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
@@ -514,7 +517,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
      * @return
      *
      */
-    public void throwAttack( InvasionConnection conn, Defender defender, int missileId )
+    public JSONArray throwAttack( InvasionConnection conn, Defender defender, int missileId )
         throws SQLException
     {
         int apIncrement = 1;
@@ -522,9 +525,15 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         int damageBounus = 0;
         int shots = 1;
         boolean usingGoliath = false;
+       JSONArray alerts = null;
 
         //grab the weapon used
         Item missile = Item.load( conn, missileId );
+        if( missile.getLocid() != id )
+        {
+            alerts.put( Poll.createErrorAlert("You do not own that.") );
+            return alerts;
+        }
 
         //calc damage bonus
         if( ( humanSkills & Skills.getValue(Skill.MELEE1) ) > 0 ) damageBounus += 1;
@@ -543,8 +552,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         double attackChance = Skills.calculateAttackChance( missile.getItemtype().getAccuracy(), attackLevel, defender.getDodgeLevel() );
         if( Math.random() < attackChance )
         {
-            //hit;
-            int damage = missile.getItemtype().getDamage() + damageBounus ;
+            //hit;  Note: thown weapons only get 1/2 the damage bonus
+            int damage = missile.getItemtype().getDamage() + Math.round(damageBounus / 2.0f );
 
             CombatResult result = defender.hit( this, damage, 'p', conn, true );
             StringBuilder ret = new StringBuilder( "You hurl your  " + missile.getItemtype().getName() + " at " + defender.getName() );
@@ -560,6 +569,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             xp = xp + result.getDamageDone();
             update(conn);
             Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
+
+            if( usingGoliath )
+            {
+                defender.setStunned( System.currentTimeMillis() + 4000 );  //4 second stun
+            }
+
         }
         else
         {
@@ -570,7 +585,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         defender.notifyAttacked( this, conn );
 
         decrementAp(conn, apIncrement);
-
+        return null;
     }
     //}}}
 
@@ -989,6 +1004,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         obj.put("level", alt.level );
         obj.put("ticksalive", alt.ticksalive );
         obj.put("daysalive", alt.ticksalive / 96 );
+        obj.put("firearms", alt.firearmsAttackLevel ) ;
         if( alt.hp < 1 ) obj.put("reload", true);
         obj.put("effects", alt.effects.getEffectsString() );
         return obj;
@@ -1095,6 +1111,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setEffects(Effects effects) { this.effects = effects; }
     public int getTicksalive() { return this.ticksalive; }
 	public void setTicksalive(int ticksalive) { this.ticksalive = ticksalive; }
+	public long getStunned() { return this.stunned; }
+	public void setStunned(long stunned) { this.stunned = stunned; }
     //}}}
 
 }

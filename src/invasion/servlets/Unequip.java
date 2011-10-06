@@ -80,7 +80,6 @@ public class Unequip extends HttpServlet
                 response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=You do not own that.");
             }
 
-
             if( it.getType().equals( "armor" ) )
             {
                 uneqiupArmor(conn, alt, i);

@@ -42,6 +42,8 @@ public class Critter implements Attacker, Defender
 	protected int typeid = -1;
 	protected int location = 0;
 	protected static String[] deathKnells = { "You have landed the killing blow." };
+	protected long stunned = 0;
+
     //}}}
 
     //{{{ Methods
@@ -401,6 +403,9 @@ public class Critter implements Attacker, Defender
 	public void setTypeid(int typeid) { this.typeid = typeid; }
 	public int getLocation() { return this.location; }
 	public void setLocation(int location) { this.location = location; }
+	public long getStunned() { return this.stunned; }
+	public void setStunned(long stunned) { this.stunned = stunned; }
+
 //}}}
 
 }

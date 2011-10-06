@@ -21,11 +21,11 @@ import org.json.*;
  * @author     jchoyt
  * @created
  */
-@WebServlet(urlPatterns = { "/admin/smite" } )
-public class Smite extends HttpServlet
+@WebServlet(urlPatterns = { "/admin/stun" } )
+public class Stun extends HttpServlet
 {
 
-    public final static String KEY = Smite.class.getName();
+    public final static String KEY = Stun.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
 
@@ -34,7 +34,7 @@ public class Smite extends HttpServlet
      *
      * @since
      */
-    public Smite()
+    public Stun()
     {
         super();
     }
@@ -49,21 +49,19 @@ public class Smite extends HttpServlet
     {
         PrintWriter out = response.getWriter();
         String altidString = WebUtils.getRequiredParameter(request, "id");
+        String timeString = WebUtils.getRequiredParameter(request, "seconds");
         String message = WebUtils.getRequiredParameter(request, "message");
-        String query = "update alt set hp=0, lasthurtby=null where id=?";
         InvasionConnection conn = null;
         try{
             int altid = Integer.parseInt(altidString);
+            long seconds = Long.parseLong( timeString );
             conn = new InvasionConnection();
             Alt alt = Alt.load( conn, altid );
-            int count =  conn.psExecuteUpdate(query, "", altid);
-            new Message( conn, altid, Message.EFFECT, message );
-            alt.kill( conn, null);
-            //LATER - lock account
+            alt.setStunned( 1000L * seconds );
         }
         catch(SQLException e)
         {
-            log.throwing(KEY, "Error smiting someone", e);
+            log.throwing(KEY, "Error stunning someone", e);
             throw new ServletException(e);
         }
         finally
@@ -72,7 +70,7 @@ public class Smite extends HttpServlet
         }
         response.setHeader("HTTP-EQUIV","Refresh");
         response.setHeader("CONTENT", "1;URL=charList.jsp");
-        out.write("<html><body>He/she/it's been smote <br/><a href=\"/admin/charList.jsp\">Back to the character list</a></body></html>");
+        out.write("<html><body>He/she/it's been stunned <br/><a href=\"/admin/charList.jsp\">Back to the character list</a></body></html>");
     }
 
 

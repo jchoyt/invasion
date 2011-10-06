@@ -41,6 +41,14 @@
                     Message: <input type="text" name="message" value="The system's automated defenses suddenly activate and reduce your body to ash."/><br/>
                     <input type="submit"/>
                 </form>
+                <form action="stun">
+                <h3>Stun</h3>
+                    ID: <input type="text" name="id"/><br/>
+                    Time: <input type="text" name="seconds" value="3600"/> seconds<br/>
+                    Message: <input type="text" name="message" value="A disturbance in space-time distracts you and you stare at it, forgetting what you wanted to do."/><br/>
+                    Prevents action for XX seconds.  The default (3600) is one hour...which is cruel.
+                    <input type="submit"/>
+                </form>
             </div>
         </center>
     </body>

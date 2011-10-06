@@ -45,19 +45,26 @@ public class ThrowItem extends HttpServlet
         PrintWriter out = response.getWriter();
         String target = WebUtils.getRequiredParameter(request, "target");
         int targetid = Integer.parseInt(target);
+        String missile = WebUtils.getRequiredParameter(request, "missile");
+        int missileid = Integer.parseInt(missile);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
+        Alt alt = wazzit.getAlt();
         JSONArray alerts = null;
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection();
             Defender defender = Alt.load( targetid );
-            alerts = wazzit.getAlt().attack( defender, conn );
-            if( wazzit.getAlt().getReload() )
+            /* check to see if the target ran off */
+            if( alt.getLocation() != defender.getLocation() )
             {
-                Poll.sendReloadCommand(out);
-                wazzit.getAlt().setReload(false);
-                return;
+                log.finer("Defender no longer at the attacker's location");
+                alerts = new JSONArray();
+                alerts.put( Poll.createErrorAlert("Your target is no longer in the area.") );
+            }
+            else
+            {
+                alerts = alt.throwAttack( conn, defender, missileid );
             }
             Poll.fullPoll( conn, out, wazzit, alerts );
         }
