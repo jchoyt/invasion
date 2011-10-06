@@ -316,11 +316,26 @@ t.p( i.name);
 t.p(' (equipped)</option>        ');
 }
 else {
-t.p('            <option value="');
+t.p('            ');
+if (i.type == "weapon" || i.type == "armor") {
+t.p('                <option value="');
 t.p( i.itemid);
-t.p('"s>');
+t.p('">');
 t.p( i.name);
-t.p('</option>        ');
+t.p(' (');
+t.p( i.condition);
+t.p(') (');
+t.p( i.ammoleft);
+t.p(')</option>            ');
+}
+else {
+t.p('                <option value="');
+t.p( i.itemid);
+t.p('">');
+t.p( i.name);
+t.p('</option>            ');
+}
+t.p('        ');
 }
 t.p('    ');
 }
@@ -646,6 +661,12 @@ if (i.damagetype == "e" && i.ammoleft < i.capacity) {
 needRecharge = "t";
 t.p('        ');
 }
+else {
+if (i.damagetype == "e" && context.stats.firearms > 3 && i.ammoleft < ( i.capacity * 2 )) {
+needRecharge = "t";
+t.p('        ');
+}
+}
 t.p('    ');
 }
 }
@@ -672,6 +693,19 @@ t.p( i.condition);
 t.p(') (');
 t.p( i.ammoleft);
 t.p(')</option>                    ');
+}
+else {
+if (i.damagetype == "e" && context.stats.firearms > 3 && i.ammoleft < ( i.capacity * 2 )) {
+t.p('                        <option value="');
+t.p( i.itemid);
+t.p('">');
+t.p( i.name);
+t.p(' (');
+t.p( i.condition);
+t.p(') (');
+t.p( i.ammoleft);
+t.p(')</option>                    ');
+}
 }
 t.p('                ');
 }

@@ -6,7 +6,9 @@
         #set( $canRecharge = "t" )
     #end
     #if ($i.type == "weapon" || $i.type == "armor")
-        #if( $i.damagetype == "e" && $i.ammoleft < $i.capacity)
+        #if( $i.damagetype == "e" && $i.ammoleft lt $i.capacity )
+            #set( $needRecharge = "t" )
+        #elseif( $i.damagetype == "e" && $stats.firearms > 3 && $i.ammoleft lt ( $i.capacity * 2 ) )
             #set( $needRecharge = "t" )
         #end
     #end
@@ -18,6 +20,8 @@
             #foreach($i in $inv)
                 #if ($i.type == "weapon" || $i.type == "armor")
                     #if( $i.damagetype == "e" && $i.ammoleft < $i.capacity)
+                        <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
+                    #elseif( $i.damagetype == "e" && $stats.firearms > 3 && $i.ammoleft lt ( $i.capacity * 2 ) )
                         <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
                     #end
                 #end
