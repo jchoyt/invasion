@@ -1,0 +1,2 @@
+Added melee skills, including thrown weapons
+Fixed reload bug where char has double shot
