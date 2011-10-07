@@ -1,2 +1,9 @@
 Added melee skills, including thrown weapons
+Added ability to throw items, added Goliatfh skill.  GUI for thown still needs to be done
+Added ammo and status to inventory management list
+Added Effects in general and drunk in particular
+Added Player Guide in TiddlyWiki format
+
 Fixed reload bug where char has double shot
+Fixed refresh url to do admin
+Fixed bug where attack link would disappear between attacks
