@@ -58,6 +58,7 @@ public class Stun extends HttpServlet
             conn = new InvasionConnection();
             Alt alt = Alt.load( conn, altid );
             alt.setStunned( 1000L * seconds );
+            new Message( conn, altid, Message.ETHERIAL, message );
         }
         catch(SQLException e)
         {
@@ -69,7 +70,7 @@ public class Stun extends HttpServlet
             DatabaseUtility.close(conn);
         }
         response.setHeader("HTTP-EQUIV","Refresh");
-        response.setHeader("CONTENT", "1;URL=charList.jsp");
+        response.setHeader("CONTENT", "1;URL=admin/charList.jsp");
         out.write("<html><body>He/she/it's been stunned <br/><a href=\"/admin/charList.jsp\">Back to the character list</a></body></html>");
     }
 
