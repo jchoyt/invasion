@@ -312,7 +312,7 @@ function dosearch( reps )
 
 function attack( targetid )
 {
-    var url = "attack?target=" + targetid;
+    var url = "attack?target=alt" + targetid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
@@ -320,7 +320,7 @@ function attack( targetid )
 
 function attack_pet( targetid )
 {
-    var url = "attackPet?target=" + targetid;
+    var url = "attack?target=pet" + targetid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });

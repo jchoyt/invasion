@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import invasion.pets.*;
 import invasion.util.*;
 import java.io.*;
 import java.util.*;
@@ -27,7 +28,7 @@ public class Attack extends HttpServlet
 
     public final static String KEY = Attack.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the Servlet object
@@ -68,14 +69,32 @@ public class Attack extends HttpServlet
     {
         PrintWriter out = response.getWriter();
         String target = WebUtils.getRequiredParameter(request, "target");
-        int targetid = Integer.parseInt(target);
+        int targetid = Integer.parseInt(target.substring(3));
+        String targetType = target.substring(0,3);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
         JSONArray alerts = null;
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection();
-            Defender defender = Alt.load( targetid );
+            Defender defender = null;
+            if( targetType.equals("alt" ) )
+            {
+                log.finer("Attempting to load character " + targetid );
+                defender = Alt.load( targetid );
+            }
+            else if( targetType.equals("pet" ) )
+            {
+                defender = CritterFactory.loadCritter( conn, targetid );
+            }
+            if( defender == null )
+            {
+                log.finer("No defender found");
+                alerts = new JSONArray();
+                alerts.put( Poll.createErrorAlert("Your target no longer exists.") );
+                Poll.fullPoll( conn, out, wazzit, alerts );
+                return;
+            }
             alerts = wazzit.getAlt().attack( defender, conn );
             if( wazzit.getAlt().getReload() )
             {
