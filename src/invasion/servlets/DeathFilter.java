@@ -21,14 +21,14 @@ import invasion.dataobjects.*;
 
 @WebFilter(
     filterName = "DeathFilter",
-    urlPatterns = {"/map/attack", "/map/attackPet","/map/drink","/map/eat","/map/move","/map/search","/map/speak", "/map/index.jsp", "/map/throw"}
+    urlPatterns = {"/map/attack", "/map/attackPet","/map/drink","/map/eat","/map/move","/map/search","/map/speak", "/map/index.jsp", "/map/throw", "/map/chalk"}
     )
 public class DeathFilter implements Filter
 {
 
     public final static String KEY = DeathFilter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     private FilterConfig filterConfig = null;
@@ -57,25 +57,25 @@ public class DeathFilter implements Filter
         }
         Alt alt = wazzit.getAlt();
         int locid = alt.getLocation();
-        log.finer( alt.getName() + "location is " + locid + " and hp is " + alt.getHp());
-        log.finer( "Stunned until : " + alt.getStunned() + " current is " + System.currentTimeMillis() );
+        log.finer( alt.getName() + "location is " + locid + " and hp is " + alt.getHp() );
         if( locid == -1337 )
         {
             //TODO make LOST IN SPACE page
             // out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
             log.finer("Locid = -1337 - character is basically screwed.");
-            filterConfig.getServletContext().getRequestDispatcher(WebUtils.BASE + "index.jsp?error=" + alt.getName() + " is lost somewhere and you have no idea where...you'll need mod help<br/>Get on irc - #soulcubes on irc.freenode.net.").forward(request, response);
+            filterConfig.getServletContext().getRequestDispatcher( "/index.jsp?error=" + alt.getName() + " is lost somewhere and you have no idea where...you'll need mod help<br/>Get on irc - #soulcubes on irc.freenode.net.").forward(request, response);
             return;
         }
         else if( alt.getStunned() > System.currentTimeMillis() )
         {
-            filterConfig.getServletContext().getRequestDispatcher(WebUtils.BASE + "map/index.jsp?error=You are stunned and cannot take any action until the effect wears off.").forward(request, response);
+            log.finer(WebUtils.BASE + "map/index.jsp?error=You are stunned and cannot take any action until the effect wears off.");
+            filterConfig.getServletContext().getRequestDispatcher( "/map/index.jsp?error=You are stunned and cannot take any action until the effect wears off.").forward(request, response);
             return;
         }
         else if( locid == -57005 || alt.getHp() < 1 )
         {
             log.finer("Character is dead.");
-            filterConfig.getServletContext().getRequestDispatcher(WebUtils.BASE + "map/dead.jsp").forward(request, response);
+            filterConfig.getServletContext().getRequestDispatcher( "/map/dead.jsp" ).forward(request, response);
             return;
         }
 

@@ -2,7 +2,9 @@ Added melee skills, including thrown weapons
 Added ability to throw items, added Goliatfh skill.  GUI for thown still needs to be done
 Added ammo and status to inventory management list
 Added Effects in general and drunk in particular
+Added ability to stun character (per Melee 4 skill, Goliath, and admin interface)
 Added Player Guide in TiddlyWiki format
+Added nascent character editing capability
 
 Fixed reload bug where char has double shot
 Fixed refresh url to do admin
