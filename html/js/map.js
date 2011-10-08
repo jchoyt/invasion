@@ -1,8 +1,8 @@
 //{{{ on page ready
 var myLayout; // init global vars
 var base_url="/game/";
-var map_url = base_url + "/map/index.jsp";
-var poll_url = base_url + "/poll";
+var map_url = base_url + "map/index.jsp";
+var poll_url = base_url + "poll";
 
 
 $(document).ready( function() {
@@ -85,7 +85,10 @@ $(document).ready( function() {
         }
     });
 
-    //set popup menu
+    $('#equip-improvised').dialog({
+        autoOpen: false,
+        width: 400
+    });    //set popup menu
     $.pop();
 
 }); //}}}
@@ -263,6 +266,15 @@ function updateEquipImprovisedDialog(data)
 
 //{{{ Actions
 
+
+function drop( itemid )
+{
+    var url = "drop?itemid=" + itemid;
+    $.getJSON(url, function(json){
+        $(document).trigger('POLL_COMPLETE', json)
+    });
+}
+
 function eat( itemid )
 {
     var url = "eat?itemid=" + itemid;
@@ -341,12 +353,11 @@ function doTransfer( itemid, src, dest )
 }
 function chalkWall()
 {
-    resource = "${base}map/chalk.jsp";
+    resource = base_url + "map/chalk.jsp";
     $('#dialog').load(resource, function() {
+        alert(resource);
         $('#dialog').dialog('open');
-        $('#poll-indicator').hide();
     });
-    $('poll-indicator').show();
     return false;
 }
 //}}}

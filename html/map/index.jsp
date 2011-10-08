@@ -118,6 +118,10 @@
                 <a href="#" onclick="$('#equip-improvised').dialog('open');return false;" class="command">Equip Improvised Weapon</a>
             </div>
         </div>
+        <!-- ui-dialog -->
+		<div id="dialog" title="Dialog Title">
+			<p>There has been an exception.  Check <a href="editLocation.jsp?locid=1001625">here</a> to see what the problem may have been</p>
+		</div>
     </div> <%--}}}--%>
 
     <%--{{{  west pane --%>
