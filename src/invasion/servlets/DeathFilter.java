@@ -21,7 +21,7 @@ import invasion.dataobjects.*;
 
 @WebFilter(
     filterName = "DeathFilter",
-    urlPatterns = {"/map/attack", "/map/attackPet","/map/drink","/map/eat","/map/move","/map/search","/map/speak", "/map/index.jsp", "/map/throw", "/map/chalk"}
+    urlPatterns = {"/map/attack", "/map/drink","/map/eat","/map/move","/map/search","/map/speak", "/map/index.jsp", "/map/throw", "/map/chalk"}
     )
 public class DeathFilter implements Filter
 {
