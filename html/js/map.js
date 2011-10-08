@@ -89,6 +89,17 @@ $(document).ready( function() {
         autoOpen: false,
         width: 400
     });    //set popup menu
+
+    $('#dialog').dialog({
+        autoOpen: false,
+        width: 600,
+        buttons: {
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+
     $.pop();
 
 }); //}}}
@@ -353,9 +364,8 @@ function doTransfer( itemid, src, dest )
 }
 function chalkWall()
 {
-    resource = base_url + "map/chalk.jsp";
+    resource = "http://127.0.0.1:8080/game/map/chalk.jsp"; //base_url + "map/chalk.jsp";
     $('#dialog').load(resource, function() {
-        alert(resource);
         $('#dialog').dialog('open');
     });
     return false;
