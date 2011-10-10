@@ -334,13 +334,20 @@ function showtarget(id)
         var occ = window.lastPoll.occs[occ_index];
         if( occ.id == id )
         {
-            var attLink = "<a href=\"#\" onclick=\"attack(" + occ.id + ")\">Attack " + occ.name + "</a>";
+            var attLink = "<a href=\"#\" onclick=\"attack(" + occ.id + ")\">Attack&nbsp;" + occ.name + "</a> <a href=\"#\" onclick=\"showThrowItem(" + occ.id + ");return false;\">Throw&nbsp;Item</a>";
             $("#att-box").html(attLink);
         }
     }
-    //show = "#desc-" + id;
-    // $("#att-box").html($(show).html());
 };
+
+function showThrowItem(id)
+{
+    // resource = "http://127.0.0.1:8080/game/map/chalk.jsp"; //base_url + "map/chalk.jsp";
+    $('#dialog').html( v2js_throwItemList(window.lastPoll) );
+    $("#throw-target").val( id );
+    $('#dialog').dialog('open');
+    return false;
+}
 
 function show_pet_target(id)
 {

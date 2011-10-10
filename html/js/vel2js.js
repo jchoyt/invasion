@@ -628,14 +628,7 @@ t.p( occ.id);
 t.p('" onclick="showtarget(');
 t.p( occ.id);
 t.p(')" href="');
-t.p('#">>></a></td></tr><span id="desc-');
-t.p( occ.id);
-t.p('" style="display:none;"><a href="');
-t.p('#" onclick="attack(');
-t.p( occ.id);
-t.p(')">Attack ');
-t.p( occ.name);
-t.p('</a></span>');
+t.p('#">>></a></td></tr>');
 }
 velocityCount = 0;
 return t.toString();
@@ -801,5 +794,27 @@ t.p( context.stats.ap);
 t.p('</span><br/><span class="stat_counter xp"><b>XP</b>: ');
 t.p( context.stats.xp);
 t.p('</span>');
+return t.toString();
+}
+function v2js_throwItemList(context) { 
+var t = new StringCat();
+var velocityCount = 0;
+if (context.velocityCount) velocityCount=context.velocityCount;
+t.p('<form action="throw" method="post">    <input type="hidden" name="target" id="throw-target" value="" />    <select name="missile">        ');
+for (var i1=0;  i1<context.inv.length; i1++) {
+var i = context.inv[i1];
+velocityCount = i1;
+t.p('            ');
+if (!( i.equipped )) {
+t.p('                <option value="');
+t.p( i.itemid);
+t.p('">');
+t.p( i.name);
+t.p('</option>            ');
+}
+t.p('        ');
+}
+velocityCount = 0;
+t.p('    </select><br/><input type="Submit" value="Throw Item at Target"/></form>');
 return t.toString();
 }

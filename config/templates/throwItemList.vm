@@ -1,0 +1,10 @@
+<form action="throw" method="post">
+    <input type="hidden" name="target" id="throw-target" value="" />
+    <select name="missile">
+        #foreach($i in $inv)
+            #if (!$i.equipped)
+                <option value="${i.itemid}">$i.name</option>
+            #end
+        #end
+    </select><br/><input type="Submit" value="Throw Item at Target"/>
+</form>

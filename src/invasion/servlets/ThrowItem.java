@@ -66,7 +66,8 @@ public class ThrowItem extends HttpServlet
             {
                 alerts = alt.throwAttack( conn, defender, missileid );
             }
-            Poll.fullPoll( conn, out, wazzit, alerts );
+            ///Poll.fullPoll( conn, out, wazzit, alerts );
+            response.sendRedirect("index.jsp");
         }
         catch (Exception e)
         {
