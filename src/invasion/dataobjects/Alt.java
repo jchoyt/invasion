@@ -760,6 +760,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.lastHurtBy = rs.getInt("lastHurtBy");
             ret.race = rs.getInt("race");
             ret.hp = rs.getInt("hp");
+            ret.hpmax = rs.getInt("hpmax");
             ret.humanSkills = rs.getLong("humanskill");
             ret.psiSkills = rs.getLong("psiskill");
             ret.mutateSkills = rs.getLong("mutateskill");
@@ -767,6 +768,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.cp = rs.getInt("cp");
             ret.ip = rs.getInt("ip");
             ret.ap = rs.getInt("ap");
+            ret.hpmax = rs.getInt("apmax");
             ret.ticksalive = rs.getInt("ticksalive");
             log.finer("in Alt.load(), id is " + id);
             DatabaseUtility.close(rs);
