@@ -151,7 +151,10 @@ public class Recharge extends HttpServlet
             else
                 return "You can't figure out how to attach the energy pack to that.";
             i.update( conn );
-            alt.setEquippedWeapon( i );
+            if( i.getItemid() == alt.getEquippedWeapon().getItemid() )
+            {
+                alt.setEquippedWeapon( i );
+            }
             new Message( conn, alt.getId(), Message.NORMAL, "You recharge your " + i.getItemtype().getName().toLowerCase()  + " using one of your energy packs.  The energy pack is now empty and will have to be recharged." );
 
 
