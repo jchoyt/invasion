@@ -19,9 +19,10 @@
 
     //set up db connection
     InvasionConnection conn = null;
+    StringWriter pollJson = null;
     try{
         conn = new InvasionConnection();
-        StringWriter pollJson = new StringWriter();
+        pollJson = new StringWriter();
         JSONArray alerts = new JSONArray();
         Poll.fullPoll( conn, pollJson, wazzit, alerts );
         JSONObject obj = new JSONObject( pollJson.toString() );
@@ -260,6 +261,7 @@
     %>
 	<%--{{{  javascript --%>
 	<script type="text/javascript">
+
 		// Never try to jquery without making sure the DOM is ready. Ready() ensures that...once working, move this stuff to map.js
 		$(document).ready(function() {
 			$("#amessages").prop({ scrollTop: $("#amessages").prop("scrollHeight") });
@@ -271,6 +273,7 @@
                 width: 400
             });
 
+            window.lastPoll = <%=pollJson%>;
 
 
 		});

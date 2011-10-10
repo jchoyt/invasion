@@ -47,6 +47,7 @@ $(document).ready( function() {
 
     // assumption is on polling, we do $(document).trigger('POLL_COMPLETE', <json data>);
     $(document).bind('POLL_COMPLETE', function(e, data){
+        window.lastPoll = data;
 		checkForReload(data);
 		updateMessagePane(data);
 		updateOccupantPane(data);
@@ -328,8 +329,17 @@ function attack_pet( targetid )
 
 function showtarget(id)
 {
-    show = "#desc-" + id;
-    $("#att-box").html($(show).html());
+    for (var occ_index=0;  occ_index<window.lastPoll.occs.length; occ_index++)
+    {
+        var occ = window.lastPoll.occs[occ_index];
+        if( occ.id == id )
+        {
+            var attLink = "<a href=\"#\" onclick=\"attack(" + occ.id + ")\">Attack " + occ.name + "</a>";
+            $("#att-box").html(attLink);
+        }
+    }
+    //show = "#desc-" + id;
+    // $("#att-box").html($(show).html());
 };
 
 function show_pet_target(id)

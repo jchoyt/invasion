@@ -5,5 +5,4 @@
     <td><img alt="" src="/game/i/hp-${occ.hp}.png"/></td>
     <td><a id="occ${occ.id}" onclick="showtarget(${occ.id})" href="#">>></a></td>
 </tr>
-<span id="desc-${occ.id}" style="display:none;"><a href="#" onclick="attack(${occ.id})">Attack ${occ.name}</a></span>
 #end
