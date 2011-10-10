@@ -19,10 +19,13 @@
     <form method="post" action="#" onsubmit="recharge($('\#recharge-itemid').val()); return false">
         <select id="recharge-itemid" name="itemid">
             #foreach($i in $inv)
-                #if ($i.type == "weapon" && $i.damagetype == "e" && $stats.firearms gt 3 && $i.ammoleft lt ( $i.capacity * 2 ) && $i.ammoleft gt ($i.capacity -1 ))
+                #if ($i.type == "weapon" && $i.damagetype == "e" && $stats.firearms gt 3 && $i.ammoleft lt ( $i.capacity * 2 ) && $i.ammoleft gt ($i.capacity - 1 ))
                         <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
                 #end
-                #if (($i.type == "weapon" || $i.type == "armor") && $i.damagetype == "e" && $i.ammoleft lt $i.capacity)
+                #if ($i.type == "armor" && $i.damagetype == "e" && $i.ammoleft lt $i.capacity)
+                        <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
+                #end
+                #if ($i.type == "weapon" && $i.damagetype == "e" && $i.ammoleft lt $i.capacity)
                         <option value="$i.itemid">$i.name ($i.condition) ($i.ammoleft)</option>
                 #end
             #end
