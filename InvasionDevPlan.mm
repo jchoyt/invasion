@@ -1,14 +1,10 @@
 <map version="0.9.0">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node COLOR="#000034" CREATED="1311387694546" ID="Freemind_Link_658598462" MODIFIED="1311473536364" STYLE="NodeMasterGraphic" TEXT="Invasion Development Plan">
+<node COLOR="#000034" CREATED="1311387694546" ID="Freemind_Link_658598462" MODIFIED="1318298174960" STYLE="NodeMasterGraphic" TEXT="">
 <edge COLOR="#309eff"/>
 <font NAME="SansSerif" SIZE="16"/>
 <node COLOR="#000034" CREATED="1311387694546" ID="Freemind_Link_1818393271" MODIFIED="1311508071355" POSITION="right" STYLE="NodeTextGraphic" TEXT="pre-alpha">
 <edge COLOR="#309eff"/>
-<node CREATED="1311469360234" ID="ID_1720514491" MODIFIED="1311469364476" TEXT="melee weapons">
-<node CREATED="1311469927797" ID="ID_866155718" MODIFIED="1311469935518" TEXT="Anything can be a melee weapon"/>
-<node CREATED="1311469937052" ID="ID_1221987248" MODIFIED="1311469951016" TEXT="enhancements to make them more powerful"/>
-</node>
 <node CREATED="1311469366247" ID="ID_828604465" MODIFIED="1311469672389" TEXT="list of items and where to find them"/>
 <node CREATED="1311469333700" ID="ID_1722906997" MODIFIED="1311614952426" TEXT="psi and mutate races">
 <node CREATED="1311469344976" ID="ID_385443179" MODIFIED="1311469348442" TEXT="soul cubes"/>
@@ -19,21 +15,7 @@
 </node>
 <node CREATED="1311469391288" ID="ID_882692320" MODIFIED="1311469392460" TEXT="factions"/>
 <node CREATED="1311508072367" ID="ID_1523109386" MODIFIED="1311508088322" TEXT="non-custom location descriptions"/>
-</node>
-<node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_947844843" MODIFIED="1317693787733" POSITION="left" STYLE="NodeTextGraphic" TEXT="bizarre ideas">
-<edge COLOR="#309eff"/>
-<node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_495182617" MODIFIED="1311387694547" STYLE="NodeTextGraphic" TEXT="XP for dying?">
-<edge COLOR="#309eff"/>
-</node>
-<node COLOR="#000034" CREATED="1311387694551" ID="Freemind_Link_329156125" MODIFIED="1311387694551" STYLE="NodeTextGraphic" TEXT="map has &quot;auxililary levels&quot; every thrid level?">
-<edge COLOR="#309eff"/>
-</node>
-<node COLOR="#000034" CREATED="1311387694551" ID="Freemind_Link_1878677950" MODIFIED="1311387694551" STYLE="NodeTextGraphic" TEXT="move through ventilation/access tunnels?">
-<edge COLOR="#309eff"/>
-</node>
-<node CREATED="1317693789580" ID="ID_638843832" MODIFIED="1317693822912" TEXT="&quot;rat tails&quot; - crafted from towels - weapon that does 1d4 damage"/>
-</node>
-<node COLOR="#000034" CREATED="1311387694549" FOLDED="true" ID="Freemind_Link_938009294" MODIFIED="1311469638687" POSITION="left" STYLE="NodeTextGraphic" TEXT="items">
+<node COLOR="#000034" CREATED="1311387694549" ID="Freemind_Link_938009294" MODIFIED="1318298218268" STYLE="NodeTextGraphic" TEXT="items">
 <edge COLOR="#309eff"/>
 <node COLOR="#000034" CREATED="1311387694549" ID="Freemind_Link_1423689823" MODIFIED="1311387694549" STYLE="NodeTextGraphic" TEXT="Small">
 <edge COLOR="#309eff"/>
@@ -89,6 +71,20 @@
 <node COLOR="#000034" CREATED="1311387694551" ID="Freemind_Link_967747006" MODIFIED="1311387694551" STYLE="NodeTextGraphic" TEXT="some can explode?">
 <edge COLOR="#309eff"/>
 </node>
+</node>
+</node>
+<node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_947844843" MODIFIED="1317693787733" POSITION="left" STYLE="NodeTextGraphic" TEXT="bizarre ideas">
+<edge COLOR="#309eff"/>
+<node COLOR="#000034" CREATED="1311387694547" ID="Freemind_Link_495182617" MODIFIED="1311387694547" STYLE="NodeTextGraphic" TEXT="XP for dying?">
+<edge COLOR="#309eff"/>
+</node>
+<node COLOR="#000034" CREATED="1311387694551" ID="Freemind_Link_329156125" MODIFIED="1311387694551" STYLE="NodeTextGraphic" TEXT="map has &quot;auxililary levels&quot; every thrid level?">
+<edge COLOR="#309eff"/>
+</node>
+<node COLOR="#000034" CREATED="1311387694551" ID="Freemind_Link_1878677950" MODIFIED="1311387694551" STYLE="NodeTextGraphic" TEXT="move through ventilation/access tunnels?">
+<edge COLOR="#309eff"/>
+</node>
+<node CREATED="1317693789580" ID="ID_638843832" MODIFIED="1317693822912" TEXT="&quot;rat tails&quot; - crafted from towels - weapon that does 1d4 damage"/>
 </node>
 <node COLOR="#000034" CREATED="1311387694551" ID="Freemind_Link_1492669254" MODIFIED="1312508619499" POSITION="left" STYLE="NodeTextGraphic" TEXT="done">
 <edge COLOR="#309eff"/>
@@ -188,6 +184,15 @@
 <node CREATED="1311469320624" ID="ID_1027615966" MODIFIED="1311469322453" TEXT="The ground"/>
 </node>
 </node>
+<node CREATED="1311469360234" ID="ID_1720514491" MODIFIED="1311469364476" TEXT="melee weapons">
+<node CREATED="1311469927797" ID="ID_866155718" MODIFIED="1311469935518" TEXT="Anything can be a melee weapon"/>
+<node CREATED="1311469937052" ID="ID_1221987248" MODIFIED="1311469951016" TEXT="enhancements to make them more powerful"/>
+</node>
+<node CREATED="1311469307398" ID="ID_910271783" MODIFIED="1311469312970" TEXT="Transfer to/from">
+<node CREATED="1311469316888" ID="ID_1803295115" MODIFIED="1311469317993" TEXT="lockers"/>
+<node CREATED="1311469318234" ID="ID_144984607" MODIFIED="1311469320334" TEXT="faction safes"/>
+<node CREATED="1312508647295" ID="ID_1489765679" MODIFIED="1312508650410" TEXT="target shooting"/>
+</node>
 </node>
 </node>
 <node CREATED="1311469542171" ID="ID_929606341" MODIFIED="1312508636756" POSITION="right" TEXT="Nice to haves">
@@ -216,11 +221,6 @@
 <edge COLOR="#309eff"/>
 </node>
 <node CREATED="1311469974138" ID="ID_1986059071" MODIFIED="1311469987177" TEXT="Items in really  bad shape will require components to fix"/>
-<node CREATED="1311469307398" ID="ID_910271783" MODIFIED="1311469312970" TEXT="Transfer to/from">
-<node CREATED="1311469316888" ID="ID_1803295115" MODIFIED="1311469317993" TEXT="lockers"/>
-<node CREATED="1311469318234" ID="ID_144984607" MODIFIED="1311469320334" TEXT="faction safes"/>
-<node CREATED="1312508647295" ID="ID_1489765679" MODIFIED="1312508650410" TEXT="target shooting"/>
-</node>
 </node>
 <node CREATED="1311473537461" ID="ID_1555687791" MODIFIED="1311614977684" POSITION="right" TEXT="races">
 <node CREATED="1311473540890" ID="ID_372724597" MODIFIED="1311473686424">
