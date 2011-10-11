@@ -52,17 +52,3 @@ insert into skills (name, value, race, prerequisite, cost) values ( 'Melee 5', 2
 
 
 
-/* CREATE OR REPLACE FUNCTION update_modified_column()
-	RETURNS TRIGGER AS $$
-	BEGIN
-	   NEW.modified = now();
-	   RETURN NEW;
-	END;
-	$$ language 'plpgsql';
-
-CREATE TRIGGER update_customer_modtime BEFORE UPDATE
-    ON customer FOR EACH ROW EXECUTE PROCEDURE
-    update_modified_column(); */
-
-
-

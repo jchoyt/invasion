@@ -313,15 +313,7 @@ function dosearch( reps )
 
 function attack( targetid )
 {
-    var url = "attack?target=alt" + targetid;
-    $.getJSON(url, function(json){
-        $(document).trigger('POLL_COMPLETE', json)
-    });
-}
-
-function attack_pet( targetid )
-{
-    var url = "attack?target=pet" + targetid;
+    var url = "attack?target=" + targetid;
     $.getJSON(url, function(json){
         $(document).trigger('POLL_COMPLETE', json)
     });
@@ -334,15 +326,15 @@ function showtarget(id)
         var occ = window.lastPoll.occs[occ_index];
         if( occ.id == id )
         {
-            var attLink = "<a href=\"#\" onclick=\"attack(" + occ.id + ")\">Attack&nbsp;" + occ.name + "</a> <a href=\"#\" onclick=\"showThrowItem(" + occ.id + ");return false;\">Throw&nbsp;Item</a>";
+            var attLink = "<a href=\"#\" onclick=\"attack('alt" + occ.id + "')\">Attack&nbsp;" + occ.name + "</a> <a href=\"#\" onclick=\"showThrowItem('alt" + occ.id + "');return false;\">Throw&nbsp;Item</a>";
             $("#att-box").html(attLink);
+            break;
         }
     }
 };
 
 function showThrowItem(id)
 {
-    // resource = "http://127.0.0.1:8080/game/map/chalk.jsp"; //base_url + "map/chalk.jsp";
     $('#dialog').html( v2js_throwItemList(window.lastPoll) );
     $("#throw-target").val( id );
     $('#dialog').dialog('open');
@@ -351,8 +343,16 @@ function showThrowItem(id)
 
 function show_pet_target(id)
 {
-    show = "#pet-desc-" + id;
-    $("#att-pet-box").html($(show).html());
+    for (var pet_index=0;  pet_index<window.lastPoll.pets.length; pet_index++)
+    {
+        var pet = window.lastPoll.pets[pet_index];
+        if( pet.id == id )
+        {
+            var attLink = "<a href=\"#\" onclick=\"attack('pet" + pet.id + "')\">Attack&nbsp;" + pet.name + "</a> <a href=\"#\" onclick=\"showThrowItem('pet" + pet.id + "');return false;\">Throw&nbsp;Item</a>";
+            $("#att-pet-box").html(attLink);
+            break;
+        }
+    }
 };
 
 

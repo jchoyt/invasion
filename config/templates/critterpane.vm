@@ -4,5 +4,4 @@
     <td><img alt="" src="/game/i/hp-${pet.hp}.png"/></td>
     <td><a id="pet${pet.id}" onclick="show_pet_target(${pet.id})">>></a></td>
 </tr>
-<span id="pet-desc-${pet.id}" style="display:none;"><a href="#" onclick="attack_pet(${pet.id})">Attack ${pet.name}</a></span>
 #end

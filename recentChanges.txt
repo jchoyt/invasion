@@ -1,11 +1,3 @@
-Added melee skills, including thrown weapons
-Added ability to throw items, added Goliatfh skill.  Early GUI done.  Needs lots of details worked out.
-Added ammo and status to inventory management list
-Added Effects in general and drunk in particular
-Added ability to stun character (per Melee 4 skill, Goliath, and admin interface)
-Added Player Guide in TiddlyWiki format
-Added nascent character editing capability
+Added "throw stuff at critters" to do damaga
 
-Fixed reload bug where char has double shot
-Fixed refresh url to do admin
-Fixed bug where attack link would disappear between attacks
+Fixed bug where effects didn't clear on death (http://soulcubes.com/issues/38/drunk-doesnt-clear-death)

@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import invasion.pets.*;
 import invasion.util.*;
 import invasion.dataobjects.*;
 import java.io.*;
@@ -44,7 +45,8 @@ public class ThrowItem extends HttpServlet
     {
         PrintWriter out = response.getWriter();
         String target = WebUtils.getRequiredParameter(request, "target");
-        int targetid = Integer.parseInt(target);
+        int targetid = Integer.parseInt(target.substring(3));
+        String targetType = target.substring(0,3);
         String missile = WebUtils.getRequiredParameter(request, "missile");
         int missileid = Integer.parseInt(missile);
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
@@ -54,7 +56,17 @@ public class ThrowItem extends HttpServlet
         try
         {
             conn = new InvasionConnection();
-            Defender defender = Alt.load( targetid );
+            Defender defender = null;
+            if( targetType.equals("alt" ) )
+            {
+                log.finer("Attempting to load character " + targetid );
+                defender = Alt.load( targetid );
+            }
+            else if( targetType.equals("pet" ) )
+            {
+                defender = CritterFactory.loadCritter( conn, targetid );
+            }
+
             /* check to see if the target ran off */
             if( alt.getLocation() != defender.getLocation() )
             {
