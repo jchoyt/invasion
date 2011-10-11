@@ -381,8 +381,7 @@ function doTransfer( itemid, src, dest )
 }
 function chalkWall()
 {
-    resource = "http://127.0.0.1:8080/game/map/chalk.jsp"; //base_url + "map/chalk.jsp";
-    $('#dialog').load(resource, function() {
+    $('#dialog').load("chalk.jsp", function() {
         $('#dialog').dialog('open');
     });
     return false;
