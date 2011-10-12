@@ -61,7 +61,6 @@ public class DeathFilter implements Filter
         if( locid == -1337 )
         {
             //TODO make LOST IN SPACE page
-            // out.write("There has been an error and you seem to be lost in some unknown location.  You're basically screwed.");
             log.finer("Locid = -1337 - character is basically screwed.");
             filterConfig.getServletContext().getRequestDispatcher( "/index.jsp?error=" + alt.getName() + " is lost somewhere and you have no idea where...you'll need mod help<br/>Get on irc - #soulcubes on irc.freenode.net.").forward(request, response);
             return;

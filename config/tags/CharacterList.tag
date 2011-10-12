@@ -1,4 +1,4 @@
-<%@ tag import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*" %><table border="0" cellpadding="2" cellspacing="0" width="700px">
+5<%@ tag import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*" %><table border="0" cellpadding="2" cellspacing="0" width="700px">
         <thead>
             <tr><th>Name</th><th>Station</th><th>Level</th><th>AP</th><th>IP</th><th>HP</th><th>CP</th><th>Location</th><th>Action</th></tr>
         </thead>
@@ -34,6 +34,10 @@
         if( sname.equals("Dead") )
         {
             out.write( "</td><td colspan=\"2\">Dead</td>");
+        }
+        else if( rs.getInt( "location") == -1337 )
+        {
+            out.write( "</td><td colspan=\"2\">Lost</td>");
         }
         else if( ticksalive < 0 )
         {
