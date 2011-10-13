@@ -89,10 +89,10 @@ public class MoveServlet extends HttpServlet
                 else if( a.getLocationType() == LocationType.DEEP_SPACE )
                 {
                     new Message( conn, a.getId(), Message.SELF, RandomUtilities.pickRandom( deepSpaceDeaths ) );
-                    alt.setLastHurtBy( 0 );
-                    alt.kill( conn, null );
-                    alt.setLocation( -1337 );
-                    alt.update( conn );
+                    a.setLastHurtBy( 0 );
+                    a.kill( conn, null );
+                    a.setLocation( -1337 );
+                    a.update( conn );
                 }
                 // notify the listeners
                 pcs.firePropertyChange(KEY, oldloc, a.getLocation());
