@@ -3,6 +3,7 @@
  */
 package invasion.dataobjects;
 
+import invasioin.dataobjects.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,17 +12,22 @@ import invasion.util.*;
 import org.json.*;
 
 /**
- *
+ *  Any item in the game - weapons, booze, clothing...doesn't matter.  It implments the Defender interface because items can be shot as targets.
  */
-public class Item  implements java.io.Serializable {
+public class Item  implements java.io.Serializable, Defender {
 
     public final static String KEY = Item.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
 
+    //{{{ members
     private int itemid;
     private ItemType itemtype;
     private int locid;
+	protected String size = null;
+	protected int location = 0;
+
+
     /**
      * Ammoleft is ammo for firearms and amount of armor/shields left for armor.
      */
@@ -35,11 +41,11 @@ public class Item  implements java.io.Serializable {
      * Item mods are enhancements or defects in weapons and armor that reduce their effectiveness
      */
     protected ItemMods mods = new ItemMods();
-
     private int condition = (int)(Math.random() * 6);
     public static final String[] conditions = { "Destroyed", "Broken", "Battered", "Operational", "Average", "To spec" };
-    public static final String DEFECT_MESSAGE = "As you work, you see something that didn't look quite right.  You review your notes, but it doesn't appear you did anything incorrectly.";
+    public static final String DEFECT_MESSAGE = "As you work, you see something that didn't look quite right.  You review your notes, but it doesn't appear you did anything incorrectly."; //}}}
 
+    //{{{ Constructors
     private Item() {
     }
 
@@ -60,6 +66,8 @@ public class Item  implements java.io.Serializable {
                 i.locid = rs.getInt("locid");
                 i.equipped = rs.getBoolean("equipped");
                 i.hidden = rs.getBoolean("hidden");
+                i.size = rs.getString("size");
+                i.location = rs.getInt("location");
             }
             else
                 throw new BotReportException("Failed to load item " + id + " from the database.");
@@ -81,17 +89,6 @@ public class Item  implements java.io.Serializable {
         return i;
     }
 
-    public boolean update(InvasionConnection conn)
-    {
-        String query = "update item set ammoleft=?, condition=?, locid=? where itemid=?";
-        int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, condition, locid, itemid);
-        if( count==0 )
-        {
-            log.severe("Failed to update item " + itemid );
-            return false;
-        }
-        return true;
-    }
 
     public Item(InvasionConnection conn, int itemtype, int locationid)
     {
@@ -116,7 +113,22 @@ public class Item  implements java.io.Serializable {
         {
            DatabaseUtility.close(ps);
         }
+    } //}}}
+
+    //{{{ Methods
+
+    public boolean update(InvasionConnection conn)
+    {
+        String query = "update item set ammoleft=?, condition=?, locid=? where itemid=?";
+        int count = conn.psExecuteUpdate(query, "Error updating item in database", ammoleft, condition, locid, itemid);
+        if( count==0 )
+        {
+            log.severe("Failed to update item " + itemid );
+            return false;
+        }
+        return true;
     }
+
 
     /**
      *  Returns current inventory as a JSONArray.  See Poll.java for sample format.
@@ -124,7 +136,7 @@ public class Item  implements java.io.Serializable {
     public static JSONArray getItems( InvasionConnection conn, int locid )
     throws SQLException
     {
-        String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight, damagetype, capacity from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, condition, ammoleft";
+        String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight, damagetype, capacity, size from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, condition, ammoleft";
         PreparedStatement ps = null;
         ResultSet rs = null;
         JSONArray root = new JSONArray();
@@ -147,6 +159,7 @@ public class Item  implements java.io.Serializable {
                 obj.put("equipped", rs.getBoolean("equipped"));
                 obj.put("damagetype", rs.getString("damagetype"));
                 obj.put("capacity", rs.getInt("capacity"));
+                obj.put("size", rs.getString("size"));
                 root.put(obj);
             }
         }
@@ -181,38 +194,6 @@ public class Item  implements java.io.Serializable {
             conn.close();
         }
     }
-
-    // public static JSONArray getStackedItems( InvasionConnection conn, int locid )
-    // throws SQLException
-    // {
-    //     String query = "select min(itemid), typeid, count(*) from item i where locid=1 group by typeid where locid=?";
-    //     ResultSet rs = null;
-    //     JSONArray root = new JSONArray();
-    //     try
-    //     {
-    //         rs = conn.psExecuteQuery(query, "", locid);
-    //         while(rs.next())
-    //         {
-    //             JSONObject obj = new JSONObject();
-    //             obj.put("typeid", rs.getInt("typeid"));
-    //             obj.put("itemid", rs.getInt("min"));
-    //             obj.put("name", ItemType.getItemType(rs.getInt("typeid")).getName());
-    //             obj.put("count", rs.getInt("ammoleft"));
-    //             root.put(obj);
-    //         }
-    //         DatabaseUtility.close(rs);
-    //     }
-    //     catch(SQLException e)
-    //     {
-    //         log.throwing( KEY, "Error retrieving Item list", e);
-    //         throw e;
-    //     }
-    //     finally
-    //     {
-    //         DatabaseUtility.close(rs);
-    //         return root;
-    //     }
-    // }
 
     public static String getCategory( InvasionConnection conn, int itemid) throws SQLException
     {
@@ -271,10 +252,10 @@ public class Item  implements java.io.Serializable {
         //TODO do a range of messages for this
         new Message( conn, locid, Message.NORMAL, DEFECT_MESSAGE );
 
-    }
+    } //}}}
 
-
-    /* setters and getters */
+    //{{{ Getters and setters
+        /* setters and getters */
     public Integer getLocid() { return this.locid; }
     public int getAmmoleft() { return this.ammoleft; }
     public int getCondition() { return this.condition; }
@@ -291,6 +272,42 @@ public class Item  implements java.io.Serializable {
 	public void setHidden(boolean hidden) { this.hidden = hidden; }
     public ItemMods getMods() { return this.mods; }
 	public void setMods(ItemMods mods) { this.mods = mods; }
+	public String getSize() { return this.size; }
+	public void setSize(String size) { this.size = size; }
+	public int getLocation() { return this.location; }
+	public void setLocation(int location) { this.location = location; }
+//}}}
+
+    //{{{ For Defender interface
+    public void insertMessage(String message, int type, InvasionConnection conn){}
+
+    public CombatResult hit( Attacker attacker, int rawAmount, char damagetype, InvasionConnection conn, boolean updateNow ) throws SQLException
+    {
+        sreturn null;
+    }
+
+    public void notifyAttacked( Attacker attacker, InvasionConnection conn ){}
+
+    public void kill(CombatResult result){}
+
+    public void kill(InvasionConnection conn, CombatResult result) throws SQLException{}
+
+    public int getDodgeLevel()
+    {
+        if( size.equals("s") )
+        {
+            return 4;
+        }
+        else if( size.equals("m") )
+        {
+            return 2
+        }
+        else
+            return 0;
+    }
+
+    //}}}
+
 }
 
-
+// :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:

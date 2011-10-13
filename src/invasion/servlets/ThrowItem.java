@@ -4,6 +4,7 @@
 
 package invasion.servlets;
 
+import invasion.bot.*;
 import invasion.pets.*;
 import invasion.util.*;
 import invasion.dataobjects.*;
@@ -76,9 +77,30 @@ public class ThrowItem extends HttpServlet
             }
             else
             {
-                alerts = alt.throwAttack( conn, defender, missileid );
+                //TODO check to see if this is a large item, the player has it, and it's not equipped.
+                Item i = Item.load( conn, missileid );
+                if( i.getSize().equals("l") )
+                {  //someone's messing about
+                    response.sendRedirect("naughty.jsp");
+                    VasionBot.announce( request.getRemoteUser() + " attempted to throw a large object.  This is not allowed" );
+                    return;
+                }
+                else if( i.isEquipped() )
+                {  //someone's messing about
+                    response.sendRedirect("naughty.jsp");
+                    VasionBot.announce( request.getRemoteUser() + " attempted to throw an item that's currently equipped.  This is not allowed" );
+                    return;
+                }
+                else if( i.getLocation() != alt.getLocation() )
+                {  //someone's messing about
+                    response.sendRedirect("naughty.jsp");
+                    VasionBot.announce( request.getRemoteUser() + " attempted to throw an item they don't own.  This is not allowed" );
+                    return;
+                }
+
+                alerts = alt.throwAttack( conn, defender, i );
+                //TODO move to ground, destroy, or whatever.
             }
-            ///Poll.fullPoll( conn, out, wazzit, alerts );
             response.sendRedirect("index.jsp");
         }
         catch (Exception e)

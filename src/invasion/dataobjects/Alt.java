@@ -517,7 +517,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
      * @return
      *
      */
-    public JSONArray throwAttack( InvasionConnection conn, Defender defender, int missileId )
+    public JSONArray throwAttack( InvasionConnection conn, Defender defender, Item missile )
         throws SQLException
     {
         int apIncrement = 1;
@@ -526,14 +526,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         int shots = 1;
         boolean usingGoliath = false;
        JSONArray alerts = null;
-
-        //grab the weapon used
-        Item missile = Item.load( conn, missileId );
-        if( missile.getLocid() != id )
-        {
-            alerts.put( Poll.createErrorAlert("You do not own that.") );
-            return alerts;
-        }
 
         //calc damage bonus
         if( ( humanSkills & Skills.getValue(Skill.MELEE1) ) > 0 ) damageBounus += 1;

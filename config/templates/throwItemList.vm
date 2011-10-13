@@ -2,7 +2,7 @@
     <input type="hidden" name="target" id="throw-target" value="" />
     <select name="missile">
         #foreach($i in $inv)
-            #if (!$i.equipped)
+            #if (!$i.equipped && $i.size != "l" )
                 <option value="${i.itemid}">$i.name</option>
             #end
         #end
