@@ -25,6 +25,8 @@ public class ItemType{
     protected boolean consumable = false;
     protected String name = null;
     protected String type = null;
+	protected String size = null;
+
     /**
      * For weapons - what type of damage it does.  For armor - what kind it soaks
      */
@@ -34,7 +36,7 @@ public class ItemType{
     protected static Map<Integer, ItemType> itemTypes = new HashMap<Integer, ItemType>();
 
     public ItemType(int typeid, int weight, int capacity, String damage,
-             boolean consumable, String name, String type, char damageType, int accuracy, boolean usesammo){
+             boolean consumable, String name, String type, char damageType, int accuracy, boolean usesammo, String size){
         this.typeid = typeid;
         this.weight = weight;
         this.capacity = capacity;
@@ -45,6 +47,7 @@ public class ItemType{
         this.damageType = damageType;
         this.usesammo = usesammo;
         this.accuracy = accuracy;
+        this.size = size;
     }
 
     public ItemType() { }
@@ -72,7 +75,8 @@ public class ItemType{
                 rs.getString("type"),
                 rs.getString("damageType").charAt(0),
                 rs.getInt("accuracy"),
-                rs.getBoolean("usesammo"));
+                rs.getBoolean("usesammo"),
+                rs.getString("size"));
                 itemTypes.put(rs.getInt("typeid"), type);
             }
             log.info("Loaded " + itemTypes.size() + " different item types.");
@@ -121,5 +125,7 @@ public class ItemType{
     public void setDamageType(char damageType) { this.damageType = damageType; }
     public int getAccuracy() { return this.accuracy; }
 	public void setAccuracy(int accuracy) { this.accuracy = accuracy; }
+	public String getSize() { return this.size; }
+	public void setSize(String size) { this.size = size; }
 
 }

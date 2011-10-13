@@ -3,7 +3,6 @@
  */
 package invasion.dataobjects;
 
-import invasioin.dataobjects.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,8 +65,7 @@ public class Item  implements java.io.Serializable, Defender {
                 i.locid = rs.getInt("locid");
                 i.equipped = rs.getBoolean("equipped");
                 i.hidden = rs.getBoolean("hidden");
-                i.size = rs.getString("size");
-                i.location = rs.getInt("location");
+                i.location = rs.getInt("locid");
             }
             else
                 throw new BotReportException("Failed to load item " + id + " from the database.");
@@ -272,8 +270,6 @@ public class Item  implements java.io.Serializable, Defender {
 	public void setHidden(boolean hidden) { this.hidden = hidden; }
     public ItemMods getMods() { return this.mods; }
 	public void setMods(ItemMods mods) { this.mods = mods; }
-	public String getSize() { return this.size; }
-	public void setSize(String size) { this.size = size; }
 	public int getLocation() { return this.location; }
 	public void setLocation(int location) { this.location = location; }
 //}}}
@@ -283,7 +279,7 @@ public class Item  implements java.io.Serializable, Defender {
 
     public CombatResult hit( Attacker attacker, int rawAmount, char damagetype, InvasionConnection conn, boolean updateNow ) throws SQLException
     {
-        sreturn null;
+        return null;
     }
 
     public void notifyAttacked( Attacker attacker, InvasionConnection conn ){}
@@ -294,18 +290,26 @@ public class Item  implements java.io.Serializable, Defender {
 
     public int getDodgeLevel()
     {
-        if( size.equals("s") )
+        if( itemtype.getSize().equals("s") )
         {
             return 4;
         }
-        else if( size.equals("m") )
+        else if( itemtype.getSize().equals("m") )
         {
-            return 2
+            return 2;
         }
         else
             return 0;
     }
 
+    public long getStunned() { return 0L; }
+    public void setStunned(long stunned) {}
+    public int getHp() { return 1; }
+    public void setAp(int ap) {}
+    public int getId() { return this.itemid; }
+    public void setId(int itemid) { this.itemid = itemid; }
+    public String getName() { return this.itemtype.getName(); }
+    public void setName(String name) {}
     //}}}
 
 }
