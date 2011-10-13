@@ -1,3 +1,7 @@
 Added "throw stuff at critters" to do damaga
+Added death by deep space
+Can't throw large items
 
 Fixed bug where effects didn't clear on death (http://soulcubes.com/issues/38/drunk-doesnt-clear-death)
+Fixed bug that would un-equip everything when a weapon was equipped
+Fixed chalk hard-coded resource url
