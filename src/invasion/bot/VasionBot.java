@@ -291,6 +291,7 @@ public class VasionBot extends PircBot
 
     public static void announce( String msg )
     {
+        log.severe(msg);
         bot.sendMessage( channels.get(0), msg );
     }
 
