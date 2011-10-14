@@ -79,7 +79,7 @@ public class ThrowItem extends HttpServlet
             {
                 //TODO check to see if this is a large item, the player has it, and it's not equipped.
                 Item i = Item.load( conn, missileid );
-                if( i.getSize().equals("l") )
+                if( i.getItemtype().getSize().equals("l") )
                 {  //someone's messing about
                     response.sendRedirect("naughty.jsp");
                     VasionBot.announce( request.getRemoteUser() + " attempted to throw a large object.  This is not allowed" );
@@ -91,7 +91,7 @@ public class ThrowItem extends HttpServlet
                     VasionBot.announce( request.getRemoteUser() + " attempted to throw an item that's currently equipped.  This is not allowed" );
                     return;
                 }
-                else if( i.getLocation() != alt.getLocation() )
+                else if( i.getLocation() != alt.getId() )
                 {  //someone's messing about
                     response.sendRedirect("naughty.jsp");
                     VasionBot.announce( request.getRemoteUser() + " attempted to throw an item they don't own.  This is not allowed" );
@@ -100,6 +100,26 @@ public class ThrowItem extends HttpServlet
 
                 alerts = alt.throwAttack( conn, defender, i );
                 //TODO move to ground, destroy, or whatever.
+                boolean itemDestroyed = false;
+                //on a miss, destroy the itme 95% of the time if it's consumable, 5% of the time if it's not
+                if( ( i.getItemtype().isConsumable() && Math.random() < 0.95 ) || Math.random() < 0.05 )
+                {
+                    String query = "delete from item where itemid=?";
+                    int count = conn.psExecuteUpdate( query, "Error deleting item from database.",  missileid );
+                    if( count==0 )
+                    {
+                         throw new BotReportException( "After " + alt.getName() + " threw a " + i.getItemtype().getName() + " the attempt to delete it from the database failed." );
+                    }
+                }
+                else
+                {
+                    String query = "update item set locid=? where itemid=?";
+                    int count = conn.psExecuteUpdate( query, "Error moving item to ground.",  alt.getLocation(), missileid );
+                    if( count==0 )
+                    {
+                         throw new BotReportException( "After " + alt.getName() + " threw a " + i.getItemtype().getName() + " the attempt to put it on the ground failed." );
+                    }
+                }
             }
             response.sendRedirect("index.jsp");
         }

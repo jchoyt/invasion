@@ -1,7 +1,8 @@
-<%@ page isErrorPage="true"%><%@ page import="java.io.*, invasion.util.*" %><%
+<%@ page isErrorPage="true"%><%@ page import="java.io.*, invasion.util.*,invasion.bot.*" %><%
 
     boolean messageGiven = true;
     String message = exception.getMessage();
+    VasionBot.announce( message );
     if( message == null )
     {
         message = "No message provided.";
@@ -31,9 +32,8 @@
 	<script>
         var messages = [
             "# Something has gone wrong with the laws of Physics.  You should never see this page.",
-            "# As a matter of fact, I've just pinged the mods in the admin channel on irc.  If you want to provide additional information, swing by ##invasion on irc.freenode.net and talk to one of the mods.",
-            "# If you don't have a client already configured, a) why not? there's a lot of good info and people on irc and b) you can use mibbit to get to <a href=\"irc\">##invasion</a>",
-            "# No, that's not a typo...use two hash marks (##) per the terms of agreement on Freenode.",
+            "# As a matter of fact, I've just pinged the mods in the admin channel on irc.  If you want to provide additional information, swing by #soulcubes on irc.freenode.net and talk to one of the mods.",
+            "# If you don't have a client already configured, a) why not? there's a lot of good info and people on irc and b) freenode has a <a href=\"http://webchat.freenode.net\" target=\"_blank\">web client</a> ",
             "# Head back <a href=\"map/index.jsp\">to the world</a>"
             ];
         var msgIndex = 0;
