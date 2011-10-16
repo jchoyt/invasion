@@ -235,7 +235,7 @@
   </body>
 </html></richcontent>
 </node>
-<node CREATED="1311473689903" ID="ID_191145415" MODIFIED="1311473691436" TEXT="Non humans can purchase human skills can be purchased at extra CP cost, though (50% extra?).   "/>
+<node CREATED="1311473689903" ID="ID_191145415" MODIFIED="1318619859493" TEXT="Non humans can purchase human skills at extra CP cost (50% extra?).   "/>
 <node CREATED="1311473693238" FOLDED="true" ID="ID_1939420360" MODIFIED="1311474254769" TEXT="Human">
 <node CREATED="1311473704715" ID="ID_285285250" MODIFIED="1311473724156" TEXT="Basic humans"/>
 <node CREATED="1311473724845" ID="ID_1590017801" MODIFIED="1311473725997" TEXT="skills">
