@@ -250,7 +250,26 @@ public class Item  implements java.io.Serializable, Defender {
         //TODO do a range of messages for this
         new Message( conn, locid, Message.NORMAL, DEFECT_MESSAGE );
 
-    } //}}}
+    }
+
+    public static void delete( InvasionConnection conn, int itemid )
+    {
+        String query = "delete from item where itemid=?";
+        try
+        {
+            int count = conn.psExecuteUpdate( query, "Error deleting item from database.",  itemid );
+            if( count==0 )
+            {
+                 throw new BotReportException( "Item id " + itemid + " failed to be deleted from the database." );
+            }
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "Error deleting item " + itemid + " from the database.", e);
+            throw new RuntimeException(e);
+        }
+    }
+    //}}}
 
     //{{{ Getters and setters
         /* setters and getters */

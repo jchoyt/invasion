@@ -104,12 +104,7 @@ public class ThrowItem extends HttpServlet
                 //on a miss, destroy the itme 95% of the time if it's consumable, 5% of the time if it's not
                 if( ( i.getItemtype().isConsumable() && Math.random() < 0.95 ) || Math.random() < 0.05 )
                 {
-                    String query = "delete from item where itemid=?";
-                    int count = conn.psExecuteUpdate( query, "Error deleting item from database.",  missileid );
-                    if( count==0 )
-                    {
-                         throw new BotReportException( "After " + alt.getName() + " threw a " + i.getItemtype().getName() + " the attempt to delete it from the database failed." );
-                    }
+                    Item.delete( conn, missileid );
                 }
                 else
                 {

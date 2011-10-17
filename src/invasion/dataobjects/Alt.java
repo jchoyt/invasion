@@ -289,6 +289,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             apIncrement = 2;
         }
 
+        //improvised weapons get 1/2 the damage bonus
+        if( !equippedWeapon.getItemtype().getName().equals("weapon") )
+        {
+            damageBounus = Math.round(damageBounus / 2.0f );
+        }
+
         for(int i = 0; i < shots; i++)
         {
             //check for misfire
@@ -324,7 +330,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 xp = xp + result.getDamageDone();
                 update(conn);
                 Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
-                //TODO - destroy consumable improvised - only on kill (complements of EK)
+                //destroy consumable improvised weapons    TODO - only on kill (complements of EK)?
+                if( !equippedWeapon.getItemtype().getName().equals("weapon")  && equippedWeapon.getItemtype().isConsumable() && Math.random() < 0.85 )
+                {
+                    Item.delete(conn, equippedWeapon.getId() );
+                    equippedWeapon = null;
+                    update(conn);
+                }
             }
             else
             {

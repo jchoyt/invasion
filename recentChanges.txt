@@ -1,6 +1,8 @@
 Added "throw stuff at critters" to do damaga
 Added death by deep space
 Can't throw large items
+Added ability to do more than one tick at a time (http://soulcubes.com/issues/51/can-we-specify-number-ticks-force)
+Consumables break when used as weapons. Half damage bonus for improvised weapons and all thrown.  (http://soulcubes.com/issues/40/open-items-melee-skill-tree)
 
 Fixed bug where effects didn't clear on death (http://soulcubes.com/issues/38/drunk-doesnt-clear-death)
 Fixed bug that would un-equip everything when a weapon was equipped
