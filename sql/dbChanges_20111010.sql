@@ -15,6 +15,7 @@ END;
 CREATE TRIGGER clearEffectsOnDeath AFTER UPDATE ON alt
   FOR EACH ROW EXECUTE PROCEDURE clearEffectsOnDeath();
 
+insert into location (id, station, message, messagetype) values (-1337, -57005, 'You see bits of your flesh floating around you', 'chalk');
 
 
 /* CREATE OR REPLACE FUNCTION update_modified_column()
