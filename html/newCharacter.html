@@ -23,31 +23,40 @@
                         }
                     }
             });
-        });
+        });so this
     </script>
 </head>
 <body>
     <center><img alt="logo" src="i/banner.png"/>
         <br/><br/>
-    <div id="newalt" class="ui-dialog-content ui-widget-content" style="background: none; border: 1px solid black; padding:2em;">
+    <div id="newaltForm" class="ui-dialog-content ui-widget-content" style="width:25%;background: none; border: 1px solid black; padding:2em;">
          <form class="cmxform" id="newaltForm" method="post" action="newCharacter" enctype="x-www-form-urlencoded" >
              <fieldset>
                <legend>Create a new character</legend>
                <p class="sub">
-                 <label for="cname">Name</label>
+                 <label for="cname">Choose a Name</label>
                  <input id="cname" name="name" size="50" remote="checkAltNameAvail.jsp" class="required" minlength="2" maxlength="255"/>
                </p>
                <p class="sub">
-                 <label for="cspeciality">Speciality</label><br/>
-                 <input id="cspeciality" name="speciality" type="radio" class="required" value="0"/> Combat<br/>
-                 <input id="cspeciality" name="speciality" type="radio" class="required" value="1"/> Science<br/>
-                 <input id="cspeciality" name="speciality" type="radio" class="required" value="2"/> Technology<br/>
-                 <input id="cspeciality" name="speciality" type="radio" class="required" value="3"/> Scourge<sup>1</sup><br/>
-                 <input id="cspeciality" name="speciality" type="radio" class="required" value="4"/> Psi<sup>1</sup>
+                 <label for="cstation">Pick Your <a href="http://soulcubes.com/PlayerGuide.html">Station</a></label><br/>
+                 <input id="cstation" name="station" type="radio" class="required" value="2229" selected="true"/> Fomalhaut<br/>
+                 <input id="cstation" name="station" type="radio" class="required" value="0" disabled="true"/> Crescent<br/>
+                 <input id="cstation" name="station" type="radio" class="required" value="42" disabled="true"/> Gjenganger<br/>
+                 <input id="cstation" name="station" type="radio" class="required" value="1" disabled="true"/> Ophiuchus<br/>
+                 <input id="cstation" name="station" type="radio" class="required" value="666" disabled="true"/> Hell0<br/>
+                 <input id="cstation" name="station" type="radio" class="required" value="1337" disabled="true"/> Chaos<br/>
                </p>
                <p class="sub">
-                 <label for="skill">Starting Skill</label>
-                 <input id="cskill" name="skill" size="50"  value="You don't need skills.  Just go shoot stuff."/>
+                 <label for="crace">Pick Your <a href="http://soulcubes.com/PlayerGuide.html">Race</a></label><br/>
+                 <input id="crace" name="race" type="radio" class="required" value="1" selected="true"/> Human<br/>
+                 <input id="crace" name="race" type="radio" class="required" value="2" disabled="true"/> Tohu<br/>
+                 <input id="crace" name="race" type="radio" class="required" value="3" disabled="true"/> Tikkun<br/>
+               </p>
+               <p class="sub">
+                 <label for="cskill">Pick a <a href="http://soulcubes.com/PlayerGuide.html">Starting Skill</a></label><br/>
+                 <input id="cskill" name="skill" type="radio" class="required" value="0"/> Fireamrs<br/>
+                 <input id="cskill" name="skill" type="radio" class="required" value="1"/> Melee<br/>
+                 <input id="cskill" name="skill" type="radio" class="required" value="2"/> Tinkerer<br/>
                </p>
              </fieldset>
              <br/>

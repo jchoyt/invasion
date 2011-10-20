@@ -38,7 +38,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     private int cp = 0;
     private int hp = 50;
     private int hpmax = 50;
-    private int speciality;
     private Item equippedWeapon = null;
 	protected Item equippedShield = null;
 	protected Item equippedArmor = null;
@@ -69,6 +68,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
+    public final static int SWORD = 34;
     protected static Map<Integer, Alt> altCache = new ConcurrentHashMap<Integer, Alt>();
 
     //}}}
@@ -854,11 +854,10 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     /**
      *  create a new character
      */
-    public static Alt createNew( String username, String name, int speciality, int skill, int station )
+    public static Alt createNew( String username, String name, int station, int race )
     {
         Alt ret = new Alt();
         ret.name = name;
-        ret.speciality = speciality;
         // check that the name isn't used
         String query = "select * from alt where name=?";
         InvasionConnection conn = null;
@@ -900,8 +899,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
 
             // save him to the database
-            query = "insert into alt ( id, username, name, station, location, speciality ) values ( DEFAULT, ?,?,?,?,? )";
-            conn.psExecuteUpdate( query, "Error creating the new character", username, name, 0, loc, speciality );
+            query = "insert into alt ( id, username, name, station, location ) values ( DEFAULT, ?,?,?,? )";
+            conn.psExecuteUpdate( query, "Error creating the new character", username, name, 0, loc );
             //get new ID
             query="select max(id) as id from alt";
             rs = conn.executeQuery( query );
@@ -911,12 +910,16 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             query="insert into stats (select ?, statid from statstype)";
             conn.psExecuteUpdate( query, "Error entering stats for new alt", ret.id );
 
-            //human intro messages
-            new Message( conn, ret.id, Message.NORMAL, "The space between the stars is black and cold. You've been there, in a sleep on the edge of death, for longer than you will ever be awake. Your old life is buried light years away and decades in the past. Whatever you came from, there's no going back.");
-            new Message( conn, ret.id, Message.NORMAL, "Humanity never found an answer to easy space travel. As science progressed, the hyperdrives and breakthrough wormhole physics never materialized. In the end, mankind put its faith in cold reality. Where superluminal flight had escaped them, cryogenics did not. A man could survive for as long as his equipment did, and by this stage, the equipment could survive for a very long time.");
-            new Message( conn, ret.id, Message.NORMAL, "Some travelers arrive at their end destination to find that the passage of decades or centuries has created a far different place than they expected. In the last few hours, as your body was pumped with the drugs that would fully revive it from the suspended animation it had been held in for so long, you struggled to remember the dreams you had directly before waking. You stare out the small portal in the airlock door, into the blackness that was your home for so long. The scientists say that you don't dream in cold sleep. Your experience speaks differently.");
-            new Message( conn, ret.id, Message.NORMAL, "As you peer out the window, you recall the jumbled confusion of visions - one moment personal the next distant. A world with a sun a few shades redder than you remember. Unfamiliar plants surrounding a cave with dark shapes lurking in the shadows, out of sight. A black moon that seemed to turn a dark reddish color when you stared at it - when seen out of the corner of your eye, it almost seemed to slowly shift, as though its surface were some foul liquid instead of the rock you expect. It filled you with a quiet terror for reasons you can't understand. You remember hunting, being hunted, neither, both, all in a confusing swirl of memories that weren't yours.");
-            new Message( conn, ret.id, Message.NORMAL, "Outside the window, the shuttle is already being dismantled for spare parts. With a final hiss of equalizing pressure, the airlock opens. Your new life has just begun. You turn around, and don't look back.");
+            if( race == 1 )
+            {
+                //human intro messages
+                new Message( conn, ret.id, Message.NORMAL, "The space between the stars is black and cold. You've been there, in a sleep on the edge of death, for longer than you will ever be awake. Your old life is buried light years away and decades in the past. Whatever you came from, there's no going back.");
+                new Message( conn, ret.id, Message.NORMAL, "Humanity never found an answer to easy space travel. As science progressed, the hyperdrives and breakthrough wormhole physics never materialized. In the end, mankind put its faith in cold reality. Where superluminal flight had escaped them, cryogenics did not. A man could survive for as long as his equipment did, and by this stage, the equipment could survive for a very long time.");
+                new Message( conn, ret.id, Message.NORMAL, "Some travelers arrive at their end destination to find that the passage of decades or centuries has created a far different place than they expected. In the last few hours, as your body was pumped with the drugs that would fully revive it from the suspended animation it had been held in for so long, you struggled to remember the dreams you had directly before waking. You stare out the small portal in the airlock door, into the blackness that was your home for so long. The scientists say that you don't dream in cold sleep. Your experience speaks differently.");
+                new Message( conn, ret.id, Message.NORMAL, "As you peer out the window, you recall the jumbled confusion of visions - one moment personal the next distant. A world with a sun a few shades redder than you remember. Unfamiliar plants surrounding a cave with dark shapes lurking in the shadows, out of sight. A black moon that seemed to turn a dark reddish color when you stared at it - when seen out of the corner of your eye, it almost seemed to slowly shift, as though its surface were some foul liquid instead of the rock you expect. It filled you with a quiet terror for reasons you can't understand. You remember hunting, being hunted, neither, both, all in a confusing swirl of memories that weren't yours.");
+                new Message( conn, ret.id, Message.NORMAL, "Outside the window, the shuttle is already being dismantled for spare parts. With a final hiss of equalizing pressure, the airlock opens. Your new life has just begun. You turn around, and don't look back.");
+            }
+            //else this is fucked up
 
             //now new guy has a location, give them stuff
             new Item( conn, ENERGYPISTOL, ret.id);
@@ -925,8 +928,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             new Item( conn, ENERGYPACK, ret.id);
             new Item( conn, ENERGYPACK, ret.id);
             new Item( conn, ENERGYPACK, ret.id);
-            new Item( conn, ENERGYPACK, ret.id);
-            new Item( conn, ENERGYPACK, ret.id);
+            new Item( conn, SWORD, ret.id);
             return ret;
         }
         catch(SQLException e)

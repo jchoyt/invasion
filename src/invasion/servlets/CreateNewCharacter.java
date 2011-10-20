@@ -67,27 +67,55 @@ public class CreateNewCharacter extends HttpServlet
         throws IOException, ServletException
     {
         String charname = WebUtils.getRequiredParameter( request, "name");
-        String speciality = WebUtils.getRequiredParameter( request, "speciality");
-        String skill = WebUtils.getRequiredParameter( request, "skill");
-        skill="-1";
-        int station = 0;
+        String skill_string = WebUtils.getRequiredParameter( request, "skill");
+        String station_string = WebUtils.getRequiredParameter( request, "station");
+        String race_string = WebUtils.getOptionalParameter( request, "race", "1");
+        int skill = Integer.parseInt(skill_string);
+        int station = Integer.parseInt(station_string);
+        int race = Integer.parseInt(race_string);
+
+        long humanSkill = 0L;
+        long psiSkill = 0L;
+        long mutSkill = 0L;
+
+        switch(skill)
+        {
+            case 0:
+                humanSkill = Skills.getValue(Skill.FIREARMS1);
+                break;
+            case 1:
+                humanSkill = Skills.getValue(Skill.MELEE1);
+                break;
+            case 2:
+                humanSkill = Skills.getValue(Skill.TINKERER1);
+                break;
+            default:
+                break;
+        }
+
+
         InvasionConnection conn = null;
         try
         {
-            int specialityid = Integer.parseInt( speciality );
-            Alt alt = Alt.createNew( request.getUserPrincipal().getName(), charname, specialityid, Integer.parseInt(skill), station );
+            Alt alt = Alt.createNew( request.getUserPrincipal().getName(), charname, station, race );
 
             if( alt != null )
             {
                 conn = new InvasionConnection();
-                new Message( conn, alt.getId(), Message.SELF, "Welcome to Invasion's pre-alpha stage.  In reality, you can't do much yet.  Over time, more will be added and I'm relying on you to pass on lessons learned to others (via the wiki, for example) who will follow you.  Also, I need bug reports, suggestions, etc. - put them on the forums.  There are some loop holes in security right now.  Report them and have fun with them, but don't abuse them.  Mostly, enjoy.");
+                new Message( conn, alt.getId(), Message.SELF, "Welcome to Invasion's pre-alpha stage.  In reality, you can't do much yet.  Over time, more will be added and I'm relying on you to pass on lessons learned to others (via the boards, for example) who will follow you.  Also, I need bug reports, suggestions, etc. - put them in the issue tracker.  There are some loop holes in security right now; report them and have fun with them, but don't abuse them.  Mostly, enjoy.");
+                String query = "update alt set humanskill=?, psiskill=?, mutateskill=? where id=?";
+                int count = conn.psExecuteUpdate( query, "Error updating " + alt.getName() + " for their starting skills", humanSkill, psiSkill, mutSkill, alt.getId() );
+                if( count != 1 )
+                {
+                    throw new BotReportException( "Error updating " + alt.getName() + " for their starting skills.  The character was not found under the id " + alt.getId() );
+                }
+
                 response.sendRedirect( WebUtils.BASE + "" );
                 return;
             }
         }
         catch (Exception e)
         {
-            Logger log = Logger.getLogger( "newCharacterProcess.jsp" );
             log.log(Level.WARNING, "Error creating new character ", e);
         }
         finally

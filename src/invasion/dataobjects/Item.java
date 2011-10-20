@@ -263,7 +263,7 @@ public class Item  implements java.io.Serializable, Defender {
                  throw new BotReportException( "Item id " + itemid + " failed to be deleted from the database." );
             }
         }
-        catch(SQLException e)
+        catch(Exception e)
         {
             log.throwing( KEY, "Error deleting item " + itemid + " from the database.", e);
             throw new RuntimeException(e);
