@@ -21,8 +21,7 @@ public class Stats {
 
     //TODO read this directly from the DB
     private static final String[] names = { "Locations Hacked", "Alcohol Consumed", "Food Consumed", "Damage Inflicted", "Damage Suffered",
-        "Survival Streak", "Books Read", "Items Repaired", "Items Crafted", "Kills",
-        "Deaths", "Drunkenness" };
+        "Survival Streak", "Books Read", "Items Repaired", "Items Crafted", "Kills", "Deaths", "Drunkenness", "Black Outs" };
     public static final int HACK = 0;
     public static final int BOOZE = 1;
     public static final int FOOD = 2;
