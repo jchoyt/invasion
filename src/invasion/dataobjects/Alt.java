@@ -900,7 +900,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
             // save him to the database
             query = "insert into alt ( id, username, name, station, location ) values ( DEFAULT, ?,?,?,? )";
-            conn.psExecuteUpdate( query, "Error creating the new character", username, name, 0, loc );
+            conn.psExecuteUpdate( query, "Error creating the new character", username, name, station, loc );
             //get new ID
             query="select max(id) as id from alt";
             rs = conn.executeQuery( query );
