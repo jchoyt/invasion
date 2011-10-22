@@ -89,8 +89,8 @@ public class Gremlin extends Critter
         damageType = 'p';
         if(Math.random() < 0.01) name = "What's corky doing here, anyway?";
         deathKnells = new String[] { "You have landed the killing blow.",
-            "You blew the little fella's head clean off!  You're mean.",
-            "You're aim was good, but cruel.  Knees aren't supposed to bend that way.  As the gremlin careens head-first into the wall, you hear a sickening splat.  Heads should be at that angle, either.",
+            "You knocked the little fella's head clean off!  You're mean.",
+            "You're aim was good, but cruel.  Knees aren't supposed to bend that way.  As the gremlin careens head-first into the wall, you hear a sickening splat.  Heads should not be at that angle, either.",
             "A clean shot!  Very nice. But you can't help but think that this may be too easy. ",
             "Really?  Arent' these a little easy for you?  Go hunt something more challenging."
             };
