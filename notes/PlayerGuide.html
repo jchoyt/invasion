@@ -561,6 +561,19 @@ Humanity is being torn and brought into a racial civil war millennia old. Will i
 [[Welcome to Pre-Alpha]]
 [[Not a Bug!]]</pre>
 </div>
+<div title="Firearms" creator="Entomo" modifier="Entomo" created="201110220052" modified="201110221202" tags="Skills" changecount="4">
+<pre>You love the sound of an energy weapon discharging...and the whistle of flechettes.  If it shoots, you can use it.  Every level increases attack accuracy and provides damage bonuses.  Higher levels provide additional benefits as listed below.  
+;Melee 1
+:+1 damage to attacks
+;Melee 2
+:+2 additional damage (+3 total)
+;Melee 3
+:+2 additional damage (+5 total)
+;Melee 4
+:+2 additional damage (+7 total), adds Double Shot - Executes 2 attacks per AP spent, but they are executed at 2 levels below current
+;Melee 5
+:+3 additional damage (+10 total), adds Kill Shot attack; costs 2AP but does 5x damage 50% of the time (does regular damage otherwise).</pre>
+</div>
 <div title="Glossary" modifier="Entomo" created="201109271303" modified="201109271455" changecount="7">
 <pre>;Action Points (AP)
 :The basic limiting factor on being able to play. Most actions require an action point to perform, however characters gain 1 AP every 15 minutes up to their limit. Once you run out of action points your character cannot take any actions until more are accrued.
@@ -574,6 +587,27 @@ Humanity is being torn and brought into a racial civil war millennia old. Will i
 :Every 15 minutes ( top of the hour and every 15 minutes after that) the game &quot;ticks&quot;.  You will gain AP, lose IP, CharacterEffects decrement, etc.  It's the fundamental measure of time in-game
 ;Insanity Points (IP)
 :Not a good thing  //TODO - add description//</pre>
+</div>
+<div title="ItemQuality" creator="Entomo" modifier="Entomo" created="201110221153" modified="201110221153" changecount="2">
+<pre>From best to worst
+#To spec - from the factory fresh!
+#Average - some use, but perfectly servicable
+#Operational - still works, looking worn
+#Battered - Han Solo's blaster; might need a component to bring it back to Operational
+#Broken - half a chance of it not working; will need a component
+#Destroyed - non-functional; needs a complete overhaul; you might want to think about just scrapping this one, but there's a lot to learn by fixing stuff this broken.
+''PRE-ALPHA NOTE'' - Item quality currently doesn't affect anything and you don't need components to fix really busted up stuff yet.  See [[Tinkerer]] for skills required to repair stuff.</pre>
+</div>
+<div title="Items" creator="Entomo" modifier="Entomo" created="201110220058" modified="201110221155" changecount="4">
+<pre>Energy Packs (empty) - don't throw them out.  They can be recharged at:
+*Security Outposts
+*Armories
+*Power Distribution Centers
+*Security Outposts
+Food - food in space is awful, but it has it's benefits if you've been wounded.
+Booze - Booze is plentiful and helpful.  It'll heal your wounds, both physical and mental. 
+Weapons - weapons need maintenance.  See ItemQuality for a ranked list of item qualities. 
+Armor - shields protect you from energy weapons and armor from physical damage.  They have a certain number of &quot;HP&quot; they can absorb before they stop working, which can be repaired or recharged (shields).  They absorb a given % of the total damage until that HP wears off. </pre>
 </div>
 <div title="MainMenu" modifier="Entomo" created="201109270205" modified="201110182031" changecount="20">
 <pre>!!!Game Reference
@@ -595,8 +629,8 @@ NewPlayerGuide
 
 Powered by TiddlyWiki &lt;&lt;version&gt;&gt;</pre>
 </div>
-<div title="Melee" modifier="YourName" created="201109270217" modified="201110060009" changecount="12">
-<pre>Growing up in the streets was rough, but it prepared you for your current situation.  Melee skills prepare you to use hand-held weapons, fight hand-to-hand, and [[ping that guy in head | ThrownWeapons]] with anything you have at hand.   Every level increases attack accuracy and provides damage bonuses.  Higher levels provide additional benefits as listed below.  Note that thrown weapons get 1/2 the damage bonus listed below (properly rounded).
+<div title="Melee" modifier="Entomo" created="201109270217" modified="201110221202" tags="Skills" changecount="17">
+<pre>Growing up in the streets was rough, but it prepared you for your current situation.  Melee skills prepare you to use hand-held weapons, fight hand-to-hand, and [[ping that guy in head | ThrownWeapons]] with anything you have at hand.   Every level increases attack accuracy and provides damage bonuses.  Higher levels provide additional benefits as listed below.  Note that improvised weapons and thrown weapons get 1/2 the damage bonus listed below (properly rounded).
 ;Melee 1
 :+1 damage to attacks
 ;Melee 2
@@ -608,7 +642,7 @@ Powered by TiddlyWiki &lt;&lt;version&gt;&gt;</pre>
 ;Melee 5
 :+3 additional damage (+10 total), adds Brutality and Goliath attacks.  Brutality costs 2AP but does 3x damage 80% of the time (does regular damage otherwise).  Only works with hand-held weapons.  Goliath costs 2AP, works only on thrown weapons and stuns your opponent for 4 seconds.  Connecting with Goliath a second time resets the time to 4 seconds.   Note there is no additional Dodge level provided.  TODO - give target a &quot;shake it off&quot; button?  1 AP.  Level 3+ defense is immune to stunning?</pre>
 </div>
-<div title="NewPlayerGuide" modifier="Entomo" created="201109271428" modified="201109271500" changecount="8">
+<div title="NewPlayerGuide" modifier="Entomo" created="201109271428" modified="201110220136" changecount="13">
 <pre>!!Overview
 Invasion is a browser-based massively-multiplayer online roleplaying game wherein characters and their cadres struggle for control over resources and territories and maybe humanity itself within isolated space stations across space.  You interact in this world through one of several characters (you start with 2 plus a bonus).  As characters in the game progress, they will become more powerful and gain interesting new abilities.
 !!Goals
@@ -620,42 +654,26 @@ But that's not a problem, because this is science fiction!  We have cloning cham
 
 So, now that //that// expectation has been set...
 !!Action Points
-Characters have a limited amount of [[Action Point|Glossary]]s (or ''AP'') available to them per day.  Most activities in the game require the expenditure of 1 or more Action Points (some actions will require more than 1 - the actions are more difficult or tiring).  When a character runs out of Action Points, he or she can do nothing else until more Action Points accrue.  All characters are granted a single Action Point every fifteen minutes of real time (which roughly translates to about 100 per day).  Initially, a character can only ''store'' a maximum of 50 Action Points at any one time.  As a character gains [[experience|CharacterGrowth]], this maximum will increase.  If a character's Action Point total is at their maximum, then they will stop accruing Action Points.
-
+Characters have a limited amount of [[Action Point|Glossary]]s (or ''AP'') available to them per day.  Most activities in the game require the expenditure of 1 or more Action Points (some actions will require more than 1 - the actions are more difficult or tiring).  When a character runs out of Action Points, he or she can do nothing else until more Action Points accrue.  All characters are granted a single Action Point every fifteen minutes of real time (which translates to almost 100 per day).  Initially, a character can only ''store'' a maximum of 50 Action Points at any one time.  As a character gains [[experience|CharacterGrowth]], this maximum will increase.  If a character's Action Point total is at their maximum, then they will stop accruing Action Points.
 !!!Hit Points, Injury, and Death
 A character's [[Hit Point|Glossary]]s (or ''HP'') represent their overall health.  When characters are injured, their Hit Point totals will go down.  When they are healed, the Hit Point total goes up (but does not go above the maximum).  Starting characters have a maximum of 50 Hit Points which increases as the [[character's level|CharacterGrowth]] increases.
 
 If a character's Hit Point total drops to 0 or lower, he or she has been killed and must [[Respawn]].  This is accomplished by clicking the &quot;Respawn&quot; button on the character page.  Note that you won't be able to [[Respawn]] right away.   Any [[Items]] that the character possesses will be collected by helpful little maintenance bots and delivered to your new body.  However, items may become [[Decay|damaged]] due to death and sometimes (rarely) the bots may miss an item.  If this happens, the character will be alerted to that fact.
 
 When a character dies, the corpse is also collected and the station does...[[something|http://en.wikipedia.org/wiki/Soylent_Green]]...with it.
-
-===Skills===
-As a character gains experience in the game, they will learn different [[Skill]]s which they can use to better survive.  These skills may take the form of combat skills, such as [[Melee Combat]] or [[Ranged Combat]], utility skills, such as [[Lockpicking]] or [[Swim]]ming, or [[spell]]s like [[Ice Dart]] and [[The Crushing]].
-
-Skills characters choose determine what their character will be best at, and determine their style of play - a character with only healing skills, for instance, will not be very effective when hitting someone with a sword.  What skills you choose are entirely up to you, but certain skills can only be used by certain [[Class|Character Classes]] (only [[Pariah]]s, for instance, may take the [[Blood Claws]] skill).
-
-Skills are purchased with [[Character Point]]s (see below).  Over time, the character will earn a great many of these.  When the character has accrued enough Character Points to buy a skill, he can do so by clicking on the &quot;Buy Skills&quot; button (located in the top box of the [[Interface|map interface]] or in the character's profile page).
-
-The skill purchase screen will have sections for each [[class]] that the character possess (starting characters are always [[Mortal]]s).  Clicking on the black bar will open the list (if it's closed) or close it (if it's open).  Skills that are available for purchase will have a &quot;Buy Skill&quot; button next to them, with the cost of the skill (in Character Points) next to it.  Click the button and BAM!  New skill.
-
-===Character Points===
-When a character levels up, they are given a certain amount of [[Character Points]]  (or ''CP'').  These Character Points are then used to purchase skills and spells.  Character Points must be spent to be of any value, and there is a limit to the number of Character Points that a character can &quot;save up&quot; during a class change. (40 at tier 2, 70 at tier 3). Character Points may also be gained from [[Badges]] gained for certain Accomplishments and Explorations.
-
-===Experience Points===
-Characters gain [[Experience Points|Glossary]] by performing certain actions within the game.  These may range from healing other players to reading books or repairing equipment to attacking and killing other players' characters.  Experience Points are needed to level up your character and get more Character Points with which to purchase additional [[Skills]].
-
-==Multi-Account Abuse==
-The creation of multiple Nexus War accounts by one person is not permitted, and when identified, will be punished by the smiting of all characters and locking of the account, followed by deletion of the account at an appropriate maintenance time. Multi-account abuse is also called [[zerging]].
-
-If your account has been locked and you feel this is in error, please contact jorm via PM at the [http://forums.nexuswar.com/ official Nexus War forums].
+!!!Skills
+As a character gains experience in the game, they will learn different [[Skill]]s which they can use to better survive and maybe even thrive.   There are a limited number of skills, but each has several levels (up to 5), with each level costing 2x the previous one.  High level skills usually come with special abilities, but are quite expensive.  Skills are purchased with [[Character Point]]s (CP).  Over time, the character will earn a great many of these.  When the character has accrued enough CP to buy the next level of a skill, he can do so by clicking on the &quot;Purchase Skills&quot; tab located on the character's profile page.
+!!!Multi-Account Abuse
+The creation of multiple Invasion accounts by one person is not permitted, and when identified, will be punished by locking the offending accounts, followed by deletion of the account at an appropriate maintenance time.   If your account has been locked and you feel this is in error, please contact Entomo or someone in charge in #soulcubes on irc.freenode.net.  Freenode has a web-based client for those that don't usually use IRC - it can be found at http://webchat.freenode.net.
 </pre>
 </div>
-<div title="Not a Bug!" modifier="Entomo" created="201110162037" modified="201110200050" changecount="5">
+<div title="Not a Bug!" modifier="Entomo" created="201110162037" modified="201110201300" changecount="6">
 <pre>The following things are not bugs:
 *&quot;I have the proper amount of XP but I haven't leveled.&quot;  Leveling is done on the tick.
 *&quot;I drank 3 bottles of booze, but it doesn't show up in my stats.&quot;  Stats are also updated on the tick.
 *&quot;I died and I can't respawn...it just says &quot;dead&quot;&quot;  Wait for the tick and a new body will be started for you.  How long it takes depends on your level (higher level =&gt; longer to regrow).  Ask a mod to force tick enough for you to respawn or grab a bunch of characters to use for testing.
-*&quot;How do I get inside?&quot;  it's a space station...you're ALWAYS inside.  There is no inside/outside to locations.  This may change in the future (one station master has already requested it), but this is the state for the immediate future. </pre>
+*&quot;How do I get inside?&quot;  it's a space station...you're ALWAYS inside.  There is no inside/outside to locations.  This may change in the future (one station master has already requested it), but this is the state for the immediate future. 
+*&quot;I can talk and talk!&quot; Speech, at the moment, is free.</pre>
 </div>
 <div title="PageTemplate" modifier="TiddlyThemes" created="200701130013" modified="200708091512" tags="ClassicTheme">
 <pre>&lt;div class='header'&gt;
@@ -675,6 +693,13 @@ If your account has been locked and you feel this is in error, please contact jo
 &lt;div id='tiddlerDisplay'&gt;&lt;/div&gt;
 &lt;/div&gt;</pre>
 </div>
+<div title="Races" creator="Entomo" modifier="Entomo" created="201110220103" changecount="1">
+<pre>Human
+
+Tohu
+
+Tikkun</pre>
+</div>
 <div title="SiteSubtitle" modifier="Entomo" created="201109270039" modified="201109271506" changecount="2">
 <pre></pre>
 </div>
@@ -684,14 +709,51 @@ If your account has been locked and you feel this is in error, please contact jo
 <div title="SiteUrl" modifier="Entomo" created="201110182026" changecount="1">
 <pre>http://soulcubes/PlayerGuide.html</pre>
 </div>
-<div title="Skills" modifier="Entomo" created="201109270208" modified="201109270227" changecount="2">
-<pre>HumanSkills
+<div title="Skills" modifier="Entomo" created="201109270208" modified="201110221208" tags="Skills" changecount="8">
+<pre>Human Skills
 *[[Firearms]]
 *[[Melee]]
 *[[Tinkerer]]
 *[[Dodge]]
-PsiSkills
-MutateSkills</pre>
+Tohu Skills
+Geared toward mind-related powers.  Think psionics.  Some rough plans below
+* pets - do damage and some that take damage for attacks directed at brood master
+* Egoist - body-enhancing abilities
+** move more efficiently/faster
+** see better (better shot/better finding)
+** heal faster
+** can &quot;absorb&quot; damage from others, healing them
+* TK - telekinesis
+** shields
+** throw items with their mind (give them cool ammo)
+** &quot;stun&quot; opponent
+* TP - telepathy
+** good defense (knows where the attack will come from)
+** confuse attacker
+** make attacker see decoys
+** mind blast (AOE)
+
+Tikkun Skills
+Geared towards body-related powers.  Think body morphing.  Or, for the very old, the ice world (Medusa?) from Jack Chalker's &quot;Four Lords of the Diamond&quot; series.
+* pets
+** more &quot;do damage&quot;
+** output from their own bodies
+** borers - pets that bore into a target and do damage per turn or AP spent
+* Body warp
+** turn body into weapon (forearm becomes sharp as a razor, fingers fuse and sharpen to a point)
+** more damage and accuracy boost
+** Think human melee skills but better and related to their own bodies
+* Armor/hide/heal
+** build defenses
+** blend into background - by pass automatic defenses
+** heals faster
+** can &quot;absorb&quot; damage from others, healing them (maybe - overlap with PSI?)
+* Enchance
+** similar to egoist
+** senses
+** speed
+** strength
+** endurance (can go past 0 AP, but at a cost?)</pre>
 </div>
 <div title="Stations" modifier="Entomo" created="201110172158" modified="201110172200" changecount="5">
 <pre>||insert blub on stations||
@@ -1126,15 +1188,32 @@ color: #999999;
 chkSaveBackups:false
 chkAutoSave:true</pre>
 </div>
+<div title="Tinkerer" creator="Entomo" modifier="Entomo" created="201110221200" modified="201110221201" tags="Skills" changecount="3">
+<pre>Tinkerer allows you to fix equipment and eventually enhance it.  At lower levels, it simply allows you to fix equipment that isn't quite up to snuff.  At higher levels you can fix truly broken items and add enhanced capabilities to equipment (''NOTE - not implemented yet'').  See ItemQuality for a ranked list of qualities.
+;Tinkerer 1
+:Can repair from Average to To Spec
+;Tinkerer 2
+:Can repair from Operational to Average
+;Tinkerer 3
+:Can repair from Battered to Operational.  ''Future'':  Can detect and remove item defects
+;Tinkerer 4
+:Can repair from Broken to Battered.  ''Future'':  Can enhance weapons and armor (think NW enchantment)
+;Tinkerer 5
+:Can repair from Destroyed to Broken.  ''Future'':  Something cool.  No idea what yet. 
+
+</pre>
+</div>
 <div title="Welcome To Invasion" modifier="Entomo" created="201109271502" modified="201110162038" changecount="4">
 <pre>//Welcome to Invasion - a futuristic, browser-based massively-multiplayer online roleplaying game. Join in the fight for power and control with characters, creatures and dark forces as you forge the future for your kind. Secure resources and territories as you hurl through space wondering if it is your mind you are hearing or something else. Generations have lived off-world for centuries and you are not the first to inhabit this place. But now something strange and frightening is happening on these deep space stations. It all started with the voices. At first people thought they were dreams, but clear that what is happening here is real. Is it the station trying to communicate or something else? Strange, ethereal messages are being heard throughout the station and none of them are the same. People are going mad, some are mutating. Some people hear nothing and fear for their lives. Join the fight, scramble for your sanity, delight in the rewards of being victorious. Can you make it through ... ''Invasion''? //</pre>
 </div>
-<div title="Welcome to Pre-Alpha" modifier="Entomo" created="201110161247" modified="201110200053" changecount="7">
+<div title="Welcome to Pre-Alpha" modifier="Entomo" created="201110161247" modified="201110221135" changecount="9">
 <pre>!!!It's ugly, but necessary...pre-alpha testing.  This is all about working out bugs and trying to ensure things are balanced.  In that vein, several key restrictions are lifted on the server at the moment.
 *No AP limit.  You can go deep, deep into negative AP.   -2,147,483,648 to be precise.
 *No character limit.  The game will eventually be free with 2+1 free characters.  2 regular characters will be free.  The +1 is a station run by the guy hosting the game and will not count towards your character count.  It'll be Chaos.  For now, you can have as many players as you'd like.
 *Multiple characters on a single station.  Once running, a player may only have one character on a station (therefore, no chance for alt abuse without also cheating and creating a new account).  We'll start with 4 active stations, so they will have to choose. (Yes, there are plans for purchasing more character slots)
 *Wandering critters.  While I intend this to be a factor later in the game, once things get locked down, there won't be many (if any) NPC-type critters. For now, a couple types exist to test pet mechanisms and give you players something to do.
+*No weight limit to what you can carry.  This'll change to be somewhere in the 50-ish neighborhood.
+*You can only find a few things - the item &lt;-&gt; location mapping isn't done yet so you can only find a few things.  I'll sprinkle a ton of stuff on the ground for you, though.  
 !!!Some other things to be prepared for:
 *You may have your experience and skills reset at times.  If I release a host of new skills, I'll likely either do a massive CP grant across the board, or just knock everyone down to level 1 and grant a bunch of XP so you re-level and get appropriate skills.  During the pre-alpha time, don't get too attached to a build.
 !!!When things go badly
