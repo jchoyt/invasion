@@ -23,7 +23,7 @@ public class Brood
 
     public final static String KEY = Brood.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     /**
      * The pet database name - for now, leave it as postgres

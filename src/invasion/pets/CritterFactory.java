@@ -23,6 +23,47 @@ public class CritterFactory
     //}}}
 
     //{{{ Methods
+    /**
+     * Adds a critter of the specified type to a random location on a station.   It will join a Brood that already exists or create a new one if necessary.
+     * @param
+     * @return
+     *
+     */
+    // public static void addCritter( int station, String type )
+    // {
+    //     String query = "select id from location where station=? and typeid not in (0, 54,55,58) order by random() limit 1";
+    //     InvasionConnection conn = null;
+    //     ResultSet rs = null;
+    //     try
+    //     {
+    //         conn = new InvasionConnection();
+    //         rs = conn.psExecuteQuery(query, "Error retrieving new location", station);
+    //         while(rs.next())
+    //         {
+    //             //process
+    //         }
+    //         DatabaseUtility.close(rs);
+    //     }
+    //     catch(SQLException e)
+    //     {
+    //         log.throwing( KEY, "a useful message", e);
+    //         throw new RuntimeException(e);
+    //     }
+    //     finally
+    //     {
+    //         DatabaseUtility.close(rs);
+    //         conn.close();
+    //     }
+
+    // }
+
+
+    /**
+     * Load critter from pet database.
+     * @param
+     * @return
+     *
+     */
 	public static Critter loadCritter( InvasionConnection conn, int id )
 	{
 	    String query = "select class, b.id as id, ap, hp, armor, shield, typeid, c.name, location  from critters c join crittertype t on c.typeid=t.id join brood b on c.brood=b.id where c.id=?";
