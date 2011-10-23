@@ -17,6 +17,10 @@ CREATE TRIGGER clearEffectsOnDeath AFTER UPDATE ON alt
 
 insert into location (id, station, message, messagetype) values (-1337, -57005, 'You see bits of your flesh floating around you', 'chalk');
 
+-- ~~~~above here done already ~~~~~~
+
+drop table playermessages;
+
 
 /* CREATE OR REPLACE FUNCTION update_modified_column()
 	RETURNS TRIGGER AS $$
