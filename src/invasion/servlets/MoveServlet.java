@@ -36,6 +36,10 @@ public class MoveServlet extends HttpServlet
         "A klaxon goes off indicating the hull breach in sector 7 that YOU just created.  Knowing what is coming you take a huge gulp of air, hoping that it will buy you a few extra seconds when you get flushed out into deep space. As you get sucked out of the now gaping hole in the side of the station you feel a burning in your lungs as the air inside suddenly increases in volume and you realise you made a horrible mistake"
     };
 
+    public static final String[] drowningDeaths = {
+        "You frantically try to reach the surface, but the weight of all your gear and your clothing pulls you down, and not knowing how to swim doesn’t help. As you frantically pull up at the water, trying to break the surface, your lungs start to burn and the sides of your vision starts to blacken. Darkness approaches; you find your desparate movements becoming sluggish, and it’s harder than ever to see. With your lungs on fire, you slowly lose your grip on reality, and your eyes slowly, slowly lose their light as you drift into the enveloping darkness."
+    };
+
     /**
      *  Description of the Method
      *
@@ -89,6 +93,14 @@ public class MoveServlet extends HttpServlet
                 else if( a.getLocationType() == LocationType.DEEP_SPACE )
                 {
                     new Message( conn, a.getId(), Message.SELF, RandomUtilities.pickRandom( deepSpaceDeaths ) );
+                    a.setLastHurtBy( 0 );
+                    a.kill( conn, null );
+                    a.setLocation( -1337 );
+                    a.update( conn );
+                }
+                else if( a.getLocationType() == LocationType.WATER )
+                {
+                    new Message( conn, a.getId(), Message.SELF, RandomUtilities.pickRandom( drowningDeaths ) );
                     a.setLastHurtBy( 0 );
                     a.kill( conn, null );
                     a.setLocation( -1337 );

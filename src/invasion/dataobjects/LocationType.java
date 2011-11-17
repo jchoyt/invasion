@@ -29,6 +29,7 @@ public class LocationType  implements java.io.Serializable {
     public static int WINDOW = 58;
     public static int DEEP_SPACE = 0;
     public static int CORRIDOR = 4;
+    public static int WATER = 55;
 
     protected static Map<Integer, LocationType> locationTypes = new HashMap<Integer, LocationType>();
 
