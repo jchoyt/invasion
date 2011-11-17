@@ -305,6 +305,11 @@ public class Item  implements java.io.Serializable, Defender {
 
     public void kill(CombatResult result){}
 
+    public int getFactionid()
+    {
+        return Integer.parseInt("-BEEF", 16);
+    }
+
     public void kill(InvasionConnection conn, CombatResult result) throws SQLException{}
 
     public int getDodgeLevel()

@@ -81,7 +81,7 @@ public class Connect extends HttpServlet
             }
             Whatzit wazzit = new Whatzit(altid);
             //check if dead
-            if( alt.getLocation() == -57005 || alt.getHp() < 1 )
+            if( alt.getLocation() == Constants.DEAD_LOCATION || alt.getHp() < 1 )
             {
                 response.sendRedirect( WebUtils.BASE + "map/dead.jsp");
                 return;

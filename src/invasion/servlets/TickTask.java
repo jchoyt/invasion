@@ -93,8 +93,8 @@ public class TickTask extends TimerTask
         }
         s = conn.getConnection().createStatement();
         //if just died, put body at a random cloning facility
-        s.addBatch( "insert into messages (message, type, altid) select 'Your new body has been started.  It will be ready in approximately ' || level || ' tick(s).', 1, id from alt where location=-57005" );
-        s.addBatch( "update alt set location = (select id from location l where typeid=31 and alt.station=l.station order by random() limit 1), ticksalive=-1*level where location=-57005" );
+        s.addBatch( "insert into messages (message, type, altid) select 'Your new body has been started.  It will be ready in approximately ' || level || ' tick(s).', 1, id from alt where location=" + Constants.DEAD_LOCATION );
+        s.addBatch( "update alt set location = (select id from location l where typeid=31 and alt.station=l.station order by random() limit 1), ticksalive=-1*level where location=" + Constants.DEAD_LOCATION );
         //increament ticksalive
         s.addBatch( "update alt set ticksalive = ticksalive + 1 where ticksalive != 0 " );
         //clear "lasthurtby" where hp=hpmax

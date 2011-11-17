@@ -27,6 +27,9 @@ public class Constants
         }
     }
 
+    public final static int DEAD_LOCATION = Integer.parseInt("-DEAD", 16);  //-57005
+    public final static int NO_FACTION = 0;
+
     public final static int MIN_CHAR_ID = 0;
     public final static int MAX_CHAR_ID = 1000000;
     public final static int MIN_LOCATION_ID = MAX_CHAR_ID + 1;
@@ -36,6 +39,9 @@ public class Constants
     public final static int MIN_LOCKER_ID = MAX_FACTION_ID + 1;
     public final static int MAX_LOCKER_ID = 4000000;
 
+	public static int HUMAN = 1;
+	public static int TOHU = 2;
+	public static int TIKKUN = 3;
 
     //}}}
 

@@ -71,7 +71,7 @@ public class DeathFilter implements Filter
             filterConfig.getServletContext().getRequestDispatcher( "/map/index.jsp?error=You are stunned and cannot take any action until the effect wears off.").forward(request, response);
             return;
         }
-        else if( locid == -57005 || alt.getHp() < 1 )
+        else if( locid == Constants.DEAD_LOCATION || alt.getHp() < 1 )
         {
             log.finer("Character is dead.");
             filterConfig.getServletContext().getRequestDispatcher( "/map/dead.jsp" ).forward(request, response);

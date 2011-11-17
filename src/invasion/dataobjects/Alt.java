@@ -45,7 +45,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected int id = 0;
 	protected String username = null;
 	protected int xp = 0;
-	protected int factionid = 0;
+	protected int factionid = Constants.NO_FACTION;
+	protected int factionrank = 0;
 	protected int level = 0;
 	protected int lastHurtBy = 0;
 	protected int race = 0;
@@ -323,13 +324,23 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                     ret.append( " Your victim's armor soaked " + result.getArmorSoak()  + " points." );
                 if( result.getShieldSoak() > 0 )
                     ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
-                ret.append( " You earned " + result.getDamageDone() +" XP.");
+
+                if( factionid ==  defender.getFactionid() )
+                {
+                    ret.append( " You gain nothing from attacking a factionmate." );
+                }
+                else
+                {
+                    ret.append( " You earned " + result.getDamageDone() +" XP.");
+                    xp = xp + result.getDamageDone();
+                    Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
+                }
+
                 new Message( conn, id, Message.NORMAL, ret.toString());
                 for(String msg : result.getAttackerMessages())
                     new Message( conn, id, Message.NORMAL, msg );
-                xp = xp + result.getDamageDone();
                 update(conn);
-                Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
+
                 //destroy consumable improvised weapons    TODO - only on kill (complements of EK)?
                 if( !equippedWeapon.getItemtype().getName().equals("weapon")  && equippedWeapon.getItemtype().isConsumable() && Math.random() < 0.85 )
                 {
@@ -497,13 +508,21 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                     ret.append( " Your victim's armor soaked " + result.getArmorSoak()  + " points." );
                 if( result.getShieldSoak() > 0 )
                     ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
-                ret.append( " You earned " + result.getDamageDone() +" XP.");
+
+                if( factionid ==  defender.getFactionid() )
+                {
+                    ret.append( " You gain nothing from attacking a factionmate." );
+                }
+                else
+                {
+                    ret.append( " You earned " + result.getDamageDone() +" XP.");
+                    xp = xp + result.getDamageDone();
+                    Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
+                }
                 new Message( conn, id, Message.NORMAL, ret.toString());
                 for(String msg : result.getAttackerMessages())
                     new Message( conn, id, Message.NORMAL, msg );
-                xp = xp + result.getDamageDone();
                 update(conn);
-                Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
             }
             else
             {
@@ -662,7 +681,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         int deathLoc = location;
         hp = 0;
         ip = 0;
-        location = -57005;
+        location = Constants.DEAD_LOCATION;
         ap = ap - (level/2);
         int killerid = lastHurtBy;
         lastHurtBy = 0;
@@ -828,6 +847,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     public static Alt load( int id )
     {
+        //return it if it's in the cache
+        if( altCache.containsKey( id ) )
+        {
+            log.finest( "Alt " + id + " returned from cache.");
+            return altCache.get(id);
+        }
+        //else
         InvasionConnection conn = null;
         try
         {
@@ -1121,6 +1147,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setTicksalive(int ticksalive) { this.ticksalive = ticksalive; }
 	public long getStunned() { return this.stunned; }
 	public void setStunned(long stunned) { this.stunned = stunned; }
+    public int getFactionrank() { return this.factionrank; }
+	public void setFactionrank(int factionrank) { this.factionrank = factionrank; }
     //}}}
 
 }

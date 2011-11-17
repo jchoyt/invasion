@@ -30,4 +30,6 @@ public interface Attacker
 
     public String getName();
 
+    public int getFactionid();
+
 }

@@ -45,4 +45,6 @@ public interface Defender
      */
 	public void setStunned(long stunned);
 	public long getStunned();
+
+    public int getFactionid();
 }
