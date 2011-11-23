@@ -1,0 +1,60 @@
+<html>
+<head>
+    <link type="text/css" href="/css/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
+    <link type="text/css" href="/css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui-1.8.14.custom.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.validate.js"></script>
+    <style type="text/css">
+        label { width: 10em; float: left; }
+        label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+        p { clear: both; }
+        em { font-weight: bold; padding-right: 1em; vertical-align: top; }
+        .submit {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+        .sub { padding: .4em; border: 1px solid #d3d3d3; }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $("#newfactionForm").validate(
+                {
+                    messages: {
+                        name: {
+                            remote: "This name is in use.  Please pick another one.",
+                        }
+                    }
+            });
+        });so this
+    </script>
+</head>
+<body>
+    <center><img faction="logo" src="i/banner.png"/>
+        <br/><br/>
+    <div id="newfactionForm" class="ui-dialog-content ui-widget-content" style="width:25%;background: none; border: 1px solid black; padding:2em;">
+         <form class="cmxform" id="newfactionForm" method="post" action="newFaction" enctype="x-www-form-urlencoded" >
+             <fieldset>
+               <legend>Create a new faction</legend>
+               <p class="sub">
+                 <label for="cname">Choose a Name</label>
+                 <input id="cname" name="name" size="50" remote="checkFactionNameAvail.jsp" class="required" minlength="2" maxlength="255"/>
+               </p>
+<!--                <p class="sub">
+                 <label for="crace">Pick Your <a href="http://soulcubes.com/PlayerGuide.html">Faction Type</a></label><br/>
+                 <input id="crace" name="race" type="radio" class="required" value="1" selected="true"/> Human<br/>
+                 <input id="crace" name="race" type="radio" class="required" value="2" disabled="true"/> Tohu<br/>
+                 <input id="crace" name="race" type="radio" class="required" value="3" disabled="true"/> Tikkun<br/>
+               </p>
+ -->
+               <p class="sub">
+                 Description:
+                 <br/>
+                 <textarea rows="10" cols="40" name="description"></textarea>
+               </p>
+               * Note:  Faction type is dependent on the race of the character creating it.  While humans can join and even lead a Tikkun or Tohu faction, they can't create it.
+             </fieldset>
+             <br/>
+             <br/>
+             <center><input class="submit ui-state-default ui-corner-all" type="submit" value="Create Faction"/></center>
+         </form>
+    </div>
+</body>
+</html>

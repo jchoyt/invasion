@@ -28,8 +28,15 @@ public class Constants
     }
 
     public final static int DEAD_LOCATION = Integer.parseInt("-DEAD", 16);  //-57005
-    public final static int NO_FACTION = 0;
 
+    //factions
+    public final static int NO_FACTION = 0;
+    public final static int FACTION_LEADER = 4;
+    public final static int FACTION_LT = 3;
+    public final static int FACTION_MEMBER = 2;
+    public final static int FACTION_NEWB = 1;
+
+    //Location limits - all these are valid "locations" for items
     public final static int MIN_CHAR_ID = 0;
     public final static int MAX_CHAR_ID = 1000000;
     public final static int MIN_LOCATION_ID = MAX_CHAR_ID + 1;

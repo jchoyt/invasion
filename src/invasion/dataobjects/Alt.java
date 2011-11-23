@@ -64,8 +64,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected Effects effects = new Effects();
 	protected int ticksalive = 0;
 	protected long stunned = 0;
-
-
+	protected int station = 0;
 
     public final static int ENERGYPISTOL = 26;
     public final static int ENERGYPACK = 28;
@@ -120,8 +119,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     public boolean update( InvasionConnection conn )
     {
         log.entering(KEY, "update");
-        String query = "update alt set ap=?, ip=?, hp=?, xp=?, lasthurtby=?, location=? where id=?";
-        int count = conn.psExecuteUpdate(query, "Error updating brood in the database", ap, ip, hp, xp, lastHurtBy, location, id );
+        String query = "update alt set ap=?, ip=?, hp=?, xp=?, lasthurtby=?, location=?, factionid=?, factionrank=?  where id=?";
+        int count = conn.psExecuteUpdate(query, "Error updating character in the database", ap, ip, hp, xp, lastHurtBy, location, factionid, factionrank, id );
         log.finer("query done");
         if( count != 1 )
         {
@@ -779,6 +778,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.locationType = rs.getInt("typeid");
             ret.username = rs.getString("username");
             ret.factionid = rs.getInt("factionid");
+            ret.factionrank = rs.getInt("factionrank");
             ret.level = rs.getInt("level");
             ret.lastHurtBy = rs.getInt("lastHurtBy");
             ret.race = rs.getInt("race");
@@ -786,6 +786,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.hpmax = rs.getInt("hpmax");
             ret.humanSkills = rs.getLong("humanskill");
             ret.psiSkills = rs.getLong("psiskill");
+            ret.station = rs.getInt("station");
             ret.mutateSkills = rs.getLong("mutateskill");
             ret.xp = rs.getInt("xp");
             ret.cp = rs.getInt("cp");
@@ -884,6 +885,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     {
         Alt ret = new Alt();
         ret.name = name;
+        ret.race = race;
+        ret.station = station;
         // check that the name isn't used
         String query = "select * from alt where name=?";
         InvasionConnection conn = null;
@@ -922,8 +925,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             DatabaseUtility.close(ps);
 
             //get the next alt id
-
-
             // save him to the database
             query = "insert into alt ( id, username, name, station, location ) values ( DEFAULT, ?,?,?,? )";
             conn.psExecuteUpdate( query, "Error creating the new character", username, name, station, loc );
@@ -1149,7 +1150,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setStunned(long stunned) { this.stunned = stunned; }
     public int getFactionrank() { return this.factionrank; }
 	public void setFactionrank(int factionrank) { this.factionrank = factionrank; }
-    //}}}
+    public int getStation() { return this.station; }
+	public void setStation(int station) { this.station = station; }
+	    //}}}
 
 }
 // :wrap=none:noTabs=true:collapseFolds=1:maxLineLen=160:mode=java:tabSize=4:indentSize=4:noWordSep=_:folding=explicit:
