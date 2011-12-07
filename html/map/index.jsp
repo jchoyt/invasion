@@ -200,7 +200,7 @@
             <div>
                 <img alt="Invasion banner" src="${images}/banner_sm.png"/>
                 <br/>You are <a href="${base}viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a>
-                <br/>Faction: None
+                <br/>Faction: <%=alt.getFactionName()%>
                 <br/><span id="stats-area2">
                 <%
                     VelocityUtil.applyTemplate(obj, "stats2.vm", out);

@@ -336,14 +336,14 @@ public class Critter implements Attacker, Defender
         return 0;
     }
 
-    public int getFactionid()
+    public Faction getFaction()
     {
         if( brood.getOwnerId() > 0 )
         {
             Alt owner = Alt.load( brood.getOwnerId() );
-            return owner.getFactionid();
+            return owner.getFaction();
         }
-        return Constants.NO_FACTION;
+        return null;
     }
 
     //}}}

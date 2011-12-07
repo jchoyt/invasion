@@ -46,5 +46,10 @@ public interface Defender
 	public void setStunned(long stunned);
 	public long getStunned();
 
-    public int getFactionid();
+	/**
+     *
+     * @return Faction object if there's a faction, null otherwise
+     *
+     */
+    public Faction getFaction();
 }

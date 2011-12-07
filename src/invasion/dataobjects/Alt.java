@@ -45,7 +45,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	protected int id = 0;
 	protected String username = null;
 	protected int xp = 0;
-	protected int factionid = Constants.NO_FACTION;
+	protected Faction faction = null;
 	protected int factionrank = 0;
 	protected int level = 0;
 	protected int lastHurtBy = 0;
@@ -120,6 +120,12 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     {
         log.entering(KEY, "update");
         String query = "update alt set ap=?, ip=?, hp=?, xp=?, lasthurtby=?, location=?, factionid=?, factionrank=?  where id=?";
+        int factionid = -1;
+        if( faction != null )
+        {
+            factionid = faction.getId();
+        }
+
         int count = conn.psExecuteUpdate(query, "Error updating character in the database", ap, ip, hp, xp, lastHurtBy, location, factionid, factionrank, id );
         log.finer("query done");
         if( count != 1 )
@@ -324,20 +330,11 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 if( result.getShieldSoak() > 0 )
                     ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
 
-                if( factionid ==  defender.getFactionid() )
-                {
-                    ret.append( " You gain nothing from attacking a factionmate." );
-                }
-                else
-                {
-                    ret.append( " You earned " + result.getDamageDone() +" XP.");
-                    xp = xp + result.getDamageDone();
-                    Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
-                }
-
+                ret.append( applyXpGain( defender, result ) );
                 new Message( conn, id, Message.NORMAL, ret.toString());
                 for(String msg : result.getAttackerMessages())
                     new Message( conn, id, Message.NORMAL, msg );
+
                 update(conn);
 
                 //destroy consumable improvised weapons    TODO - only on kill (complements of EK)?
@@ -508,19 +505,11 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 if( result.getShieldSoak() > 0 )
                     ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
 
-                if( factionid ==  defender.getFactionid() )
-                {
-                    ret.append( " You gain nothing from attacking a factionmate." );
-                }
-                else
-                {
-                    ret.append( " You earned " + result.getDamageDone() +" XP.");
-                    xp = xp + result.getDamageDone();
-                    Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
-                }
+                ret.append( applyXpGain( defender, result ) );
                 new Message( conn, id, Message.NORMAL, ret.toString());
                 for(String msg : result.getAttackerMessages())
                     new Message( conn, id, Message.NORMAL, msg );
+
                 update(conn);
             }
             else
@@ -538,6 +527,24 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             defender.notifyAttacked( this, conn );
         }
         decrementAp(conn, apIncrement);
+    }
+
+    /**
+     * Applies the XP gain for an attack. This includes checking for attacking factionmates and setting stats.  This does NOT update the database.
+     * @param defender the entity attacked
+     * @param result the result of the hit passed back to the attacker from the defender
+     * @return  String to be appended to the attack result message
+     *
+     */
+    protected String applyXpGain( Defender defender, CombatResult result )
+    {
+        if( faction != null && defender.getFaction() != null && faction.getId() == defender.getFaction().getId() )
+        {
+            return " You gain nothing from attacking a factionmate.";
+        }
+        xp = xp + result.getDamageDone();
+        Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
+        return " You earned " + result.getDamageDone() +" XP.";
     }
 
 
@@ -584,13 +591,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 ret.append( " Your victim's armor soaked " + result.getArmorSoak()  + " points." );
             if( result.getShieldSoak() > 0 )
                 ret.append( " Your victim's shields soaked " + result.getShieldSoak()  + " points." );
-            ret.append( " You earned " + result.getDamageDone() +" XP.");
+
+            ret.append( applyXpGain( defender, result ) );
             new Message( conn, id, Message.NORMAL, ret.toString());
             for(String msg : result.getAttackerMessages())
                 new Message( conn, id, Message.NORMAL, msg );
-            xp = xp + result.getDamageDone();
+
             update(conn);
-            Stats.addChange(id, Stats.DAMDONE, result.getDamageDone());
 
             if( usingGoliath )
             {
@@ -768,16 +775,16 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         ResultSet rs = null;
         try
         {
-            String query = "select * from alt a join location l on (a.location = l.id) where a.id=?";
+            String query = "select a.name as charname, f.name as factionname, * from alt a join location l on (a.location = l.id) where a.id=?";
             rs = conn.psExecuteQuery( query, "Error loading char " + id, id);
             rs.next();
-            ret.name = rs.getString("name");
+            ret.name = rs.getString("charname");
             ret.id = id;
             ret.autoReload = rs.getBoolean("autoreload");
             ret.location = rs.getInt("location");
             ret.locationType = rs.getInt("typeid");
             ret.username = rs.getString("username");
-            ret.factionid = rs.getInt("factionid");
+            ret.faction = Faction.getFaction(rs.getInt("faction.getId()"));
             ret.factionrank = rs.getInt("factionrank");
             ret.level = rs.getInt("level");
             ret.lastHurtBy = rs.getInt("lastHurtBy");
@@ -1117,8 +1124,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setUsername(String username) { this.username = username; }
 	public int getXp() { return this.xp; }
 	public void setXp(int xp) { this.xp = xp; }
-	public int getFactionid() { return this.factionid; }
-	public void setFactionid(int factionid) { this.factionid = factionid; }
+	public Faction getFaction() { return this.faction; }
+	public void setFaction(Faction faction) { this.faction = faction; }
 	public int getLevel() { return this.level; }
 	public void setLevel(int level) { this.level = level; }
 	public int getLastHurtBy() { return this.lastHurtBy; }
@@ -1152,7 +1159,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 	public void setFactionrank(int factionrank) { this.factionrank = factionrank; }
     public int getStation() { return this.station; }
 	public void setStation(int station) { this.station = station; }
-	    //}}}
+    //}}}
 
 }
 // :wrap=none:noTabs=true:collapseFolds=1:maxLineLen=160:mode=java:tabSize=4:indentSize=4:noWordSep=_:folding=explicit:

@@ -86,6 +86,10 @@ alter table factions add column createdby integer;
 --add location for "no stronghold"
 insert into location (id, message) values (-1, 'No stronghold here!');
 
+-- Set faction id -1 to mean no faction - need this to make code for quitting a faction easier
+alter table alt alter factionid set default -1;
+insert into factions (id,name, station) values (-1,'Unfactioned',-1);
+update alt set factionid=-1 where factionid is null;
 
 /* CREATE OR REPLACE FUNCTION update_modified_column()
 	RETURNS TRIGGER AS $$

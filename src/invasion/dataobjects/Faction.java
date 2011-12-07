@@ -34,66 +34,62 @@ public class Faction
 	protected int station = 0;
 	protected int createdby = 0;
 
-
+	//TODO move these to Constants class
 	public final static int AMMENITY1 = 1;
 	public final static int AMMENITY2 = 2;
 	public final static int AMMENITY3 = 4;
 	public final static int AMMENITY4 = 8;
+
+    private static Map<Integer, Faction> byId = new HashMap<Integer, Faction>();
+
     //}}}
 
-//{{{ Constuctors
-
+    //{{{ Constuctors
     /**
-     * Loads a faction from the database.  Note the politics and flagsCaptured are done lazily.
+     * Called at server startup to load up the factions from the database.  Note the politics and flagsCaptured are done lazily.
      * @param
      * @return
      *
      */
-    public static Faction load( InvasionConnection conn, int id )
+    public static void loadCache()
     {
-        String query = "select * from factions where id = ?";
+        String query = "select * from factions";
+        InvasionConnection conn = null;
         ResultSet rs = null;
-        Faction ret = new Faction();
         try
         {
-            rs = conn.psExecuteQuery(query, "Failure loading Faction " + id, id);
+            conn = new InvasionConnection();
+            rs = conn.executeQuery(query);
             while(rs.next())
             {
-
-                //process
+                Faction f = new Faction();
+                f.setId( rs.getInt("id"));
+                f.setName(rs.getString("name"));
+                f.type=rs.getInt("type");
+                f.shloc = rs.getInt("shloc");
+                f.level = rs.getInt("level");
+                f.prestige = rs.getInt("prestige");
+                f.open = rs.getBoolean("open");
+                f.station = rs.getInt("station");
+                f.ammenities = rs.getInt("ammenities");
+                // f.cansetsh = rs.getInt("cansetsh"):
+                f.description = rs.getString("description");
+                f.createdby = rs.getInt("createdby");
+                byId.put(f.id, f);
+                log.finer("Loaded " + f.getName() );
             }
-            DatabaseUtility.close(rs);
         }
         catch(SQLException e)
         {
-            log.throwing( KEY, "Failure loading Faction " + id, e);
+            log.throwing( KEY, "Error initializing the faction list", e);
             throw new RuntimeException(e);
         }
         finally
         {
             DatabaseUtility.close(rs);
+            conn.close();
         }
-        return ret;
-    }
-
-    public static Faction load( int id )
-    {
-        InvasionConnection conn = null;
-        try
-        {
-            conn = new InvasionConnection();
-            return load( conn, id );
-        }
-        catch(SQLException e)
-        {
-            log.throwing( KEY, "Failure loading Faction " + id, e);
-            throw new NaughtyException(e);
-        }
-        finally
-        {
-            DatabaseUtility.close(conn);
-        }
-    }
+     }
 
     /**
      * Private to control faction creation to creating new and loading from the database.
@@ -142,7 +138,7 @@ public class Faction
 
             //set up the creator as a faction leader
             log.finer("Setting creator's faction id to " + f.id );
-            creator.setFactionid( f.id );
+            creator.setFaction( Faction.getFaction(f.id) );
             creator.setFactionrank( Constants.FACTION_LEADER );
             if(!creator.update(conn))
             {
@@ -150,6 +146,8 @@ public class Faction
             }
 
             new Message( conn, creator.getId(), Message.NORMAL, f.name + " has been created.  Lead it well.");
+
+            byId.put(f.id, f);
 
             return f;
         }
@@ -181,6 +179,21 @@ public class Faction
         List<String> ret = new ArrayList<String>();
         //todo populate - needs the ammenitites defined somewhere in a lookup table that is pre-populated at server start time.
         return ret;
+    }
+
+    /**
+     * Provide a way to get the faction object directly
+     * @param
+     * @return
+     *
+     */
+    public static Faction getFaction(int id)
+    {
+        if( id == -1 )
+        {
+            return null;
+        }
+        return byId.get(id);
     }
     //}}}
 

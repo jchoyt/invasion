@@ -112,7 +112,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                 <img alt="logo" src="${images}/banner.png"/>
                 <br/>
                 <h3>This is <%=thisguy.getName()%></h3>
-                <i>Unfactioned</i>
+                <i><%=thisguy.getFactionName()%></i>
                 <br/>
                 <div id="tabs" style="width:500px;">
                     <ul>

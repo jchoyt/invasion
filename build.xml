@@ -177,7 +177,7 @@
 
     <target name="doc" depends="setProps">
         <mkdir dir="${doc}" />
-        <javadoc packagenames="org.mitre.*" sourcepath="${src}" destdir="${doc}" author="true" version="true" windowtitle="${project.name} API">
+        <javadoc packagenames="invasion.*" sourcepath="${src}" destdir="${doc}" author="true" version="true" windowtitle="${project.name} API">
             <classpath>
                 <path refid="jarspath" />
             </classpath>

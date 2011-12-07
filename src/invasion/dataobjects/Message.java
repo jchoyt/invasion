@@ -39,7 +39,7 @@ public class Message  implements java.io.Serializable {
     public static final int EFFECT = 4; //}}}
 
     //{{{ Constructors
-    public Message() {
+    private Message() {
     }
 
     public Message(int messageid) {

@@ -334,6 +334,7 @@ public class Item  implements java.io.Serializable, Defender {
     public void setId(int itemid) { this.itemid = itemid; }
     public String getName() { return this.itemtype.getName(); }
     public void setName(String name) {}
+    public Faction getFaction() { return null; }
     //}}}
 
 }

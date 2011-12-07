@@ -108,6 +108,8 @@ public class InitServlet extends HttpServlet
         LocationCache.load();
         /* load up the broods */
         BroodManager.load();
+        /* load up factions */
+        Faction.loadCache();
         /* start up the error reporting bot */
         botThread = new Thread( new BotRunner( "vasionbot.properties" ), "VasionBot" );
         botThread.start();
