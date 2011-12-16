@@ -775,7 +775,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         ResultSet rs = null;
         try
         {
-            String query = "select a.name as charname, f.name as factionname, * from alt a join location l on (a.location = l.id) where a.id=?";
+            String query = "select a.name as charname, f.name as factionname, * from alt a join location l on (a.location = l.id) join factions f on (a.factionid = f.id) where a.id=?";
             rs = conn.psExecuteQuery( query, "Error loading char " + id, id);
             rs.next();
             ret.name = rs.getString("charname");
@@ -784,7 +784,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.location = rs.getInt("location");
             ret.locationType = rs.getInt("typeid");
             ret.username = rs.getString("username");
-            ret.faction = Faction.getFaction(rs.getInt("faction.getId()"));
+            ret.faction = Faction.getFaction(rs.getInt("factionid"));
             ret.factionrank = rs.getInt("factionrank");
             ret.level = rs.getInt("level");
             ret.lastHurtBy = rs.getInt("lastHurtBy");

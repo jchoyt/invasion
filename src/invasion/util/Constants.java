@@ -46,9 +46,18 @@ public class Constants
     public final static int MIN_LOCKER_ID = MAX_FACTION_ID + 1;
     public final static int MAX_LOCKER_ID = 4000000;
 
-	public static int HUMAN = 1;
-	public static int TOHU = 2;
-	public static int TIKKUN = 3;
+    //races
+	public final static int HUMAN = 1;
+	public final static int TOHU = 2;
+	public final static int TIKKUN = 3;
+
+	public final static String[] RACENAMES = new String[4];
+	static
+	{
+	    RACENAMES[HUMAN] = "Human";
+	    RACENAMES[TOHU] = "Tohu";
+	    RACENAMES[TIKKUN] = "Tikkun";
+	}
 
     //}}}
 
