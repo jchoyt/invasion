@@ -200,6 +200,21 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
      {
          ip = ( ip - amt > 0 ) ? ip - amt : 0;
      }
+
+     /**
+     * Convienence class to get faction id
+     * @param
+     * @return return faction ID if factioned, -1 otherwise
+     *
+     */
+     public int getFactionId()
+     {
+         if( faction == null )
+         {
+             return -1;
+         }
+         return faction.getId();
+     }
      //}}}
 
     //{{{ For Attacker interface

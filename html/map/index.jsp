@@ -200,7 +200,12 @@
             <div>
                 <img alt="Invasion banner" src="${images}/banner_sm.png"/>
                 <br/>You are <a href="${base}viewCharacter.jsp?id=<%=alt.getId()%>"><%=alt.getName()%></a>
-                <br/>Faction: <%=alt.getFactionName()%>
+                <%
+                    if( alt.getFaction() != null )
+                    {
+                        out.write( "<br/>Faction: <a href=" + WebUtils.BASE + "viewFaction.jsp?id=" + alt.getFactionId() + ">" + alt.getFaction().getName() + "</a>" );  /* I have no idea why \" in the ">" provides a double " but it does.  Revisit if this causes a problem */
+                    }
+                %>
                 <br/><span id="stats-area2">
                 <%
                     VelocityUtil.applyTemplate(obj, "stats2.vm", out);
