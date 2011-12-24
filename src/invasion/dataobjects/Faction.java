@@ -134,8 +134,13 @@ public class Faction
             {
                 f.id = rs.getInt( 1 );
             }
+            else
+            {
+                log.severe( "On creating faction " + f.name + " the faction ID was not returned from the database and therefore the leader can't be set." );
+            }
             DatabaseUtility.close(rs);
 
+            byId.put(f.id, f);
             //set up the creator as a faction leader
             log.finer("Setting creator's faction id to " + f.id );
             creator.setFaction( Faction.getFaction(f.id) );
@@ -147,7 +152,6 @@ public class Faction
 
             new Message( conn, creator.getId(), Message.NORMAL, f.name + " has been created.  Lead it well.");
 
-            byId.put(f.id, f);
 
             return f;
         }
