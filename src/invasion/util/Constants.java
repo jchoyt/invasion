@@ -51,13 +51,7 @@ public class Constants
 	public final static int TOHU = 2;
 	public final static int TIKKUN = 3;
 
-	public final static String[] RACENAMES = new String[4];
-	static
-	{
-	    RACENAMES[HUMAN] = "Human";
-	    RACENAMES[TOHU] = "Tohu";
-	    RACENAMES[TIKKUN] = "Tikkun";
-	}
+	public final static String[] RACENAMES = { null, "Human", "Tohu", "Tikkun" };
 
     //}}}
 
