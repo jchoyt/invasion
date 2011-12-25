@@ -1,5 +1,118 @@
 <%@ page import="invasion.util.*,org.json.*,invasion.dataobjects.*,invasion.ui.*,java.io.*,java.sql.*" %><%@
-    taglib prefix="tags" tagdir="/WEB-INF/tags" %><%
+    taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
+
+/**
+ * prints the list of members - suitable only for fitting into the accordion
+ * @param
+ * @return
+ *
+ */
+protected void printMemberList( InvasionConnection conn, JspWriter out, Faction faction)
+{
+    String query = "select name, factionrank, level, race from alt where factionid=? order by factionrank desc";
+    ResultSet rs = null;
+    try
+    {
+        conn = new InvasionConnection();
+        rs = conn.psExecuteQuery(query, "Error pulling member list for " + faction.getName(), faction.getId() );
+        String name = null;
+        while(rs.next())
+        {
+            name = rs.getString("name");
+            if( rs.getInt("factionrank") == Constants.FACTION_LEADER )
+            {
+                name += " (Leader)";
+            }
+
+            out.write( name + " - level " + rs.getString( "level" ) + " " + Constants.RACENAMES[rs.getInt("race")] + "<br/>" );
+        }
+        DatabaseUtility.close(rs);
+    }
+    catch(Exception e)
+    {
+        throw new RuntimeException(e);
+    }
+    finally
+    {
+        DatabaseUtility.close(rs);
+    }
+}
+
+/**
+ * prints the faction politics - suitable only for fitting into the accordion
+ * @param
+ * @return
+ *
+ */
+protected void printPolitics( InvasionConnection conn, JspWriter out, Faction faction)
+{
+    String query = "select name, setting from politics p join factions f on p.target=f.id where setter=? order by setting desc";
+    ResultSet rs = null;
+    try
+    {
+        conn = new InvasionConnection();
+        rs = conn.psExecuteQuery(query, "Error pulling politics for " + faction.getName(), faction.getId() );
+        String name = null;
+        out.print("<b><u>Factions Considered Friendly</u></b><br/>");
+        boolean switched = false;
+        while(rs.next())
+        {
+            if( !switched && rs.getInt("setting") == Constants.HOSTILE_STATUS )
+            {
+                switched = !switched;
+                out.print("<br/><b><u>Factions Considered Friendly</u></b><br/>");
+            }
+            out.write( rs.getString("name") + "<br/>" );
+
+        }
+        DatabaseUtility.close(rs);
+    }
+    catch(Exception e)
+    {
+        throw new RuntimeException(e);
+    }
+    finally
+    {
+        DatabaseUtility.close(rs);
+    }
+}
+
+
+/**
+ * prints the list of captured flags - suitable only for fitting into the accordion
+ * @param
+ * @return
+ *
+ */
+protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Faction faction)
+{
+    String query = "select name from flagscaptured fc join factions f on fc.owner=f.id where holder=?";
+    ResultSet rs = null;
+    try
+    {
+        conn = new InvasionConnection();
+        rs = conn.psExecuteQuery(query, "Error pulling politics for " + faction.getName(), faction.getId() );
+        String name = null;
+        boolean switched = false;
+        while(rs.next())
+        {
+            out.write( rs.getString("name") + "<br/>"  );
+        }
+        DatabaseUtility.close(rs);
+    }
+    catch(Exception e)
+    {
+        throw new RuntimeException(e);
+    }
+    finally
+    {
+        DatabaseUtility.close(rs);
+    }
+}
+
+%>
+
+<%
     String id_string = WebUtils.getRequiredParameter(request, "id");
     int id = Integer.parseInt(id_string);
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
@@ -14,7 +127,6 @@
         response.sendRedirect( WebUtils.BASE + "index.jsp?error=That faction does not exist.");
         return;
     }
-    String query = "";
     InvasionConnection conn = null;
     try
     {
@@ -73,20 +185,15 @@
                     <div id="accordion">
                         <h3><a href="#">Members</a></h3>
                         <div>
-                            <p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
+                            <% printMemberList( conn, out, thisFaction ); %>
                         </div>
                         <h3><a href="#">Captured Flags</a></h3>
                         <div>
-                            <p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
+                            <% printMCapturedFlags( conn, out, thisFaction ); %>
                         </div>
                         <h3><a href="#">Politics</a></h3>
                         <div>
-                            <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
-                            <ul>
-                                <li>List item one</li>
-                                <li>List item two</li>
-                                <li>List item three</li>
-                            </ul>
+                            <% printPolitics( conn, out, thisFaction ); %>
                         </div>
                     </div>
                 </div>
