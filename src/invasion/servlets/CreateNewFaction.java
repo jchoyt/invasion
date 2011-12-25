@@ -76,13 +76,13 @@ public class CreateNewFaction extends HttpServlet
             {
                 conn = new InvasionConnection();
                 Faction faction = Faction.createNew( conn, alt, name, description );
-                response.sendRedirect( WebUtils.BASE + "" );
+                response.sendRedirect( WebUtils.BASE + "map/index.jsp" );
                 return;
             }
         }
         catch (Exception e)
         {
-            log.log(Level.WARNING, "Error creating new character ", e);
+            log.log(Level.WARNING, "Error creating new faction ", e);
             response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=There was an error creating the faction.  If this persists, please report it on the <a href=\"http://soulcubes.com/boards\" target=\"_blank\">boards</a>.");
         }
         finally

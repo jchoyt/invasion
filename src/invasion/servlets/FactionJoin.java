@@ -73,6 +73,7 @@ public class FactionJoin extends HttpServlet
         {
             conn = new InvasionConnection();
             alt.setFaction( factionJoined );
+            alt.setFactionrank( Constants.FACTION_NEWB );
             alt.update( conn );
             new Message( conn, alt.getId(), Message.SELF, "You have successfully joined " + factionJoined.getName() );
         }
