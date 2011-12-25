@@ -74,6 +74,7 @@
                 VelocityUtil.applyTemplate(obj, "stats.vm", out);
             %></span></span>
             <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="${images}/transmit.gif"/></span> Menu<div class="pop">
+                    <p><a href="${base}factions.jsp">Faction List</a></p>
                     <p><a href="${base}disconnect">Disconnect</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage periodic poll</a></p>

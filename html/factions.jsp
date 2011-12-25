@@ -55,6 +55,7 @@
             %>
             </tbody>
         </table>
+        <a href="newFaction.html">Create a mew faction</a>
     </center>
 </body>
 </html>

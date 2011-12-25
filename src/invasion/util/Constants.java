@@ -36,6 +36,12 @@ public class Constants
     public final static int FACTION_MEMBER = 2;
     public final static int FACTION_NEWB = 1;
 
+    public final static String[] FACTION_POLITICS = { "Hostile", "Neutral", "Friendly" };
+    public final static int HOSTILE_STATUS = 0;
+    public final static int NEUTRAL_STATUS = 1;
+    public final static int FRIENDLY_STATUS = 2;
+
+
     //Location limits - all these are valid "locations" for items
     public final static int MIN_CHAR_ID = 0;
     public final static int MAX_CHAR_ID = 1000000;
