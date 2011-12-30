@@ -1,0 +1,100 @@
+body {
+    text-align:center;
+}
+
+
+#wrap {
+    color:#404040;
+    margin:10px auto;
+    padding:0;
+    width:750px;
+}
+
+.box {
+    min-width:50%;
+    min-height:50px;
+    padding:10px;
+}
+
+
+.toomuch {
+    color: gray;
+}
+
+
+.human-banner {
+    width: 700px;
+    padding:10px;
+    border: solid 3px #666666;
+    background-color:#cccccc;
+    color:black;
+    font-size: 40px;
+    text-align: center;
+    vertical-align:middle;
+}
+
+
+.tikkun-banner {
+    width: 700px;
+    padding:10px;
+    border: solid 3px #990033;
+    background-color:#ffcccc;
+    color:black;
+    font-size: 40px;
+    text-align: center;
+    vertical-align:middle;
+}
+
+
+.tohu-banner {
+    width: 700px;
+    padding:10px;
+    border: solid 3px #006633;
+    background-color:#99ff99;
+    color:black;
+    font-size: 40px;
+    text-align: center;
+    vertical-align:middle;
+}
+
+
+
+/*{{{ Edit page */
+.headers {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    float: left;
+    /* margin-right: 10px; */
+    width: 225px;
+    /* margin: 0 5px 5px 5px; */
+    padding: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align:center;
+}
+
+#friendly, #neutral, #hostile {
+    list-style-type: none;
+    margin: 0;
+    padding: 5px;
+    float: left;
+    /* margin-right: 10px; */
+    min-width:225px;
+    border: 1px solid lightgray;
+}
+
+#friendly li, #neutral li, #hostile li {
+    margin: 0 3px 3px 3px;
+    padding: 2px;
+    font-size: 1.2em;
+    /* width: 100%; */
+}
+
+/*}
+}
+}
+*/
+
+
+/* :wrap=none:noTabs=true:collapseFolds=1:mode=css:tabSize=4:indentSize=4:folding=explicit: */

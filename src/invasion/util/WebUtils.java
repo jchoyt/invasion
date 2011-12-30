@@ -283,7 +283,7 @@ public class WebUtils
 
         PrintWriter out = null;
         File errFile = new File( BASE_PATH + "admin/err", System.currentTimeMillis() + ".err" );
-        String ret = BASE_URL + "/admin/err/" + errFile.getName();
+        String ret = BASE_URL + "admin/err/" + errFile.getName();
         try
         {
             out = new PrintWriter( new BufferedWriter( new FileWriter( errFile, true ) ) );

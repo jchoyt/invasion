@@ -114,7 +114,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                 <h3>This is <%=thisguy.getName()%></h3>
                 <i><%= thisguy.getFaction()== null ? "Unfactioned" : "<a href=\"viewFaction.jsp?id=" + thisguy.getFaction().getId() + "\">" + thisguy.getFaction().getName() + "</a>"%></i>
                 <br/>
-                <div id="tabs" style="width:500px;">
+                <div id="tabs" style="min-width:500px;">
                     <ul>
                         <li><a href="#tabs-1">Summary</a></li>
                         <li><a href="#tabs-2">Skills</a></li>

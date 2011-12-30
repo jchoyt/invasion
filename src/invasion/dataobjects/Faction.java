@@ -199,6 +199,42 @@ public class Faction
         }
         return byId.get(id);
     }
+
+
+    public boolean update( InvasionConnection conn )
+    {
+        log.entering(KEY, "update");
+        String query = "update faction set description=?, amenities=?, open=? where id=?";
+
+        int count = conn.psExecuteUpdate( query, "Error updating faction in the database", description, ammenities, true, id );
+        log.finer("query done");
+        if( count != 1 )
+        {
+            log.warning( "Faction " +  id + " not updated");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean update( )
+    {
+        InvasionConnection conn = null;
+        try
+        {
+            conn = new InvasionConnection();
+            return update( conn );
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            return false;
+        }
+        finally
+        {
+            DatabaseUtility.close(conn);
+        }
+    }
+
     //}}}
 
     //{{{ Getters and Setters

@@ -63,7 +63,6 @@ protected void printPolitics( InvasionConnection conn, JspWriter out, Faction fa
                 out.print("<br/><b><u>Factions Considered Friendly</u></b><br/>");
             }
             out.write( rs.getString("name") + "<br/>" );
-
         }
         DatabaseUtility.close(rs);
     }
@@ -135,16 +134,10 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
         <head>
             <link type="text/css" href="${css}/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
             <link type="text/css" href="${css}/main.css" rel="stylesheet" />
+            <link type="text/css" href="${css}/factionpages.css" rel="stylesheet" />
             <script type="text/javascript" src="${js}/jquery-1.6.2.min.js"></script>
             <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
             <script type="text/javascript" src="${js}/jquery.validate.js"></script>
-            <style type="text/css">
-                .box { width:50%; height:250px;padding:10px; }
-                .toomuch { color: gray;  }
-                .human-banner { width: 700px; padding:10px; border: solid 3px #666666; background-color:#cccccc; color:black; font-size: 40px; text-align: center; vertical-align:middle;}
-                .tikkun-banner { width: 700px; padding:10px; border: solid 3px #990033; background-color:#ffcccc; color:black; font-size: 40px; text-align: center; vertical-align:middle;}
-                .tohu-banner { width: 700px; padding:10px; border: solid 3px #006633; background-color:#99ff99; color:black; font-size: 40px; text-align: center; vertical-align:middle;}
-            </style>
             <script type="text/javascript">
                 $(document).ready(function() {
                     // Dialog
@@ -200,9 +193,11 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
                 <div class="box">
                     <b><%=thisFaction.getName()%></b>
                     <br/><i><%=thisFaction.getDescription()%></i>
+                    <br/><b>Stronghold Location:</b>
                     <br/><b>Race:</b> <%=Constants.RACENAMES[thisFaction.getType()]%>
                     <br/><b>Prestige:</b> <%=thisFaction.getPrestige()%>
                     <br/><b>Created by:</b> <%=Alt.load(conn, thisFaction.getCreatedby()).getName()%>
+                    <br/><b>Stronghold Ammenities: </b>
                     <%  if( alt != null //a character is logged in}
                             && ( alt.getRace() == Constants.HUMAN || alt.getRace() == thisFaction.getType() )  //correct race)
                             && alt.getFactionId() != thisFaction.getId()  //not already in the faction
@@ -215,7 +210,16 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
 
             <center>
                 <br clear="all"/><%-- <a href="${base}map/index.jsp">Back</a> --%>
-                <a href="javascript: history.go(-1)">Back</a> | <a href="javascript: alert('Not implemented yet');">Purchase Faction Banner</a>
+                <a href="javascript: history.go(-1)">Back</a>
+                <%
+                    if( alt != null //a character is logged in}
+                        && alt.getFactionId() == thisFaction.getId()  //is in the faction
+                        && alt.getFactionrank() > Constants.FACTION_MEMBER )
+                    {
+                        out.write( " | <a href=\"javascript: alert('Not implemented yet');\">Purchase Faction Banner</a> | <a href=\"editFaction.jsp\">Edit Faction</a>");
+                    }
+
+                %>
             </center>
 
             <!-- ui-dialog -->

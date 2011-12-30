@@ -91,6 +91,10 @@ alter table alt alter factionid set default -1;
 insert into factions (id,name, station) values (-1,'Unfactioned',-1);
 update alt set factionid=-1 where factionid is null;
 
+-- add create date for factions and characters
+alter table factions add column createdate timestamp not null default now();
+alter table alt add column createdate timestamp not null default now();
+
 /* CREATE OR REPLACE FUNCTION update_modified_column()
 	RETURNS TRIGGER AS $$
 	BEGIN
