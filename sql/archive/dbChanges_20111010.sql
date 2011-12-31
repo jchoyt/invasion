@@ -17,8 +17,6 @@ CREATE TRIGGER clearEffectsOnDeath AFTER UPDATE ON alt
 
 insert into location (id, station, message, messagetype) values (-1337, -57005, 'You see bits of your flesh floating around you', 'chalk');
 
--- ~~~~above here done on prod already ~~~~~~
-
 drop table playermessages;
 
 -- fill out the faction table

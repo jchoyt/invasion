@@ -1,15 +1,1 @@
-Added "throw stuff at critters" to do damaga
-Added death by deep space and drowning
-Can't throw large items
-Added ability to do more than one tick at a time (http://soulcubes.com/issues/51/can-we-specify-number-ticks-force)
-Consumables break when used as weapons. Half damage bonus for improvised weapons and all thrown.  (http://soulcubes.com/issues/40/open-items-melee-skill-tree)
-[F] Thrown items now end up either destroyed or on the ground.
-[F] Consumables break, improvised get half damage bonus from skills.
-[C] Character creation page updated, new characters to go Cy's station
-[F] new pets for Cy's base
-[F] Factions can be created, joined, some editing.  Added faction page to Menu
 
-Fixed bug where effects didn't clear on death (http://soulcubes.com/issues/38/drunk-doesnt-clear-death)
-Fixed bug that would un-equip everything when a weapon was equipped
-Fixed chalk hard-coded resource url
-Fixed bug where admin teleport didn't affect cached Alt object (http://soulcubes.com/issues/48/admin-teleport-isnt-working#comment-74)
