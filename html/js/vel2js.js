@@ -48,14 +48,7 @@ t.p('.png"/></td>    <td><a id="pet');
 t.p( pet.id);
 t.p('" onclick="show_pet_target(');
 t.p( pet.id);
-t.p(')">>></a></td></tr><span id="pet-desc-');
-t.p( pet.id);
-t.p('" style="display:none;"><a href="');
-t.p('#" onclick="attack_pet(');
-t.p( pet.id);
-t.p(')">Attack ');
-t.p( pet.name);
-t.p('</a></span>');
+t.p(')">>></a></td></tr>');
 }
 velocityCount = 0;
 return t.toString();
@@ -799,7 +792,10 @@ t.p('</span><br/><span class="stat_counter ap"><b>AP</b>: ');
 t.p( context.stats.ap);
 t.p('</span><br/><span class="stat_counter xp"><b>XP</b>: ');
 t.p( context.stats.xp);
-t.p('</span>');
+t.p('</span><br/><b>Shields/Armor</b>: ');
+t.p( context.stats.shields);
+t.p('/');
+t.p( context.stats.armor);
 return t.toString();
 }
 function v2js_throwItemList(context) { 
@@ -811,7 +807,7 @@ for (var i1=0;  i1<context.inv.length; i1++) {
 var i = context.inv[i1];
 velocityCount = i1;
 t.p('            ');
-if (!( i.equipped )) {
+if (!( i.equipped ) && i.size != "l") {
 t.p('                <option value="');
 t.p( i.itemid);
 t.p('">');

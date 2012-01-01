@@ -5,4 +5,4 @@
 <br/><span class="stat_counter ip"><b>IP</b>: $stats.ip</span>
 <br/><span class="stat_counter ap"><b>AP</b>: $stats.ap</span>
 <br/><span class="stat_counter xp"><b>XP</b>: $stats.xp</span>
-
+<br/><b>Shields/Armor</b>: ${stats.shields}/${stats.armor}

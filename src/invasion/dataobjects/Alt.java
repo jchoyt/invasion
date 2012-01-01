@@ -1062,6 +1062,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         obj.put("ticksalive", alt.ticksalive );
         obj.put("daysalive", alt.ticksalive / 96 );
         obj.put("firearms", alt.firearmsAttackLevel ) ;
+        obj.put("shields", alt.getEquippedShield() == null ? 0 : alt.getEquippedShield().getAmmoleft() );
+        obj.put("armor", alt.getEquippedArmor() == null ? 0 :  alt.getEquippedArmor().getAmmoleft() );
         if( alt.hp < 1 ) obj.put("reload", true);
         obj.put("effects", alt.effects.getEffectsString() );
         return obj;
