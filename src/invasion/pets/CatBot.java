@@ -117,7 +117,7 @@ public class CatBot extends Critter
     public void kill(InvasionConnection conn, CombatResult result) throws SQLException
     {
         super.kill(conn, result);
-        if( Math.random() < 1.0 )  //TODO - change back to .25
+        if( Math.random() < 0.1 )  //TODO - change back to .25
         {
             Message.locationBroadcast(conn, location, Message.EFFECT, "You watch in horror as various chunks of your target start to twitch and pulsate." +
                 "They morph into smaller versions of the parent creature and run off to other parts of the station." );
