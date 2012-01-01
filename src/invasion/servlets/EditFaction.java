@@ -58,9 +58,6 @@ public class EditFaction extends HttpServlet
         try
         {
             int ammenity = Integer.parseInt( newAmmenity );
-
-            conn = new InvasionConnection();
-
             if( description != null )
             {
                 alt.getFaction().setDescription( description );
@@ -75,6 +72,7 @@ public class EditFaction extends HttpServlet
             else
                 response.sendRedirect( "editFaction.jsp?error=This action requires that you actually want to change something." );
 
+            conn = new InvasionConnection();
             alt.getFaction().update(conn);
             //  TODO -give appropriate feedback - page reload here, or use Poll.fullPoll in the finally block below - don't use both
             // new Message( conn, id, Message.EFFECT, "As you swing the weapon, something feels terribly wrong and it takes you off-balance; you miss." );
@@ -88,7 +86,7 @@ public class EditFaction extends HttpServlet
         }
         finally
         {
-            conn.close();
+            DatabaseUtility.close(conn);
         }
     }
 

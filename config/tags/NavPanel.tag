@@ -1,4 +1,4 @@
-<%@ tag import="java.util.*, invasion.dataobjects.*, invasion.util.*, java.sql.*,java.util.logging.*" %><%!
+<%@ tag import="java.util.*, invasion.dataobjects.*, invasion.util.*, invasion.pets.*, java.sql.*,java.util.logging.*" %><%!
 
 
     InvasionConnection conn = null;
@@ -88,6 +88,7 @@
         {
             boxNum = x + ( y * 5 );
             cloc = rs.getString("id");
+            locid = Integer.parseInt( cloc );
             out.write("   <div class=\"me " + rs.getString("cssname") + "\" style=\"left: " + Integer.toString(x*BOX_SIZE) + "px; top:");
             out.write(Integer.toString(y*BOX_SIZE) + "px;\" onmouseover=\"shloc('" + cloc);
             out.write("')\">");
@@ -96,6 +97,45 @@
             {
                 out.write( WebUtils.getMovementClass(boxNum) );
             }
+
+            // add character and pet icons on 5x5 map
+            int charcount = LocationCache.getCharactersAtLoc( locid );
+            if( charcount == 0 )
+            {
+                //move along
+            }
+            else if( charcount == 1 )
+            {
+                out.write("<img src=\"../i/pop1.gif\" style=\"position: absolute; top: 15px; left: 15px;z-index: 1;\"/>");
+            }
+            else if( charcount == 2 )
+            {
+                out.write("<img src=\"../i/pop2.gif\" style=\"position: absolute; top: 15px; left: 15px;z-index: 1;\"/>");
+            }
+            else //three or more
+            {
+                out.write("<img src=\"../i/pop3.gif\" style=\"position: absolute; top: 15px; left: 15px;z-index: 1;\"/>");
+            }
+
+            int crittercount = LocationCache.getBroodsAtLoc( locid );
+            if( crittercount == 0 )
+            {
+                //move along
+            }
+            else if( crittercount == 1 )
+            {
+                out.write("<img src=\"../i/critter-1.png\" style=\"position: absolute; top: 32px; left: 26px;z-index: 3;\"/>");
+            }
+            else if( crittercount == 2 )
+            {
+                out.write("<img src=\"../i/critter-2.png\" style=\"position: absolute; top: 32px; left: 26px;z-index: 3;\"/>");
+            }
+            else //three or more
+            {
+                out.write("<img src=\"../i/critter-3.png\" style=\"position: absolute; top: 32px; left: 26px;z-index: 3;\"/>");
+            }
+
+
             /* metadata - hidden until mouseover */
             out.write("<div style=\"display:none\" id=\"desc-" + cloc + "\">");
             out.write("<strong>Name:</strong> " + rs.getString("locname"));
