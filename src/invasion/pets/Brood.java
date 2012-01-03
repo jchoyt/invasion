@@ -23,7 +23,7 @@ public class Brood
 
     public final static String KEY = Brood.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     /**
      * The pet database name - for now, leave it as postgres
@@ -135,33 +135,33 @@ public class Brood
     /**
      * General movement, attacking, etc.
      *
-     * @param
+     * @param conn Connection to the main database
+     * @param pConn Connection to the pet database
      * @return
      *
      */
-    public void act()
+    public void act( InvasionConnection conn, InvasionConnection pConn )
     {
-        log.entering(KEY, "act");
+        log.entering(KEY, "Brood " + id + " acting");
         //move
-        InvasionConnection conn = null;
         ResultSet rs = null;
         String query = null;
-        buildTargetList();
-        if( targetList.size() == 0 )
+        buildTargetList( conn );
+        if( ownerId < 1 && targetList.size() == 0 ) //move feral broods (not player broods) if no targets to attack
         {
             int dir = (int)(Math.random() * 8);
+            // log.finer( "Brood " + id + " had no targets.  Moving in direction " + dir);
             query = "select id from location l where (station, level, x, y) in (select station, level, x + " + MoveServlet.xdelta[dir] + ", y + " + MoveServlet.ydelta[dir] + " from location s where id=?)";
             int oldloc = location;
             try
             {
-                conn = new InvasionConnection( PETDB );
-                rs = conn.psExecuteQuery(query, "Brood movmement not updated", location);
+                rs = pConn.psExecuteQuery(query, "Brood movmement not updated", location);
                 if(rs.next())
                 {
                     location = rs.getInt(1);
                 }
                 DatabaseUtility.close(rs);
-                if(!update( conn ))
+                if(!update( pConn ))
                 {
                     log.severe("Failed to update the brood after movement.  Things will be ... inconsistent.");
                     return;
@@ -177,38 +177,33 @@ public class Brood
             finally
             {
                 DatabaseUtility.close(rs);
-                conn.close();
             }
         }
 
         //combine if possible
-        if( ownerId == -1 && LocationCache.getBroodsAtLoc(location) > 1 ) // if feral and other ferals exist
+        if( ownerId < 1 && LocationCache.getBroodsAtLoc(location) > 1 ) // if feral and other ferals exist
         {
             try
             {
-                //if(conn == null)
-                conn = new InvasionConnection( PETDB );
-                query = "select b.id from brood b where owner = -1 and location = ? and id != ?";
-                rs = conn.psExecuteQuery(query, "Error grabbing list of feral broods to merge with", location, id);
+                query = "select b.id from brood b where owner is null and location = ? and id != ?";
+                rs = pConn.psExecuteQuery(query, "Error grabbing list of feral broods to merge with", location, id);
                 while(rs.next())
                 {
                     int broodId = rs.getInt(1);
                     Brood b = BroodManager.getFeralBrood( broodId );
-                    if( b == null )
+                    if( b == null )  //this should never happen.  Just trying to protect the code - TODO add an announcement by the bot
                     {
                         b = BroodManager.getFeralBrood( broodId );
                         BroodManager.addBrood( b );
                     }
                     if( b.getPowerRating() > this.getPowerRating() )
                     {
-                        this.mergeInto(conn, b);
-                        this.delete(conn);
+                        this.mergeInto(pConn, b);
                         break;
                     }
                     else  //merge the new brood into this one
                     {
-                        b.mergeInto(conn, this);
-                        b.delete(conn);
+                        b.mergeInto(pConn, this);
                     }
                 }
                 DatabaseUtility.close(rs);
@@ -221,11 +216,10 @@ public class Brood
             finally
             {
                 DatabaseUtility.close(rs);
-                conn.close();
             }
         }
         //rebuild target list to see if there's someone to attack in the *new* location
-        buildTargetList();
+        buildTargetList( conn );
         //check for stuff to attack
         if( targetList.size() > 0 )
         {
@@ -250,18 +244,15 @@ public class Brood
      * @return
      *
      */
-    public void buildTargetList()
+    public void buildTargetList( InvasionConnection conn )
     {
         targetList.clear();
         //find targets
-        String query = "select * from alt where location = ? and ticksalive > 0";
+        String query = "select id from alt where location = ? and ticksalive > 0";
         //TODO - faction check
-        InvasionConnection conn = null;
         ResultSet rs = null;
         try
         {
-            conn = new InvasionConnection();
-
             if( LocationCache.getCharactersAtLoc(location) > 1 || (LocationCache.getCharactersAtLoc(location) > 0 && ownerId == -1 ) )  // more than one character or feral and any characters
             {
                 rs = conn.psExecuteQuery( query, "Error", location );
@@ -273,7 +264,7 @@ public class Brood
                 DatabaseUtility.close(rs);
             }
 
-            if( LocationCache.getBroodsAtLoc(location) > 1 )
+            /* if( LocationCache.getBroodsAtLoc(location) > 1 )
             {
                 query = "select * from brood b join critters c on b.id=c.brood where b.id != ? and location = ?";
                 rs = conn.psExecuteQuery( query, "Error", id, location );
@@ -283,12 +274,13 @@ public class Brood
                     targetList.add(Alt.load(conn, rs.getInt("id")));
                 }
                 DatabaseUtility.close(rs);
-            }
+            } */
             // rank targets.  Higher attractiveness for lower armor and them dishing out higher damage per "round"
 
             // max 3 brood members per target
 
             // figure out best way to defend brood owner
+            // log.finer("Brood " + id + " has a list of " + targetList.size() + " targets to choose from." );
 
         }
         catch(SQLException e)
@@ -303,13 +295,12 @@ public class Brood
                 active=false;
             else
                 active=true;
-            conn.close();
         }
     }
 
     /**
-     * Moves critters from this brood into another both in the database and in the BroodManager
-     * @param
+     * Moves critters from this brood into another in the database
+     * @param conn The pet database
      * @return
      *
      */
@@ -318,20 +309,21 @@ public class Brood
         b.getMembers().addAll( this.members );
         String query = "update critters set brood = ?  where brood = ?";
         conn.psExecuteUpdate(query, "Failure merging broods", b.getId(), id);
-        this.members = null;
+        delete( conn );
+        this.members = new ArrayList<Critter>();
     }
 
     /**
-     * Deletes the brood from the database
+     * Deletes the brood from the database and the BroodManager
      * @param
      * @return
      *
      */
-    public void delete(InvasionConnection conn)
+    protected boolean delete(InvasionConnection conn)
     {
         BroodManager.removeBrood(this);
         String query = "delete from brood where id=?";
-        conn.psExecuteUpdate(query, "Deleting merged brood", id);
+        return 1 == conn.psExecuteUpdate(query, "Deleting merged brood", id);
     }
 
 
@@ -352,12 +344,25 @@ public class Brood
      * @return
      *
      */
-	public void removeMember( Critter oldCritter)
+	public void removeMember( Critter oldCritter, InvasionConnection conn )
 	{
 	    members.remove(oldCritter);
 	    if( members.size() == 0 )
         {
+            //delete brood from database
+            String query = "delete from brood where id=" + id;
+            try
+            {
+                conn.executeUpdate(query);
+            }
+            catch(SQLException e)
+            {
+                log.throwing( KEY, "Failed to remove brood " + id + " from the database." , e);
+                throw new RuntimeException(e);
+            }
 
+            //delete from BroodManager
+            BroodManager.removeBrood(this);
         }
 	}
 

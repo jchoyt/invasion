@@ -308,15 +308,15 @@ public class Critter implements Attacker, Defender
         }
         //remove it from the PET database
         String query = "delete from critters where id=" + id;
-        InvasionConnection petConn = null;
+        // InvasionConnection petConn = null;  //TODO use pet databse
         if( brood != null )
         {
-            brood.removeMember( this );
             LocationCache.decrementCritters( brood.getLocation() );
+            brood.removeMember( this, conn );
         }
         try
         {
-            petConn = new InvasionConnection();
+            // petConn = new InvasionConnection();  //TODO use pet databse`
             conn.executeUpdate(query);
         }
         catch(SQLException e)
@@ -324,10 +324,10 @@ public class Critter implements Attacker, Defender
             log.throwing( KEY, "a useful message", e);
             throw new RuntimeException(e);
         }
-        finally
-        {
-            petConn.close();
-        }
+        // finally
+        // {
+        //     petConn.close();
+        // }
     }
 
 

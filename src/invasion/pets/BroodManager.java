@@ -21,7 +21,7 @@ public class BroodManager
 
     public final static String KEY = BroodManager.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
+    static{log.setLevel(Level.FINER);}
 
     //{{{ Members
 	protected static Map<Integer, Brood> playerBroods = new HashMap<Integer, Brood>();
@@ -53,14 +53,34 @@ public class BroodManager
      */
     public static void workBroodsForTick()
     {
-        log.entering(KEY, "workBroodsForTick");
-       //cycle through and initiate each one
-       for( Integer key : playerBroods.keySet() )
-           playerBroods.get(key).act();
+        InvasionConnection conn = null;
+        // TODO use PETDB
+        try
+        {
+           conn = new InvasionConnection();
+           log.entering(KEY, "workBroodsForTick");
+           //cycle through and initiate each one
+           for( Integer key : playerBroods.keySet() )
+           {
+               playerBroods.get(key).act( conn, conn );  // TODO use PETDB
+           }
 
-       for( Brood b : feralBroods )
-           b.act();
-        log.exiting(KEY, "workBroodsForTick");
+           for( Brood b : feralBroods )
+           {
+               b.act( conn, conn );  // TODO use PETDB
+           }
+           log.exiting(KEY, "workBroodsForTick");
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            DatabaseUtility.close( conn );
+            // TODO use PETDB
+        }
     }
 
     /**
@@ -71,13 +91,29 @@ public class BroodManager
      */
     public static void workBroods()
     {
-       //cycle through and initiate each one
-       for( Integer key : playerBroods.keySet() )
-           if( playerBroods.get(key).getActive() )
-               playerBroods.get(key).act();
-       for( Brood b : feralBroods )
-           if( b.getActive() )
-               b.act();
+        InvasionConnection conn = null;
+        // TODO use PETDB
+        try
+        {
+            conn = new InvasionConnection();
+            //cycle through and initiate each one
+            for( Integer key : playerBroods.keySet() )
+               if( playerBroods.get(key).getActive() )
+                   playerBroods.get(key).act( conn, conn );  // TODO use PETDB
+            for( Brood b : feralBroods )
+               if( b.getActive() )
+                   b.act( conn, conn );  // TODO use PETDB
+        }
+        catch(SQLException e)
+        {
+            log.throwing( KEY, "a useful message", e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            DatabaseUtility.close( conn );
+            // TODO use PETDB
+        }
     }
 
     public static Critter getCritter( int id, JSONArray alerts )
@@ -147,7 +183,7 @@ public class BroodManager
                 while(rs2.next())
                     ret.addMember( CritterFactory.loadCritter( conn, rs2.getInt("id" ) ) );
                 DatabaseUtility.close(rs2);
-                if( ret.getOwnerId() == -1 )
+                if( ret.getOwnerId() < 1 )
                     feralBroods.add(ret);
                 else
                     playerBroods.put( ret.getOwnerId(), ret );
@@ -169,8 +205,7 @@ public class BroodManager
     }
 
     /**
-     * Adds a new Brood to the manager.  What actually happens is it's added to a buffer which is then merged
-     * when all the actions for all broods are done.
+     * Adds a new Brood to the manager.
      *
      * @param b the brood to add
      */
@@ -184,13 +219,12 @@ public class BroodManager
     }
 
     /**
-     * Removes a Brood from the manager.  What actually happens is it's added to a list of Broods to be removed
-     * at the end of the next action cycle
+     * Removes a Brood from the manager.
      * @param b the Brood to remove
      */
     public static void removeBrood( Brood b )
     {
-        if( b.getOwnerId() == -1 )
+        if( b.getOwnerId() < 1 )
             feralBroods.remove( b );
         else
             playerBroods.remove( b.getOwnerId() );

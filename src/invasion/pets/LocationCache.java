@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.List;
 import invasion.servlets.*;
 import invasion.util.*;
+
 public class LocationCache implements PropertyChangeListener
 {
 
@@ -41,7 +42,7 @@ public class LocationCache implements PropertyChangeListener
     {
         // subscribe to events
         MoveServlet.pcs.addPropertyChangeListener(new LocationCache());
-        // Brood.pcs.addPropertyChangeListener(this);
+        Brood.pcs.addPropertyChangeListener(new LocationCache());
         String query = "select min(id), max(id) - min(id) from location where id >= 1000000";
         InvasionConnection conn = null;
         ResultSet rs = null;
@@ -102,7 +103,7 @@ public class LocationCache implements PropertyChangeListener
      */
     public static List<String> verify()
     {
-        String query = "select min(id), max(id) - min(id) from location where id >= 1000000";
+        String query = "select min(id), max(id) - min(id) from location where id > 999999";
         InvasionConnection conn = null;
         ResultSet rs = null;
         List<String> ret = null;
@@ -111,7 +112,7 @@ public class LocationCache implements PropertyChangeListener
             ret = new ArrayList<String>();
             conn = new InvasionConnection();
             //character count per location
-            query = "select location, count(*) from alt where location >= 1000000 group by location order by location";
+            query = "select location, count(*) from alt where location > 999999 group by location order by location";
             rs = conn.executeQuery(query);
             while(rs.next())
             {
@@ -174,13 +175,13 @@ public class LocationCache implements PropertyChangeListener
     {
         if( evt.getPropertyName().equals( MoveServlet.KEY ) )
         {
-            log.finer("Adjusting location counts.");
+            log.finer("Adjusting location counts. " + evt );
             incrementChars( (Integer)evt.getNewValue() );
             decrementChars( (Integer)evt.getOldValue() );
         }
         else if( evt.getPropertyName().equals( Brood.KEY ) )
         {
-            log.finer("Adjusting location counts.");
+            log.finer("Adjusting location counts. " + evt);
             incrementCritters( (Integer)evt.getNewValue() );
             decrementCritters( (Integer)evt.getOldValue() );
         }
