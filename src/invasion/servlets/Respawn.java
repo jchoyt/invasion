@@ -7,6 +7,7 @@ package invasion.servlets;
 import invasion.bot.VasionBot;
 import invasion.dataobjects.*;
 import invasion.util.*;
+import invasion.pets.LocationCache;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -77,6 +78,7 @@ public class Respawn extends HttpServlet
             request.getSession().setAttribute( Whatzit.KEY,  wazzit );
 
             new Message( conn, altid, Message.SELF, "You step out of the cloning chamber and look around with your new old eyes.  You see rows of identical chambers around the room.  Moving around experimentally, you determine everything appears to be as it should be.");
+            LocationCache.incrementChars( alt.getLocation() );
             response.sendRedirect( WebUtils.BASE + "map/index.jsp" );
         }
         catch(Exception e)

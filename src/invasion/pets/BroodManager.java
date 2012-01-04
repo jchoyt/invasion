@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import invasion.util.*;
 import java.sql.*;
+import invasion.bot.*;
+
 
 /**
  * Objects for having "active" broods working.  An active Brood is one that is in combat, or was recently in combat.
@@ -188,6 +190,7 @@ public class BroodManager
                 while(rs2.next())
                     ret.addMember( CritterFactory.loadCritter( conn, rs2.getInt("id" ) ) );
                 DatabaseUtility.close(rs2);
+                ret.buildTargetList( conn );
                 if( ret.getOwnerId() < 1 )
                     feralBroods.add(ret);
                 else
@@ -241,6 +244,41 @@ public class BroodManager
             if( b.getId() == id )
                 return b;
         return null;
+    }
+
+
+    /**
+     * Cause all broods to attack
+     * @param
+     * @return
+     *
+     */
+    public static void processAttacks()
+    {
+        InvasionConnection conn = null;
+        try
+        {
+            conn = new InvasionConnection();
+            for(Brood b : feralBroods)
+                if( b.getActive() )
+                {
+                    log.finer("Brood " + b.getId() + " is active." );
+                    b.attack( conn );
+                }
+            for(Brood b : playerBroods.values())
+                if( b.getActive() )
+                    b.attack( conn );
+        }
+        catch(Exception e)
+        {
+            log.throwing(KEY, "processAttacks", e );
+            String errFile = WebUtils.dumpError(e);
+            VasionBot.announce("Error processing pet attacks.  If this repeats, things are going to get very spammy. Details can be found at " + errFile );
+        }
+        finally
+        {
+            DatabaseUtility.close(conn);
+        }
     }
     //}}}
 

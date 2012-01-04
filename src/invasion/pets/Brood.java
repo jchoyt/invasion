@@ -51,7 +51,7 @@ public class Brood
 	protected int type = 0;
 	protected int id = 0;
 	protected List<Defender> targetList = new ArrayList<Defender>();
-	protected boolean active = false;
+	protected boolean active = true;
 	//}}}
 
 	//{{{ Constructors
@@ -133,7 +133,7 @@ public class Brood
 
 
     /**
-     * General movement, attacking, etc.
+     * General movement, combining, etc.
      *
      * @param conn Connection to the main database
      * @param pConn Connection to the pet database
@@ -230,24 +230,32 @@ public class Brood
         }
         //rebuild target list to see if there's someone to attack in the *new* location
         buildTargetList( conn );
-        //check for stuff to attack
-        //TODO move these to ATTACK thread
-        if( targetList.size() > 0 )
+
+        //attack will happenon the pet tick
+        log.exiting(KEY, "act");
+    }
+
+    public void attack( InvasionConnection conn )
+    {
+        log.finer( "Brood " + id + " preparing to attack - there are " + targetList.size() + " targets.");
+        int randomTarget = -1;
+        for( Critter c : members )
         {
-            log.finer( "Brood " + id + " preparing to attack - there are " + targetList.size() + " targets.");
-            active = true;
-            for( Critter c : members )
+            //TODO - make these focused attacks
+            //TODO - stop attacking when the target is dead - maybe - check Critter attack and if it's smart enough to stop attacking when someone is dead
+            randomTarget = (int) (Math.random() * targetList.size() );
+            Defender target = targetList.get(randomTarget);
+            c.attack( target, conn );
+            if( target.getLocation() != location )
             {
-                //TODO - make these focused attacks
-                //TODO - stop attacking when the target is dead - maybe - check Critter attack and if it's smart enough to stop attacking when someone is dead
-                int randomTarget = (int) (Math.random() * targetList.size() );
-                c.attack( targetList.get(randomTarget), conn );
+                targetList.remove(target);
+                if( targetList.size() < 1 )
+                {
+                    active = false;
+                    return;
+                }
             }
         }
-        else
-            active = false;
-        //attack
-        log.exiting(KEY, "act");
     }
 
 
@@ -267,13 +275,15 @@ public class Brood
         ResultSet rs = null;
         try
         {
-            if( LocationCache.getCharactersAtLoc(location) > 1 || (LocationCache.getCharactersAtLoc(location) > 0 && ownerId == -1 ) )  // more than one character or feral and any characters
+            if( LocationCache.getCharactersAtLoc(location) > 1 || (LocationCache.getCharactersAtLoc(location) > 0 && ownerId < 1 ) )  // more than one character or feral and any characters
             {
+                log.finer("Checking for targets for brood " + id + " at location " + location );
                 rs = conn.psExecuteQuery( query, "Error", location );
                 while(rs.next())
                 {
                     //TODO - determine if enemy
                     targetList.add(Alt.load(conn, rs.getInt("id")));
+                    log.finer("Adding a target to the list for brood " + id );
                 }
                 DatabaseUtility.close(rs);
             }

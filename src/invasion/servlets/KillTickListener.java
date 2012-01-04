@@ -41,6 +41,7 @@ public class KillTickListener implements ServletContextListener
 	{
 		context = contextEvent.getServletContext();
 		TickServlet.killTimer();
+		PetTickServlet.killTimer();
 		log.finer("Context Destroyed");
 	}
 }

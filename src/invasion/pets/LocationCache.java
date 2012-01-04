@@ -59,7 +59,7 @@ public class LocationCache implements PropertyChangeListener
             DatabaseUtility.close(rs);
 
             //character count per location
-            query = "select location, count(*) from alt where location >= 1000000 group by location order by location";
+            query = "select location, count(*) from alt where location >= 1000000 and ticksalive > 0 group by location order by location";
             rs = conn.executeQuery(query);
             while(rs.next())
             {
@@ -112,7 +112,7 @@ public class LocationCache implements PropertyChangeListener
             ret = new ArrayList<String>();
             conn = new InvasionConnection();
             //character count per location
-            query = "select location, count(*) from alt where location > 999999 group by location order by location";
+            query = "select location, count(*) from alt where location > 999999 and ticksalive > 0 group by location order by location";
             rs = conn.executeQuery(query);
             while(rs.next())
             {
