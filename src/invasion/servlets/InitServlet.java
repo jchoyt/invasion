@@ -104,10 +104,10 @@ public class InitServlet extends HttpServlet
         Search.load();
         /* pre-load the Skill values */
         Skills.load();
-        /* Load up the location occupant counts */
-        LocationCache.load();
         /* load up the broods */
         BroodManager.load();
+        /* Load up the location occupant counts */
+        LocationCache.load();
         /* load up factions */
         Faction.loadCache();
         /* start up the error reporting bot */

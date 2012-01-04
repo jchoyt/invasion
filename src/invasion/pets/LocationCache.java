@@ -68,8 +68,8 @@ public class LocationCache implements PropertyChangeListener
             }
             DatabaseUtility.close(rs);
 
-            //brood count per location
-            query = "select location, count(id) from brood group by location order by location";
+            //critter count per location
+            query = "select location, count(c.id) from brood b join critters c on (b.id=c.brood) group by location";
             rs = conn.executeQuery(query);
             while(rs.next())
                 setCrittersAtLoc(rs.getInt(1), rs.getInt(2));
@@ -125,8 +125,8 @@ public class LocationCache implements PropertyChangeListener
             }
             DatabaseUtility.close(rs);
 
-            //brood count per location
-            query = "select location, count(id) from brood group by location order by location";
+            //critter count per location
+            query = "select location, count(c.id) from brood b join critters c on (b.id=c.brood) group by location";
             rs = conn.executeQuery(query);
             while(rs.next())
             {
@@ -182,8 +182,9 @@ public class LocationCache implements PropertyChangeListener
         else if( evt.getPropertyName().equals( Brood.KEY ) )
         {
             log.finer("Adjusting location counts. " + evt);
-            incrementCritters( (Integer)evt.getNewValue() );
-            decrementCritters( (Integer)evt.getOldValue() );
+            Brood b = (Brood)evt.getNewValue();
+            incrementCritters( b.getLocation(), b.getSize() );
+            decrementCritters( (Integer)evt.getOldValue(), b.getSize() );
         }
     }
 
@@ -207,9 +208,11 @@ public class LocationCache implements PropertyChangeListener
 	public static void setItemsAtLoc(int locid, int count) { itemsAtLoc[locid - offset] = count; }
     public static void decrementChars( int locid ) { charactersAtLoc[locid - offset]--; }
     public static void decrementCritters( int locid ) { crittersAtLoc[locid - offset]--; }
+    public static void decrementCritters( int locid, int count ) { crittersAtLoc[locid - offset] = crittersAtLoc[locid - offset] - count; }
     public static void decrementItems( int locid ) { itemsAtLoc[locid - offset]--; }
     public static void incrementChars( int locid ) { charactersAtLoc[locid - offset]++; }
     public static void incrementCritters( int locid ) { crittersAtLoc[locid - offset]++; }
+    public static void incrementCritters( int locid, int count ) { crittersAtLoc[locid - offset] = crittersAtLoc[locid - offset] + count; }
     public static void incrementItems( int locid ) { itemsAtLoc[locid - offset]++; }
     public static int getSize() { return charactersAtLoc.length; }
     //}}}

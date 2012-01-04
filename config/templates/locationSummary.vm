@@ -12,7 +12,7 @@ Located at ($x, $y) on level $level of $station station
 <ul>
 #foreach($p in $pets)
     ##<li>$o.type named $o.name in brood $o.brood (owned by $o.owner)
-    <li><a href="viewCritter.jsp?id=${p.id}">$p.name</a></li>
+    <li><a href="viewCritter.jsp?id=${p.id}">$p.name</a> (brood $p.brood)</li>
 #end
 </ul>
 

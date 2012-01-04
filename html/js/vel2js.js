@@ -567,7 +567,9 @@ t.p('    <li><a href="viewCritter.jsp?id=');
 t.p( p.id);
 t.p('">');
 t.p( p.name);
-t.p('</a></li>');
+t.p('</a> (brood ');
+t.p( p.brood);
+t.p(')</li>');
 }
 velocityCount = 0;
 t.p('</ul><form action="broadcastLocation">    <input type="hidden" name="locid" value="');

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.json.*;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.*;
 import invasion.util.*;
 import java.sql.*;
 
@@ -21,11 +22,11 @@ public class BroodManager
 
     public final static String KEY = BroodManager.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
-	protected static Map<Integer, Brood> playerBroods = new HashMap<Integer, Brood>();
-	protected static List<Brood> feralBroods = new ArrayList<Brood>();
+	protected static Map<Integer, Brood> playerBroods = new ConcurrentHashMap<Integer, Brood>();
+	protected static List<Brood> feralBroods = new CopyOnWriteArrayList<Brood>();
 	protected static File serializedFileLocation = null;
     //}}}
 
@@ -75,6 +76,10 @@ public class BroodManager
         {
             log.throwing( KEY, "a useful message", e);
             throw new RuntimeException(e);
+        }
+        catch( RuntimeException e)
+        {
+            log.throwing( KEY, "act() threw a runtime exception", e);
         }
         finally
         {

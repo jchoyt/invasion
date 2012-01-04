@@ -133,7 +133,7 @@ public class Critter implements Attacker, Defender
         throws JSONException
     {
         JSONArray ret = new JSONArray();
-        String query = "select c.name, c.id, hp, hpmax from critters c join brood b on c.brood = b.id join crittertype t on t.id=c.typeid where b.location =?";
+        String query = "select c.name, c.id, hp, hpmax, brood from critters c join brood b on c.brood = b.id join crittertype t on t.id=c.typeid where b.location =?";
         InvasionConnection conn = null;
         ResultSet rs = null;
         try
@@ -146,6 +146,7 @@ public class Critter implements Attacker, Defender
                 obj.put("name", rs.getString("name"));
                 obj.put("id", rs.getString("id") );
                 obj.put("hp", Alt.calcHpCategory( rs.getInt("hp"), rs.getInt("hpmax") ) );
+                obj.put("brood", rs.getString("brood"));
                 ret.put(obj);
             }
             DatabaseUtility.close(rs);

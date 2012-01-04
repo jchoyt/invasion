@@ -149,8 +149,9 @@ public class Brood
         buildTargetList( conn );
         if( ownerId < 1 && targetList.size() == 0 ) //move feral broods (not player broods) if no targets to attack
         {
+            //TODO only move to valid destinations
             int dir = (int)(Math.random() * 8);
-            // log.finer( "Brood " + id + " had no targets.  Moving in direction " + dir);
+            log.finer( "Brood " + id + " had no targets.  Moving in direction " + dir);
             query = "select id from location l where (station, level, x, y) in (select station, level, x + " + MoveServlet.xdelta[dir] + ", y + " + MoveServlet.ydelta[dir] + " from location s where id=?)";
             int oldloc = location;
             try
@@ -161,13 +162,15 @@ public class Brood
                     location = rs.getInt(1);
                 }
                 DatabaseUtility.close(rs);
-                if(!update( pConn ))
+                if(update( pConn ))
+                {
+                    pcs.firePropertyChange( KEY, oldloc, this );
+                }
+                else
                 {
                     log.severe("Failed to update the brood after movement.  Things will be ... inconsistent.");
                     return;
                 }
-                else
-                    pcs.firePropertyChange(KEY, oldloc, location);
             }
             catch(SQLException e)
             {
@@ -196,15 +199,22 @@ public class Brood
                         b = BroodManager.getFeralBrood( broodId );
                         BroodManager.addBrood( b );
                     }
-                    if( b.getPowerRating() > this.getPowerRating() )
+
+                    //merge if total size will be < 4-7
+                    if( ( b.members.size() + members.size() + (Math.random()*3 ) ) < 8 )
                     {
-                        this.mergeInto(pConn, b);
-                        break;
+                        if( b.getPowerRating() > this.getPowerRating() )
+                        {
+                            this.mergeInto(pConn, b);
+                            //break;
+                        }
+                        else  //merge the new brood into this one
+                        {
+                            b.mergeInto(pConn, this);
+                        }
                     }
-                    else  //merge the new brood into this one
-                    {
-                        b.mergeInto(pConn, this);
-                    }
+                    else
+                        log.finer("Not merging broods " + id + " and " + b.id + " because the size would be " + (b.members.size() + members.size()));
                 }
                 DatabaseUtility.close(rs);
             }
@@ -221,11 +231,15 @@ public class Brood
         //rebuild target list to see if there's someone to attack in the *new* location
         buildTargetList( conn );
         //check for stuff to attack
+        //TODO move these to ATTACK thread
         if( targetList.size() > 0 )
         {
+            log.finer( "Brood " + id + " preparing to attack - there are " + targetList.size() + " targets.");
+            active = true;
             for( Critter c : members )
             {
                 //TODO - make these focused attacks
+                //TODO - stop attacking when the target is dead - maybe - check Critter attack and if it's smart enough to stop attacking when someone is dead
                 int randomTarget = (int) (Math.random() * targetList.size() );
                 c.attack( targetList.get(randomTarget), conn );
             }
@@ -275,11 +289,11 @@ public class Brood
                 }
                 DatabaseUtility.close(rs);
             } */
-            // rank targets.  Higher attractiveness for lower armor and them dishing out higher damage per "round"
+            // TODO rank targets.  Higher attractiveness for lower armor and them dishing out higher damage per "round"
 
-            // max 3 brood members per target
+            // TODO max 3 brood members per target
 
-            // figure out best way to defend brood owner
+            // TODO figure out best way to defend brood owner
             // log.finer("Brood " + id + " has a list of " + targetList.size() + " targets to choose from." );
 
         }
@@ -405,6 +419,7 @@ public class Brood
 	public void setTargetList(List<Defender> targetList) { this.targetList = targetList; }
 	public boolean getActive() { return this.active; }
 	public void setActive(boolean active) { this.active = active; }
+	public int getSize() { return this.members.size(); }
     //}}}
 
 }
