@@ -388,6 +388,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         throws SQLException
     {
         log.entering(KEY, "attackWithFirearm");
+        //check if you have ammo BEFORE the shot - reload if possible
+        if(!checkReload(conn))
+            return;
         int apIncrement = 1;
         int attackLevel = firearmsAttackLevel;
         int damageBounus = 0;
@@ -412,8 +415,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         }
         for(int i = 0; i < shots; i++)
         {
-            //check if you have ammo BEFORE the shot - reload if possible
-            checkReload(conn);
             //check for misfire
             if( Math.random() < equippedWeapon.getMods().getMisfireRate() )
             {
@@ -1071,24 +1072,25 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Checks the equipped weapon and reloads it if necessary.  Gives an appropriate messages.
-     * @param
-     * @return
+     * @param conn valid DB connection
+     * @return true if OK to shoot, false if out of ammo
      *
      */
-     protected void checkReload( InvasionConnection conn )
+     protected boolean checkReload( InvasionConnection conn )
         throws SQLException
      {
-        if( equippedWeapon.getAmmoleft() == 0 )
+        if( equippedWeapon.getAmmoleft() < 1 )
         {
             String reloadResult = invasion.servlets.Recharge.rechargeItem( conn, this, equippedWeapon );
             if( reloadResult != null )
             {
                 new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You don't have anything to reload it with." );
-                return;
+                return false;
             }
             else
                 new Message( conn, id, Message.NORMAL, "Your weapon is out of ammunition.  You reload your weapon." );
         }
+        return true;
      }
 
 
