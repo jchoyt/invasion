@@ -1,5 +1,5 @@
 [BCF] 
-<insert link to issue tracker if applicable>
+#<insert link to issue tracker if applicable>
 # [B] - Bug fix
 # [F] - Feature addition
 # [C] - other Change (typos, etc.)
