@@ -1,3 +1,0 @@
-[B] Broods now moving and merging and attacking on the tick [C] Put cap on the number of ticks that can be run [C] Added code for new RNG if it becomes necessary
-[F] Added current shields/armor to map index http://soulcubes.com/issues/16/indicate-current-defense-status-character-info
-[C] Reduced respawn rates for minor critters
