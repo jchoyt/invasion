@@ -55,7 +55,7 @@
             %>
             </tbody>
         </table>
-        <a href="newFaction.html">Create a mew faction</a>
+        <a href="newFaction.html">Create a mew faction</a> | <a href="javascript: history.go(-1)">Back</a>
     </center>
 </body>
 </html>
