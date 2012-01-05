@@ -154,11 +154,25 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
                         }
                     });
 
+                    $('#quitdialog').dialog({
+                        autoOpen: false,
+                        width: 400,
+                        buttons: {
+                            "Cancel": function() {
+                                $(this).dialog("close");
+                            },
+                            "Yes": function() {
+                                $("#confirmquit").submit();
+                            }
+                        }
+                    });
+
                     // set up accordion
                     $("#accordion").accordion({ header: "h3" });
 
-                    //set up join button
+                    //set up join or quit button
                     $("#joinbutton").button().click(function() { $('#dialog').dialog('open'); });;
+                    $("#quitbutton").button().click(function() { $('#quitdialog').dialog('open'); });;
 
                 });
             </script>
@@ -203,8 +217,13 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
                             && alt.getFactionId() != thisFaction.getId()  //not already in the faction
                         )
                         {
-                            %><br/><button id="joinbutton">Join <%=thisFaction.getName()%></button>
-                      <%}%>
+                           out.write( "<br/><button id=\"joinbutton\">Join " + thisFaction.getName() + "</button>" );
+                        }
+                        else if( alt != null && alt.getFactionId() == thisFaction.getId() )
+                        {
+                            out.write( "<br/><button id=\"quitbutton\">Quit " + thisFaction.getName() + "</button>" );
+                        }
+                    %>
                 </div>
             </div>
 
@@ -223,10 +242,15 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
             </center>
 
             <!-- ui-dialog -->
-            <div id="dialog" title="Skill Purchase Attempt" style="text-align:center;">
+            <div id="dialog" title="Join Faction Attempt" style="text-align:center;">
                 Are you sure you want to join <%=thisFaction.getName()%>?
                 <form id="confirmjoin" action="map/joinFaction">
                     <input type="hidden" name="factionid" value="<%=thisFaction.getId()%>"/>
+                </form>
+            </div>
+            <div id="quitdialog" title="Quit Faction Attempt" style="text-align:center;">
+                Are you sure you want to join <%=thisFaction.getName()%>?
+                <form id="confirmquit" action="map/quitFaction">
                 </form>
             </div>
         </body>
