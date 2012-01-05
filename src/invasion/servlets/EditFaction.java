@@ -57,13 +57,13 @@ public class EditFaction extends HttpServlet
         InvasionConnection conn = null;
         try
         {
-            int ammenity = Integer.parseInt( newAmmenity );
             if( description != null )
             {
                 alt.getFaction().setDescription( description );
             }
             else if( newAmmenity != null )
             {
+                int ammenity = Integer.parseInt( newAmmenity );
                 //TODO check for prestige to pay for it
                 //TODO check to make sure you don't already HAVE it
                 //TODO loookup ammenity and fix cost (4) below

@@ -204,7 +204,7 @@ public class Faction
     public boolean update( InvasionConnection conn )
     {
         log.entering(KEY, "update");
-        String query = "update factions set description=?, amenities=?, open=? where id=?";
+        String query = "update factions set description=?, ammenities=?, open=? where id=?";
 
         int count = conn.psExecuteUpdate( query, "Error updating faction in the database", description, ammenities, true, id );
         log.finer("query done");
