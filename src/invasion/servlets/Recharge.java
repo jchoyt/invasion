@@ -16,7 +16,7 @@ import java.sql.*;
 import org.json.*;
 
 /**
- *
+ *  Servlet to recharge Energy Packs and weapons/shields
  *
  * @author     jchoyt
  * @created
@@ -40,7 +40,7 @@ public class Recharge extends HttpServlet
     }
 
     /**
-     *  Description of the Method
+     *  Racharges an Energy Pack
      *
      */
     @Override
@@ -104,7 +104,7 @@ public class Recharge extends HttpServlet
     }
 
     /**
-     * Performs the recharge
+     * Performs the recharge of a weapon
      * @param
      * @return  null if successful, otherwise return an error message suitable for the user to see
      *
@@ -147,6 +147,7 @@ public class Recharge extends HttpServlet
                 {
                     i.setAmmoleft( it.getCapacity()  );
                 }
+                alt.setEquippedShield( i );
             }
             else
                 return "You can't figure out how to attach the energy pack to that.";
