@@ -15,7 +15,7 @@ public class Critter implements Attacker, Defender
 {
     public final static String KEY = Critter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
+    // static{log.setLevel(Level.FINER);}
 
     //{{{ Constructors
     //}}}
