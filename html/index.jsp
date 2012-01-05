@@ -30,7 +30,7 @@
                 out.write(" | <a href=\"" + WebUtils.BASE + "/admin\">Admin area</a>");
             }
         %>
-        <br/><a href="http://soulcubes.com/boards" target="_blank">Forums</a> | <a href="http://soulcubes.com/docs" target="_blank">Wiki</a>
+        <br/><a href="http://soulcubes.com/boards" target="_blank">Forums</a> | <a href="http://soulcubes.com/docs" target="_blank">Documentation</a>
     </center>
 </body>
 </html>
