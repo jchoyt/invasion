@@ -435,8 +435,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                         Stats.addChange(id, Stats.DAMTAKEN, damage);
                         //notify everyone else in the area
                         Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
-                            Constants.getHisHers( gender, false) + " weapon but it short circuited.  You watch in horror as half " +
-                            Constants.getHisHers( gender, false) + " torso is absolutely torched - there wasn't even time for " +
+                            Constants.getHisHer( gender, false) + " weapon but it short circuited.  You watch in horror as half " +
+                            Constants.getHisHer( gender, false) + " torso is absolutely torched - there wasn't even time for " +
                             Constants.getHimHer( gender, false) + " to scream.", id);
                         lastHurtBy = 0;
                         kill( conn, null );
@@ -449,8 +449,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                         Stats.addChange(id, Stats.DAMTAKEN, damage);
                         //notify everyone else in the area
                         Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
-                            Constants.getHisHers( gender, false) + " weapon but it short circuited.  The released energy dances over " +
-                            Constants.getHisHers( gender, false) + " body.  You can only watch while " +
+                            Constants.getHisHer( gender, false) + " weapon but it short circuited.  The released energy dances over " +
+                            Constants.getHisHer( gender, false) + " body.  You can only watch while " +
                             Constants.getHeShe( gender, false) + " screams in pain.", id);
                     }
                     equippedWeapon.setAmmoleft(0);
@@ -472,8 +472,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                         Stats.addChange(id, Stats.DAMTAKEN, damage);
                         //notify everyone else in the area
                         Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
-                            Constants.getHisHers( gender, false) + " weapon but it blew back into  " +
-                            Constants.getHisHers( gender, false) + " face.  With a curdled scream, " +
+                            Constants.getHisHer( gender, false) + " weapon but it blew back into  " +
+                            Constants.getHisHer( gender, false) + " face.  With a curdled scream, " +
                             Constants.getHeShe( gender, false) + " crumples to the ground, dead.", id);
                         lastHurtBy = 0;
                         kill( conn, null );
@@ -486,8 +486,8 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                         Stats.addChange(id, Stats.DAMTAKEN, damage);
                         //notify everyone else in the area
                         Message.locationBroadcast( conn, location, Message.NORMAL, name + " tried to fire " +
-                            Constants.getHisHers( gender, false) + " weapon but it blew back into  " +
-                            Constants.getHisHers( gender, false) + " face.", id);
+                            Constants.getHisHer( gender, false) + " weapon but it blew back into  " +
+                            Constants.getHisHer( gender, false) + " face.", id);
                     }
                     equippedWeapon.setAmmoleft( equippedWeapon.getAmmoleft() - 1 );
                     checkReload(conn);

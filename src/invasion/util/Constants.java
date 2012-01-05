@@ -91,7 +91,7 @@ public class Constants
      * @return
      *
      */
-    public static String getHisHers( char gender, boolean capiltalized )
+    public static String getHisHer( char gender, boolean capiltalized )
     {
         switch( gender )
         {
@@ -102,9 +102,9 @@ public class Constants
                     return "his";
             default:
                 if(capiltalized)
-                    return "Hers";
+                    return "Her";
                 else
-                    return "hers";
+                    return "her";
         }
     }
 
