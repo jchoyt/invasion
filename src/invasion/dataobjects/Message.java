@@ -175,7 +175,7 @@ public class Message  implements java.io.Serializable {
     public static int locationBroadcast(InvasionConnection conn, int locid, int type, String message)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where location=?";
-        return conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, message, type, locid );
+        return conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, EscapeChars.forHTML(message), type, locid );
     }
 
     /**
@@ -184,7 +184,7 @@ public class Message  implements java.io.Serializable {
     public static int locationBroadcast(InvasionConnection conn, int locid, int type, String message, int exceptAlt)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where location=? and id != ?";
-        return conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, message, type, locid, exceptAlt );
+        return conn.psExecuteUpdate( query, "Error broadcasting message to location " + locid, EscapeChars.forHTML(message), type, locid, exceptAlt );
     }
 
     /**
@@ -193,7 +193,19 @@ public class Message  implements java.io.Serializable {
     public static int stationBroadcast(InvasionConnection conn, int station, int type, String message)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where station=?";
-        return conn.psExecuteUpdate(query, "Error broadcasting to the entire station", message, type, station);
+        return conn.psExecuteUpdate(query, "Error broadcasting to the entire station", EscapeChars.forHTML(message), type, station);
+    }
+
+    /**
+     * Inserts a message to every member of the given faction
+     * @param
+     * @return
+     *
+     */
+    public static int stationBroadcast(InvasionConnection conn, int factionid, String message)
+    {
+        String query = "insert into messages (message, type, altid) select ?, ?, id from alt where factionid=?";
+        return conn.psExecuteUpdate(query, "Error broadcasting to the faction " + factionid, EscapeChars.forHTML(message), BROADCAST, factionid);
     }
 
     public JSONObject toJson()

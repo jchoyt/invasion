@@ -212,7 +212,20 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
                     <br/><b>Prestige:</b> <%=thisFaction.getPrestige()%>
                     <br/><b>Created by:</b> <%=Alt.load(conn, thisFaction.getCreatedby()).getName()%>
                     <br/><b>Stronghold Ammenities: </b>
-                    <%  if( alt != null //a character is logged in}
+                    <%
+                        //if lt. or leader, allow send faction messages
+                        if( alt != null && alt.getFactionId() == thisFaction.getId() && alt.getFactionrank() > Constants.FACTION_MEMBER )
+                        {
+                            %>
+                            <form action="factionMessage">
+                            Send a message to the entire faction:<br/>
+                            <input type="text" width="100px" name="words"/><input type="submit"/>
+                            </form>
+                            <%
+                        }
+
+                        //add join or quit button
+                        if( alt != null //a character is logged in}
                             && ( alt.getRace() == Constants.HUMAN || alt.getRace() == thisFaction.getType() )  //correct race)
                             && alt.getFactionId() != thisFaction.getId()  //not already in the faction
                         )
