@@ -71,7 +71,7 @@ $(document).ready( function() {
         autoOpen: false,
         width: 400,
         buttons: {
-            "Cancel": function() {
+            "Done": function() {
                 $(this).dialog("close");
             },
             "Submit": function() {
