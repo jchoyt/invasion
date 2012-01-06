@@ -815,7 +815,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             ret.cp = rs.getInt("cp");
             ret.ip = rs.getInt("ip");
             ret.ap = rs.getInt("ap");
-            ret.hpmax = rs.getInt("apmax");
+            ret.apmax = rs.getInt("apmax");
             ret.ticksalive = rs.getInt("ticksalive");
             log.finer("in Alt.load(), id is " + id);
             DatabaseUtility.close(rs);
