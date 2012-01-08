@@ -26,6 +26,8 @@ public class Constants
             log.throwing(KEY, "error setting up Constants", e) ;
         }
     }
+    //maximun number of 'wearable' itmes a character can equip
+    public final static int MAX_WEARABLE = 8;
 
     public final static int DEAD_LOCATION = Integer.parseInt("-DEAD", 16);  //-57005
 

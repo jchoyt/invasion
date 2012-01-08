@@ -78,6 +78,7 @@ public class Equip extends HttpServlet
             if( i.getLocid() != alt.getId() )
             {
                 response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=You do not own that.");
+                return;
             }
 
             if( it.getType().equals( "armor" ) )
@@ -149,10 +150,24 @@ public class Equip extends HttpServlet
      *   @param
      */
     protected void eqiupWearable( InvasionConnection conn, Alt alt, Item item )
+        throws SQLException
     {
-
+        ResultSet rs = null;
         //update the item
-        String query = "update item set equipped='t' where itemid = ?";
+        String query = "select count(*) from item i join itemtype it on (i.typeid=it.typeid) where type='wearable' and equipped=true and locid=?";
+        rs = conn.psExecuteQuery( query, "", alt.getId() );
+        int clothingCount = -1;
+        if( rs.next() )
+        {
+            clothingCount = rs.getInt(1);
+        }
+        DatabaseUtility.close(rs);
+        if( clothingCount >= Constants.MAX_WEARABLE )
+        {
+            new Message( conn, alt.getId(), Message.SELF, "You try to find somewhere to put your  " + item.getItemtype().getName() + " but fail.");
+            return;
+        }
+        query = "update item set equipped='t' where itemid = ?";
         int count = conn.psExecuteUpdate(query, "Error equipping wearable in database", item.getItemid());
         alt.getClothing().add( item.getItemtype().getName() );
         //now decrement AP
