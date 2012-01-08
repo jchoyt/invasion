@@ -341,6 +341,11 @@ function showThrowItem(id)
     return false;
 }
 
+function show_pet_owner(id)
+{
+    $("#att-pet-box").html("This pet is feral.");
+};
+
 function show_pet_target(id)
 {
     for (var pet_index=0;  pet_index<window.lastPoll.pets.length; pet_index++)
@@ -354,7 +359,6 @@ function show_pet_target(id)
         }
     }
 };
-
 
 function recharge(id)
 {
