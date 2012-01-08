@@ -70,6 +70,7 @@ public class CreateNewCharacter extends HttpServlet
         if( charname.length() < 2 )
         {
             response.sendRedirect( WebUtils.BASE + "index.jsp?error=Your character's name should have at least 2 characters, don't you think?  It's just cruel otherwise.  Try again." );
+            return;
         }
         String skill_string = WebUtils.getRequiredParameter( request, "skill");
         String station_string = WebUtils.getRequiredParameter( request, "station");
