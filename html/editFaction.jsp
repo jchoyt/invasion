@@ -91,8 +91,8 @@
 
                     <ul id="neutral" class="connectedSortable">
                         <%
-                        query = "select name, f.id from factions f where id > 0 and id not in (select target from politics where setter=?) order by name;";
-                        rs = conn.psExecuteQuery( query, "", alt.getFaction().getId() );
+                        query = "select name, f.id from factions f where id > 0 and id not in (select target from politics where setter=?) and id != ? order by name;";
+                        rs = conn.psExecuteQuery( query, "", alt.getFaction().getId(), alt.getFaction().getId() );
                         while( rs.next() )
                         {
                             out.write("<li id=" + rs.getString("id") + " class=\"ui-state-highlight\">" + rs.getString( "name" ) + "<li>\n" );

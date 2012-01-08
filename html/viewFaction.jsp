@@ -46,12 +46,12 @@ protected void printMemberList( InvasionConnection conn, JspWriter out, Faction 
  */
 protected void printPolitics( InvasionConnection conn, JspWriter out, Faction faction)
 {
-    String query = "select name, setting from politics p join factions f on p.target=f.id where setter=? order by setting desc";
+    String query = "select name, setting from politics p join factions f on p.target=f.id where setter=? and f.id!=? order by setting desc";
     ResultSet rs = null;
     try
     {
         conn = new InvasionConnection();
-        rs = conn.psExecuteQuery(query, "Error pulling politics for " + faction.getName(), faction.getId() );
+        rs = conn.psExecuteQuery(query, "Error pulling politics for " + faction.getName(), faction.getId(), faction.getId() );
         String name = null;
         out.print("<b><u>Factions Considered Friendly</u></b><br/>");
         boolean switched = false;
