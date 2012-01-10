@@ -18,7 +18,7 @@ import javax.servlet.ServletContextListener;
 
 
 /**
- *  Class to process Stats on shutdown
+ *  Class to kill the tick timers on application shutdown
  */
 @WebListener
 public class KillTickListener implements ServletContextListener

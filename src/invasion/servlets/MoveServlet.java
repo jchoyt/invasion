@@ -86,6 +86,8 @@ public class MoveServlet extends HttpServlet
                 a.setLocationType( rs.getInt("typeid") );
                 a.update(conn);
 
+                ActionLog.addAction( a.getId(), ActionLog.ENTERED, a.getLocation() );
+
                 if( a.getLocationType() == LocationType.CORRIDOR )
                 {
                     moveCost = 0;

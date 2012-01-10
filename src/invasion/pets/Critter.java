@@ -299,6 +299,8 @@ public class Critter implements Attacker, Defender
             }
             alt.update();
             Stats.addChange( lasthurtby, Stats.KILLS, 1);
+            ActionLog.addAction( lasthurtby, ActionLog.KILLED, id );
+
             if( result == null )
             {
                 new Message(conn, lasthurtby, Message.NORMAL, message );
@@ -354,6 +356,7 @@ public class Critter implements Attacker, Defender
         /* check to see if the target ran off */
         try
         {
+            ActionLog.addAction( id, ActionLog.ATTACKED, defender.getId() );
             // check if you hit
             if( Math.random() < attackAccuracy )
             {

@@ -252,6 +252,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 alerts.put( Poll.createErrorAlert("You must equip a weapon before attacking with it.") );
                 return alerts;
             }
+            ActionLog.addAction( id, ActionLog.ATTACKED, defender.getId() );
             if( equippedWeapon.getItemtype().getUsesammo() )
             {
                 attackWithFirearm( conn, defender );
@@ -260,7 +261,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             {
                 attackWithMelee( conn, defender );
             }
-
             //TODO check for Goliath
 
 
@@ -749,6 +749,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             //broadcast killer message
             Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killer.getName() + " killed " + name + "!  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.", killerid);
             //TODO IP adjust if others are of the same race (or faction?)
+            ActionLog.addAction( killerid, ActionLog.KILLED, id );
         }
         else
         {

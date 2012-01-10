@@ -47,6 +47,7 @@ public class TickTask extends TimerTask
             conn = new InvasionConnection();
             log.entering( KEY, "run" );
             processStats();
+            processActionLog();
             ticksAlive();
             checkLevels();
             checkSanity();
@@ -138,6 +139,30 @@ public class TickTask extends TimerTask
         {
             StringWriter w = new StringWriter();
             Stats.writeLog(w);
+            log.warning( w.toString() );
+            return;
+        }
+    }
+
+    /**
+     * rotaties the stats tracker and logs them to file prior to processing
+     * @param
+     * @return
+     *
+     */
+    private void processActionLog()
+    {
+        try
+        {
+            ActionLog.process( conn );
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            e.getNextException().printStackTrace();
+            log.throwing(KEY, "Error processing the ActionLog",  e.getNextException());
+            StringWriter w = new StringWriter();
+            ActionLog.writeLog(w);
             log.warning( w.toString() );
             return;
         }

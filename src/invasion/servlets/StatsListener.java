@@ -19,7 +19,7 @@ import javax.servlet.ServletContextListener;
 
 
 /**
- *  Class to process Stats on shutdown
+ *  Class to process Stats and the ActionLog on shutdown
  */
 @WebListener
 public class StatsListener implements ServletContextListener
@@ -48,17 +48,20 @@ public class StatsListener implements ServletContextListener
         {
             conn = new InvasionConnection();
             Stats.process(conn);
+            ActionLog.process(conn);
         }
         catch (SQLException e)
         {
             try
             {
                 Stats.writeLog(new FileWriter( context.getRealPath( "/" ) + "/stats"+System.currentTimeMillis() ) );
+                ActionLog.writeLog( new FileWriter( context.getRealPath( "/" ) + "/actionlog"+System.currentTimeMillis() ) );
             }
             catch(Exception ex)
             {
                 StringWriter w = new StringWriter();
                 Stats.writeLog(w);
+                ActionLog.writeLog(w);
                 log.warning( w.toString() );
             }
             log.throwing(KEY, "body", e);

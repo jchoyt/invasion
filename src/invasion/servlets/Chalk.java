@@ -97,11 +97,13 @@ public class Chalk extends HttpServlet
             ps.execute();
             DatabaseUtility.close(ps);
             Message.locationBroadcast( conn, wazzit.getAlt().getLocation(), Message.NORMAL, wazzit.getAlt().getName() + " " + action + " something on the wall.", wazzit.getAlt().getId() );
+            ActionLog.addAction( wazzit.getAlt().getId(), ActionLog.WROTE, wazzit.getAlt().getLocation() );
+
         }
         catch (SQLException e)
         {
             Logger log = Logger.getLogger( "chalkProcess.jsp" );
-            log.log(Level.WARNING, "Error adding writintg to the wall", e);
+            log.log(Level.WARNING, "Error adding writing to the wall", e);
         }
         finally
         {
