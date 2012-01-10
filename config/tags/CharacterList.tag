@@ -33,7 +33,7 @@
         int ticksalive = rs.getInt("ticksalive");
         if( sname.equals("Dead") )
         {
-            out.write( "</td><td colspan=\"2\">Dead</td>");
+            out.write( "</td><td colspan=\"2\"><a class=\"link_button\" href=\"" + WebUtils.BASE + "connect?id="+ id +"\">Dead</td>");
         }
         else if( rs.getInt( "location") == -1337 )
         {
@@ -43,7 +43,7 @@
         {
             out.write( "</td><td>");
             out.write( rs.getString("loc"));
-            out.write( "</td><td>Clone Growing (" + (-1 * ticksalive) + " ticks)");
+            out.write( "</td><td><a class=\"link_button\" href=\"" + WebUtils.BASE + "connect?id="+ id +"\">Clone Growing (" + (-1 * ticksalive) + " ticks)");
         }
         else if( ticksalive == 0 )
         {

@@ -1,10 +1,9 @@
 <!DOCTYPE HTML>
 <%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*, java.io.*" %><%@
     taglib prefix="tags" tagdir="/WEB-INF/tags" %><%!
-    public final static String KEY = WebUtils.BASE + "map/index.jsp";
+    public final static String KEY = WebUtils.BASE + "map/dead.jsp";
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}%><%
-    log.finer("entering /map/index.jsp");
     Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
     Alt alt = wazzit.getAlt();
     if( alt == null )
@@ -19,9 +18,10 @@
 
     //set up db connection
     InvasionConnection conn = null;
+    StringWriter pollJson = null;
     try{
         conn = new InvasionConnection();
-        StringWriter pollJson = new StringWriter();
+        pollJson = new StringWriter();
         JSONArray alerts = new JSONArray();
         Poll.fullPoll( conn, pollJson, wazzit, alerts );
         JSONObject obj = new JSONObject( pollJson.toString() );
@@ -73,6 +73,7 @@
                 VelocityUtil.applyTemplate(obj, "stats.vm", out);
             %></span></span>
             <span style="float:right;margin-right:10px"><span id="poll-indicator"><img alt="" src="${images}/transmit.gif"/></span> Menu<div class="pop">
+                    <p><a href="${base}factions.jsp">Faction List</a></p>
                     <p><a href="${base}disconnect">Disconnect</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage periodic poll</a></p>
@@ -148,21 +149,14 @@
 
     <%--{{{ dialogs --%>
     <div id="inv-mgmt-dlg" title="Inventory Management">
-        <form>
-            <select name="action">
-                <option>Drop</option>
-                <option>Place on Ground</option>
-                <option>Give to...</option>
-                <option>Put in locker...</option>
-                <option>Put in faction safe</option>
-            </select>
-            <br/>
-            <select style="float:left;" name="itemid" id="inv-list" size="10" multiple="true">
-                <%
-                    VelocityUtil.applyTemplate(obj, "inventoryManagement.vm", out);
-                %>
-            </select> * Ctrl+click to select multiple items to operate on at once.
-        </form>
+        <%
+            VelocityUtil.applyTemplate(obj, "inventoryManagement.vm", out);
+        %>
+    </div>
+    <div id="equip-improvised" title="Equip Improvised Weapon">
+        <%
+            VelocityUtil.applyTemplate(obj, "equipImprovised.vm", out);
+        %>
     </div>
     <%--}}}--%>
     <%
@@ -180,24 +174,21 @@
     %>
 	<%--{{{  javascript --%>
 	<script type="text/javascript">
+
 		// Never try to jquery without making sure the DOM is ready. Ready() ensures that...once working, move this stuff to map.js
 		$(document).ready(function() {
-			$("#amessages").scrollTop($("#amessages").attr("scrollHeight"));
+			$("#amessages").prop({ scrollTop: $("#amessages").prop("scrollHeight") });
 			// Scroll the message pane.
 
 			// Dialog
-            $('#inv-mgmt-dlg').dialog({
+            $('#equip-improvised').dialog({
                 autoOpen: false,
-                width: 400,
-                buttons: {
-                    "Cancel": function() {
-                        $(this).dialog("close");
-                    },
-                    "Submit": function() {
-                        alert('Do ajax submit');
-                    }
-                }
+                width: 400
             });
+
+            window.lastPoll = <%=pollJson%>;
+
+
 		});
 	</script>
     <%--}}}--%>

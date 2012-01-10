@@ -80,13 +80,13 @@ public class Connect extends HttpServlet
                 return;
             }
             Whatzit wazzit = new Whatzit(altid);
+            request.getSession().setAttribute( Whatzit.KEY,  wazzit );
             //check if dead
             if( alt.getLocation() == Constants.DEAD_LOCATION || alt.getHp() < 1 )
             {
                 response.sendRedirect( WebUtils.BASE + "map/dead.jsp");
                 return;
             }
-            request.getSession().setAttribute( Whatzit.KEY,  wazzit );
             response.sendRedirect( WebUtils.BASE + "map/index.jsp" );
         }
         catch(Exception e)

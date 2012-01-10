@@ -249,8 +249,6 @@
             VelocityUtil.applyTemplate(obj, "equipImprovised.vm", out);
         %>
     </div>
-
-
     <%--}}}--%>
     <%
         }
