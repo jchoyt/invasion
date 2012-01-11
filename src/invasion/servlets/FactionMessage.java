@@ -67,7 +67,7 @@ public class FactionMessage extends HttpServlet
         try
         {
             conn = new InvasionConnection();
-            Message.stationBroadcast( conn, alt.getFactionId(), message );
+            Message.factionBroadcast( conn, alt.getFactionId(), message );
             response.sendRedirect( WebUtils.BASE + "map/index.jsp" );
         }
         catch(SQLException e)

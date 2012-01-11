@@ -202,7 +202,7 @@ public class Message  implements java.io.Serializable {
      * @return
      *
      */
-    public static int stationBroadcast(InvasionConnection conn, int factionid, String message)
+    public static int factionBroadcast(InvasionConnection conn, int factionid, String message)
     {
         String query = "insert into messages (message, type, altid) select ?, ?, id from alt where factionid=?";
         return conn.psExecuteUpdate(query, "Error broadcasting to the faction " + factionid, EscapeChars.forHTML(message), BROADCAST, factionid);
