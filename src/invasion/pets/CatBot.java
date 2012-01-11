@@ -119,37 +119,37 @@ public class CatBot extends Critter
         super.kill(conn, result);
         if( Math.random() < 0.1 )  //TODO - change back to .25
         {
-            Message.locationBroadcast(conn, location, Message.EFFECT, "You watch in horror as various chunks of your target start to twitch and pulsate." +
-                "They morph into smaller versions of the parent creature and run off to other parts of the station." );
+            Message.locationBroadcast(conn, location, Message.EFFECT, "You watch in horror as the larger CatBot bits start to twitch and shuffle towards one another." +
+                "They reassemble into smaller versions of the parent bot and stand up to join their bretheren.  MEOW!" );
             //get the station
-            int station = -1;
-            String query = "select station from location where id=?";
-            ResultSet rs = null;
-            try
-            {
-                log.finer("Adding gremlins to station beloinging to location " + location );
-                conn = new InvasionConnection();
-                rs = conn.psExecuteQuery(query, "Error message", location);
-                while(rs.next())
-                {
-                    station = rs.getInt("station");
-                }
-                log.finer("Station looked up is " + station );
-                DatabaseUtility.close(rs);
-            }
-            catch(SQLException e)
-            {
-                log.throwing( KEY, "a useful message", e);
-                throw new RuntimeException(e);
-            }
-            finally
-            {
-                DatabaseUtility.close(rs);
-            }
+            // int station = -1;
+            // String query = "select station from location where id=?";
+            // ResultSet rs = null;
+            // try
+            // {
+            //     log.finer("Adding gremlins to station beloinging to location " + location );
+            //     conn = new InvasionConnection();
+            //     rs = conn.psExecuteQuery(query, "Error message", location);
+            //     while(rs.next())
+            //     {
+            //         station = rs.getInt("station");
+            //     }
+            //     log.finer("Station looked up is " + station );
+            //     DatabaseUtility.close(rs);
+            // }
+            // catch(SQLException e)
+            // {
+            //     log.throwing( KEY, "a useful message", e);
+            //     throw new RuntimeException(e);
+            // }
+            // finally
+            // {
+            //     DatabaseUtility.close(rs);
+            // }
 
             for(int i = 0; i < 6; i++)
             {
-                new CatBot(station);
+                new CatBot(brood);
             }
         }
     }

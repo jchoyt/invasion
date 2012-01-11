@@ -84,6 +84,8 @@ public class Critter implements Attacker, Defender
             rs = conn.executeQuery( query );
             rs.next();
             this.id = rs.getInt( "id" );
+            LocationCache.incrementCritters(brood.getLocation());
+
             return true;
         }
         catch(SQLException e)
@@ -308,6 +310,9 @@ public class Critter implements Attacker, Defender
             else
                 result.getAttackerMessages().add( message );
             //TODO - broadcast the kill message
+                        //broadcast killer message
+            Message.locationBroadcast( conn, alt.getLocation(), Message.NORMAL, alt.getName() + " killed " + name + "!  Poor, innocent critter.", alt.getId());
+
         }
         //remove it from the PET database
         String query = "delete from critters where id=" + id;
