@@ -60,7 +60,7 @@ public class Skill implements java.io.Serializable
     public final static String GOLIATH = "Goliath";
     public final static String WHIRLWIND = "Whirlwind";
     public final static String BRUTALITY = "Brutality";
-
+	protected String helplink = null;
     //}}}
 
     //{{{ Constuctors
@@ -88,7 +88,9 @@ public class Skill implements java.io.Serializable
     public void setName(String name) {this.name = name;}
     public int getCost() { return this.cost; }
 	public void setCost(int cost) { this.cost = cost; }
-    //}}}
+    public String getHelplink() { return this.helplink; }
+	public void setHelplink(String helplink) { this.helplink = helplink; }
+	    //}}}
 }
 
 // :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:

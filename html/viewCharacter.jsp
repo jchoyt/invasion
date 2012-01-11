@@ -13,6 +13,10 @@ protected void printHave( Alt thisguy, Skill skill, boolean rootSkill, JspWriter
         out.write( " &raquo " );
     if( Skills.hasSkill( thisguy, skill ) )
     {
+        if( skill.getHelplink() != null )
+        {
+            out.write( "(<a href=\"" + skill.getHelplink() + "\" target=\"_blank\"><span style=\"display:inline-block\" class=\"ui-icon ui-icon-help\"></span></a>) ");
+        }
         out.write( skill.getName() );
         for( Skill s : skill.getChildren() )
         {
@@ -37,6 +41,10 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
     if(!rootSkill)
     {
         out.write( " &raquo " );
+    }
+    else if( skill.getHelplink() != null )
+    {
+        out.write( "(<a href=\"" + skill.getHelplink() + "\" target=\"_blank\"><span style=\"display:inline-block\" class=\"ui-icon ui-icon-help\"></span></a>) ");
     }
     if( Skills.hasSkill( thisguy, skill ) )
     {

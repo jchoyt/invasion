@@ -52,6 +52,7 @@ public class Skills implements java.io.Serializable
                 s.setName(rs.getString("name"));
                 s.setPrereq(rs.getInt("prereqid"));
                 s.setCost(rs.getInt("cost"));
+                s.setHelplink( rs.getString("helplink") );
                 addSkill(s);
                 log.finer("Loaded " + s.getName() );
             }
