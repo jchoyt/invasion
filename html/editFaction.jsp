@@ -172,6 +172,7 @@
                     <br/><input type="submit"/>
                 </form>
             </div>
+            <a href="javascript: history.go(-1)">Back</a>
         </div>
     </body>
 </html>

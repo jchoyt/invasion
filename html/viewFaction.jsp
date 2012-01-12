@@ -170,6 +170,8 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
 
                     // set up accordion
                     $("#accordion").accordion({ header: "h3" });
+                    $("#summary").height($("#accordion").height() + 30 );
+                    console.log($("#accordion"));
 
                     //set up join or quit button
                     $("#joinbutton").button().click(function() { $('#dialog').dialog('open'); });;

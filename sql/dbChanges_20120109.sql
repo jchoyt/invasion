@@ -19,3 +19,5 @@ alter table skills add column helplink text;
 update skills set helplink='http://soulcubes.com/PlayerGuide.html#Firearms' where id=1;
 update skills set helplink='http://soulcubes.com/PlayerGuide.html#Melee' where id=18;
 update skills set helplink='http://soulcubes.com/PlayerGuide.html#Tinkerer' where id=6;
+
+-- ---------------Above this line already applied to prod ----------------------------------
