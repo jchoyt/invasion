@@ -21,3 +21,6 @@ update skills set helplink='http://soulcubes.com/PlayerGuide.html#Melee' where i
 update skills set helplink='http://soulcubes.com/PlayerGuide.html#Tinkerer' where id=6;
 
 -- ---------------Above this line already applied to prod ----------------------------------
+
+--move broods to center of Cy's station
+update brood set location=1037732 where location between 1037612 and 1044011;

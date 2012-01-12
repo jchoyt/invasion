@@ -31,7 +31,7 @@
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
             int spread = (MAP_SIDE)/2;
-            query = "select  id, station, level, x, y, l.name as locname, lt.name as typename, description, cssname from Location l join locationtype lt on (l.typeid = lt.typeid) where x between ? and ? and y between ? and ? and station = ? order by y,x";
+            query = "select  id, station, level, x, y, l.name as locname, lt.name as typename, lt.typeid as typeid, description, cssname from Location l join locationtype lt on (l.typeid = lt.typeid) where x between ? and ? and y between ? and ? and station = ? order by y,x";
             ps = conn.prepareStatement(query);
             ps.setInt(1, x - spread );
             ps.setInt(2, x + spread);
@@ -93,7 +93,7 @@
             out.write(Integer.toString(y*BOX_SIZE) + "px;\" onmouseover=\"shloc('" + cloc);
             out.write("')\">");
             /* movement */
-            if( !Location.UNWALKABLE.contains( rs.getString("typename") ) )
+            if( !Constants.DISALLOWED_LOCATIONS.contains( rs.getInt("typeid") ) )
             {
                 out.write( WebUtils.getMovementClass(boxNum) );
             }

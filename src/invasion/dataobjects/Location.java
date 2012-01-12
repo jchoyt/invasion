@@ -30,15 +30,6 @@ public class Location  implements java.io.Serializable {
     private String name;
     private String description;
     private Set<Alt> alts = new HashSet<Alt>(0);
-    public static final List<String> UNWALKABLE = new ArrayList<String>();
-    static
-    {
-        UNWALKABLE.add("Deep Space");
-        UNWALKABLE.add("Water");
-        UNWALKABLE.add("Bulkhead");
-        UNWALKABLE.add("Window");
-    }
-
 
     //{{{ Constructors
     public Location() { }
