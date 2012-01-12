@@ -748,7 +748,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                 result.getAttackerMessages().add( message );
 
             //give victim death message
-            new Message( conn, id, Message.NORMAL, killer.getName() + " has dealt you a death blow.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
+            new Message( conn, id, Message.NORMAL, killer.getName() + " has dealt you a death blow.  You feel the familiar tingle of your consciousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
             //broadcast killer message
             Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killer.getName() + " killed " + name + "!  This weighs heavily on you...so much death.  As the maintenance bots remove the body, you briefly wonder where the recycled material will end up.", killerid);
             //TODO IP adjust if others are of the same race (or faction?)
@@ -762,7 +762,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             //assume critter is acting on it's own
 
             //give victim death message
-            new Message( conn, id, Message.NORMAL, killer.getName() + " has thrashed you thoroughly.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
+            new Message( conn, id, Message.NORMAL, killer.getName() + " has thrashed you thoroughly.  You feel the familiar tingle of your consciousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
             //broadcast killer message
             Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killer.getName() + " killed " + name + "!  It's always amusing to watch a critter tear someone else apart...until they look at you next.");
             //TODO IP adjust if others are of the same race (or faction?)
@@ -771,7 +771,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
         else if(attacker == null )
         {
             //death message with no killer
-            new Message( conn, id, Message.SELF, "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
+            new Message( conn, id, Message.SELF, "You have died.  You feel the familiar tingle of your consciousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
             //Message.locationBroadcast( conn, deathLoc, Message.NORMAL, name + " died.  Who the hell knows how this happens anymore?");
         }
         else

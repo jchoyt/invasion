@@ -157,7 +157,7 @@ public class Unequip extends HttpServlet
         //now decrement AP
         alt.decrementAp(conn, 1);
         alt.update(conn);
-        new Message( conn, alt.getId(), Message.NORMAL, "You revmoe your " + item.getItemtype().getName() + ".");
+        new Message( conn, alt.getId(), Message.NORMAL, "You remove your " + item.getItemtype().getName() + ".");
     }
 
 
