@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.*;
 import invasion.util.*;
+import invasion.bot.*;
 import invasion.dataobjects.*;
 import java.sql.*;
 import java.beans.*;
@@ -150,16 +151,19 @@ public class Brood
         if( ownerId < 1 && targetList.size() == 0 ) //move feral broods (not player broods) if no targets to attack
         {
             //TODO only move to valid destinations
-            int dir = (int)(Math.random() * 8);
-            log.finer( "Brood " + id + " had no targets.  Moving in direction " + dir);
-            query = "select id from location l where (station, level, x, y) in (select station, level, x + " + MoveServlet.xdelta[dir] + ", y + " + MoveServlet.ydelta[dir] + " from location s where id=?)";
+            query = "select l.typeid, l.id from location l join location l2 on (l.station=l2.station and l.x between l2.x-1 and l2.x+1 and l.y between l2.y-1 and l2.y+1 and l.id!=l2.id) where l2.id=? order by random()";
             int oldloc = location;
             try
             {
                 rs = pConn.psExecuteQuery(query, "Brood movmement not updated", location);
-                if(rs.next())
+                while(rs.next())
                 {
-                    location = rs.getInt(1);
+                    if( Constants.DISALLOWED_LOCATIONS.contains(rs.getInt("typeid") ) )
+                    {
+                        continue;
+                    }
+                    location = rs.getInt("id");
+                    break;
                 }
                 DatabaseUtility.close(rs);
                 if(update( pConn ))
@@ -168,7 +172,13 @@ public class Brood
                 }
                 else
                 {
-                    log.severe("Failed to update the brood after movement.  Things will be ... inconsistent.");
+                    log.severe("Failed to update the brood after movement.  Resyncing.");
+                    List<String> list = LocationCache.verify();
+                    VasionBot.announce("Failed to update the brood after movement.  I had to resync the cache and found " + list.size() + " thing(s) wrong." );
+                    for( String s : list )
+                    {
+                        log.info( s );
+                    }
                     return;
                 }
             }

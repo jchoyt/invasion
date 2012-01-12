@@ -135,7 +135,6 @@
                 out.write("<img src=\"../i/critter-3.png\" style=\"position: absolute; top: 32px; left: 26px;z-index: 3;\"/>");
             }
 
-
             /* metadata - hidden until mouseover */
             out.write("<div style=\"display:none\" id=\"desc-" + cloc + "\">");
             out.write("<strong>Name:</strong> " + rs.getString("locname"));

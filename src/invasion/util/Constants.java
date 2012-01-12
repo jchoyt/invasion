@@ -3,8 +3,11 @@
  */
 package invasion.util;
 
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import invasion.dataobjects.*;
 import org.json.*;
 
 public class Constants
@@ -60,6 +63,17 @@ public class Constants
 	public final static int TIKKUN = 3;
 
 	public final static String[] RACENAMES = { null, "Human", "Tohu", "Tikkun" };
+
+	//places characters and people shouldn't be
+	public final static List<Integer> DISALLOWED_LOCATIONS = new ArrayList<Integer>();
+	static
+	{
+	     DISALLOWED_LOCATIONS.add(LocationType.BULKHEAD);
+         DISALLOWED_LOCATIONS.add(LocationType.WINDOW);
+         DISALLOWED_LOCATIONS.add(LocationType.DEEP_SPACE);
+         DISALLOWED_LOCATIONS.add(LocationType.WATER);
+    };
+
 
     //}}}
 
