@@ -120,9 +120,9 @@ public class Gremlin extends Critter
      * @return
      *
      */
-    public void kill(InvasionConnection conn, CombatResult result) throws SQLException
+    public void kill(Attacker attacker, InvasionConnection conn, CombatResult result) throws SQLException
     {
-        super.kill(conn, result);
+        super.kill(attacker, conn, result);
         if( Math.random() < 0.1 )  //TODO - change back to .25
         {
             Message.locationBroadcast(conn, location, Message.EFFECT, "You watch in horror as the larger gremlin bits start to twitch and pulsate." +

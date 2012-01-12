@@ -96,7 +96,7 @@ public class MoveServlet extends HttpServlet
                 {
                     new Message( conn, a.getId(), Message.SELF, RandomUtilities.pickRandom( deepSpaceDeaths ) );
                     a.setLastHurtBy( 0 );
-                    a.kill( conn, null );
+                    a.kill( null, conn, null );
                     a.setLocation( -1337 );
                     a.update( conn );
                 }
@@ -104,7 +104,7 @@ public class MoveServlet extends HttpServlet
                 {
                     new Message( conn, a.getId(), Message.SELF, RandomUtilities.pickRandom( drowningDeaths ) );
                     a.setLastHurtBy( 0 );
-                    a.kill( conn, null );
+                    a.kill( null, conn, null );
                     a.setLocation( -1337 );
                     a.update( conn );
                 }

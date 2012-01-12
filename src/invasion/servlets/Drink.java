@@ -114,7 +114,7 @@ public class Drink extends HttpServlet
             {
                 new Message( conn, alt.getId(), Message.NORMAL, "Chugging that last one was a mistake.  The world spins; you feel dizzy and fall over.  Slowly your body succumbs to the alcohol and shuts down.  You have died.");
                 alt.setLastHurtBy( 0 );
-                alt.kill(conn, null);
+                alt.kill(null, conn, null);
             }
         }
         catch(Exception e)

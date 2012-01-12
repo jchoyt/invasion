@@ -90,7 +90,7 @@ public class TickTask extends TimerTask
         ResultSet rs = conn.psExecuteQuery( query, "Error checking for those who have died a slow death" );
         while(rs.next())
         {
-            Alt.load( conn, rs.getInt(1) ).kill( conn, null );
+            Alt.load( conn, rs.getInt(1) ).kill( null, conn, null );
         }
         s = conn.getConnection().createStatement();
         //if just died, put body at a random cloning facility

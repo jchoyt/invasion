@@ -58,7 +58,7 @@ public class Smite extends HttpServlet
             Alt alt = Alt.load( conn, altid );
             int count =  conn.psExecuteUpdate(query, "", altid);
             new Message( conn, altid, Message.EFFECT, message );
-            alt.kill( conn, null);
+            alt.kill( null, conn, null);
             //LATER - lock account
         }
         catch(SQLException e)

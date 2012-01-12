@@ -97,13 +97,13 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
      *
      * @param result Conveyor of death messages back to the attacker so they can be reported in the correct order
      */
-    public void kill(CombatResult result)
+    public void kill(Attacker attacker, CombatResult result)
     {
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection();
-            kill( conn, result );
+            kill( attacker, conn, result );
         }
         catch(SQLException e)
         {
@@ -440,7 +440,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                             Constants.getHisHer( gender, false) + " torso is absolutely torched - there wasn't even time for " +
                             Constants.getHimHer( gender, false) + " to scream.", id);
                         lastHurtBy = 0;
-                        kill( conn, null );
+                        kill( this, conn, null );
                     }
                     else
                     { //just hurt
@@ -477,7 +477,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
                             Constants.getHisHer( gender, false) + " face.  With a curdled scream, " +
                             Constants.getHeShe( gender, false) + " crumples to the ground, dead.", id);
                         lastHurtBy = 0;
-                        kill( conn, null );
+                        kill( this, conn, null );
                     }
                     else
                     { //just hurt
@@ -683,7 +683,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
         if( hp < 1 )
         {
-            kill( conn, ret );
+            kill( attacker, conn, ret );
             attacker.setReload(true);
         }
         else if( updateNow )
@@ -698,15 +698,19 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
      *  um....kills off the character.  Sets time till respawn, updates the database, and removes the character from the cache.
      * @param result Conveyor of death messages back to the attacker so they can be reported in the correct order
      */
-    public void kill(InvasionConnection conn, CombatResult result)
+    public void kill(Attacker attacker, InvasionConnection conn, CombatResult result)
     {
         int deathLoc = location;
         hp = 0;
         ip = 0;
         location = Constants.DEAD_LOCATION;
         ap = ap - (level/2);
-        int killerid = lastHurtBy;
         lastHurtBy = 0;
+        int killerid = -1;
+        if( attacker instanceof Alt )
+        {
+            killerid = attacker.getId();
+        }
         update( conn );
         String query = "update alt set ticksalive=0-level where id=?";
         conn.psExecuteUpdate( query, "err", id );
@@ -714,10 +718,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
         // update victim's stat
         Stats.addChange( id, Stats.DEATHS, 1);
-        if( killerid > 0 )
+        if( attacker instanceof Alt )
         {
-            //TODO - make sure killerid is always a characdter....not a critter
-            Alt killer = Alt.load( killerid );
+            Alt killer = (Alt) attacker;
             killer.setXp( killer.getXp() + level );
 
             //give kill message to attacker (and ding IP if appropriate)
@@ -751,11 +754,30 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             //TODO IP adjust if others are of the same race (or faction?)
             ActionLog.addAction( killerid, ActionLog.KILLED, id );
         }
-        else
+        else if( attacker instanceof Critter )
+        {
+            Critter killer = (Critter)attacker;
+            //TODO give XP, kill stat (?), IP hit, etc to petmaster as appropriate
+
+            //assume critter is acting on it's own
+
+            //give victim death message
+            new Message( conn, id, Message.NORMAL, killer.getName() + " has thrashed you thoroughly.  You feel the familiar tingle of your consciencousness being uploaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
+            //broadcast killer message
+            Message.locationBroadcast( conn, deathLoc, Message.NORMAL, killer.getName() + " killed " + name + "!  It's always amusing to watch a critter tear someone else apart...until they look at you next.");
+            //TODO IP adjust if others are of the same race (or faction?)
+            ActionLog.addAction( killer.getId(), ActionLog.KILLED, id );
+        }
+        else if(attacker == null )
         {
             //death message with no killer
             new Message( conn, id, Message.SELF, "You have died.  You feel the familiar tingle of your consciencousness being downloaded.  The station maintenance bots have removed your body for recycling.  A new body will be started for you soon." );
             //Message.locationBroadcast( conn, deathLoc, Message.NORMAL, name + " died.  Who the hell knows how this happens anymore?");
+        }
+        else
+        {
+            //TODO have bot log this...it's bad.
+
         }
         altCache.remove( id );
    }
@@ -770,7 +792,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
     {
         hp = hp - damage;
         if( hp < 1 )
-            kill( conn, null );
+            kill( attacker, conn, null );
         else
             if( updateNow )
                 update();
@@ -895,6 +917,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
             DatabaseUtility.close(conn);
         }
     }
+
 
     public static void clearCache()
     {

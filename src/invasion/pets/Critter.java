@@ -216,7 +216,7 @@ public class Critter implements Attacker, Defender
 
         if( hp < 1 )
         {
-            kill( conn, result );
+            kill( attacker, conn, result );
             attacker.setReload(true);
         }
         else
@@ -241,13 +241,13 @@ public class Critter implements Attacker, Defender
     }
 
 
-    public void kill(CombatResult result)
+    public void kill(Attacker attacker, CombatResult result)
     {
         InvasionConnection conn = null;
         try
         {
             conn = new InvasionConnection();
-            kill( conn, result );
+            kill( attacker, conn, result );
         }
         catch(SQLException e)
         {
@@ -267,11 +267,11 @@ public class Critter implements Attacker, Defender
      * @return
      *
      */
-    public void kill(InvasionConnection conn, CombatResult result) throws SQLException
+    public void kill(Attacker attacker, InvasionConnection conn, CombatResult result) throws SQLException
     {
         if( lasthurtby > 0 )
         {
-            Alt alt = Alt.load( lasthurtby );
+            Alt alt = (Alt) attacker;
             alt.setXp( alt.getXp() + 10 );
             /*         This is for when we care about what kind of pet it was
             query = "select race, name from alt where id=?";
