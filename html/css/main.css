@@ -29,7 +29,7 @@ a img { border:0px; } /*}}}*/
 .effects {color:green;}
 
 .link_button {padding: 10px;text-decoration: none;}
-.stat { width:75px; url('../i/stat_bg.jpg'); }
+.stat { width:75px; background: url('../i/stat_bg.jpg'); }
 
 /* remove padding and scrolling from elements that contain an Accordion OR a content-div */
 .ui-layout-center ,	/* has content-div */

@@ -1,0 +1,83 @@
+/*
+ * CSS for flyout menu - source http://dreamweaverspot.com/css-tips-tutorial-css-flyout-menu/
+ */
+
+
+/* Styling area */
+.cssfly {  font-family: "Georgia", "New York", serif; font-size: 1.3em; width:106px; height:20px; margin:0;position:absolute; top:0px; left:0px;}
+.cssfly ul li a, .menu ul li a:visited {
+    display:block;
+    text-decoration:none;
+    color: #E17009;
+    width:104px;
+    height:20px;
+    text-align:center;
+    border:1px solid #C5DBEC;;
+    line-height:19px; }
+.cssfly ul {padding:0; margin:0;list-style-type: none; }
+.cssfly ul li {float:left; margin-right:1px; position:relative;}
+.cssfly ul li ul {display: none;}
+
+/* Action area */
+.cssfly ul li:hover a {color:#fff; background:#000;}
+.cssfly ul li:hover ul {
+    display:block; position:absolute; top:0;
+    left:105px; width:105px;
+}
+.cssfly ul li:hover ul li a.hide {
+    background:#ccc; color:#000;
+}
+.cssfly ul li:hover ul li:hover a.hide {width:150px;}
+.cssfly ul li:hover ul li ul {display: none;}
+.cssfly ul li:hover ul li a {
+    display:block; color: #E17009; background:white; width:150px;
+}
+.cssfly ul li:hover ul li a:hover {background:#C5DBEC;;; color:#000;}
+.cssfly ul li:hover ul li:hover ul {
+    display:block; position:absolute; left:151px; top:0; color:#000;
+}
+.cssfly ul li:hover ul li:hover ul li a {
+    display:block; width:200px; background:#dfc184; color:#000;
+}
+.cssfly ul li:hover ul li:hover ul li a:hover {background:#bd8d5e;
+    color:#fff;
+}
+
+/*  Example
+<div class="cssfly">
+ <ul>
+  <li><a href="#">Home</a>
+   <ul>
+    <li><a href="#">Site Map</a></li>
+    <li><a href="#">Forum</a>
+    <ul>
+    	<li><a href="#">Third Level</a></li>
+     </ul>
+    </li>
+   </ul>
+  </li> <!-- end "Home" list item -->
+
+  <li><a href="#">About</a>
+   <ul>
+    <li><a href="#">Me</a></li>
+    <li><a href="#">Portfolio</a></li>
+   </ul>
+  </li> <!-- end "About Us" list item -->
+
+  <li><a href="#">Galleries</a>
+   <ul>
+    <li><a href="#">CSS</a></li>
+    <li><a href="#">WordPress</a></li>
+    <li><a href="#">Photos</a></li>
+   </ul>
+  </li> <!-- end "Galleries" list item -->
+
+  <li><a href="#">Articles</a>
+   <ul>
+    <li><a href="#">Current</a></li>
+    <li><a href="#">Favorites</a></li>
+    <li><a href="#">Archive</a></li>
+   </ul>
+  </li> <!-- end "Articles" list item -->
+ </ul>
+</div>*/

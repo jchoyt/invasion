@@ -310,7 +310,6 @@ public class Critter implements Attacker, Defender
             else
                 result.getAttackerMessages().add( message );
             //TODO - broadcast the kill message
-                        //broadcast killer message
             Message.locationBroadcast( conn, alt.getLocation(), Message.NORMAL, alt.getName() + " killed " + name + "!  Poor, innocent critter.", alt.getId());
 
         }
