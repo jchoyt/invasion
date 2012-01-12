@@ -43,18 +43,6 @@ public class AlterPolitics extends HttpServlet
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
     {
-        response.sendRedirect("http://disney.com");
-    }
-
-
-    /**
-     *  Sets the faction status or removes it from the database table (if new status is neutral).
-     *
-     */
-    @Override
-    public void doPost( HttpServletRequest request, HttpServletResponse response )
-        throws IOException, ServletException
-    {
         PrintWriter out = response.getWriter();
         Whatzit wazzit =(Whatzit) request.getSession().getAttribute(Whatzit.KEY);
         Alt alt = wazzit.getAlt();
@@ -98,7 +86,7 @@ public class AlterPolitics extends HttpServlet
                     out.print("Insert did not happen");
                 }
             }
-            out.print("OK");
+            response.sendRedirect( "editFaction.jsp?info=Faction politics successfully updated." );
         }
         catch(SQLException e)
         {
@@ -109,7 +97,18 @@ public class AlterPolitics extends HttpServlet
         {
             conn.close();
         }
+    }
 
+
+    /**
+     *  Sets the faction status or removes it from the database table (if new status is neutral).
+     *
+     */
+    @Override
+    public void doPost( HttpServletRequest request, HttpServletResponse response )
+        throws IOException, ServletException
+    {
+        response.sendRedirect("http://disney.com");
     }
 
 }

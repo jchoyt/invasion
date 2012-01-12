@@ -1,5 +1,9 @@
 <%@ page import="invasion.util.*,invasion.ui.*,java.sql.*,invasion.dataobjects.*, invasion.pets.*,java.util.logging.*,org.json.*, java.io.*" %>
 <%
+
+    String errorMsg = WebUtils.getOptionalParameter(request, "error");
+    String infoMsg = WebUtils.getOptionalParameter(request, "info");
+
     //set up db connection
     InvasionConnection conn = null;
     ResultSet rs = null;
@@ -19,48 +23,33 @@
     <head>
         <link type="text/css" href="${css}/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
         <link type="text/css" href="${css}/main.css" rel="stylesheet" />
+        <link type="text/css" href="${css}/cssfly.css" rel="stylesheet" />
         <link type="text/css" href="${css}/factionpages.css" rel="stylesheet" />
         <script type="text/javascript" src="${js}/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="${js}/jquery-ui-1.8.14.custom.min.js"></script>
-        <script type="text/javascript">
-            $(function() {
-                $( "#friendly, #neutral, #hostile" ).sortable({
-                    connectWith: ".connectedSortable",
-                    receive: function(event, ui) {
-                        // console.log(ui);
-                        console.log(event);
-                        var newSetting = event.srcElement.parentElement.id;
-                        var factionMoved = event.srcElement.id;
-                        var dataString = "faction=" + factionMoved + "&newStatus=" + newSetting;
-                        // alert(dataString);
-                        $.ajax({
-                            type: "POST",
-                            url: "alterPolitics",
-                            data: dataString
-                        }).done(function( msg ) {
-                            if( msg == "OK" )
-                            {
-                                $( "#status" ).html( "<span class=\"info\">Successfully set " + factionMoved + " to " + newSetting + "</span>" );
-                            }
-                            else
-                            {
-                                $( "#status" ).html( "<span class=\"error\">Despite what you see above, there was an error trying to reset the status of " + factionMoved + " to " + newSetting + ".  <a href=\"editFaction.jsp\">Click</a> to refresh the page.</span>" );
-                            }
-
-                        });
-                    }
-                }
-            ).disableSelection();
-            });
-        </script>
+        <style type="text/css">
+            .ui-icon { display:inline-block; }
+            #hostile { border: 1px solid #CD0A0A; background: #FEF1EC;color: #CD0A0A; }
+            #friendly { border: 1px solid #8CCE3B; background: #F1FBE5;color: #030303; }
+            #neutral { border:1px solid #FAD42E; background: #FBEC88 ;color: #363636; }
+        </style>
     </head>
     <body>
+        <jsp:include page="sitenav.jsp" />
         <center>
             <%-- if the faction has a banner...
             <img alt="logo" src="${images}/banner.png"/>--%>
             <br/>
             <div class="human-banner"><%=alt.getFaction().getName()%></div>
-            <br/>
+            <br/><br/>
+            <%  if( !errorMsg.equals(WebUtils.EMPTY_STR) )
+            {
+                out.write( "<h3 class=\"error\">" + errorMsg + "</h3>");
+            }
+            if( !infoMsg.equals(WebUtils.EMPTY_STR) )
+            {
+                out.write( "<h3 class=\"info\">" + infoMsg + "</h3>");
+            }%>
         </center>
         <div id="wrap">
             <div class="box">
@@ -77,37 +66,38 @@
                 <div class="headers">Neutral</div>
                 <div class="headers">Hostile</div>
                 <br clear="all"/>
-                    <ul id="friendly" class="connectedSortable">
+                    <ul id="friendly">
                         <%
                         query = "select name, f.id, setting from politics p join factions f on p.target=f.id where setter=? and id > 0 and setting = 2 order by setting, name";
                         rs = conn.psExecuteQuery( query, "", alt.getFaction().getId() );
                         while( rs.next() )
                         {
-                            out.write("<li id=" + rs.getString("id") + " class=\"ui-state-default\">" + rs.getString( "name" ) + "<li>\n" );
+                            out.write(rs.getString( "name" ) + " <a href=\"alterPolitics?faction=" + rs.getString("id")  + "&newStatus=neutral\"><span class=\"ui-icon ui-icon-arrowthick-1-e\"></span></a><br/>\n" );
                         }
                         DatabaseUtility.close(rs);
                         %>
                     </ul>
 
-                    <ul id="neutral" class="connectedSortable">
+                    <ul id="neutral" >
                         <%
                         query = "select name, f.id from factions f where id > 0 and id not in (select target from politics where setter=?) and id != ? order by name;";
                         rs = conn.psExecuteQuery( query, "", alt.getFaction().getId(), alt.getFaction().getId() );
                         while( rs.next() )
                         {
-                            out.write("<li id=" + rs.getString("id") + " class=\"ui-state-highlight\">" + rs.getString( "name" ) + "<li>\n" );
+                            out.write("<a href=\"alterPolitics?faction=" + rs.getString("id")  + "&newStatus=friendly\"><span class=\"ui-icon ui-icon-arrowthick-1-w\"></span></a>" + rs.getString( "name" ) +
+                                " <a href=\"alterPolitics?faction=" + rs.getString("id")  + "&newStatus=hostile\"><span class=\"ui-icon ui-icon-arrowthick-1-e\"></span></a><br/>\n" );
                         }
                         DatabaseUtility.close(rs);
                         %>
                     </ul>
 
-                    <ul id="hostile" class="connectedSortable">
+                    <ul id="hostile">
                         <%
                         query = "select name, f.id, setting from politics p join factions f on p.target=f.id where setter=? and id > 0 and setting = 0 order by setting, name";
                         rs = conn.psExecuteQuery( query, "", alt.getFaction().getId() );
                         while( rs.next() )
                         {
-                            out.write("<li id=" + rs.getString("id") + " class=\"ui-state-error\">" + rs.getString( "name" ) + "<li>\n" );
+                            out.write( "<a href=\"alterPolitics?faction=" + rs.getString("id")  + "&newStatus=neutral\"><span class=\"ui-icon ui-icon-arrowthick-1-w\"></span></a>" + rs.getString( "name" ) + "<br/>\n" );
                         }
                         DatabaseUtility.close(rs);
                         %>
