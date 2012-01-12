@@ -81,7 +81,7 @@ public class TickTask extends TimerTask
         s.addBatch( "update alt set ip = ip -1 where ip > 0 AND id!=4 ");
         //if you have 10 HP or less, you are destined for death.
         s.addBatch( "insert into messages (message, type, altid) select 'Your wounds are so grevious even breathing causes more damage', 4, id from alt where hp < 11 and hp > 0 and ticksalive > 0");
-        s.addBatch( "update stats set count = count + 1 where statid = 4 and altid in (select id from alt where hp < 11 and hp > 0)  and ticksalive > 0" ); //update damage taken
+        s.addBatch( "update stats set count = count + 1 where statid = 4 and altid in (select id from alt where hp < 11 and hp > 0 and ticksalive > 0)" ); //update damage taken
         s.addBatch( "update alt set hp = hp - 1 where hp < 11 and hp > 0  and ticksalive > 0");
         s.executeBatch();
         DatabaseUtility.close(s);
