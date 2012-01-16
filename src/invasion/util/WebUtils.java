@@ -250,17 +250,17 @@ public class WebUtils
 
     private static String[] buildNavigationLookup()
     {
-        String OPEN = "<a href=\"" + BASE;
+        String OPEN = "<a class=\"navicon\" href=\"" + BASE;
         String[] temp = new String[25];
         Arrays.fill( temp, EMPTY_STR );
-        temp[6] =  OPEN + "map/move?dir=0\")><img src=\"" + IMAGES + "/nw.png\" style=\"z-index: 5;\"/></a>";
-        temp[7] =  OPEN + "map/move?dir=1\")><img src=\"" + IMAGES + "/n.png\" style=\"z-index: 5;\"/></a>";
-        temp[8] =  OPEN + "map/move?dir=2\")><img src=\"" + IMAGES + "/ne.png\" style=\"z-index: 5;\"/></a>";
-        temp[11] = OPEN + "map/move?dir=3\")><img src=\"" + IMAGES + "/w.png\" style=\"z-index: 5;\"/></a>";
-        temp[13] = OPEN + "map/move?dir=5\")><img src=\"" + IMAGES + "/e.png\" style=\"z-index: 5;\"/></a>";
-        temp[16] = OPEN + "map/move?dir=6\")><img src=\"" + IMAGES + "/sw.png\" style=\"z-index: 5;\"/></a>";
-        temp[17] = OPEN + "map/move?dir=7\")><img src=\"" + IMAGES + "/s.png\" style=\"z-index: 5;\"/></a>";
-        temp[18] = OPEN + "map/move?dir=8\")><img src=\"" + IMAGES + "/se.png\" style=\"z-index: 5;\"/></a>";
+        temp[6] =  OPEN + "map/move?dir=0\")><img src=\"" + IMAGES + "/nw.png\"/></a>";
+        temp[7] =  OPEN + "map/move?dir=1\")><img src=\"" + IMAGES + "/n.png\"/></a>";
+        temp[8] =  OPEN + "map/move?dir=2\")><img src=\"" + IMAGES + "/ne.png\"/></a>";
+        temp[11] = OPEN + "map/move?dir=3\")><img src=\"" + IMAGES + "/w.png\"/></a>";
+        temp[13] = OPEN + "map/move?dir=5\")><img src=\"" + IMAGES + "/e.png\"/></a>";
+        temp[16] = OPEN + "map/move?dir=6\")><img src=\"" + IMAGES + "/sw.png\"/></a>";
+        temp[17] = OPEN + "map/move?dir=7\")><img src=\"" + IMAGES + "/s.png\"/></a>";
+        temp[18] = OPEN + "map/move?dir=8\")><img src=\"" + IMAGES + "/se.png\"/></a>";
         return temp;
     }
 

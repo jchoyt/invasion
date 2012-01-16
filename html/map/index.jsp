@@ -52,6 +52,8 @@
 	<style type="text/css">
         td { border:none;}
         table { border:none; }
+        .me .navicon img { display: none; position:relative; }
+        .me:hover .navicon img   {display:block; z-index:10; position:relative;}
 	</style>
 	<%--}}} --%>
 </head>
