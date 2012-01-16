@@ -72,7 +72,7 @@ public class Smite extends HttpServlet
         }
         response.setHeader("HTTP-EQUIV","Refresh");
         response.setHeader("CONTENT", "1;URL=charList.jsp");
-        out.write("<html><body>He/she/it's been smote <br/><a href=\"/admin/charList.jsp\">Back to the character list</a></body></html>");
+        out.write("<html><body>He/she/it's been smote <br/><a href=\"" + WebUtils.BASE + "admin/charList.jsp\">Back to the character list</a></body></html>");
     }
 
 
