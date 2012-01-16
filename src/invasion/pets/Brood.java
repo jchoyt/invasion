@@ -19,7 +19,7 @@ import java.sql.*;
 import java.beans.*;
 
 
-public class Brood
+public class Brood  implements PropertyChangeListener
 {
 
     public final static String KEY = Brood.class.getName();
@@ -62,10 +62,14 @@ public class Brood
 	    insert();
 	}
 
-	public Brood(){}
+	public Brood()
+	{
+        MoveServlet.pcs.addPropertyChangeListener(this);
+	}
 	//}}}
 
 	//{{{ methods
+
 	public void setGoal( int type, int value )
 	{
 	    if( type < 0 || type > 4 )
@@ -109,6 +113,7 @@ public class Brood
             try{ conn.commit(); } catch (Exception e2) {e2.printStackTrace(System.out);}
             DatabaseUtility.close(rs);
             conn.close();
+            MoveServlet.pcs.addPropertyChangeListener(this);
         }
 
     }
@@ -247,7 +252,13 @@ public class Brood
 
     public void attack( InvasionConnection conn )
     {
+        buildTargetList(conn);
         log.finer( "Brood " + id + " preparing to attack - there are " + targetList.size() + " targets.");
+        if( targetList.size() == 0 )
+        {
+            active=false;
+            return;
+        }
         int randomTarget = -1;
         for( Critter c : members )
         {
@@ -383,6 +394,8 @@ public class Brood
 	    members.remove(oldCritter);
 	    if( members.size() == 0 )
         {
+            //remove from MoveServelet PCS
+            MoveServlet.pcs.removePropertyChangeListener(this);
             //delete brood from database
             String query = "delete from brood where id=" + id;
             try
@@ -394,7 +407,6 @@ public class Brood
                 log.throwing( KEY, "Failed to remove brood " + id + " from the database." , e);
                 throw new RuntimeException(e);
             }
-
             //delete from BroodManager
             BroodManager.removeBrood(this);
         }
@@ -420,6 +432,22 @@ public class Brood
 	    return id;
 	}
 
+	//}}}
+
+	//{{{ for PropertyChangeListener
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+        // log.finer("Receive PCE " + evt.toString() );
+        if( evt.getPropertyName().equals( MoveServlet.KEY ) )
+        {
+            Integer i = (Integer)evt.getNewValue();
+            if( location == i.intValue() )
+            {
+                // log.finer("A target entered our tile!  Get 'em");
+                active = true;
+            }
+        }
+    }
 	//}}}
 
     //{{{  Getters and Setters
