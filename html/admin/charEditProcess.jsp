@@ -1,5 +1,5 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %><%@
-page import="invasion.util.*,invasion.dataobjects.*, java.sql.*,java.util.logging.*" %><%
+page import="invasion.util.*,invasion.bot.*,invasion.pets.*,invasion.dataobjects.*, java.sql.*,java.util.logging.*,java.util.*" %><%
     String locid_string = WebUtils.getRequiredParameter(request, "location");
     String name = WebUtils.getRequiredParameter(request, "name");
     String station_string = WebUtils.getRequiredParameter(request, "station");
@@ -9,6 +9,7 @@ page import="invasion.util.*,invasion.dataobjects.*, java.sql.*,java.util.loggin
 
     int charid = -1;
 
+    Logger log = Logger.getLogger( "charList.jsp" );  //"charEditProcess.jsp" );
     InvasionConnection conn = null;
     try{
         charid = Integer.parseInt( charid_string );
@@ -29,10 +30,19 @@ page import="invasion.util.*,invasion.dataobjects.*, java.sql.*,java.util.loggin
         alt.setName( clean_name );
         alt.setLocation( locid );
         // alt.setStation( stationid );  //not tracked in Alt.java
+        List<String> list = LocationCache.verify();
+        if( list.size() > 2 )
+        {
+            VasionBot.announce("Resynced the cache after a teleport and found " + list.size() + " thing(s) wrong.  Two of these were the transport." );
+            for( String s : list )
+            {
+                log.info( s );
+            }
+        }
+
     }
     catch (SQLException e)
     {
-        Logger log = Logger.getLogger( "charEditProcess.jsp" );
         log.log(Level.WARNING, "Error editing character " + charid, e);
     }
     finally
