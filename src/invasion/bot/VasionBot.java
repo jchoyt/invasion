@@ -71,7 +71,7 @@ public class VasionBot extends PircBot
             //set up handlers
             channelCommands = new ChannelCommands();
             doers.add(channelCommands);
-            doers.add(new GoofyRestCommands() );
+            // doers.add(new GoofyRestCommands() );
             // doers.add(new MessageCommands());
             join();
         }

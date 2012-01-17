@@ -17,7 +17,8 @@ import java.util.*;
  * This provides functionality that isjust plain screwing around.
  *
  * @author jchoyt
-  */
+ * @deprecated  Replaced by EK by a python bot.  I assume he's splitting it off and will run it under a different nick eventually
+ */
 public class GoofyRestCommands implements BotCommandHandler
 {
 

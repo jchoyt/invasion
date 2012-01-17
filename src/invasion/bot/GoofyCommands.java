@@ -12,7 +12,7 @@ import java.util.*;
 
 
 /**
- * This provides functionality that isjust plain screwing around.
+ * This provides functionality that is just plain screwing around.
  *
  * @author jchoyt
   */
