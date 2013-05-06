@@ -1,10 +1,10 @@
 <html>
 <head>
-    <link type="text/css" href="/css/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
-    <link type="text/css" href="/css/main.css" rel="stylesheet" />
-    <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/js/jquery-ui-1.8.14.custom.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.validate.js"></script>
+    <link type="text/css" href="/game/css/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
+    <link type="text/css" href="/game/css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="/game/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/game/js/jquery-ui-1.8.14.custom.min.js"></script>
+    <script type="text/javascript" src="/game/js/jquery.validate.js"></script>
     <style type="text/css">
         label { width: 10em; float: left; }
         label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
@@ -23,13 +23,24 @@
                         }
                     }
             });
+            showSkills("human");
         });
+
+        function showSkills( type )
+        {
+            var idname = "#" + type;
+            /* set all to hidden, then unhide "type" */
+            $("#human").hide();
+            $("#tohu").hide();
+            $("#tikkun").hide();
+            $(idname).show();
+        }
     </script>
 </head>
 <body>
     <center><img alt="logo" src="i/banner.png"/>
         <br/><br/>
-    <div id="newaltForm" class="ui-dialog-content ui-widget-content" style="width:25%;background: none; border: 1px solid black; padding:2em;">
+    <div id="newaltForm" class="ui-dialog-content ui-widget-content" style="width:500px;background: none; border: 1px solid black; padding:2em;">
          <form class="cmxform" id="newaltForm" method="post" action="newCharacter" enctype="x-www-form-urlencoded" >
              <fieldset>
                <legend>Create a new character</legend>
@@ -38,7 +49,7 @@
                  <input id="cname" name="name" size="50" remote="checkAltNameAvail.jsp" class="required" minlength="2" maxlength="255"/>
                </p>
                <p class="sub">
-                 <label for="cstation">Pick Your <a href="http://soulcubes.com/PlayerGuide.html">Station</a></label><br/>
+                 <label for="cstation">Pick Your Station<a href="http://soulcubes.com/PlayerGuide.html#Stations"><img src="i/help.png"/></a></label><br clear="all"/>
                  <input id="cstation" name="station" type="radio" class="required" value="2229" selected="true"/> Fomalhaut<br/>
                  <input id="cstation" name="station" type="radio" class="required" value="0" disabled="true"/> Crescent<br/>
                  <input id="cstation" name="station" type="radio" class="required" value="42" disabled="true"/> Gjenganger<br/>
@@ -47,16 +58,32 @@
                  <input id="cstation" name="station" type="radio" class="required" value="1337" disabled="true"/> Chaos<br/>
                </p>
                <p class="sub">
-                 <label for="crace">Pick Your <a href="http://soulcubes.com/PlayerGuide.html">Race</a></label><br/>
-                 <input id="crace" name="race" type="radio" class="required" value="1" selected="true"/> Human<br/>
-                 <input id="crace" name="race" type="radio" class="required" value="2" disabled="true"/> Tohu<br/>
-                 <input id="crace" name="race" type="radio" class="required" value="3" disabled="true"/> Tikkun<br/>
+                 <label for="crace">Pick Your Race<a href="http://soulcubes.com/PlayerGuide.html#Races" target="_blank"><img src="i/help.png"/></a></label><br clear="all"/>
+                 <input id="crace" name="race" type="radio" class="required" onchange="showSkills('human');" value="1" selected="true"/> Human<br/>
+                 <input id="crace" name="race" type="radio" class="required" onchange="showSkills('tikkun');" value="2"/> Tohu<br/>
+                 <input id="crace" name="race" type="radio" class="required" onchange="showSkills('tohu');" value="3"/> Tikkun<br/>
                </p>
                <p class="sub">
-                 <label for="cskill">Pick a <a href="http://soulcubes.com/PlayerGuide.html">Starting Skill</a></label><br/>
-                 <input id="cskill" name="skill" type="radio" class="required" value="0"/> Firearms<br/>
-                 <input id="cskill" name="skill" type="radio" class="required" value="1"/> Melee<br/>
-                 <input id="cskill" name="skill" type="radio" class="required" value="2"/> Tinkerer<br/>
+                 <label for="cskill">Pick a Starting Skill<a href="http://soulcubes.com/PlayerGuide.html#Skills"><img src="i/help.png"/></a></label><br clear="all"/>
+                 <!--  Human skills -->
+                 <span id="human">
+                     <input id="cskill" name="skill" type="radio" class="required" value="0"/> Firearms<br/>
+                     <input id="cskill" name="skill" type="radio" class="required" value="1"/> Melee<br/>
+                     <input id="cskill" name="skill" type="radio" class="required" value="2"/> Tinkerer<br/>
+                 </span>
+                 <!-- Tikkun Skills -->
+                 <span id="tikkun">
+                     <input id="cskill" name="skill" type="radio" class="required" value="20"/> Body Warp<br/>
+                     <input id="cskill" name="skill" type="radio" class="required" value="21"/> Soul Sharer<br/>
+                     <input id="cskill" name="skill" type="radio" class="required" value="22"/> Protector of the Nest<br/>
+                 </span>
+                 <!-- Tohu skills -->
+                 <span id="tohu">
+                     <input id="cskill" name="skill" type="radio" class="required" value="30"/> Telekinesis<br/>
+                     <input id="cskill" name="skill" type="radio" class="required" value="31"/> Summoner<br/>
+                     <input id="cskill" name="skill" type="radio" class="required" value="32"/> Telepathy<br/>
+                 </span>
+
                </p>
              </fieldset>
              <br/>

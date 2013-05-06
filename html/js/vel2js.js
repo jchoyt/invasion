@@ -38,9 +38,12 @@ if (context.velocityCount) velocityCount=context.velocityCount;
 for (var i1=0;  i1<context.pets.length; i1++) {
 var pet = context.pets[i1];
 velocityCount = i1;
-t.p('<tr>    <td><a href="/game/viewOwner.jsp?id=');
+t.p('<tr>    <td class="');
+t.p( context.css-class);
+t.p('"><a href="');
+t.p('#" onclick="show_pet_owner(');
 t.p( pet.id);
-t.p('">');
+t.p(')">');
 t.p( pet.name);
 t.p('</a></td>    <td><img alt="" src="/game/i/hp-');
 t.p( pet.hp);
@@ -555,7 +558,11 @@ t.p('">');
 t.p( o.name);
 t.p('</a> (L');
 t.p( o.level);
-t.p(')</li>');
+t.p('    ');
+if (o.ticksalive < 1) {
+t.p('        , Dead    ');
+}
+t.p('        )</li>');
 }
 velocityCount = 0;
 t.p('</ul><u>Critters here</u><ul>');

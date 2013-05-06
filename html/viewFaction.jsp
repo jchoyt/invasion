@@ -214,7 +214,7 @@ protected void printMCapturedFlags( InvasionConnection conn, JspWriter out, Fact
                     <br/><b>Stronghold Location:</b>
                     <br/><b>Race:</b> <%=Constants.RACENAMES[thisFaction.getType()]%>
                     <br/><b>Prestige:</b> <%=thisFaction.getPrestige()%>
-                    <br/><b>Created by:</b> <%=Alt.load(conn, thisFaction.getCreatedby()).getName()%>
+                    <br/><b>Created by:</b> <%=AltFactory.load(conn, thisFaction.getCreatedby()).getName()%>
                     <br/><b>Stronghold Ammenities: </b>
                     <%
                         //if lt. or leader, allow send faction messages

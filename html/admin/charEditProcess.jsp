@@ -26,7 +26,7 @@ page import="invasion.util.*,invasion.bot.*,invasion.pets.*,invasion.dataobjects
             //TODO set error dest
             //dest = "somehwere?error=Error updating character - no changes were made
         }
-        Alt alt = Alt.load( conn, charid );
+        Alt alt = AltFactory.load( conn, charid );
         alt.setName( clean_name );
         alt.setLocation( locid );
         // alt.setStation( stationid );  //not tracked in Alt.java

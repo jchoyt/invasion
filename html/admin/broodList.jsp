@@ -21,31 +21,40 @@
                     <tr><th>Survive</th><th>Protect</th><th>Kill Psi</th><th>Kill Mut</th><th>Kill Human</th></tr>
                 </thead>
                 <tbody>
-            <%
-            for(Brood b : BroodManager.getFeralBroods())
-            {
-                out.write("<tr><td><a href=\"\" rel=\"locationPopup.jsp?locid="+ b.getLocation() +"\" title=\"Tile "+ b.getLocation() +"\" class=\"locpopup\">" + b.getLocation() + "</a>" );
-                out.write("</td><td>" +  b.getMembers().size());
-                out.write("</td><td>" + b.getGoals()[Brood.GOAL_SURVIVE]);
-                out.write( "</td><td>" + b.getGoals()[Brood.GOAL_PROTECT] );
-                out.write( "</td><td>" + b.getGoals()[Brood.GOAL_KILL_PSI] );
-                out.write( "</td><td>" + b.getGoals()[Brood.GOAL_KILL_MUT] );
-                out.write("</td><td>" +  b.getGoals()[Brood.GOAL_KILL_HUMAN] );
-            }
-            %>
+                    <%
+                    for(Brood b : BroodManager.getFeralBroods())
+                    {
+                        out.write("<tr><td><a href=\"\" rel=\"locationPopup.jsp?locid="+ b.getLocation() +"\" title=\"Tile "+ b.getLocation() +"\" class=\"locpopup\">" + b.getLocation() + "</a>" );
+                        out.write("</td><td>" +  b.getMembers().size());
+                        out.write("</td><td>" + b.getGoals()[Brood.GOAL_SURVIVE]);
+                        out.write( "</td><td>" + b.getGoals()[Brood.GOAL_PROTECT] );
+                        out.write( "</td><td>" + b.getGoals()[Brood.GOAL_KILL_PSI] );
+                        out.write( "</td><td>" + b.getGoals()[Brood.GOAL_KILL_MUT] );
+                        out.write("</td><td>" +  b.getGoals()[Brood.GOAL_KILL_HUMAN] );
+                    }
+                    %>
                  </tbody>
             </table>
             Player Broods
             <table>
-                <thead></thead>
+                <thead>
+                    <tr><th rowspan="2">Location</th><th rowspan="2">Size</th><th rowspan="2">Owner ID</th><th colspan="5">Goals</th></tr>
+                    <tr><th>Survive</th><th>Protect</th><th>Kill Psi</th><th>Kill Mut</th><th>Kill Human</th></tr>
+                </thead>
                 <tbody>
-                    <%--
-                  <%
-                    for(Brood b : playerBroods.values())
-                        for(Critter c : b.getMembers() )
-                            ret.put(c.toJson());
+                    <%
+                    for(Brood b : BroodManager.getPlayerBroods())
+                    {
+                        out.write("<tr><td><a href=\"\" rel=\"locationPopup.jsp?locid="+ b.getLocation() +"\" title=\"Tile "+ b.getLocation() +"\" class=\"locpopup\">" + b.getLocation() + "</a>" );
+                        out.write("</td><td>" +  b.getMembers().size());
+                        out.write("</td><td>" +  b.getOwnerId());
+                        out.write("</td><td>" + b.getGoals()[Brood.GOAL_SURVIVE]);
+                        out.write( "</td><td>" + b.getGoals()[Brood.GOAL_PROTECT] );
+                        out.write( "</td><td>" + b.getGoals()[Brood.GOAL_KILL_PSI] );
+                        out.write( "</td><td>" + b.getGoals()[Brood.GOAL_KILL_MUT] );
+                        out.write("</td><td>" +  b.getGoals()[Brood.GOAL_KILL_HUMAN] );
+                    }
                     %>
-                     --%>
              </tbody>
         </table>
         </center>

@@ -9,7 +9,7 @@
         conn = new InvasionConnection();
         JSONObject ret = Location.getSummary( conn, loc );
         //critters
-        JSONArray pets = Critter.petsAtLocation( loc );
+        JSONArray pets = BroodManager.petsAtLocation( loc );
         if( pets.length() > 0 )
         {
             ret.put("pets", pets );

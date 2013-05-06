@@ -11,20 +11,14 @@ protected void printHave( Alt thisguy, Skill skill, boolean rootSkill, JspWriter
 {
     if(!rootSkill)
         out.write( " &raquo " );
-    if( Skills.hasSkill( thisguy, skill ) )
+    if( thisguy.hasSkill( skill ) )
     {
         if( skill.getHelplink() != null )
-        {
-            out.write( "(<a href=\"" + skill.getHelplink() + "\" target=\"_blank\"><span style=\"display:inline-block\" class=\"ui-icon ui-icon-help\"></span></a>) ");
-        }
+            out.write( "<br/><a href=\"" + skill.getHelplink() + "\" target=\"_blank\"><span style=\"display:inline-block\" class=\"ui-icon ui-icon-help\"></span></a> ");
         out.write( skill.getName() );
         for( Skill s : skill.getChildren() )
-        {
-            if( Skills.hasSkill( thisguy, s ) )
-            {
+            if( thisguy.hasSkill( s ) )
                 printHave( thisguy, s, false, out );
-            }
-        }
     }
 
 }
@@ -39,29 +33,21 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
     throws IOException
 {
     if(!rootSkill)
-    {
         out.write( " &raquo " );
-    }
-    else if( skill.getHelplink() != null )
-    {
-        out.write( "(<a href=\"" + skill.getHelplink() + "\" target=\"_blank\"><span style=\"display:inline-block\" class=\"ui-icon ui-icon-help\"></span></a>) ");
-    }
-    if( Skills.hasSkill( thisguy, skill ) )
+    else
+        out.write("<br/>");
+    if( skill.getHelplink() != null )
+        out.write( "<a href=\"" + skill.getHelplink() + "\" target=\"_blank\"><span style=\"display:inline-block\" class=\"ui-icon ui-icon-help\"></span></a> ");
+    if( thisguy.hasSkill( skill ) )
     {
         out.write( "<b>" + skill.getName() + "</b>" );
         for( Skill s : skill.getChildren() )
-        {
             printCanBuy( thisguy, s, false, out );
-        }
     }
     else if( thisguy.getCp() >= skill.getCost() )
-    {
         out.write( "<a href=\"#\" onclick=\"doPurchase( " + thisguy.getId() + ", " + skill.getId() + ");setTimeout('location.reload();', 1500);\">Purchase " + skill.getName() + " ( " + skill.getCost() + " CP )" + "</a>" );
-    }
     else
-    {
         out.write( "<span class=\"toomuch\">" + skill.getName() + " ( " + skill.getCost() + " CP )</span>" );
-    }
 }
 
 %><%@
@@ -73,8 +59,8 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
     {
         conn = new InvasionConnection();
         //load the alt
-            Alt thisguy = Alt.load(conn, id);
-            Whatzit wazzit =(Whatzit) session.getAttribute(Whatzit.KEY);
+        Alt thisguy = AltFactory.load(conn, id);
+        Whatzit wazzit = (Whatzit)session.getAttribute(Whatzit.KEY);
         %><html>
         <head>
             <link type="text/css" href="${css}/redmond/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
@@ -122,7 +108,7 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                 <h3>This is <%=thisguy.getName()%></h3>
                 <i><%= thisguy.getFaction()== null ? "Unfactioned" : "<a href=\"viewFaction.jsp?id=" + thisguy.getFaction().getId() + "\">" + thisguy.getFaction().getName() + "</a>"%></i>
                 <br/>
-                <div id="tabs" style="min-width:500px;">
+                <div id="tabs" style="width:650px;">
                     <ul>
                         <li><a href="#tabs-1">Summary</a></li>
                         <li><a href="#tabs-2">Skills</a></li>
@@ -164,38 +150,37 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                     </div>
                     <div id="tabs-2">
                         <b><u>Human Skills</u></b>
-                        <br/>
                         <%
                             for( Skill s : Skills.getHumanSkills() )
                             {
                                 printHave(thisguy, s, true, out);
-                                out.write("<br/>");
                             }
-                        %>
-                        <br/>
-                        <%--
-                        <br/>
-                        <b><u>Psi Skills</u></b>
-                        <br/>
-                        <%
-                            for( Skill s : Skills.getPsiSkills() )
+                            out.write("<br/>");
+                            if( thisguy.getRace()==Constants.TOHU )
                             {
-                                printHave(thisguy, s, true, out);
-                                out.write("<br/>");
+                                %>
+                                <br/>
+                                <br/>
+                                <b><u>Tohu Skills</u></b>
+                                <%
+                                for( Skill s : Skills.getTohuSkills() )
+                                {
+                                    printHave(thisguy, s, true, out);
+                                }
                             }
-                        %>
-                        <br/>
-                        <br/>
-                        <b><u>Psi Skills</u></b>
-                        <br/>
-                        <%
-                            for( Skill s : Skills.getPsiSkills() )
+                            else if( thisguy.getRace()==Constants.TOHU )
                             {
-                                printHave(thisguy, s, true, out);
-                                out.write("<br/>");
+                                %>
+                                <br/>
+                                <br/>
+                                <b><u>Tikkun Skills</u></b>
+                                <%
+                                for( Skill s : Skills.getTikkunSkills() )
+                                {
+                                    printHave(thisguy, s, true, out);
+                                }
                             }
                         %>
-                        --%>
                     </div>
                     <div id="tabs-3">
                         <table cellpadding="0">
@@ -208,13 +193,30 @@ protected void printCanBuy( Alt thisguy, Skill skill, boolean rootSkill, JspWrit
                     <%
                     if( thisguy.getUsername().equals( request.getRemoteUser() ) )
                     {
-                        out.write( "<div id=\"tabs-4\">");
+                        out.write( "<div id=\"tabs-4\"><b><u>Human Skills</u></b>");
                         for( Skill s : Skills.getHumanSkills() )
                         {
                             printCanBuy(thisguy, s, true, out);
+                        }
+                        out.write("<br/>");
+                        if( thisguy.getRace() == Constants.TOHU )
+                        {
+                            out.write("<br/><b><u>Tohu Skills</u></b>");
+                            for( Skill s : Skills.getTohuSkills() )
+                            {
+                                printCanBuy(thisguy, s, true, out);
+                            }
                             out.write("<br/>");
                         }
-                        out.write( "</div>" );
+                        if( thisguy.getRace() == Constants.TIKKUN )
+                        {
+                            out.write("<br/><b><u>Tikkun Skills</u></b>");
+                            for( Skill s : Skills.getTikkunSkills() )
+                            {
+                                printCanBuy(thisguy, s, true, out);
+                            }
+                            out.write( "</div>" );
+                        }
                     } %>
                 </div>
                 <br clear="all"/><a href="${base}map/index.jsp">Back</a>

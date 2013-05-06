@@ -82,6 +82,16 @@ h3, h4 { /* Headers & Footer in Center & East panes */
 .skillsbox h2 { font-style: italic; margin: 0px; padding: 0px; font-size: 1em;}
 /*}}}*/
 
+/*{{{ faction relationship colors  */
+.fc-self {color:#df6f00; }
+.fc-faction {color:#91268f;}
+.fc-ally {}
+.fc-friend {}
+.fc-neutral {}
+.fc-hostile {}
+.fc-enemy {}
+/*}}}*/
+
 /*{{{  navigation map*/
 
 .me {
