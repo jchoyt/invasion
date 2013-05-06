@@ -25,7 +25,6 @@ public final class EscapeChars {
      * The idea is to neutralize control characters commonly used by scripts, such that
      * they will not be executed by the browser. This is done by replacing the control
      * characters with their escaped equivalents.
-     * See {@link hirondelle.web4j.security.SafeText} as well.
      *
      * <P>The following characters are replaced with corresponding
      * HTML character entities :

@@ -19,7 +19,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/equip" } )
 public class Equip extends HttpServlet
@@ -58,10 +57,6 @@ public class Equip extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -110,7 +105,6 @@ public class Equip extends HttpServlet
     /**
      * Equips a weapon.  Assumes that the error checking is done already (character owns it, it's a weapon). Calling function must update
      * the alt to save changes made here.
-     *   @param
      */
     protected void eqiupWeaon( InvasionConnection conn, Alt alt, Item item )
     {
@@ -127,7 +121,6 @@ public class Equip extends HttpServlet
     /**
      * Equip armor or shield.  Assumes that the error checking is done already (character owns it, it's aarmor). Calling function must update
      * the alt to save changes made here.
-     *   @param
      */
     protected void eqiupArmor( InvasionConnection conn, Alt alt, Item item )
     {
@@ -147,7 +140,6 @@ public class Equip extends HttpServlet
     /**
      * Equip clothing.  Assumes that the error checking is done already (character owns it, it's something wearable). Calling function must update
      * the alt to save changes made here.
-     *   @param
      */
     protected void eqiupWearable( InvasionConnection conn, Alt alt, Item item )
         throws SQLException
@@ -176,10 +168,6 @@ public class Equip extends HttpServlet
         new Message( conn, alt.getId(), Message.NORMAL, "You don your " + item.getItemtype().getName() + ".");
     }
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

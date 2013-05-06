@@ -40,14 +40,6 @@ public class MoveServlet extends HttpServlet
         "You frantically try to reach the surface, but the weight of all your gear and your clothing pulls you down, and not knowing how to swim doesn't help. As you frantically pull up at the water, trying to break the surface, your lungs start to burn and the sides of your vision starts to blacken. Darkness approaches; you find your desparate movements becoming sluggish, and it's harder than ever to see. With your lungs on fire, you slowly lose your grip on reality, and your eyes slowly, slowly lose their light as you drift into the enveloping darkness."
     };
 
-    /**
-     *  Description of the Method
-     *
-     *@param  req                   Description of the Parameter
-     *@param  resp                  Description of the Parameter
-     *@exception  ServletException  Description of the Exception
-     *@exception  IOException       Description of the Exception
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
@@ -135,14 +127,6 @@ public class MoveServlet extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  req                   Description of the Parameter
-     *@param  resp                  Description of the Parameter
-     *@exception  ServletException  Description of the Exception
-     *@exception  IOException       Description of the Exception
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException

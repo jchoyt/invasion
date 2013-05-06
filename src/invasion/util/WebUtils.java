@@ -17,7 +17,6 @@ import javax.servlet.jsp.PageContext;
  *  code.
  *
  * @author     jchoyt
- * @created    April 22, 2004
  */
 public class WebUtils
 {

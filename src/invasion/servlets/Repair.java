@@ -20,7 +20,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/repair" } )
 public class Repair extends HttpServlet
@@ -61,10 +60,6 @@ public class Repair extends HttpServlet
         super();
     }
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -181,8 +176,6 @@ public class Repair extends HttpServlet
 
     /**
      * Method to calculate the XP gain for a given item condition and delta.  I'd precalculate this, but using it this wasy is easier to understand.
-     * @param
-     * @return
      *
      */
     public int calculateXp( int itemCondition, int delta )
@@ -192,8 +185,6 @@ public class Repair extends HttpServlet
 
     /**
      * Method to calculate the AP cost for a given item condition and delta.  I"d precalculate this, but using it this wasy is easeri to understand.
-     * @param
-     * @return
      *
      */
     public int calculateAp( int itemCondition, int delta )

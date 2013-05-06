@@ -145,8 +145,7 @@ public class Skills implements java.io.Serializable
       * @param       attackerLevel Example: 5 if attacker has Firearms 5
       * @param       dodgeLevel Example: 3 if attacker has Dodge 3 or Melee 5
       * @param       baserate base chance of attacking with that weapon (imporvised or not)
-      * @return
-      *
+       *
       */
      public static double calculateAttackChance ( double baserate, int attackerLevel, int dodgeLevel)
      {

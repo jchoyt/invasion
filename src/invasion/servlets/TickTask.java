@@ -120,8 +120,6 @@ public class TickTask extends TimerTask
 
     /**
      * rotaties the stats tracker and logs them to file prior to processing.
-     * @param
-     * @return
      *
      */
     private void processStats()
@@ -141,8 +139,6 @@ public class TickTask extends TimerTask
 
     /**
      * rotaties the stats tracker and logs them to file prior to processing.
-     * @param
-     * @return
      *
      */
     private void processActionLog()

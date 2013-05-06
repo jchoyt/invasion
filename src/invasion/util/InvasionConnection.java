@@ -148,9 +148,9 @@ public class InvasionConnection
      *  CachedResultSet  Do NOT use this when retrieving large amounts of data, as this dumps lots of data into memory.
      *  Also, for large data pulls, you should be setting the retreival cache size to speed retreival.
      *
-     * @param  sSQL        Query string suitable for creating a PreparedStatment
-     * @param Object...    Comma delimited list of parameters, in order!
-     * @return             ResultSet of the query
+     * @param  query   Query string suitable for creating a PreparedStatment
+     * @param params   Comma delimited list of parameters, in order!
+     * @return         ResultSet of the query
      * @exception  SQLException  Description of the Exception
      */
     public ResultSet psExecuteQuery(String query, String errorMsg, Object... params)
@@ -207,9 +207,9 @@ public class InvasionConnection
 
     /**
      *
-     * @param  sSQL        Query string suitable for creating a PreparedStatment
-     * @param Object...    Comma delimited list of parameters, in order!
-     * @return             Count of objects modified
+     * @param   query   Query string suitable for creating a PreparedStatment
+     * @param   params  Comma delimited list of parameters, in order!
+     * @return  Count of objects modified
      * @exception  SQLException  Description of the Exception
      */
     public int psExecuteUpdate(String query, String errorMsg, Object... params)
@@ -260,9 +260,9 @@ public class InvasionConnection
      *  This method executes an updating SQL stmtement (usually an UPDATE, INSERT, or DELETE) that is passed as a
      *  parameter and returns the generated key from the insert statement
      *
-     * @param  sSQL        Query string suitable for creating a PreparedStatment
-     * @param Object...    Comma delimited list of parameters, in order!
-     * @return             ResultSet of the query
+     * @param  query    Query string suitable for creating a PreparedStatment
+     * @param  params   Comma delimited list of parameters, in order!
+     * @return  ResultSet of the query
      * @exception  SQLException  Description of the Exception
      */
     public int psExecuteInsert(String query, String errorMsg, Object... params)

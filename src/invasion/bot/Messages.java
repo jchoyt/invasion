@@ -15,15 +15,9 @@ import java.util.*;
  */
 public class Messages
 {
-    /**
-     * DOCUMENT ME!
-     */
     private String REPO;
 
-    /**
-     * DOCUMENT ME!
-     */
-    private Map<String, ArrayList> messages = new HashMap<String, ArrayList>(  );
+    private Map<String, ArrayList<String>> messages = new HashMap<String, ArrayList<String>>(  );
 
     /**
      * Creates a new Messages object.
@@ -54,12 +48,12 @@ public class Messages
         who = who.toLowerCase();
         if ( messages.containsKey( who ) )
         {
-            List m = messages.get( who );
+            List<String> m = messages.get( who );
             m.add( message );
         }
         else
         {
-            ArrayList m = new ArrayList(  );
+            ArrayList<String> m = new ArrayList<String>(  );
             m.add( message );
             messages.put( who, m );
         }
@@ -74,7 +68,7 @@ public class Messages
     public List getMessages( String who )
     {
         who = who.toLowerCase();
-        List ret = messages.get( who );
+        List<String> ret = messages.get( who );
         messages.remove( who );
 
         /*
@@ -169,7 +163,7 @@ public class Messages
             fIn = new FileInputStream( REPO );
             oIn = new ObjectInputStream( fIn );
             //de-serializing object
-            messages = ( HashMap<String, ArrayList> ) oIn.readObject(  );
+            messages = ( HashMap<String, ArrayList<String>> ) oIn.readObject(  );
             // System.out.println("Deserialized " + emp.fName + " " + emp.lName + " from NewEmployee.ser ");
         }
         catch ( IOException e )
@@ -223,7 +217,7 @@ public class Messages
      */
     public List reviewAllMessages(  )
     {
-        List ret = new ArrayList(  );
+        List<String> ret = new ArrayList<String>(  );
 
         for ( String o : messages.keySet(  ) )
         {

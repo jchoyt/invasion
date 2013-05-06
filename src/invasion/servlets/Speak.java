@@ -18,7 +18,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/speak" } )
 public class Speak extends HttpServlet
@@ -57,10 +56,6 @@ public class Speak extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -104,10 +99,6 @@ public class Speak extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

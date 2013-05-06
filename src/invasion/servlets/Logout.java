@@ -19,7 +19,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/logout" } )
 public class Logout extends HttpServlet
@@ -58,10 +57,6 @@ public class Logout extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -77,10 +72,6 @@ public class Logout extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

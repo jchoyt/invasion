@@ -19,7 +19,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/factionMessage" } )
 public class FactionMessage extends HttpServlet

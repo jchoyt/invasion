@@ -19,8 +19,6 @@ public class LiMag extends Critter
 
    /**
      * Bare constructor - used by CritterFactory to load from the database
-     * @param
-     * @return
      *
      */
     public LiMag()
@@ -30,8 +28,6 @@ public class LiMag extends Critter
 
     /**
      * Constructor to add a new LiMag to an existing Brood
-     * @param
-     * @return
      *
      */
     public LiMag( Brood brood )
@@ -47,8 +43,6 @@ public class LiMag extends Critter
 
     /**
      * Constructor for a Brood-less LiMag - a new Brood will be created with this guy as the sole member
-     * @param
-     * @return
      *
      */
     public LiMag( int station )

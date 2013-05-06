@@ -17,7 +17,7 @@ import invasion.bot.*;
 /**
  * Objects for having "active" broods working.  An active Brood is one that is in combat, or was recently in combat.
  *
- * @see #Critter(static methods)
+ * @see invasion.pets.Critter
  */
 public class BroodManager
 {
@@ -50,8 +50,6 @@ public class BroodManager
     //{{{ Methods
     /**
      * Everyone acts on the tick
-     * @param
-     * @return
      *
      */
     public static void workBroodsForTick()
@@ -92,8 +90,6 @@ public class BroodManager
 
     /**
      * use for every X second activity
-     * @param
-     * @return
      *
      */
     public static void workBroods()
@@ -136,8 +132,6 @@ public class BroodManager
 
     /**
      * Returns a JSON object with a list of all the critters at a specific location
-     * @param
-     * @return
      *
      */
     public static JSONArray petsAtLocation( int locid )
@@ -249,8 +243,6 @@ public class BroodManager
 
     /**
      * Cause all broods to attack
-     * @param
-     * @return
      *
      */
     public static void processAttacks()

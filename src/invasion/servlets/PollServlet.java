@@ -21,14 +21,6 @@ public class PollServlet extends HttpServlet
     public final static Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
 
-    /**
-     *  Description of the Method
-     *
-     *@param  req                   Description of the Parameter
-     *@param  resp                  Description of the Parameter
-     *@exception  ServletException  Description of the Exception
-     *@exception  IOException       Description of the Exception
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
@@ -46,20 +38,10 @@ public class PollServlet extends HttpServlet
         Poll.fullPoll( response.getWriter(), wazzit, null );
     }
 
-
-    /**
-     *  Description of the Method
-     *
-     *@param  req                   Description of the Parameter
-     *@param  resp                  Description of the Parameter
-     *@exception  ServletException  Description of the Exception
-     *@exception  IOException       Description of the Exception
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
         response.sendRedirect("naughty.jsp");
     }
-
 }

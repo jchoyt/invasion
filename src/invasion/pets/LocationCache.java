@@ -34,8 +34,6 @@ public class LocationCache implements PropertyChangeListener
     //{{{ Methods
     /**
      * Run at webapp start to pre-load the cache with whatever is in the database
-     * @param
-     * @return
      *
      */
     public static void load()
@@ -97,8 +95,6 @@ public class LocationCache implements PropertyChangeListener
 
     /**
      * Check to make sure the Cache matches the database
-     * @param
-     * @return
      *
      */
     public static List<String> verify()

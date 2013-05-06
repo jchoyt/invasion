@@ -21,7 +21,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/eat" } )
 public class Eat extends HttpServlet
@@ -60,10 +59,6 @@ public class Eat extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -114,10 +109,6 @@ public class Eat extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

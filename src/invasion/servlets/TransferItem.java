@@ -20,7 +20,6 @@ import org.json.*;
  *  Class to do transfers of times from one location to another.  Char <-> char, char <-> safe/locker, and char <-> ground are all supported.  Items can be transferred one at a time, or en masse.
  *
  * @author     jchoyt
- * @created Fri Jul 22 22:25:39 EDT 2011 @142 /Internet Time/
  */
 @WebServlet(urlPatterns = { "/map/transferItem" } )
 public class TransferItem extends HttpServlet
@@ -109,8 +108,6 @@ public class TransferItem extends HttpServlet
 
     /**
      * Drops all items selected
-     * @param
-     * @return
      *
      */
     protected JSONArray doDrop( InvasionConnection conn, String[] itemids, Alt alt )
@@ -158,8 +155,6 @@ public class TransferItem extends HttpServlet
 
     /**
      * Does the transfer of a single item from source to destination, including all appropriate checks
-     * @param
-     * @return
      *
      */
     protected JSONArray doTransfer( InvasionConnection conn, int itemid, int src, int dest, Alt alt )
@@ -316,7 +311,6 @@ public class TransferItem extends HttpServlet
      * Checks to see if the "other" location (that is the one that's not the character initiating the transfer), is in the same place.
      * @param   altLoc - location id of the tile the character is sitting in
      * @param   otherLoc - ID of one of: Character, tile, faction (for safes), locker.   For all but
-     * @return
      *
      */
     protected boolean checkCoincidingLocation( InvasionConnection conn, int altLoc, int otherLoc )

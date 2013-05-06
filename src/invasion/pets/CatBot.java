@@ -20,8 +20,6 @@ public class CatBot extends Critter
 
    /**
      * Bare constructor - used by CritterFactory to load from the database
-     * @param
-     * @return
      *
      */
     public CatBot()
@@ -31,8 +29,6 @@ public class CatBot extends Critter
 
     /**
      * Constructor to add a new CatBot to an existing Brood
-     * @param
-     * @return
      *
      */
     public CatBot( Brood brood )
@@ -48,8 +44,6 @@ public class CatBot extends Critter
 
     /**
      * Constructor for a Brood-less CatBot - a new Brood will be created with this guy as the sole member
-     * @param
-     * @return
      *
      */
     public CatBot( int station )
@@ -110,8 +104,6 @@ public class CatBot extends Critter
 
     /**
      * when you kill them...just make more!!
-     * @param
-     * @return
      *
      */
     public void kill(Attacker attacker, InvasionConnection conn, CombatResult result) throws SQLException

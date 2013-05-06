@@ -21,7 +21,6 @@ import javax.servlet.annotation.WebServlet;
  *  Have active pets attack every 8 seconds
  *
  * @author     jchoyt
- * @created    Tue Jan 03 23:59:21 EST 2012 @249 /Internet Time/
  */
 @WebServlet(urlPatterns = { "/petTick" }, loadOnStartup=99 )
 public class PetTickServlet extends HttpServlet
@@ -118,7 +117,6 @@ public class PetTickServlet extends HttpServlet
  *  This class is a repeating task to process pet attacks
  *
  * @author     jchoyt
- * @created    Wed Jan 04 00:40:34 EST 2012 @278 /Internet Time/
  */
 
 

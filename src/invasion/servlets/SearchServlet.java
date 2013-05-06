@@ -19,7 +19,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/search" } )
 public class SearchServlet extends HttpServlet
@@ -74,10 +73,6 @@ public class SearchServlet extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -142,10 +137,6 @@ public class SearchServlet extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

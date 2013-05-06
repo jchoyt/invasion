@@ -19,8 +19,6 @@ public class Dalek extends Critter
 
    /**
      * Bare constructor - used by CritterFactory to load from the database
-     * @param
-     * @return
      *
      */
     public Dalek()
@@ -30,8 +28,6 @@ public class Dalek extends Critter
 
     /**
      * Constructor to add a new Dalek to an existing Brood
-     * @param
-     * @return
      *
      */
     public Dalek( Brood brood )
@@ -47,8 +43,6 @@ public class Dalek extends Critter
 
     /**
      * Constructor for a Brood-less Dalek - a new Brood will be created with this guy as the sole member
-     * @param
-     * @return
      *
      */
     public Dalek( int station )

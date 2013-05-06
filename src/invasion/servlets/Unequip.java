@@ -19,7 +19,6 @@ import java.sql.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/unequip" } )
 public class Unequip extends HttpServlet
@@ -58,10 +57,6 @@ public class Unequip extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -111,7 +106,6 @@ public class Unequip extends HttpServlet
     /**
      * Unequips a weapon.  Assumes that the error checking is done already (character owns it, it's a weapon). Calling function must update
      * the alt to save changes made here.
-     *   @param
      */
     protected void uneqiupWeaon( InvasionConnection conn, Alt alt, Item item )
     {
@@ -128,7 +122,6 @@ public class Unequip extends HttpServlet
     /**
      * Unequip armor or shield.  Assumes that the error checking is done already (character owns it, it's aarmor). Calling function must update
      * the alt to save changes made here.
-     *   @param
      */
     protected void uneqiupArmor( InvasionConnection conn, Alt alt, Item item )
     {
@@ -145,7 +138,6 @@ public class Unequip extends HttpServlet
     /**
      * Unequip clothing.  Assumes that the error checking is done already (character owns it, it's something wearable). Calling function must update
      * the alt to save changes made here.
-     *   @param
      */
     protected void uneqiupWearable( InvasionConnection conn, Alt alt, Item item )
     {
@@ -161,10 +153,6 @@ public class Unequip extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

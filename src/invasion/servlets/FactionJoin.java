@@ -19,7 +19,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/joinFaction" } )
 public class FactionJoin extends HttpServlet

@@ -44,8 +44,7 @@ public class DiceRoller
 
     /**
      * pulls out the dice and sets up the arrays for use
-     * @param
-     * @return
+     * @param config dice configuration.  Examples 4d10, 1d6, 3d4+12
      *
      */
     protected void parse( String config )
@@ -71,8 +70,8 @@ public class DiceRoller
 
     /**
      * Function to roll a single die of arbitray size and return an random number in the range
-     * @param
-     * @return
+     * @param  maxValue highest pip count in the die
+     * @return random int value between 1 and maxvalue
      *
      */
      protected int roll( int maxValue )

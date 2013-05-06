@@ -90,7 +90,7 @@ public class Message  implements java.io.Serializable {
         // InvasionConnection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        List<Message> msgs = new ArrayList();
+        List<Message> msgs = new ArrayList<Message>();
         try
         {
             // conn = new InvasionConnection();
@@ -198,8 +198,6 @@ public class Message  implements java.io.Serializable {
 
     /**
      * Inserts a message to every member of the given faction
-     * @param
-     * @return
      *
      */
     public static int factionBroadcast(InvasionConnection conn, int factionid, String message)

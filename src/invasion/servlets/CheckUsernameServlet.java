@@ -17,7 +17,6 @@ import java.sql.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/checkUsernameAvailable" } )
 public class CheckUsernameServlet extends HttpServlet
@@ -56,10 +55,6 @@ public class CheckUsernameServlet extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest req, HttpServletResponse resp )
         throws IOException, ServletException
@@ -100,10 +95,6 @@ public class CheckUsernameServlet extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest req, HttpServletResponse resp )
         throws IOException, ServletException {

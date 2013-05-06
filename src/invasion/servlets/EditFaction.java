@@ -20,7 +20,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/editFaction" } )
 public class EditFaction extends HttpServlet

@@ -20,7 +20,6 @@ import invasion.dataobjects.*;
  *  Description of the Class
  *
  *@author     jchoyt
- *@created    October 2, 2005
  */
 public class Login {
 

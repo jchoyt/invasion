@@ -15,7 +15,6 @@ import java.lang.reflect.Array;
  *  This class acts like a Properties object, but it can hold multiple Strings for one key
  *
  *@author     jchoyt
- *@created    February 2, 2001
  */
 public final class Config extends Object implements Serializable
 {

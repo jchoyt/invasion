@@ -21,7 +21,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/throw" } )
 public class ThrowItem extends HttpServlet

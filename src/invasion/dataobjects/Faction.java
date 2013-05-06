@@ -47,8 +47,6 @@ public class Faction
     //{{{ Constuctors
     /**
      * Called at server startup to load up the factions from the database.  Note the politics and flagsCaptured are done lazily.
-     * @param
-     * @return
      *
      */
     public static void loadCache()
@@ -93,8 +91,6 @@ public class Faction
 
     /**
      * Private to control faction creation to creating new and loading from the database.
-     * @param
-     * @return
      *
      */
     private Faction() {};
@@ -174,8 +170,6 @@ public class Faction
     //{{{ Methods
     /**
      * Returns a textual list of the ammenities a faction has.  In essence this coverts from the encoded representation (long) to text suitable for display in the GUI.
-     * @param
-     * @return
      *
      */
     public List<String> getAmmenityText()
@@ -187,8 +181,6 @@ public class Faction
 
     /**
      * Provide a way to get the faction object directly
-     * @param
-     * @return
      *
      */
     public static Faction getFaction(int id)

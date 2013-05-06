@@ -37,11 +37,6 @@ public class VelocityUtil{
 
     /**
      *  recursively converts a JSONObject into a heirarchical series of Maps and Lists
-     *  @param ret StringBuilder to be appended to
-     *  @param format format the field is to be inserted into
-     *  @param parent JSONObject or JSONArray that is the starting point
-     *  @param tokens array of field names yet to be processed
-     *  @param otherLeafKeys List of other leaf node keys.  E.g., if I want repositories.name as the main, also pass "type" to get repositories.type as well.  Only works with items of the same depth
      */
     public static Object process(Object node) throws JSONException
     {
@@ -94,7 +89,7 @@ public class VelocityUtil{
      *  Applies template to json data and puts the results in the provided Writer
      *  @param o Input data
      *  @param template location of .vm file to be used
-     *  @param wrtier output is written here.  Could be a StringWriter or some sort of stream
+     *  @param writer output is written here.  Could be a StringWriter or some sort of stream
      */
     public static void applyTemplate( JSONObject o, String template, Writer writer ) throws Exception
     {

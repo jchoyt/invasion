@@ -111,12 +111,6 @@ public class VasionBot extends PircBot
 
     /**
      * The general commands that work in all channels (including private ones, due to the "else" above.
-     *
-     * @param channel DOCUMENT ME!
-     * @param sender DOCUMENT ME!
-     * @param login DOCUMENT ME!
-     * @param hostname DOCUMENT ME!
-     * @param message DOCUMENT ME!
      */
     protected void onMessage( String channel, String sender, String login, String hostname, String message )
     {
@@ -190,10 +184,6 @@ public class VasionBot extends PircBot
 
     /**
      * Starts the program
-     *
-     * @param args DOCUMENT ME!
-     *
-     * @throws Exception DOCUMENT ME!
      */
     public static void main( String[] args ) throws Exception
     {
@@ -222,9 +212,6 @@ public class VasionBot extends PircBot
 
     /**
      * This method carries out the actions to be performed when the PircBot gets disconnected. This may happen if the PircBot quits from the server, or if the connection is unexpectedly lost.
-     * @param
-     * @return
-     *
      */
     protected void onDisconnect()
     {

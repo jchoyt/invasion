@@ -20,7 +20,6 @@ import javax.servlet.annotation.WebServlet;
  *  Do the tick every 15 minutes on the quarter hour
  *
  * @author     jchoyt
- * @created    Wed Mar 10 12:23:54 EST 2010 @766 /Internet Time/
  */
 @WebServlet(urlPatterns = { "/tick" }, loadOnStartup=10 )
 public class TickServlet extends HttpServlet

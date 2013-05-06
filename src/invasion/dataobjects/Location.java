@@ -40,9 +40,8 @@ public class Location  implements java.io.Serializable {
 
     //{{{ Methods
     /**
-     * Returns all the occupants.  See Poll.fullPoll() for data format returned.
-     * @see Poll.fullPoll()
-     * @param
+     * Returns all the occupants.  See the invasion.ui.Poll API for data format returned.
+     * @see invasion.ui.Poll
      * @return  JSONArray full of occupants
      *
      */
@@ -137,7 +136,7 @@ public class Location  implements java.io.Serializable {
     /**
      * Returns all the information about a location
      * @param conn Currently open databse connection
-     * @param locid Location to dump the informatoin about
+     * @param who character to report data for
      * @return JSONObject with all known information about a location
      *
      */

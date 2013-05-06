@@ -80,8 +80,9 @@ public class Constants
     //{{{ Methods
     /**
      * Provides "he" or "she" depending on the gender.  Putting this in one place prevents having to do the damn check everywhere.
-     * @param
-     * @return
+     * @param gender 'm' for male, any other char for female
+     * @param capiltalized whether to return he or He
+     * @return he or she as appropriate
      *
      */
     public static String getHeShe( char gender, boolean capiltalized )
@@ -102,9 +103,10 @@ public class Constants
     }
 
     /**
-     * Provides "his" or "hers" depending on the gender.  Putting this in one place prevents having to do the damn check everywhere.
-     * @param
-     * @return
+     * Provides "his" or "her" depending on the gender - as in "his gun" or "her gun".  Putting this in one place prevents having to do the damn check everywhere.
+     * @param gender 'm' for male, any other char for female
+     * @param capiltalized whether to return his or His
+     * @return his or her as appropriate
      *
      */
     public static String getHisHer( char gender, boolean capiltalized )
@@ -126,10 +128,10 @@ public class Constants
 
 
     /**
-     * Provides "his" or "hers" depending on the gender.  Putting this in one place prevents having to do the damn check everywhere.
-     * @param
-     * @return
-     *
+     * Provides "him" or "her" depending on the gender - as in the person you're pointing at.  Putting this in one place prevents having to do the damn check everywhere.
+     * @param gender 'm' for male, any other char for female
+     * @param capiltalized whether to return him or Him
+     * @return him or her as appropriate
      */
     public static String getHimHer( char gender, boolean capiltalized )
     {

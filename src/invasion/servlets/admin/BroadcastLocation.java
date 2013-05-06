@@ -18,7 +18,6 @@ import java.sql.*;
  * Sends announcement to entire location
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/admin/broadcastLocation" } )
 public class BroadcastLocation extends HttpServlet

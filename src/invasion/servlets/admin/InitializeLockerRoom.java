@@ -19,7 +19,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/admin/initializeLockerRoom" } )
 public class InitializeLockerRoom extends HttpServlet

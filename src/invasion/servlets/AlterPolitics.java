@@ -20,7 +20,6 @@ import org.json.*;
  *  Intended to use in an ajax call - any return value other than "OK" is unacceptable.
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/alterPolitics" } )
 public class AlterPolitics extends HttpServlet

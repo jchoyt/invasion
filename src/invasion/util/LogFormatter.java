@@ -10,7 +10,6 @@ import java.util.logging.Logger;
  *  Description of the Class
  *
  *@author     jchoyt
- *@created    May 30, 2004
  */
 public class LogFormatter extends Formatter
 {

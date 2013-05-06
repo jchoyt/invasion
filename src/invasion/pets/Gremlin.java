@@ -20,8 +20,6 @@ public class Gremlin extends Critter
 
    /**
      * Bare constructor - used by CritterFactory to load from the database
-     * @param
-     * @return
      *
      */
     public Gremlin()
@@ -32,8 +30,6 @@ public class Gremlin extends Critter
 
     /**
      * Constructor to add a new Gremlin to an existing Brood
-     * @param
-     * @return
      *
      */
     public Gremlin( Brood brood )
@@ -50,8 +46,6 @@ public class Gremlin extends Critter
 
     /**
      * Constructor for a Brood-less Gremlin - a new Brood will be created with this guy as the sole member
-     * @param
-     * @return
      *
      */
     public Gremlin( int station )
@@ -116,8 +110,6 @@ public class Gremlin extends Critter
 
     /**
      * when you kill them...just make more!!
-     * @param
-     * @return
      *
      */
     public void kill(Attacker attacker, InvasionConnection conn, CombatResult result) throws SQLException

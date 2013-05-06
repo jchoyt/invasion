@@ -19,7 +19,6 @@ import org.json.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/saveSkillConfig" } )
 public class SaveSkillConfig extends HttpServlet
@@ -29,10 +28,6 @@ public class SaveSkillConfig extends HttpServlet
     public final static Logger log = Logger.getLogger( KEY );
     static{log.setLevel(Level.FINER);}
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException
@@ -57,10 +52,6 @@ public class SaveSkillConfig extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

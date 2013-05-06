@@ -38,7 +38,7 @@ public class Utils
         {
             URL url = new URL( timeUrl );
             URLConnection conn = url.openConnection(  );
-            DataInputStream dis = new DataInputStream( conn.getInputStream(  ) );
+            BufferedReader dis = new BufferedReader( new InputStreamReader( conn.getInputStream( ) ) );
             String inputLine;
 
             while ( ( inputLine = dis.readLine(  ) ) != null )

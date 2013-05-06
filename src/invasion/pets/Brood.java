@@ -81,8 +81,6 @@ public class Brood  implements PropertyChangeListener
 
     /**
      * Puts a new brood into the database and sets the Brood ID that's returned from the database.  Note this uses the critter database rather than the main one.
-     * @param
-     * @return
      *
      */
     public boolean insert()
@@ -120,8 +118,6 @@ public class Brood  implements PropertyChangeListener
 
     /**
      * Updates the brood in the database.  Note this uses the critter database rather than the main one.
-     * @param
-     * @return
      *
      */
     public boolean update( InvasionConnection conn )
@@ -143,7 +139,6 @@ public class Brood  implements PropertyChangeListener
      *
      * @param conn Connection to the main database
      * @param pConn Connection to the pet database
-     * @return
      *
      */
     public void act( InvasionConnection conn, InvasionConnection pConn )
@@ -283,8 +278,6 @@ public class Brood  implements PropertyChangeListener
     /**
      * bulids a list of potential targets
      *
-     * @param
-     * @return
      *
      */
     public void buildTargetList( InvasionConnection conn )
@@ -346,7 +339,6 @@ public class Brood  implements PropertyChangeListener
     /**
      * Moves critters from this brood into another in the database
      * @param conn The pet database
-     * @return
      *
      */
     public void mergeInto( InvasionConnection conn, Brood b )
@@ -360,8 +352,6 @@ public class Brood  implements PropertyChangeListener
 
     /**
      * Deletes the brood from the database and the BroodManager
-     * @param
-     * @return
      *
      */
     protected boolean delete(InvasionConnection conn)
@@ -374,8 +364,6 @@ public class Brood  implements PropertyChangeListener
 
     /**
      * Adds a new critter to the List in this Brood object - does not make any database changes.
-     * @param
-     * @return
      *
      */
 	public void addMember(Critter newCritter)
@@ -385,8 +373,6 @@ public class Brood  implements PropertyChangeListener
 
     /**
      * Removes a specific critter from the List in this Brood object - does not make any database changes.
-     * @param
-     * @return
      *
      */
 	public void removeMember( Critter oldCritter, InvasionConnection conn )

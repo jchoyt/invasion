@@ -13,14 +13,7 @@ import java.util.*;
  */
 public class Inventory
 {
-    /**
-     * DOCUMENT ME!
-     */
     private String REPO;
-
-    /**
-     * DOCUMENT ME!
-     */
     private List<String> stuff = new ArrayList<String>(  );
 
     /**
@@ -30,33 +23,17 @@ public class Inventory
     {
     }
 
-
-    /**
-     * Creates a new Inventory object.
-     *
-     * @param filename DOCUMENT ME!
-     */
     public Inventory( String filename )
     {
         REPO = filename;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param who DOCUMENT ME!
-     * @param message DOCUMENT ME!
-     */
     public void addItem( String item )
     {
         stuff.add(item);
         Utils.save( stuff, REPO );
     }
 
-
-    /**
-     * returns a list of messages for the user named
-     */
     public String getItem(  )
     {
         double randomValue = Math.random(  );
@@ -67,10 +44,6 @@ public class Inventory
         return ret;
     }
 
-
-    /**
-     * DOCUMENT ME!
-     */
     public void load(  )
     {
         try
@@ -88,28 +61,9 @@ public class Inventory
         }
     }
 
-
     public int getInventoryCount()
     {
         return stuff.size();
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    // public List reviewAllInventory(  )
-    // {
-    //     List ret = new ArrayList(  );
-
-    //     for ( String o : messages.keySet(  ) )
-    //     {
-    //         ret.add( "Inventory for " + o );
-    //         ret.addAll( messages.get( o ) );
-    //     }
-
-    //     return ret;
-    // }
 }
 

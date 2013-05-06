@@ -64,8 +64,6 @@ public class Critter implements Attacker, Defender
 
     /**
      * Puts a new critter into the database and sets the  ID that's returned from the database.  Note this uses the critter database rather than the main one.
-     * @param
-     * @return
      *
      */
     public boolean insert()
@@ -173,7 +171,6 @@ public class Critter implements Attacker, Defender
     /**
      *
      * @param  conn - don't use - need to use the petdb.  This is the connection for the attacker
-     * @return
      *
      */
     public CombatResult hit( Attacker attacker, int rawAmount, char damagetype, InvasionConnection conn, boolean updateNow ) throws SQLException
@@ -227,8 +224,6 @@ public class Critter implements Attacker, Defender
     /**
      * Notify the defender that they've been attacked.  Allows for reprisals.
      *
-     * @param
-     * @return
      *
      */
     public void notifyAttacked( Attacker attacker, InvasionConnection conn )
@@ -262,8 +257,7 @@ public class Critter implements Attacker, Defender
      * Kills off a pet
      *
      * @param  conn Connection to use for attacker only (assuming it's a character)
-     * @param  whodunnit The id of the last entity to attack
-     * @return
+     * @param  attacker The id of the last entity to attack
      *
      */
     public void kill(Attacker attacker, InvasionConnection conn, CombatResult result) throws SQLException

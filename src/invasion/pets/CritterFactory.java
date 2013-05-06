@@ -25,8 +25,6 @@ public class CritterFactory
     //{{{ Methods
     /**
      * Adds a critter of the specified type to a random location on a station.   It will join a Brood that already exists or create a new one if necessary.
-     * @param
-     * @return
      *
      */
     // public static void addCritter( int station, String type )
@@ -60,8 +58,6 @@ public class CritterFactory
 
     /**
      * Load critter from pet database.
-     * @param
-     * @return
      *
      */
 	public static Critter loadCritter( InvasionConnection conn, int id )

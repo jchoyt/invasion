@@ -17,7 +17,6 @@ import java.sql.*;
  *
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/admin/itemAdd" } )
 public class AddItem extends HttpServlet
@@ -56,10 +55,6 @@ public class AddItem extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doGet( HttpServletRequest req, HttpServletResponse resp )
         throws IOException, ServletException
@@ -101,10 +96,6 @@ public class AddItem extends HttpServlet
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest req, HttpServletResponse resp )
         throws IOException, ServletException {

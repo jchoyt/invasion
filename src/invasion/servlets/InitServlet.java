@@ -27,11 +27,7 @@ import invasion.bot.*;
  *    <li> Setting up the Velocity template engine</li>
  *    <li> </li>
  *  </ul>
- *
- *
  *@author     Jeffrey Hoyt
- *@version    1.0
- *@see        javax.servlet.http
  */
 public class InitServlet extends HttpServlet
 {
@@ -66,10 +62,6 @@ public class InitServlet extends HttpServlet
          *  required for all Servlets
          */
         super.init( config );
-        /* Set up logging */
-        System.setProperty( "java.util.logging.config.class", "invasion.util.LogConfig" );
-        LogConfig.reloadLogManagerProperties();
-        System.out.println( LogConfig.getConfiguration() );
         /*
          *  Grab the name for the currently deployed webapp.  It's possible this could be in error if the webapp is deployed
          *  as a subdirectory (i.e., The docbase is http://localhost:8080/first/sub).  If this ever gets deployed that way it will

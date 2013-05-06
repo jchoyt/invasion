@@ -19,7 +19,6 @@ import org.json.*;
  *  Servlet to recharge Energy Packs and weapons/shields
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/map/recharge" } )
 public class Recharge extends HttpServlet
@@ -105,7 +104,6 @@ public class Recharge extends HttpServlet
 
     /**
      * Performs the recharge of a weapon
-     * @param
      * @return  null if successful, otherwise return an error message suitable for the user to see
      *
      */
@@ -174,10 +172,6 @@ public class Recharge extends HttpServlet
         return null;
     }
 
-    /**
-     *  Description of the Method
-     *
-     */
     @Override
     public void doPost( HttpServletRequest request, HttpServletResponse response )
         throws IOException, ServletException

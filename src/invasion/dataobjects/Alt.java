@@ -160,9 +160,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Calculates the HP circle that will show
-     * @param
-     * @return
-     *
      */
     public static int calcHpCategory( int hp, int hpmax )
     {
@@ -181,8 +178,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Heals the character. Takes care of checking to ensure your not healing above the max.  Does NOT save the new state.
-     * @param
-     * @return
      *
      */
      public void heal( int amt )
@@ -192,9 +187,7 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
      /**
       * "Heals" the character's IP, i.e., lowers it.
-      * @param
-      * @return
-      *
+        *
       */
      public void healIp( int amt )
      {
@@ -203,7 +196,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
      /**
      * Convienence class to get faction id
-     * @param
      * @return return faction ID if factioned, -1 otherwise
      *
      */
@@ -226,9 +218,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
    /**
     * Attack a target
-    * @param
-    * @return
-    *
     */
    public JSONArray attack( Defender defender, InvasionConnection conn )
    {
@@ -278,8 +267,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Attack with a melee weapon, improvised or otherwise
-     * @param
-     * @return
      *
      */
     public void attackWithMelee( InvasionConnection conn, Defender defender )
@@ -380,8 +367,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Fire gun
-     * @param
-     * @return
      *
      */
     protected void attackWithFirearm(InvasionConnection conn, Defender defender)
@@ -566,8 +551,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Throw item at someone/-thing.  This will verify the character owns the object to be used as a missle.
-     * @param
-     * @return
      *
      */
     public JSONArray throwAttack( InvasionConnection conn, Defender defender, Item missile )
@@ -1068,9 +1051,9 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Characters statistics for the gui.  Supports The Poll.
-     * @param id of the character to describe
+     * @param altid of the character to describe
      * @return JSON representation of a character's current stats. See Poll.java for example
-     * @see Poll.java
+     * @see invasion.ui.Poll
      */
     public static JSONObject getStats( InvasionConnection conn, int altid )
     throws SQLException, JSONException
@@ -1120,8 +1103,6 @@ public class Alt implements java.io.Serializable, Attacker, Defender {
 
     /**
      * Saves alt current state and takes him out of the cache, forcing a reload
-     * @param
-     * @return
      *
      */
     public static void uncache( int altid )

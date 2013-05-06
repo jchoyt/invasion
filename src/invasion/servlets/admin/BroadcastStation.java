@@ -18,7 +18,6 @@ import java.sql.*;
  * Sends announcement to entire station
  *
  * @author     jchoyt
- * @created
  */
 @WebServlet(urlPatterns = { "/admin/broadcastStation" } )
 public class BroadcastStation extends HttpServlet
