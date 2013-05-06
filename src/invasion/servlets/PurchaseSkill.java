@@ -97,7 +97,7 @@ public class PurchaseSkill extends HttpServlet
                 conn.psExecuteUpdate( query, "error", s.getValue(), altid );
                 query = "update alt set cp = cp - ? where id = ?";
                 conn.psExecuteUpdate( query, "error", s.getCost(), altid );
-                Alt.uncache( altid );
+                AltFactory.uncache( altid );
                 out.write("<font color=\"green\">Purchase succeeded...reloading page.</font>");
             }
             else

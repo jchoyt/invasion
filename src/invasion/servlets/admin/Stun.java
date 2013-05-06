@@ -51,7 +51,7 @@ public class Stun extends HttpServlet
             int altid = Integer.parseInt(altidString);
             long seconds = Long.parseLong( timeString );
             conn = new InvasionConnection();
-            Alt alt = Alt.load( conn, altid );
+            Alt alt = AltFactory.load( conn, altid );
             alt.setStunned( System.currentTimeMillis() + (1000L * seconds) );
             new Message( conn, altid, Message.ETHERIAL, message );
         }

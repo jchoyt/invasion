@@ -50,7 +50,7 @@ public class Smite extends HttpServlet
         try{
             int altid = Integer.parseInt(altidString);
             conn = new InvasionConnection();
-            Alt alt = Alt.load( conn, altid );
+            Alt alt = AltFactory.load( conn, altid );
             int count =  conn.psExecuteUpdate(query, "", altid);
             new Message( conn, altid, Message.EFFECT, message );
             alt.kill( null, conn, null);

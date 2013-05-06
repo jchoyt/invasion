@@ -1,112 +1,82 @@
-/*
- *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
- */
-
 package invasion.pets;
 
-import java.util.logging.Level;
+import invasion.dataobjects.Alt;
+import invasion.dataobjects.Station;
+import invasion.util.DiceRoller;
 import java.util.logging.Logger;
-import invasion.dataobjects.*;
-import invasion.util.*;
 
-public class LiMag extends Critter
+public class LiMag
+  extends Critter
 {
+  public static final String KEY = LiMag.class.getName();
+  public static final Logger log = Logger.getLogger(KEY);
 
-    public final static String KEY = LiMag.class.getName();
-    public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
-    //{{{ Constructors
+  public LiMag() {}
 
-   /**
-     * Bare constructor - used by CritterFactory to load from the database
-     *
-     */
-    public LiMag()
+  public LiMag(Brood brood)
+  {
+    if (brood == null)
     {
-        init();
+      throw new RuntimeException("Can't create a new LiMag in a non-existant brood");
     }
+    setBrood(brood);
+    init();
+  }
 
-    /**
-     * Constructor to add a new LiMag to an existing Brood
-     *
-     */
-    public LiMag( Brood brood )
+  public LiMag(int station)
+  {
+    Brood b = new Brood(-1);
+    b.addMember(this);
+    b.setLocation(Station.getRandomLocation(station));
+    setBroodGoals(b);
+    b.setType(131);
+    if (!b.insert())
     {
-        if( brood == null )
-        {
-            throw new RuntimeException("Can't create a new LiMag in a non-existant brood");
-        }
-        setBrood(brood);
-        init();
-        insert();
+      log.warning("Brood not inserted.");
     }
+    BroodManager.addBrood(b);
 
-    /**
-     * Constructor for a Brood-less LiMag - a new Brood will be created with this guy as the sole member
-     *
-     */
-    public LiMag( int station )
-    {
-        //no brood yet, so create one
-        Brood b = new Brood(-1);
-        b.addMember(this);
-        b.setLocation( Station.getRandomLocation( station ) );
-        setBroodGoals( b );
-        b.setType( Brood.INVADING );
-        if( !b.insert() )
-        {
-            log.warning("Brood not inserted.");
-        }
+    setBrood(b);
+    init();
+    insert();
+    log.finer("Finished creating LiMag " + this.id + " at location " + b.getLocation());
+  }
 
-        //now create the pet
-        setBrood( b );
-        init();
-        insert();
-        log.finer("Finished creating LiMag " + id + " at location " + b.getLocation() );
-    }
+  public void init()
+  {
+    this.ap = 75;
+    this.apmax = 75;
+    this.hp = 50;
+    this.hpmax = 50;
+    this.attackDamage = new DiceRoller("4d7");
+    this.cost = -1;
+    this.armor = 120;
+    this.armorMax = 120;
+    this.shield = 120;
+    this.shieldMax = 120;
+    this.name = ("LiMag " + (int)(Math.random() * 2500.0D));
+    this.typeid = 1;
+    this.damageType = 'e';
+    if (Math.random() < 0.01D) this.name = "I blame Player_1";
+    this.deathKnells = new String[] { "You have landed the killing blow.", "With a final blow, the lights on the LiMag slowly dim.", "Sparks fly from your target's caraprice and it finally lies motionless.", "You yell, \"Holy crap! Did you see that shot?!??  Did you?\"  Oh. Yeah. There's nobody else here. You are forever alone." };
+  }
 
-    public void init()
-    {
-        ap = 75;
-        apmax = 75;
-        hp = 50;
-        hpmax = 50;
-        attackDamage = new DiceRoller("4d7");
-        cost = -1;
-        armor = 120;
-        armorMax = 120;
-        shield = 120;
-        shieldMax = 120;
-        name = "LiMag " + ( (int) ( Math.random() * 2500 ) );
-        typeid = 1;
-        damageType = 'e';
-        if(Math.random() < 0.01) name = "I blame Player_1";
-        deathKnells = new String[] { "You have landed the killing blow.",
-            "With a final blow, the lights on the LiMag slowly dim.",
-            "Sparks fly from your target's caraprice and it finally lies motionless.",
-            "You yell, \"Holy crap! Did you see that shot?!??  Did you?\"  Oh. Yeah. There's nobody else here. You are forever alone."
-            };
-    }
-    //}}}
+  public void setBroodGoals(Brood brood)
+  {
+    brood.setGoal(0, 2);
+    brood.setGoal(1, 1);
+    brood.setGoal(2, 5);
+    brood.setGoal(4, 5);
+    brood.setGoal(3, 5);
+  }
 
-    //{{{ Methods
+  public boolean checkSummoner(Alt alt)
+  {
+    return false;
+  }
 
-    /**
-     * see @Critter
-     */
-    public void setBroodGoals( Brood brood )
-    {
-        brood.setGoal( Brood.GOAL_SURVIVE, 2 );
-        brood.setGoal( Brood.GOAL_PROTECT, 1 );
-        brood.setGoal( Brood.GOAL_KILL_PSI, 5 );
-        brood.setGoal( Brood.GOAL_KILL_HUMAN , 5 );
-        brood.setGoal( Brood.GOAL_KILL_MUT , 5 );
-    }
-    //}}}
-
-    //{{{  Getters and setters
-    public int getId() { return -1; }
-    //}}}
-
+  public int getId()
+  {
+    return -1;
+  }
 }
-// :wrap=none:noTabs=true:collapseFolds=1:folding=explicit:

@@ -76,7 +76,7 @@ public class Attack extends HttpServlet
             if( targetType.equals("alt" ) )
             {
                 log.finer("Attempting to load character " + targetid );
-                defender = Alt.load( targetid );
+                defender = AltFactory.load( targetid );
             }
             else if( targetType.equals("pet" ) )
             {

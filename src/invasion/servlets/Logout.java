@@ -67,7 +67,7 @@ public class Logout extends HttpServlet
 
         int altid = wazzit.getAlt().getId();
         request.getSession().invalidate();
-        Alt.uncache( altid );
+        AltFactory.uncache( altid );
         response.sendRedirect( WebUtils.BASE + "index.jsp" );
     }
 

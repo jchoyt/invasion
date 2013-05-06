@@ -1,35 +1,23 @@
-/*
- *  Copyright 2010 Jeffrey Hoyt.  All rights reserved.
- */
-
 package invasion.dataobjects;
 
-import org.json.*;
-import invasion.util.*;
+import invasion.util.InvasionConnection;
+import org.json.JSONArray;
 
-public interface Attacker
+public abstract interface Attacker
 {
-    /**
-     * Performs an attack.
-     * @param  defender - target of the attack
-     * @param  conn - existing database connection
-     * @return  Any alters (e.g. your target has moved away) for the user
-     *
-     */
-    public JSONArray attack(Defender defender, InvasionConnection conn );
+  public abstract JSONArray attack(Defender paramDefender, InvasionConnection paramInvasionConnection);
 
-    public int getLocation();
+  public abstract int getLocation();
 
-    public void insertMessage(String message, int type, InvasionConnection conn);
+  public abstract void insertMessage(String paramString, int paramInt, InvasionConnection paramInvasionConnection);
 
-    public int getId();
+  public abstract int getAttackerId();
 
-    public void setReload(boolean reload);
+  public abstract void setReload(boolean paramBoolean);
 
-    public boolean getReload();
+  public abstract boolean getReload();
 
-    public String getName();
+  public abstract String getName();
 
-    public Faction getFaction();
-
+  public abstract Faction getFaction();
 }

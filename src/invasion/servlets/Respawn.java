@@ -46,7 +46,7 @@ public class Respawn extends HttpServlet
     {
         String charId = WebUtils.getRequiredParameter(request, "id");
         int altid = Integer.parseInt(charId);
-        Alt.uncache( altid );
+        AltFactory.uncache( altid );
         Alt alt = null;
 
         String query = "update alt set hp=hpmax, ip=0, lasthurtby=null, ticksalive=1 where id=? and ticksalive=0;";
@@ -62,7 +62,7 @@ public class Respawn extends HttpServlet
                 VasionBot.announce( request.getRemoteUser() + " attempted to respawn character " + charId + " but the new body isn't done growing (they hacked the page)." );
                 return;
             }
-            alt = Alt.load(altid);
+            alt = AltFactory.load(altid);
             if( !alt.getUsername().equals(request.getRemoteUser()) )
             {
                 response.sendRedirect("naughty.jsp");

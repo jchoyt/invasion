@@ -67,7 +67,7 @@ public class Connect extends HttpServlet
         int altid = Integer.parseInt(charId);
         try
         {
-            alt = Alt.load( altid );
+            alt = AltFactory.load( altid );
             if( !alt.getUsername().equals(request.getRemoteUser()) )
             {
                 response.sendRedirect("naughty.jsp");

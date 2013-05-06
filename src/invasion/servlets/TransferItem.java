@@ -220,7 +220,7 @@ public class TransferItem extends HttpServlet
                         alerts.put( Poll.createErrorAlert( "Item transfer failed." ) );
                         return alerts;
                     }
-                    Alt recipient = Alt.load( conn, dest );
+                    Alt recipient = AltFactory.load( conn, dest );
                     new Message( conn, alt.getId(), Message.NORMAL, "You give your " + item.getItemtype().getName() + " to " + recipient.getName() +".");
                     new Message( conn, recipient.getId(), Message.NORMAL, alt.getName() + " gave you a(n) " + item.getItemtype().getName() + ".");
                     alt.decrementAp( conn, 1 );
@@ -317,7 +317,7 @@ public class TransferItem extends HttpServlet
     {
         if( otherLoc < Constants.MIN_LOCATION_ID ) //dest is a character
         {
-            Alt giftee = Alt.load( conn, otherLoc );
+            Alt giftee = AltFactory.load( conn, otherLoc );
             return giftee.getLocation() == altLoc;
         }
         else if( otherLoc < Constants.MIN_FACTION_ID ) //dest is tile

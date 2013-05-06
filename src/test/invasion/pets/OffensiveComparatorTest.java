@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.logging.*;
 import org.junit.*;
 import invasion.pets.*;
+import invasion.dataobjects.*;
 
 public class OffensiveComparatorTest
 {
@@ -33,9 +34,10 @@ public class OffensiveComparatorTest
 
         c1 = new Critter(){
             public void setBroodGoals( Brood brood ) {}
+            public void init(){}
+            public boolean checkSummoner(Alt x) { return false;}
         };
     } //}}}
-
 
     //{{{  tests
     @Test
