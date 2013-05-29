@@ -75,7 +75,7 @@ public abstract class Critter implements Attacker, Defender
     {
       conn = new InvasionConnection("postgres");
       conn.setAutoCommit(false);
-      conn.psExecuteUpdate(query, "Error adding new brood to the database", new Object[] { Integer.valueOf(this.brood.getId()), Integer.valueOf(this.typeid), this.name, Integer.valueOf(this.ap), Integer.valueOf(this.hp), Integer.valueOf(this.armor), Integer.valueOf(this.shield) });
+      conn.psExecuteUpdate(query, "Error adding new brood to the database", new Object[] { brood.getId(), typeid, name, ap, hp, armor, shield });
 
       query = "select max(id) as id from critters";
       rs = conn.executeQuery(query);
@@ -137,7 +137,7 @@ public abstract class Critter implements Attacker, Defender
       rs = conn.executeQuery(query);
       while (rs.next())
       {
-        critterClasses.put(Integer.valueOf(rs.getInt("id")), rs.getString("class"));
+        critterClasses.put(rs.getInt("id"), rs.getString("class"));
       }
     }
     catch (SQLException e)
@@ -154,7 +154,7 @@ public abstract class Critter implements Attacker, Defender
 
   public static String getCritterClass(int id)
   {
-    return (String)critterClasses.get(Integer.valueOf(id));
+    return (String)critterClasses.get(id);
   }
 
   public abstract boolean checkSummoner(Alt paramAlt);

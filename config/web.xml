@@ -10,13 +10,6 @@
         <listener-class>invasion.servlets.StatsListener</listener-class>
     </listener> -->
 
-    <!-- Init Servlet -->
-    <servlet>
-        <servlet-name>InitServlet</servlet-name>
-        <servlet-class>invasion.servlets.InitServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
     <!-- Login by form -->
     <login-config>
         <auth-method>FORM</auth-method>

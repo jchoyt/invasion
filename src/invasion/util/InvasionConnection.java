@@ -258,65 +258,6 @@ public class InvasionConnection
 
     /**
      *  This method executes an updating SQL stmtement (usually an UPDATE, INSERT, or DELETE) that is passed as a
-     *  parameter and returns the generated key from the insert statement
-     *
-     * @param  query    Query string suitable for creating a PreparedStatment
-     * @param  params   Comma delimited list of parameters, in order!
-     * @return  ResultSet of the query
-     * @exception  SQLException  Description of the Exception
-     */
-    public int psExecuteInsert(String query, String errorMsg, Object... params)
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        int returnVal = -1;
-        try
-        {
-            ps = conn.prepareStatement(query);
-            //set params
-            int i = 1;
-            for(Object param: params)
-            {
-                if( param instanceof String )
-                    ps.setString(i, String.valueOf(param));
-                else if( param instanceof Integer )
-                    ps.setInt(i, ((Integer)param).intValue());
-                else if( param instanceof Long )
-                    ps.setLong(i, ((Long)param).longValue());
-                else if( param instanceof Float )
-                    ps.setFloat(i, ((Float)param).floatValue());
-                else if( param instanceof Double )
-                    ps.setDouble(i, ((Double)param).doubleValue());
-                else if( param instanceof java.lang.Character )
-                    ps.setString( i, String.valueOf( param ) );
-                else if( param instanceof Boolean )
-                    ps.setBoolean(i, ((Boolean)param).booleanValue());
-                else throw new RuntimeException( "This method does not handle " + param.getClass() + " yet." );
-                i++;
-            }
-            log.finer( ps.toString() );
-
-            ps.executeUpdate();
-            rs = ps.getGeneratedKeys();
-            if(rs.next())
-                returnVal = rs.getInt( 1 );
-            else
-                throw new SQLException("Error retrieving generated keys.");
-        }
-        catch(SQLException e)
-        {
-            log.log( Level.SEVERE, errorMsg, e);
-        }
-        finally
-        {
-            DatabaseUtility.close(rs);
-            DatabaseUtility.close(ps);
-            return returnVal;
-        }
-    }
-
-    /**
-     *  This method executes an updating SQL stmtement (usually an UPDATE, INSERT, or DELETE) that is passed as a
      *  parameter signals the driver with the given flag about whether the auto-generated keys produced by this
      *  stmtement should be made available for retrieval.
      *

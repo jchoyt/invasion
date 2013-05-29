@@ -1,4 +1,4 @@
-package invasion.pets;
+    package invasion.pets;
 
 import invasion.bot.VasionBot;
 import invasion.dataobjects.Alt;
@@ -39,13 +39,13 @@ public class Brood
   public static final int FERAL_TOHU = 129;
   public static final int FERAL_TIKKUN = 130;
   public static final int INVADING = 131;
-  protected List<Critter> members = new ArrayList();
+  protected List<Critter> members = new ArrayList<Critter>();
   protected int ownerId = -1;
   protected int[] goals = new int[5];
   protected int location = 0;
   protected int type = 0;
   protected int id = 0;
-  protected List<Defender> targetList = new ArrayList();
+  protected List<Defender> targetList = new ArrayList<Defender>();
   protected boolean active = true;
 
   public Brood(int ownerId)
@@ -70,14 +70,14 @@ public class Brood
 
   public boolean insert()
   {
-    String query = "insert into brood (location, type, goal_survive, goal_protect, goal_killpsi,goal_killmut,goal_killhuman, owner, type) values (?,?,?,?,?,?,?,?,?)";
+    String query = "insert into brood (location, type, goal_survive, goal_protect, goal_killpsi,goal_killmut,goal_killhuman, owner) values (?,?,?,?,?,?,?,?)";
     InvasionConnection conn = null;
     ResultSet rs = null;
     try
     {
       conn = new InvasionConnection("postgres");
       conn.setAutoCommit(false);
-      conn.psExecuteInsert(query, "Error adding new brood to the database", new Object[] { Integer.valueOf(this.location), Integer.valueOf(this.type), Integer.valueOf(this.goals[0]), Integer.valueOf(this.goals[1]), Integer.valueOf(this.goals[2]), Integer.valueOf(this.goals[3]), Integer.valueOf(this.goals[4]), Integer.valueOf(this.ownerId), Integer.valueOf(this.type) });
+      conn.psExecuteUpdate(query, "Error adding new brood to the database", new Object[] { location, type, goals[0], goals[1], goals[2], goals[3], goals[4], ownerId });
 
       query = "select max(id) as id from brood";
       rs = conn.executeQuery(query);
@@ -281,7 +281,7 @@ public class Brood
     String query = "update critters set brood = ?  where brood = ?";
     conn.psExecuteUpdate(query, "Failure merging broods", new Object[] { Integer.valueOf(b.getId()), Integer.valueOf(this.id) });
     delete(conn);
-    this.members = new ArrayList();
+    this.members = new ArrayList<Critter>();
   }
 
   protected boolean delete(InvasionConnection conn)

@@ -105,7 +105,7 @@ public class Chalk extends HttpServlet
             DatabaseUtility.close(ps);
             DatabaseUtility.close(conn);
         }
-        response.sendRedirect("index.jsp");
+        response.sendRedirect(WebUtils.BASE + "map/index.jsp");
     }
 
 

@@ -54,7 +54,7 @@ public class Anopheles extends Critter
     this.shield = (40 + skillLevel * skillLevel);
     this.shieldMax = (40 + skillLevel * skillLevel);
     this.name = ("Anopheles " + (int)(Math.random() * 2500.0D));
-    this.typeid = 5;
+    this.typeid = 6;
     this.damageType = 'e';
     this.defenderChance = (0.05D * skillLevel);
     this.deathKnells = new String[] { "You have landed the killing blow.", "The Anopheles releases a horrendous howl of pain and collapses, dead." };

@@ -4,20 +4,21 @@
 
 package invasion.servlets;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
+import invasion.bot.*;
 import invasion.dataobjects.*;
 import invasion.pets.*;
 import invasion.ui.VelocityUtil;
 import invasion.util.*;
-import invasion.bot.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *  This allows for initial setup, inlcuding
@@ -29,12 +30,12 @@ import invasion.bot.*;
  *  </ul>
  *@author     Jeffrey Hoyt
  */
+@WebServlet(urlPatterns={"/94yTsFEk7tU8igXn6vPPW4fRi6qv49mTRYydlmIkTpL9ypVpl1CSH5fI7Uji7cx"}, loadOnStartup=1)
 public class InitServlet extends HttpServlet
 {
 
     public final static String KEY = InitServlet.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
 
     protected static Thread botThread = null;
 
@@ -94,14 +95,26 @@ public class InitServlet extends HttpServlet
         LocationType.load();
         /* pre-load the Search information */
         Search.load();
+        log.info("--> Search tables loaded");
+
+        Critter.loadClassNames();
+        log.info("--> Critter types loaded");
+
         /* pre-load the Skill values */
         Skills.load();
+        log.info("--> Skills loaded");
+
         /* Load up the location occupant counts  */
         LocationCache.load();
+        log.info("--> Location cache set up");
+
         /* load up the broods */
         BroodManager.load();
+        log.info("--> Broods loaded");
+
         /* load up factions */
         Faction.loadCache();
+        log.info("--> Factions loaded");
         /* start up the error reporting bot */
         botThread = new Thread( new BotRunner( "vasionbot.properties" ), "VasionBot" );
         botThread.start();
@@ -118,7 +131,6 @@ public class InitServlet extends HttpServlet
     public void doGet( HttpServletRequest req, HttpServletResponse resp )
         throws IOException, ServletException
     {
-        doPost( req, resp );
     }
 
 

@@ -72,10 +72,10 @@ public class PurchaseSkill extends HttpServlet
             int altid = Integer.parseInt( altidString );
             conn = new InvasionConnection();
             String column = "humanskill";
-            if( s.getRace().equals( Skill.PSI ) )
-                column = "psiskill";
-            else if( s.getRace().equals( Skill.MUTATE ) )
-                column = "mutateskill";
+            if( s.getRace().equals( Constants.RACENAMES[Constants.TOHU] ) )
+                column = "tohuskill";
+            else if( s.getRace().equals( Constants.RACENAMES[Constants.TIKKUN] ) )
+                column = "tikkunskill";
             String query = "select s.name, a.cp, s.cost <= a.cp as hascp, " +  //boolean - do you have enough CP to buy this?
                 "(t.value & a."+ column + " > 0 or s.prerequisite is null ) " +  //boolean do you have the prerequisite skill?
                 "as prereq from alt a join skills s on (a."+ column + " & s.value = 0 ) " + //ensures you don't already have it

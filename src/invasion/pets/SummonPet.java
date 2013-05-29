@@ -52,7 +52,7 @@ public class SummonPet extends HttpServlet
         }
         catch ( NumberFormatException e )
         {
-            response.sendRedirect( "index.jsp?error=A beast by that name does not exist." );
+            response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=A beast by that name does not exist." );
         }
 
         if ( !alt.isPetmaster() )
@@ -73,7 +73,7 @@ public class SummonPet extends HttpServlet
 
             if ( type == null )
             {
-                response.sendRedirect( "index.jsp?error=There are no pangolins in space." );
+                response.sendRedirect( WebUtils.BASE + "map/index.jsp?error=There are no pangolins in space." );
 
             }
             else

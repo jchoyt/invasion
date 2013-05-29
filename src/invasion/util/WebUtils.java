@@ -1,16 +1,19 @@
 /*
  *  Copyright 2009 Jeffrey Hoyt. All Rights Reserved.
- */
+*/
 package invasion.util;
 
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.*;
+import invasion.dataobjects.Message;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.logging.Logger;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
-
 
 /**
  *  Miscellaneous utils for use in JSPs and for other web-based areas of the
@@ -21,8 +24,8 @@ import javax.servlet.jsp.PageContext;
 public class WebUtils
 {
 
-    public final static String KEY = WebUtils.class.getName();
-    public final static Logger log = Logger.getLogger( KEY );
+    public static final String KEY = WebUtils.class.getName();
+    public static final Logger log = Logger.getLogger( KEY );
     // static{log.setLevel(Level.FINER);}
 
     public static final String EMPTY_STR = "";
@@ -46,10 +49,9 @@ public class WebUtils
      * @exception  NullPointerException  thrown if the name was not in the html
      *      form
      */
-    public static String getRequiredParameter( ServletRequest req, String name )
-        throws NullPointerException
+    public static String getRequiredParameter( ServletRequest req, String name ) throws NullPointerException
     {
-        String  ret  = req.getParameter( name );
+        String ret = req.getParameter( name );
 
         if ( ret == null )
         {
@@ -57,7 +59,6 @@ public class WebUtils
         }
         return ret;
     }
-
 
     /**
      *  Retrieves a list of parameters from a passed request. If the parameter is not found, an NPE is thrown.
@@ -70,8 +71,7 @@ public class WebUtils
      * @exception  NullPointerException  thrown if the name was not in the html
      *      form
      */
-    public static String[] getRequiredParameterValues( ServletRequest req, String name )
-        throws NullPointerException
+    public static String[] getRequiredParameterValues( ServletRequest req, String name ) throws NullPointerException
     {
         String[] values = req.getParameterValues( name );
         if ( values == null )
@@ -80,7 +80,6 @@ public class WebUtils
         }
         return values;
     }
-
 
     /**
      *  Gets the optionalParameter attribute of the WebUtils class
@@ -93,10 +92,9 @@ public class WebUtils
      * @return                           The optionalParameter value
      * @exception  NullPointerException  Description of the Exception
      */
-    public static String getOptionalParameter( ServletRequest req, String name, String defalt )
-        throws NullPointerException
+    public static String getOptionalParameter( ServletRequest req, String name, String defalt ) throws NullPointerException
     {
-        String  ret  = req.getParameter( name );
+        String ret = req.getParameter( name );
 
         if ( ret == null )
         {
@@ -105,7 +103,7 @@ public class WebUtils
         return ret;
     }
 
-  /**
+    /**
      *  Retrieves a list of parameters from a passed request in comma delimited
      *  format. If the parameter is not found, an NPE is thrown.
      *
@@ -117,17 +115,16 @@ public class WebUtils
      * @exception  NullPointerException  thrown if the name was not in the html
      *      form
      */
-    public static String getOptionalParameterValues( ServletRequest req, String name )
-        throws NullPointerException
+    public static String getOptionalParameterValues( ServletRequest req, String name ) throws NullPointerException
     {
-        String[]      values  = req.getParameterValues( name );
+        String[] values = req.getParameterValues( name );
 
         if ( values == null )
         {
-		return EMPTY_STR;
-	}
+            return EMPTY_STR;
+        }
 
-        StringBuffer  ret     = new StringBuffer();
+        StringBuffer ret = new StringBuffer();
 
         for ( int i = 0; i < values.length; i++ )
         {
@@ -148,12 +145,10 @@ public class WebUtils
      * @return                           The optionalParameter value
      * @exception  NullPointerException  Description of the Exception
      */
-    public static String getOptionalParameter( ServletRequest req, String name )
-        throws NullPointerException
+    public static String getOptionalParameter( ServletRequest req, String name ) throws NullPointerException
     {
         return getOptionalParameter( req, name, EMPTY_STR );
     }
-
 
     /**
      *  Gets the requiredAttribute attribute of the WebUtils class
@@ -165,7 +160,7 @@ public class WebUtils
      */
     public static String getRequiredAttribute( PageContext page, String name, int scope )
     {
-        Object  ret  = page.getAttribute( name, scope );
+        Object ret = page.getAttribute( name, scope );
 
         if ( ret == null )
         {
@@ -173,7 +168,6 @@ public class WebUtils
         }
         return ret.toString();
     }
-
 
     /**
      *  Gets the optionalAttribute attribute of the WebUtils class
@@ -185,7 +179,7 @@ public class WebUtils
      */
     public static String getOptionalAttribute( PageContext page, String name, int scope )
     {
-        Object  ret  = page.getAttribute( name, scope );
+        Object ret = page.getAttribute( name, scope );
 
         if ( ret == null )
         {
@@ -193,7 +187,6 @@ public class WebUtils
         }
         return ret.toString();
     }
-
 
     /**
      *  Validate the form of an email address. <P>
@@ -220,14 +213,10 @@ public class WebUtils
             return false;
         }
 
-        String[]  tokens  = aEmailAddress.split( "@" );
+        String[] tokens = aEmailAddress.split( "@" );
 
-        return tokens.length == 2 &&
-                    tokens[0].trim().length() > 0 &&
-                    tokens[1].trim().length() > 0 &&
-                    tokens[1].indexOf( '.' ) != -1;
+        return tokens.length == 2 && tokens[0].trim().length() > 0 && tokens[1].trim().length() > 0 && tokens[1].indexOf( '.' ) != -1;
     }
-
 
     /**
      *  Calculates the display name of a datasource name (which is usually a file name)
@@ -239,12 +228,12 @@ public class WebUtils
     {
         if ( name.startsWith( "db_" ) )
         {
-            return name.substring( 3, name.indexOf( '.' ) );
+            return name.substring(3, name.indexOf( '.' ) );
         }
         else
         {
             return name;
-        }//main database configured in config.properties
+        }        // main database configured in config.properties
     }
 
     private static String[] buildNavigationLookup()
@@ -252,9 +241,9 @@ public class WebUtils
         String OPEN = "<a class=\"navicon\" href=\"" + BASE;
         String[] temp = new String[25];
         Arrays.fill( temp, EMPTY_STR );
-        temp[6] =  OPEN + "map/move?dir=0\")><img src=\"" + IMAGES + "/nw.png\"/></a>";
-        temp[7] =  OPEN + "map/move?dir=1\")><img src=\"" + IMAGES + "/n.png\"/></a>";
-        temp[8] =  OPEN + "map/move?dir=2\")><img src=\"" + IMAGES + "/ne.png\"/></a>";
+        temp[6] = OPEN + "map/move?dir=0\")><img src=\"" + IMAGES + "/nw.png\"/></a>";
+        temp[7] = OPEN + "map/move?dir=1\")><img src=\"" + IMAGES + "/n.png\"/></a>";
+        temp[8] = OPEN + "map/move?dir=2\")><img src=\"" + IMAGES + "/ne.png\"/></a>";
         temp[11] = OPEN + "map/move?dir=3\")><img src=\"" + IMAGES + "/w.png\"/></a>";
         temp[13] = OPEN + "map/move?dir=5\")><img src=\"" + IMAGES + "/e.png\"/></a>";
         temp[16] = OPEN + "map/move?dir=6\")><img src=\"" + IMAGES + "/sw.png\"/></a>";
@@ -263,22 +252,22 @@ public class WebUtils
         return temp;
     }
 
-    public static String getMovementClass(int i)
+    public static String getMovementClass( int i )
     {
         return movementClasses[i];
     }
 
-//    public static JSONObject mergeJson(JSONObject ....)
-//    {
-//        DO IT
-//    }
+    // public static JSONObject mergeJson(JSONObject ....)
+    // {
+    // DO IT
+    // }
 
     /**
      * Creates an error file and returns the location.
      */
     public static String dumpError( Throwable t )
     {
-        log.entering( KEY, "dumpError");
+        log.entering( KEY, "dumpError" );
 
         PrintWriter out = null;
         File errFile = new File( BASE_PATH + "admin/err", System.currentTimeMillis() + ".err" );
@@ -290,11 +279,11 @@ public class WebUtils
             out.flush();
             out.close();
         }
-        catch(IOException e)
+        catch ( IOException e )
         {
-            //do nothihg
+            // do nothihg
             ret = "Error dumping error file.  How ironic, eh?" + e.getMessage();
-            log.throwing(KEY, "dumpError", e );
+            log.throwing( KEY, "dumpError", e );
         }
         finally
         {
@@ -302,6 +291,26 @@ public class WebUtils
         }
     }
 
+    public static void moveToChaos( HttpServletResponse response, int altid )
+    {
+        try
+        {
+            if ( Math.random() < 0.01D )
+            {
+                response.sendRedirect( "naughty.jsp" );
+                new Message( new InvasionConnection(), 4, 1, "Character id " + altid + " has just been moved to your station for doing something naughty.  Punish him." );
+            }
+            else
+            {
+                response.sendRedirect( "naughty.jsp" );
+            }
+            return;
+        }
+        catch ( Exception e )
+        {
+            log.throwing( KEY, "FUCK.  Can't move to Chaos.", e );
+        }
+    }
 
 }
 
