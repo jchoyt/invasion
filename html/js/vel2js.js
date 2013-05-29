@@ -38,7 +38,9 @@ if (context.velocityCount) velocityCount=context.velocityCount;
 for (var i1=0;  i1<context.pets.length; i1++) {
 var pet = context.pets[i1];
 velocityCount = i1;
-t.p('<tr>    <td><a href="');
+t.p('<tr class="');
+t.p( pet.css-class);
+t.p('">    <td><a href="');
 t.p('#" onclick="show_pet_owner(');
 t.p( pet.id);
 t.p(')">');
@@ -611,7 +613,9 @@ if (context.velocityCount) velocityCount=context.velocityCount;
 for (var i1=0;  i1<context.occs.length; i1++) {
 var occ = context.occs[i1];
 velocityCount = i1;
-t.p('<tr>    <td><a href="/game/viewCharacter.jsp?id=');
+t.p('<tr class="');
+t.p( occ.css-class);
+t.p('">    <td><a href="/game/viewCharacter.jsp?id=');
 t.p( occ.id);
 t.p('">');
 t.p( occ.name);

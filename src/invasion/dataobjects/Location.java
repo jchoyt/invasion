@@ -45,14 +45,14 @@ public class Location  implements java.io.Serializable {
      * @return  JSONArray full of occupants
      *
      */
-    public static JSONArray getOccupants(InvasionConnection conn, int locid, int you)
+    public static JSONArray getOccupants(InvasionConnection conn, int locid, Alt viewingCharacter)
     {
         String query = "select * from alt where location = ? and id != ? and ticksalive > 0";
         ResultSet rs = null;
         JSONArray root = new JSONArray();
         try
         {
-            rs = conn.psExecuteQuery( query, "Retrieving Occupants for Poll", locid, you );
+            rs = conn.psExecuteQuery( query, "Retrieving Occupants for Poll", locid, viewingCharacter.getId() );
             while(rs.next())
             {
                 JSONObject obj = new JSONObject();
@@ -60,6 +60,11 @@ public class Location  implements java.io.Serializable {
                 obj.put("id", rs.getInt("id"));
                 obj.put("level", rs.getInt("level"));
                 obj.put( "hp", Alt.calcHpCategory( rs.getInt("hp"), rs.getInt("hpmax") ) );
+                //find the faction relationship (if any)
+                int viewedFactionId = rs.getInt("factionid");
+                String cssClass = FactionPolitics.getPolitics(viewingCharacter.getFactionId(), viewedFactionId).getCssClass();
+                obj.put("css-class", cssClass);
+
                 root.put(obj);
             }
             DatabaseUtility.close(rs);

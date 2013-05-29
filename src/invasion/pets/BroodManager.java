@@ -123,22 +123,6 @@ public class BroodManager
     return ret;
   }
 
-  public static JSONArray petsAtLocation(int locid)
-    throws JSONException
-  {
-    Alt alt = AltFactory.load(1);
-    JSONArray ret = new JSONArray();
-    for (Brood b : feralBroods)
-      if (b.getLocation() == locid)
-        for (Critter c : b.getMembers())
-          ret.put(c.toJson(alt));
-    for (Brood b : playerBroods.values())
-      if (b.getLocation() == locid)
-        for (Critter c : b.getMembers())
-          ret.put(c.toJson(alt));
-    return ret;
-  }
-
   public static void load()
   {
     InvasionConnection conn = null;

@@ -115,9 +115,14 @@ public class InitServlet extends HttpServlet
         /* load up factions */
         Faction.loadCache();
         log.info("--> Factions loaded");
+
+        /* load up politics */
+        FactionPolitics.loadPolitics();
+        log.info("--> Politics loaded");
+
         /* start up the error reporting bot */
-        botThread = new Thread( new BotRunner( "vasionbot.properties" ), "VasionBot" );
-        botThread.start();
+        // botThread = new Thread( new BotRunner( "vasionbot.properties" ), "VasionBot" );
+        // botThread.start();
     }
 
     /**

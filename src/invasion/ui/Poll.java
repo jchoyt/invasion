@@ -1182,7 +1182,7 @@ public class Poll
 
       ret.put("msgs", Message.getInitialMessages(conn, wazzit.getAlt().getId()));
 
-      JSONArray occupants = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt().getId());
+      JSONArray occupants = Location.getOccupants(conn, wazzit.getAlt().getLocation(), wazzit.getAlt());
       if (occupants.length() > 0)
       {
         ret.put("occs", occupants);

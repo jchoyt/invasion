@@ -355,6 +355,12 @@ function show_pet_target(id)
     }
 };
 
+// input is pet id
+function show_pet_owner(id)
+{
+
+}
+
 function recharge(id)
 {
     var url = "recharge?itemid=" + id;
