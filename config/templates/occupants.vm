@@ -1,5 +1,5 @@
 #foreach($occ in $occs)
-<tr class="${occ.css-class}">
+<tr class="${occ.cssclass}">
     <td><a href="/game/viewCharacter.jsp?id=${occ.id}">${occ.name}</a></td>
     <td>${occ.level}</td>
     <td><img alt="" src="/game/i/hp-${occ.hp}.png"/></td>

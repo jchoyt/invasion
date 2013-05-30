@@ -61,7 +61,7 @@ public abstract class Critter implements Attacker, Defender
     else {
       cssClass = invasion.dataobjects.FactionPolitics.getPolitics(alt.getFactionId(), this.brood.getFactionId()).getCssClass();
     }
-    obj.put("css-class", cssClass);
+    obj.put("cssclass", cssClass);
 
     return obj;
   }

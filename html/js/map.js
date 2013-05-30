@@ -121,10 +121,8 @@ function checkForReload( data )
 
 function poll()
 {
-    $("#poll-indicator").show();
     $.getJSON(poll_url, function(json){
         $(document).trigger('POLL_COMPLETE', json);
-		$("#poll-indicator").hide();
     });
 }
 
@@ -277,8 +275,6 @@ function updateEquipImprovisedDialog(data)
 //}}}
 
 //{{{ Actions
-
-
 function drop( itemid )
 {
     var url = "drop?itemid=" + itemid;
@@ -392,4 +388,5 @@ function chalkWall()
     return false;
 }
 //}}}
-// :collapseFolds=0:folding=explicit:
+
+// :collapseFolds=1:folding=explicit:

@@ -76,7 +76,7 @@
                     <p><a href="${base}factions.jsp">Faction List</a></p>
                     <p><a href="${base}disconnect">Disconnect</a></p>
                     <p><hr/></p>
-                    <p><a href="#" onclick="setInterval( 'poll()', 10000);">Engage periodic poll</a></p>
+                    <p><a href="#" onclick="$('#poll-indicator').show();setInterval( 'poll()', 10000);$('.pop_toggle').click();">Engage periodic poll</a></p>
                     <p><hr/></p>
                     <p><a href="#" onclick="alert('No uber map yet');">Uber Map</a></p>
                     <p><a href="http://soulcubes.com/docs" target="_blank" >Documentation</a></p>

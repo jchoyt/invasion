@@ -63,7 +63,7 @@ public class Location  implements java.io.Serializable {
                 //find the faction relationship (if any)
                 int viewedFactionId = rs.getInt("factionid");
                 String cssClass = FactionPolitics.getPolitics(viewingCharacter.getFactionId(), viewedFactionId).getCssClass();
-                obj.put("css-class", cssClass);
+                obj.put("cssclass", cssClass);
 
                 root.put(obj);
             }

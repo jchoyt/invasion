@@ -57,10 +57,11 @@ protected void printPolitics( InvasionConnection conn, JspWriter out, Faction fa
         boolean switched = false;
         while(rs.next())
         {
+            // show when we swtich from friently to hostile
             if( !switched && rs.getInt("setting") == Constants.HOSTILE_STATUS )
             {
                 switched = !switched;
-                out.print("<br/><b><u>Factions Considered Friendly</u></b><br/>");
+                out.print("<br/><b><u>Factions Considered Hostile</u></b><br/>");
             }
             out.write( rs.getString("name") + "<br/>" );
         }
