@@ -24,7 +24,6 @@ public class AddItem extends HttpServlet
 
     public final static String KEY = AddItem.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the Servlet object

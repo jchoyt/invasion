@@ -27,7 +27,6 @@ public class Drink extends HttpServlet
 
     public final static String KEY = Drink.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
     public final static int BLACK_OUT_THRESHOLD = 30;
     public final static int ALCHOHOL_POISONING = 50;
 

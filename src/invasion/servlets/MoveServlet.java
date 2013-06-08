@@ -21,7 +21,6 @@ public class MoveServlet extends HttpServlet
 {
     public final static String KEY = "MoveServlet";  //change to MoveServlet eventually
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     public final static PropertyChangeSupport pcs = new PropertyChangeSupport(KEY);
 

@@ -28,7 +28,6 @@ public class ThrowItem extends HttpServlet
 
     public final static String KEY = ThrowItem.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     public ThrowItem()
     {

@@ -26,7 +26,6 @@ public class InitializeLockerRoom extends HttpServlet
 
     public final static String KEY = InitializeLockerRoom.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     public InitializeLockerRoom()
     {

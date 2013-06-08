@@ -18,7 +18,6 @@ public class Location  implements java.io.Serializable {
     //{{{ Logging
     public final static String KEY = Location.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
     //}}}
 
     private int id;

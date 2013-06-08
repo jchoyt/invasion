@@ -26,7 +26,6 @@ public class Logout extends HttpServlet
 
     public final static String KEY = Logout.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the Servlet object

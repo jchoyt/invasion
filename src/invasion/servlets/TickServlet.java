@@ -27,7 +27,6 @@ public class TickServlet extends HttpServlet
 
     public final static String KEY = TickServlet.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
     protected static Timer timer = null;
 
     /**

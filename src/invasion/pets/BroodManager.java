@@ -35,6 +35,9 @@ public class BroodManager
 
   private BroodManager() {}
 
+  /**
+   *  make all the broods do something
+   */
   public static void workBroodsForTick()
   {
     InvasionConnection conn = null;

@@ -15,7 +15,6 @@ public class Constants
 
     public final static String KEY = Constants.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     public final static float ARMOR_SOAK_PERCENT = 0.5f;

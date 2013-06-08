@@ -25,7 +25,6 @@ public class Speak extends HttpServlet
 
     public final static String KEY = Speak.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the Servlet object

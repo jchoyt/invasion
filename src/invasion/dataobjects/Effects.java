@@ -16,7 +16,6 @@ public class Effects
     //{{{ Logging
     public final static String KEY = Effects.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
     //}}}
 
     //{{{ Members

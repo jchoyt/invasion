@@ -18,7 +18,6 @@ public class Skill implements java.io.Serializable
 
     public final static String KEY = Skill.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     private int id;

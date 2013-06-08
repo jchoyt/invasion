@@ -20,7 +20,6 @@ public class Utils
 
     public final static String KEY = Utils.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
     /**
      *  URL to hit for accurate current time
      */

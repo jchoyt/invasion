@@ -19,7 +19,6 @@ public class LocationCache implements PropertyChangeListener
 
     public final static String KEY = LocationCache.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
 	protected static int[] charactersAtLoc = null;

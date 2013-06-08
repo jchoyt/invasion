@@ -25,7 +25,6 @@ public class Login {
 
     public final static String KEY = Login.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     public static final String COOKIE_TAG = "chocolate_invasion_cookie";
     public static final String LOGIN_OK = "OK";

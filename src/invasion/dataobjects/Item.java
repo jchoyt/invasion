@@ -17,7 +17,6 @@ public class Item  implements java.io.Serializable, Defender {
 
     public final static String KEY = Item.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     //{{{ members
     private int itemid;

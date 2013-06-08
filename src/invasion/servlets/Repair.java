@@ -27,7 +27,6 @@ public class Repair extends HttpServlet
 
     public final static String KEY = Repair.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
     /**
      * Base XP for repairing from <i>index</i> condition.  Indexes conform to indexes of Item.conditions.
      */

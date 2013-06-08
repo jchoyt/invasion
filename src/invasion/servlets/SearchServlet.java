@@ -26,7 +26,6 @@ public class SearchServlet extends HttpServlet
 
     public final static String KEY = SearchServlet.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     public final static String[] nothing = { "You search and find nothing.",
         "You search and find a small hole in the wall. It's empty.",

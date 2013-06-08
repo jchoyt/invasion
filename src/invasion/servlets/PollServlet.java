@@ -19,7 +19,6 @@ public class PollServlet extends HttpServlet
 {
     public final static String KEY = "PollServlet";
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response )

@@ -26,7 +26,6 @@ public class KillTickListener implements ServletContextListener
 
     public final static String KEY = KillTickListener.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
 	ServletContext context;
 
 	@Override

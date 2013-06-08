@@ -27,7 +27,6 @@ public class EditFaction extends HttpServlet
 
     public final static String KEY = EditFaction.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     public EditFaction()
     {

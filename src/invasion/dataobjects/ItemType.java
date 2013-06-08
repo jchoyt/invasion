@@ -13,7 +13,6 @@ public class ItemType{
 
     public final static String KEY = ItemType.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     protected int typeid = 0;
     protected int weight = 0;

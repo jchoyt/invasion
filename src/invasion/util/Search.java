@@ -16,7 +16,6 @@ public class Search
 {
     public final static String KEY = Search.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     static Map<Integer, List<SearchDistribution>> lookups = new HashMap<Integer, List<SearchDistribution>>();
 
@@ -107,7 +106,6 @@ public class Search
     {
         public final static String KEY = SearchDistribution.class.getName();
         public final static Logger log = Logger.getLogger( KEY );
-        // static{log.setLevel(Level.FINER);}
         double lowerbound;
         double upperbound;
         double rate;

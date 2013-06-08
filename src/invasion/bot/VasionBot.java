@@ -27,7 +27,6 @@ public class VasionBot extends PircBot
 
     public final static String KEY = VasionBot.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     /**
      * The line separator for the OS this is running on.  While everyone should be running Linux or MacOS, I recognize

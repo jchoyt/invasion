@@ -28,7 +28,6 @@ public class DeathFilter implements Filter
 
     public final static String KEY = DeathFilter.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     private FilterConfig filterConfig = null;

@@ -21,7 +21,6 @@ public final class Config extends Object implements Serializable
 
     public final static String KEY = Config.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    static{log.setLevel(Level.FINER);}
     private HashMap<String,String[]> nvPairs;
     public static int RANDOM_PRIME_NUMBER = 215;
 

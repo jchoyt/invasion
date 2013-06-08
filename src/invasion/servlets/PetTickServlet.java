@@ -28,7 +28,6 @@ public class PetTickServlet extends HttpServlet
 
     public final static String KEY = PetTickServlet.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
     protected static Timer timer = null;
 
     /**
@@ -125,7 +124,6 @@ class PetTickTask extends TimerTask
 
     public final static String KEY = PetTickTask.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     /**
      *  Constructor for the TickTask object

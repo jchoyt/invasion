@@ -13,7 +13,6 @@ public class Station
 
     public final static String KEY = Station.class.getName();
     public final static Logger log = Logger.getLogger( KEY );
-    // static{log.setLevel(Level.FINER);}
 
     //{{{ Members
     //}}}
