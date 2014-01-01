@@ -24,6 +24,7 @@ public class LocationCache implements PropertyChangeListener
 	protected static int[] charactersAtLoc = null;
 	protected static int[] crittersAtLoc = null;
 	protected static int[] itemsAtLoc = null;
+	//shift from lowest locaiton ID to 0 so the arrays can be 0-based without a million empty slots
 	protected static int offset = 0;
     //}}}
 

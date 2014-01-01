@@ -1,5 +1,9 @@
+/*
+ *  Copyright 2013 Jeffrey Hoyt.  All rights reserved.
+ */
 package invasion.pets;
 
+//{{{ Imports
 import invasion.bot.VasionBot;
 import invasion.dataobjects.Alt;
 import invasion.dataobjects.Defender;
@@ -16,13 +20,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Logger; //}}}
 
 public class Brood implements PropertyChangeListener
 {
+    //{{{ Logging
     public static final String KEY = Brood.class.getName();
     public static final Logger log = Logger.getLogger( KEY );
+    //}}}
 
+    //{{{ Members
     public static final String PETDB = "postgres";
 
     public static final PropertyChangeSupport pcs = new PropertyChangeSupport( KEY );
@@ -45,8 +52,9 @@ public class Brood implements PropertyChangeListener
     protected int type = 0;
     protected int id = 0;
     protected List<Defender> targetList = new ArrayList<Defender>();
-    protected boolean active = true;
+    protected boolean active = true; //}}}
 
+    //{{{ Constructors
     public Brood( int ownerId )
     {
         this.ownerId = ownerId;
@@ -56,7 +64,9 @@ public class Brood implements PropertyChangeListener
     public Brood()
     {
         MoveServlet.pcs.addPropertyChangeListener( this );
-    }
+    } //}}}
+
+    //{{{ Methods
 
     public void setGoal( int type, int value )
     {
@@ -136,6 +146,7 @@ public class Brood implements PropertyChangeListener
         ResultSet rs = null;
         String query = null;
         buildTargetList( conn );
+        //move feral broods if there's nothing to attack
         if ( ( this.ownerId < 1 ) && ( this.targetList.size() == 0 ) )
         {
             query = "select l.typeid, l.id from location l join location l2 on (l.station=l2.station and l.x between l2.x-1 and l2.x+1 and l.y between l2.y-1 and l2.y+1 and l.id!=l2.id) where l2.id=? order by random()";
@@ -177,24 +188,23 @@ public class Brood implements PropertyChangeListener
             {
                 DatabaseUtility.close( rs ); } DatabaseUtility.close( rs );
         }
-
-        if ( ( this.ownerId < 1 ) && ( LocationCache.getBroodsAtLoc( this.location ) > 1 ) )
+        // feral broods attack if new location has occupants
+        if ( ( this.ownerId < 1 ) && ( LocationCache.getBroodsAtLoc( this.location ) > 1 || LocationCache.charactersAtLoc( this.location ) > 1 ) )
         {
             try
             {
-                query = "select b.id from brood b where owner is null and location = ? and id != ?";
-                rs = pConn.psExecuteQuery( query, "Error grabbing list of feral broods to merge with", new Object[]
-                { Integer.valueOf( this.location ), Integer.valueOf( this.id ) } );
+                query = "select b.id from brood b where owner=-1 and location=? and id != ?";
+                rs = pConn.psExecuteQuery( query, "Error grabbing list of feral broods to merge with", new Object[] { Integer.valueOf( this.location ), Integer.valueOf( this.id ) } );
                 while ( rs.next() )
                 {
-                    int broodId = rs.getInt(1 );
+                    int broodId = rs.getInt( 1 );
                     Brood b = BroodManager.getFeralBrood( broodId );
                     if ( b == null )
                     {
                         b = BroodManager.getFeralBrood( broodId );
                         BroodManager.addBrood( b );
                     }
-
+                    // if the combined brood is not too big, merge them.  Allow some randomness so broods aren't all the same size - this allows feral broods to be 5-8 in size.
                     if ( b.members.size() + this.members.size() + Math.random() * 3.0D < 8.0D )
                     {
                         if ( b.getPowerRating() > getPowerRating() )
@@ -233,26 +243,12 @@ public class Brood implements PropertyChangeListener
     {
         buildTargetList( conn );
         log.finer( "Brood " + this.id + " preparing to attack - there are " + this.targetList.size() + " targets." );
-        if ( this.targetList.size() == 0 )
-        {
-            this.active = false;
-            return;
-        }
         int randomTarget = -1;
         for ( Critter c : this.members )
         {
             randomTarget = ( int ) ( Math.random() * this.targetList.size() );
             Defender target = ( Defender ) this.targetList.get( randomTarget );
             c.attack( target, conn );
-            if ( target.getLocation() != this.location )
-            {
-                this.targetList.remove( target );
-                if ( this.targetList.size() < 1 )
-                {
-                    this.active = false;
-                    return;
-                }
-            }
         }
     }
 
@@ -378,18 +374,6 @@ public class Brood implements PropertyChangeListener
         return owner.getFaction().getId();
     }
 
-    public void propertyChange( PropertyChangeEvent evt )
-    {
-        if ( evt.getPropertyName().equals( "MoveServlet" ) )
-        {
-            Integer i = ( Integer ) evt.getNewValue();
-            if ( this.location == i.intValue() )
-            {
-                this.active = true;
-            }
-        }
-    }
-
     public Alt getPetmaster( InvasionConnection conn )
     {
         if ( this.ownerId == -1 )
@@ -398,39 +382,40 @@ public class Brood implements PropertyChangeListener
         }
         return AltFactory.load( conn, this.ownerId );
     }
+    //}}}
 
-    public List<Critter> getMembers()
-    { return this.members; }
-    public void setMembers( List<Critter> members )
-    { this.members = members; }
-    public int getOwnerId()
-    { return this.ownerId; }
-    public void setOwnerId( int ownerId )
-    { this.ownerId = ownerId; }
-    public int[] getGoals()
-    { return this.goals; }
-    public void setGoals( int[] goals )
-    { this.goals = goals; }
-    public int getLocation()
-    { return this.location; }
-    public void setLocation( int location )
-    { this.location = location; }
-    public int getType()
-    { return this.type; }
-    public void setType( int type )
-    { this.type = type; }
-    public int getId()
-    { return this.id; }
-    public void setId( int id )
-    { this.id = id; }
-    public List<Defender> getTargetList()
-    { return this.targetList; }
-    public void setTargetList( List<Defender> targetList )
-    { this.targetList = targetList; }
-    public boolean getActive()
-    { return this.active; }
-    public void setActive( boolean active )
-    { this.active = active; }
-    public int getSize()
-    { return this.members.size(); }
+    //{{{ For PropertyChangeListener interface
+
+    public void propertyChange( PropertyChangeEvent evt )
+    {
+        //check if something has moved into this brood's locationo, if so, activate it
+        if ( evt.getPropertyName().equals( "MoveServlet" ) )
+        {
+            Integer i = ( Integer ) evt.getNewValue();
+            if ( this.location == i.intValue() )
+            {
+                this.active = true;
+            }
+        }
+    } //}}}
+
+    //{{{ Setters and getters
+    public List<Critter> getMembers() { return this.members; }
+    public void setMembers( List<Critter> members ) { this.members = members; }
+    public int getOwnerId() { return this.ownerId; }
+    public void setOwnerId( int ownerId ){ this.ownerId = ownerId; }
+    public int[] getGoals()    { return this.goals; }
+    public void setGoals( int[] goals )    { this.goals = goals; }
+    public int getLocation()    { return this.location; }
+    public void setLocation( int location )    { this.location = location; }
+    public int getType()    { return this.type; }
+    public void setType( int type )    { this.type = type; }
+    public int getId()    { return this.id; }
+    public void setId( int id )    { this.id = id; }
+    public List<Defender> getTargetList()    { return this.targetList; }
+    public void setTargetList( List<Defender> targetList )    { this.targetList = targetList; }
+    public boolean getActive()    { return this.active; }
+    public void setActive( boolean active )    { this.active = active; }
+    public int getSize()    { return this.members.size(); } //}}}
+
 }
