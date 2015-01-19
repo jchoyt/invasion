@@ -131,7 +131,6 @@ public class Item  implements java.io.Serializable, Defender {
      *  Returns current inventory as a JSONArray.  See Poll.java for sample format.
      */
     public static JSONArray getItems( InvasionConnection conn, int locid )
-    throws SQLException
     {
         String query = "select i.typeid, itemid, ammoleft, condition, name, type, hidden, equipped, weight, damagetype, capacity, size from item i join itemtype t on (i.typeid = t.typeid) where locid = ? order by type, name, condition, ammoleft";
         PreparedStatement ps = null;
@@ -163,14 +162,15 @@ public class Item  implements java.io.Serializable, Defender {
         catch(SQLException e)
         {
             log.throwing( KEY, "Error retrieving Item list", e);
-            throw e;
-        }
+        } catch (JSONException e) {
+            log.throwing( KEY, "Error retrieving Item list", e);
+		}
         finally
         {
             DatabaseUtility.close(rs);
             DatabaseUtility.close(ps);
-            return root;
         }
+        return root;
     }
 
     public static JSONArray getItems( int locid )  //can also be altid

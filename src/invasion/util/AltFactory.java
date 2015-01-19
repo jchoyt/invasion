@@ -25,7 +25,7 @@ public class AltFactory
     static
     { log.setLevel( Level.FINER ); }
 
-    protected static Map<Integer, Alt> altCache = new ConcurrentHashMap();
+    protected static Map<Integer, Alt> altCache = new ConcurrentHashMap<Integer, Alt>();
 
     public static Alt load( InvasionConnection conn, int id )
     {
@@ -58,7 +58,7 @@ public class AltFactory
                     ret = new Tikkun();
                     break;
                 default:
-                    log.finer( "Loading Human by default - race number unknown: " + race );
+                    log.warning( "Loading Human by default - race number unknown: " + race );
                     ret = new Alt();
             }
 
@@ -314,7 +314,7 @@ public class AltFactory
 
     protected static void loadEquippedItems( InvasionConnection conn, Alt alt )
     {
-        ArrayList clothing = new ArrayList();
+        ArrayList<String> clothing = new ArrayList<String>();
         String query = "select itemid, type, damagetype, name from item i join itemtype t on (i.typeid=t.typeid) where locid=? and equipped=true";
         ResultSet rs = null;
         try

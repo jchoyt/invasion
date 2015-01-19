@@ -40,7 +40,8 @@ public class InvasionConnection
         init( dbname );
     }
 
-    private void init( String dbname )
+    @SuppressWarnings("unused")
+	private void init( String dbname )
         throws SQLException
     {
         try {

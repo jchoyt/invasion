@@ -189,7 +189,7 @@ public class Brood implements PropertyChangeListener
                 DatabaseUtility.close( rs ); } DatabaseUtility.close( rs );
         }
         // feral broods attack if new location has occupants
-        if ( ( this.ownerId < 1 ) && ( LocationCache.getBroodsAtLoc( this.location ) > 1 || LocationCache.charactersAtLoc( this.location ) > 1 ) )
+        if ( ( this.ownerId < 1 ) && ( LocationCache.getBroodsAtLoc( this.location ) > 1 || LocationCache.getCharactersAtLoc( this.location ) > 1 ) )
         {
             try
             {

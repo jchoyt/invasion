@@ -132,8 +132,8 @@ public class Location  implements java.io.Serializable {
         {
             DatabaseUtility.close(rs);
             // mainobj.toString();
-            return mainobj;
         }
+        return mainobj;
     }
 
 

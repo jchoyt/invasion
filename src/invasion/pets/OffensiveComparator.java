@@ -6,6 +6,7 @@ package invasion.pets;
 import java.util.*;
 
 
+@SuppressWarnings("rawtypes")
 public class OffensiveComparator implements Comparator
 {
 

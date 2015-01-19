@@ -92,9 +92,9 @@ public class LogConfig
     {
         StringBuilder ret = new StringBuilder( "Current LogManager configuration" );
         Logger logger = null;
-        for ( Enumeration e = LogManager.getLogManager().getLoggerNames(); e.hasMoreElements();  )
+        for ( Enumeration<String> e = LogManager.getLogManager().getLoggerNames(); e.hasMoreElements();  )
         {
-            logger = LogManager.getLogManager().getLogger( ( String ) e.nextElement() );
+            logger = LogManager.getLogManager().getLogger( e.nextElement() );
             ret.append( LogFormatter.NEWLINE );
             ret.append( "Logger name: " );
             ret.append( logger.getName() );
