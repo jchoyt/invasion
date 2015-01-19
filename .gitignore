@@ -7,3 +7,7 @@ research
 *.log
 pgBackups
 html/release.txt
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
