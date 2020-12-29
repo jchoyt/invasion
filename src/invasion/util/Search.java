@@ -77,7 +77,7 @@ public class Search
     {
         //TODO remove this once searchodds are worked out
         type = 2;
-        //Check to see if it passes the locatoin % first
+        //Check to see if it passes the location % first
         double rate = LocationType.getLocationType(type).getSearchrate();
         if( Math.random() > rate )
         {

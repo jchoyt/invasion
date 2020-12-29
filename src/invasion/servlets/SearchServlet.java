@@ -40,7 +40,7 @@ public class SearchServlet extends HttpServlet
 
     public final static String[] nothingSpecial = {
         "You search and find the droids you were looking for.",
-        "You search and find a fleeting image of hope in a lost and forlorn hope, a small ray of light shining in the dark abyss, a feeble bright light announcing it's presence in a world of blackness...",
+        "You search and find a fleeting image of hope in a lost and forlorn world, a small ray of light shining in the dark abyss, a feeble bright light announcing it's presence in a world of blackness...",
         "You search and find something so horrific you throw up in your mouth a little."};
 
     /**
@@ -144,5 +144,3 @@ public class SearchServlet extends HttpServlet
     }
 
 }
-
-

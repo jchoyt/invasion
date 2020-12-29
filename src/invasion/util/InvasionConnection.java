@@ -7,7 +7,6 @@ package invasion.util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.rowset.*;
 import javax.sql.rowset.*;
 import java.sql.*;
 import java.util.*;
@@ -158,7 +157,7 @@ public class InvasionConnection
         ResultSet rs = null;
         try
         {
-            CachedRowSet crs = new CachedRowSetImpl();
+            CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
             ps = conn.prepareStatement(query);
             //set params
             int i = 1;
@@ -274,4 +273,3 @@ public class InvasionConnection
 
 
 }
-
