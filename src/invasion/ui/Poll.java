@@ -1,10 +1,13 @@
-package invasion.util;
+package invasion.ui;
 
 import invasion.dataobjects.Alt;
 import invasion.dataobjects.Item;
 import invasion.dataobjects.Location;
 import invasion.dataobjects.Message;
 import invasion.pets.BroodManager;
+import invasion.util.InvasionConnection;
+import invasion.util.Whatzit;
+
 import java.io.Writer;
 import java.util.logging.Logger;
 import org.json.JSONArray;

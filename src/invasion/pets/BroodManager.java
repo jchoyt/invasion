@@ -2,7 +2,6 @@ package invasion.pets;
 
 import invasion.bot.VasionBot;
 import invasion.dataobjects.Alt;
-import invasion.util.AltFactory;
 import invasion.util.DatabaseUtility;
 import invasion.util.InvasionConnection;
 import invasion.util.WebUtils;
@@ -24,8 +23,8 @@ public class BroodManager
   public static final String KEY = BroodManager.class.getName();
   public static final Logger log = Logger.getLogger(KEY);
 
-  protected static Map<Integer, Brood> playerBroods = new ConcurrentHashMap();
-  protected static List<Brood> feralBroods = new CopyOnWriteArrayList();
+  protected static Map<Integer, Brood> playerBroods = new ConcurrentHashMap<Integer, Brood>();
+  protected static List<Brood> feralBroods = new CopyOnWriteArrayList<Brood>();
   protected static File serializedFileLocation = null;
 
   public BroodManager(String file)
@@ -33,6 +32,7 @@ public class BroodManager
     serializedFileLocation = new File(file);
   }
 
+  @SuppressWarnings("unused")
   private BroodManager() {}
 
   /**
@@ -49,7 +49,7 @@ public class BroodManager
 
       for (Integer key : playerBroods.keySet())
       {
-        ((Brood)playerBroods.get(key)).act(conn, conn);
+        playerBroods.get(key).act(conn, conn);
       }
 
       for (Brood b : feralBroods)
@@ -82,8 +82,8 @@ public class BroodManager
       conn = new InvasionConnection();
 
       for (Integer key : playerBroods.keySet())
-        if (((Brood)playerBroods.get(key)).getActive())
-          ((Brood)playerBroods.get(key)).act(conn, conn);
+        if (playerBroods.get(key).getActive())
+          playerBroods.get(key).act(conn, conn);
       for (Brood b : feralBroods) {
         if (b.getActive()) {
           b.act(conn, conn);
@@ -205,7 +205,7 @@ public class BroodManager
 
   public static Brood getPlayerBrood(int id)
   {
-    return (Brood)playerBroods.get(Integer.valueOf(id));
+    return playerBroods.get(Integer.valueOf(id));
   }
 
   public static void processAttacks()
@@ -246,8 +246,8 @@ public class BroodManager
       rs = conn.psExecuteQuery(query, "Error message", new Object[] { Integer.valueOf(critterId) });
       if (rs.next())
       {
-        Class clazz = Class.forName(rs.getString("class"));
-        Constructor constructor = clazz.getConstructor(new Class[] { Brood.class });
+        Class<?> clazz = Class.forName(rs.getString("class"));
+        Constructor<?> constructor = clazz.getConstructor(new Class[] { Brood.class });
 
         ret = (Critter)constructor.newInstance(new Object[] { brood });
         ret.setId(critterId);

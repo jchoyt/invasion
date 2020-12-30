@@ -5,6 +5,7 @@
 package invasion.servlets;
 
 import invasion.ui.NaughtyException;
+import invasion.ui.Poll;
 //import invasion.ui.*;
 import invasion.util.*;
 import invasion.dataobjects.*;

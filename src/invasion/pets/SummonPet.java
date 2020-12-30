@@ -1,7 +1,7 @@
 /*
  *  Copyright 2013s Jeffrey Hoyt.  All rights reserved.
  */
-package invasion.servlets;
+package invasion.pets;
 
 import invasion.bot.VasionBot;
 import invasion.dataobjects.Alt;
@@ -12,7 +12,7 @@ import invasion.pets.Critter;
 import invasion.util.Constants;
 import invasion.util.DatabaseUtility;
 import invasion.util.InvasionConnection;
-import invasion.util.Poll;
+import invasion.ui.Poll;
 import invasion.util.RandomUtilities;
 import invasion.util.WebUtils;
 import invasion.util.Whatzit;
@@ -92,7 +92,7 @@ public class SummonPet extends HttpServlet
                     BroodManager.addBrood( b );
                 }
 
-                Class clazz = Class.forName( type );
+                Class<?> clazz = Class.forName( type );
                 Critter newCritter = ( Critter ) clazz.newInstance();
 
                 if ( !newCritter.checkSummoner( alt ) )

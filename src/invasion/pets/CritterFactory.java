@@ -69,7 +69,7 @@ public class CritterFactory
             rs = conn.psExecuteQuery(query, "Error message", id);
             if(rs.next())
             {
-                Class clazz = Class.forName( rs.getString("class") );
+                Class<?> clazz = Class.forName( rs.getString("class") );
                 ret = (Critter)clazz.newInstance();
                 ret.setId( id );
                 ret.setAp( rs.getInt("ap"));

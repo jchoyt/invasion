@@ -35,7 +35,7 @@ public class VelocityUtil{
 
 
     /**
-     *  recursively converts a JSONObject into a heirarchical series of Maps and Lists
+     *  recursively converts a JSONObject into a hierarchical series of Maps and Lists
      */
     public static Object process(Object node) throws JSONException
     {
@@ -53,12 +53,12 @@ public class VelocityUtil{
         }
         else if( node instanceof JSONArray )
         {
-            List child = new ArrayList();
+            List<JSONObject> child = new ArrayList<JSONObject>();
             //leaf node is an array of JSONObjects which better have a property matching tokens[0]
             JSONArray leaf = (JSONArray)node;
             for(int i = 0; i < leaf.length(); i++)
             {
-                child.add(process(leaf.get(i)));
+                child.add((JSONObject) process(leaf.get(i)));
             }
             return child;
         }
@@ -68,7 +68,7 @@ public class VelocityUtil{
 
 
     /**
-     *  Converts JSONObject into a heirarchical series of Maps and Lists.  Assumes the top node is *not* an array (i.e., it has names),  It can be a single object which is
+     *  Converts JSONObject into a hierarchical series of Maps and Lists.  Assumes the top node is *not* an array (i.e., it has names),  It can be a single object which is
      *  a name and Array, but it must have the name.
      */
     public static Map json2Map(JSONObject obj) throws JSONException

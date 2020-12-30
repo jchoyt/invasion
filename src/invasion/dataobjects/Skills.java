@@ -19,9 +19,9 @@ public class Skills
 
   private static Map<String, Skill> byName = new HashMap();
   private static Map<Integer, Skill> byId = new HashMap();
-  protected static List<Skill> humanSkills = new ArrayList();
-  protected static List<Skill> tohuSkills = new ArrayList();
-  protected static List<Skill> tikkunSkills = new ArrayList();
+  protected static List<Skill> humanSkills = new ArrayList<Skill>();
+  protected static List<Skill> tohuSkills = new ArrayList<Skill>();
+  protected static List<Skill> tikkunSkills = new ArrayList<Skill>();
 
   public static void load()
   {

@@ -6,6 +6,7 @@ package invasion.servlets;
 
 import invasion.bot.*;
 import invasion.util.*;
+import invasion.ui.Poll;
 import invasion.dataobjects.*;
 import java.io.*;
 import java.util.*;
